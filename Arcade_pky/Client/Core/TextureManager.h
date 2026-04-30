@@ -1,0 +1,21 @@
+#pragma once
+#include "SubManager.h"
+
+class TextureManager : public SubManager
+{
+public:
+    TextureManager()           = default;
+    ~TextureManager() override = default;
+    DELETE_SPECIAL_FUNC(TextureManager)
+
+private:
+    std::unordered_map<std::string, Ptr<class Texture>> _textures;
+
+public:
+    bool Init() override;
+    void Destroy() override;
+
+    Ptr<class Texture> FindTexture(const std::string& name);
+    Ptr<class Texture> LoadTexture(
+      const std::string& name, const std::wstring& fileName);
+};

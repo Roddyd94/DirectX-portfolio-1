@@ -1,0 +1,21 @@
+#pragma once
+#include <random>
+
+namespace Utility
+{
+    int32 RandomInt32(int32 numStart, int32 numEnd)
+    {
+        static std::mt19937 gen{std::random_device{}()};
+        std::uniform_int_distribution<int> dist{numStart, numEnd};
+
+        return dist(gen);
+    }
+
+    int64 RandomInt32(int64 numStart, int64 numEnd)
+    {
+        static std::mt19937 gen{std::random_device{}()};
+        std::uniform_int_distribution<long long> dist{numStart, numEnd};
+
+        return dist(gen);
+    }
+}

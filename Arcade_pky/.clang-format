@@ -1,0 +1,99 @@
+Language: Cpp
+Standard: c++20
+
+IndentWidth: 4
+UseTab: Never
+
+AccessModifierOffset: -4
+AlignAfterOpenBracket: false
+AlignArrayOfStructures: Right
+
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveBitFields: Consecutive
+AlignConsecutiveDeclarations: Consecutive
+AlignConsecutiveMacros: Consecutive
+AlignOperands: AlignAfterOperator
+AlignTrailingComments:
+  Kind: Always
+
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Empty
+
+AlwaysBreakBeforeMultilineStrings: true
+BreakAdjacentStringLiterals: true 
+BreakAfterAttributes: Always
+BreakAfterReturnType: Automatic
+BreakBeforeBinaryOperators: All
+BreakBeforeBraces: Allman
+BreakBeforeConceptDeclarations: Always
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: BeforeColon
+BreakInheritanceList: BeforeColon
+BreakStringLiterals: true
+BreakTemplateDeclarations: Yes
+
+BinPackArguments: true
+BinPackParameters: OnePerLine
+PackConstructorInitializers: NextLine
+
+ColumnLimit: 80
+ContinuationIndentWidth: 2
+
+EmptyLineBeforeAccessModifier: LogicalBlock
+
+FixNamespaceComments: true
+
+IncludeCategories:
+  - Regex: '^"pch\.h"$'                        # 미리 컴파일된 헤더
+    Priority: -1        
+    SortPriority : -1
+  - Regex: '(^"|^"[^"/]+[\\/])GameEngine\.h"$' # GameEngine 헤더
+    Priority: 1
+    SortPriority : 10
+  - Regex: '^"[^"/]*Manager\.h"$'              # 현재 디렉터리 매니저 헤더
+    Priority: 1
+    SortPriority : 12
+  - Regex: '^"InputSystem\.h"$'                # InputSystem 헤더
+    Priority: 1
+    SortPriority : 13
+  - Regex: '^"[^"/]+[\\/].*Manager\.h"$'       # 타 디렉터리 매니저 헤더
+    Priority: 1
+    SortPriority : 14
+  - Regex: '^"[^"/]+[\\/]InputSystem\.h"$'     # InputSystem 헤더
+    Priority: 1
+    SortPriority : 15
+  - Regex: '^"[^"/]+"$'                        # 현재 디렉터리 / 루트 헤더
+    Priority: 2
+    SortPriority : 20
+  - Regex: '^"[^"/]+[\\/].*"$'                 # 타 디렉터리 헤더
+    Priority: 2
+    SortPriority : 21
+  - Regex: '^<.*>'                             # 표준 라이브러리
+    Priority: 3
+    SortPriority : 30
+  - Regex: '^<[^>]+[\\/].*>'                   # 외부 라이브러리
+    Priority: 3
+    SortPriority : 31
+IncludeBlocks: Regroup
+SortIncludes: true
+
+IndentCaseBlocks: false
+IndentCaseLabels: false
+IndentRequiresClause: false
+
+InsertNewlineAtEOF: true
+
+IntegerLiteralSeparator:
+  Binary: 4
+  Decimal: 3
+  Hex: 2
+
+LambdaBodyIndentation: Signature
+
+NamespaceIndentation: All
+
+PointerAlignment: Left
+
+RemoveEmptyLinesInUnwrappedLines: true

@@ -1,0 +1,17 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Debug_MemoryPool" />
+    <BuildType Name="Debug_ObjectPool" />
+    <BuildType Name="Release" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/config/">
+    <File Path="../.gitignore" />
+    <File Path=".clang-format" />
+  </Folder>
+  <Project Path="Client/Client.vcxproj" Id="e5ed1214-11b1-4fed-b8fc-430ced8de272">
+    <BuildType Solution="Debug|x86" Project="Debug_ObjectPool" />
+  </Project>
+</Solution>
