@@ -9,10 +9,13 @@
 #include "MaterialConstantBuffer.h"
 #include "StaticMeshShader.h"
 #include "TransformConstantBuffer.h"
+
+#ifdef _HAS_TILEMAP_MODULE
 #include "Tilemap/TileInstanceShader.h"
 #include "Tilemap/TileOutlineInstanceShader.h"
 #include "Tilemap/TileOutlineStructureBuffer.h"
 #include "Tilemap/TileStructureBuffer.h"
+#endif // _HAS_TILEMAP_MODULE
 
 bool ShaderManager::Init()
 {
@@ -25,11 +28,13 @@ bool ShaderManager::Init()
     if (!CreateShader<FrameMeshShader>("FrameMeshShader"))
         return false;
 
+#ifdef _HAS_TILEMAP_MODULE
     if (!CreateShader<TileInstanceShader>("TileInstanceShader"))
         return false;
 
     if (!CreateShader<TileOutlineInstanceShader>("TileOutlineInstanceShader"))
         return false;
+#endif // _HAS_TILEMAP_MODULE
 #pragma endregion SHADERS
 
 #pragma region VERTEX_CONSTANT_BUFFERS
@@ -49,6 +54,7 @@ bool ShaderManager::Init()
 #pragma endregion PIXEL_CONSTANT_BUFFERS
 
 #pragma region STRUCTURE_BUFFERS
+#ifdef _HAS_TILEMAP_MODULE
     if (!CreateStructureBuffer<TileStructureBuffer>(
           "Tile", sizeof(TileInstanceData), 128, 1, ShaderType::Vertex))
         return false;
@@ -56,6 +62,7 @@ bool ShaderManager::Init()
     if (!CreateStructureBuffer<TileOutlineStructureBuffer>("TileOutline",
           sizeof(TileOutlineInstanceData), 128, 1, ShaderType::Vertex))
         return false;
+#endif // _HAS_TILEMAP_MODULE
 #pragma endregion STRUCTURE_BUFFERS
 
     CreateSamplers();
