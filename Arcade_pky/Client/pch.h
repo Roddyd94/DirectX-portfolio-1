@@ -49,5 +49,5 @@ using namespace Microsoft::WRL;
 #include "Core/Ptr.h"
 
 #define _HAS_COLLISION_MODULE
-//#define _HAS_TILEMAP_MODULE
+#define _HAS_TILEMAP_MODULE
 
