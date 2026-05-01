@@ -27,8 +27,8 @@ public:
 
     bool LoadTexture(const std::wstring& fileName);
     void SetShader(
-      uint32 registerNum, uint32 shaderBufferType, uint32 textureIndex);
-    void ResetShader(uint32 registerNum, uint32 shaderBufferType);
+      int32 registerNum, uint32 shaderBufferType, uint32 textureIndex);
+    void ResetShader(int32 registerNum, uint32 shaderBufferType);
 
 protected:
     bool CreateShaderResourceView(uint32 textureIndex);

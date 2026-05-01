@@ -48,8 +48,8 @@ bool MeshManager::Init()
 
     uint16 textureRectIndices[6]{0, 1, 3, 0, 3, 2};
 
-    if (!CreateMesh("TextureRect", textureRectVertices, sizeof(TextureVertex), 4,
-          D3D11_USAGE_DEFAULT, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+    if (!CreateMesh("TextureRect", textureRectVertices, sizeof(TextureVertex),
+          4, D3D11_USAGE_DEFAULT, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
           textureRectIndices, sizeof(uint16), 6, DXGI_FORMAT_R16_UINT))
         return false;
 
@@ -79,12 +79,12 @@ Ptr<Mesh> MeshManager::FindMesh(const std::string& name)
 
 Ptr<Mesh> MeshManager::CreateMesh(const std::string& name,
   void*                                              vertexData,
-  int32                                              size,
+  uint32                                             size,
   int32                                              count,
   D3D11_USAGE                                        vertexUsage,
   D3D11_PRIMITIVE_TOPOLOGY                           primitive,
   void*                                              indexData,
-  int32                                              indexSize,
+  uint32                                             indexSize,
   int32                                              indexCount,
   DXGI_FORMAT                                        fmt,
   D3D11_USAGE                                        indexUsage)

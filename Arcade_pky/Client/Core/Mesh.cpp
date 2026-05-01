@@ -10,12 +10,12 @@ void Mesh::Destroy() {}
 
 bool Mesh::CreateMesh(void* vertexData,
   uint32                    size,
-  uint32                    count,
+  int32                     count,
   D3D11_USAGE               vertexUsage,
   D3D11_PRIMITIVE_TOPOLOGY  primitive,
   void*                     indexData,
   uint32                    indexSize,
-  uint32                    indexCount,
+  int32                     indexCount,
   DXGI_FORMAT               format,
   D3D11_USAGE               indexUsage)
 {
@@ -80,7 +80,7 @@ void Mesh::Render()
     }
 }
 
-void Mesh::RenderInstancing(uint32 count)
+void Mesh::RenderInstancing(int32 count)
 {
     uint32 stride = _vertexBufferData.size;
     uint32 offset = 0;
@@ -107,7 +107,7 @@ bool Mesh::CreateBuffer(ComPtr<ID3D11Buffer>& buffer,
   D3D11_BIND_FLAG                             flag,
   void*                                       data,
   uint32                                      size,
-  uint32                                      count,
+  int32                                       count,
   D3D11_USAGE                                 usage)
 {
     D3D11_BUFFER_DESC bufferDesc = {};

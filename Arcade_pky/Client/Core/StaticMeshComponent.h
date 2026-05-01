@@ -29,7 +29,7 @@ public:
     void SetMaterial(uint32 slotIndex, const std::string& name);
     void AddTexture(uint32 slotIndex,
       const std::string&   name,
-      uint32               registerNum,
+      int32                registerNum,
       uint32               shaderBufferType = ShaderType::Pixel,
       uint32               textureIndex     = 0);
     void SetBaseColor(uint32 slotIndex, float r, float g, float b, float a);

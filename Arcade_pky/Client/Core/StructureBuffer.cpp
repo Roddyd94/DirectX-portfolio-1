@@ -9,7 +9,7 @@
 void StructureBuffer::Destroy() {}
 
 bool StructureBuffer::Create(
-  uint32 size, uint32 elementCount, uint32 registerNum, uint8 shaderType)
+  uint32 size, int32 elementCount, int32 registerNum, uint8 shaderType)
 {
     _size         = size;
     _elementCount = elementCount;
@@ -48,7 +48,7 @@ void StructureBuffer::Bind()
         CONTEXT->PSSetShaderResources(_registerNum, 1, _srv.GetAddressOf());
 }
 
-void StructureBuffer::SetData(void* data, uint32 elementCount)
+void StructureBuffer::SetData(void* data, int32 elementCount)
 {
     D3D11_MAPPED_SUBRESOURCE mapped = {};
 
@@ -57,7 +57,7 @@ void StructureBuffer::SetData(void* data, uint32 elementCount)
     CONTEXT->Unmap(_buffer.Get(), 0);
 }
 
-void StructureBuffer::Resize(uint32 elementCount)
+void StructureBuffer::Resize(int32 elementCount)
 {
     if (_elementCount >= elementCount)
         return;

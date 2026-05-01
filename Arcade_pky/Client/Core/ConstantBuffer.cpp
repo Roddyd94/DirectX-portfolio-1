@@ -11,7 +11,7 @@ void ConstantBuffer::Update() {}
 
 void ConstantBuffer::Destroy() {}
 
-bool ConstantBuffer::Create(uint32 size, uint32 registerNum, uint8 shaderType)
+bool ConstantBuffer::Create(uint32 size, int32 registerNum, uint8 shaderType)
 {
     _size        = size;
     _registerNum = registerNum;

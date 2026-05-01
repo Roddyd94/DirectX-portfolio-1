@@ -1,19 +1,19 @@
 #include "Share.fx"
 
-struct TileLineInstanceData
+struct TileOutlineInstanceData
 {
     float4 color;
     float2 worldPos;
     float2 size;
 };
 
-StructuredBuffer<TileLineInstanceData> tileLineInstances : register(t1);
+StructuredBuffer<TileOutlineInstanceData> tileOutlineInstances : register(t1);
 
-float4 TileLineInstanceVS(float3 position : POSITION, uint instanceID : SV_InstanceID) : SV_POSITION
+float4 TileOutlineInstanceVS(float3 position : POSITION, uint instanceID : SV_InstanceID) : SV_POSITION
 {
     float4 output = (float4) 0;
 
-    TileLineInstanceData instance = tileLineInstances[instanceID];
+    TileOutlineInstanceData instance = tileOutlineInstances[instanceID];
     
     float3 pos = position;
     pos.x = pos.x * instance.size.x + instance.worldPos.x;
@@ -25,7 +25,7 @@ float4 TileLineInstanceVS(float3 position : POSITION, uint instanceID : SV_Insta
     return output;
 }
 
-PS_Output_Single TileLineInstancePS(float4 input : SV_Position)
+PS_Output_Single TileOutlineInstancePS(float4 input : SV_Position)
 {
     PS_Output_Single output = (PS_Output_Single) 0;
 

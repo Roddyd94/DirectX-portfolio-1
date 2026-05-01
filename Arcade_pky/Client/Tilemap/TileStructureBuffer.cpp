@@ -7,14 +7,14 @@ void TileStructureBuffer::Update()
     if (_dataArray.empty())
         return;
 
-    uint32 count = GetElementCount();
+    int32 count = GetElementCount();
     Resize(count);
     SetData(_dataArray.data(), count);
 }
 
-uint32 TileStructureBuffer::GetElementCount() const
+int32 TileStructureBuffer::GetElementCount() const
 {
-    return static_cast<uint32>(_dataArray.size());
+    return static_cast<int32>(_dataArray.size());
 }
 
 void TileStructureBuffer::Clear()

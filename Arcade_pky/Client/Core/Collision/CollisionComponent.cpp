@@ -40,10 +40,9 @@ bool CollisionComponent::Init(
     level->AddCollision(_colliderID, This<CollisionComponent>());
 
 #if _DEBUG
-    _shader = FIND_SHADER("FrameMeshShader", Shader);
-    _transformConstantBuffer
-      = FIND_CONSTANT_BUFFER("Transform", TransformConstantBuffer);
-    _colorConstantBuffer = FIND_CONSTANT_BUFFER("Color", ColorConstantBuffer);
+    _shader                  = FIND_SHADER("FrameMeshShader", Shader);
+    _transformConstantBuffer = CONSTANT_BUFFER_TRANSFORM;
+    _colorConstantBuffer     = CONSTANT_BUFFER_COLOR;
 #endif // _DEBUG
 
     return true;

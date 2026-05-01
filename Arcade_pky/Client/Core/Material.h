@@ -6,9 +6,9 @@ struct MaterialTextureInfo
 {
     Weak<class Texture> texture;
 
-    uint32 registerNum;
-    uint32 shaderBufferType;
+    int32  registerNum = -1;
     uint32 textureIndex;
+    uint32 shaderBufferType;
 };
 
 class Material : public Resource
@@ -35,11 +35,11 @@ public:
     void SetSamplerType(uint8 type);
 
     void AddTexture(Ptr<class Texture> texture,
-      uint32                           registerNum,
+      int32                            registerNum,
       uint32                           shaderBufferType = ShaderType::Pixel,
       uint32                           textureIndex     = 0);
     void AddTexture(const std::string& name,
-      uint32                           registerNum,
+      int32                            registerNum,
       uint32                           shaderBufferType = ShaderType::Pixel,
       uint32                           textureIndex     = 0);
     void SetPixelShader(const std::string& name);

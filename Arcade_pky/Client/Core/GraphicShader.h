@@ -24,7 +24,7 @@ public:
 
     void SetShader() final;
 
-    void AddInputLayoutDesc(const char* semetic,
+    void AddInputLayoutDesc(const char* sementic,
       uint32                            sementicIndex,
       DXGI_FORMAT                       fmt,
       uint32                            inputSlot,

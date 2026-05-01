@@ -22,11 +22,11 @@ bool SceneComponent::Init(
     if (!Component::Init(componentID, name, owner))
         return false;
 
-    _transformConstantBuffer
-      = FIND_CONSTANT_BUFFER("Transform", TransformConstantBuffer);
+    _transformConstantBuffer = CONSTANT_BUFFER_TRANSFORM;
 
     if (_isRendering)
-        RenderManager::Instance().AddRenderComponent(owner->GetActorID(), This<SceneComponent>());
+        RenderManager::Instance().AddRenderComponent(
+          owner->GetActorID(), This<SceneComponent>());
 
     return true;
 }

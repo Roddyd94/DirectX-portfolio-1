@@ -25,15 +25,19 @@ int GameEngine::Init()
 {
     WindowsManager::_isRunning = InitManagers();
 
-    _world = New<World>();
-    _world->Init("Default");
+    if (WindowsManager::_isRunning)
+    {
+        _world = New<World>();
+        _world->Init("Default");
+    }
 
     return WindowsManager::Instance().Run();
 }
 
 void GameEngine::Destroy()
 {
-    _world->Destroy();
+    if (_world)
+        _world->Destroy();
     ResourceManager::Instance().Destroy();
 
 #ifdef _USE_MEMORY_POOL

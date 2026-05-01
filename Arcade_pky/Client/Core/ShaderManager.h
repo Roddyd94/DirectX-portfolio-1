@@ -4,7 +4,7 @@
 #include "ConstantBuffer.h"
 #include "Rendering.h"
 #include "Shader.h"
-// #include "SBuffer.h"
+#include "StructureBuffer.h"
 
 class ShaderManager : public SubManager
 {
@@ -14,9 +14,9 @@ public:
     DELETE_SPECIAL_FUNC(ShaderManager)
 
 private:
-    std::unordered_map<std::string, Ptr<Shader>>         _shaders;
-    std::unordered_map<std::string, Ptr<ConstantBuffer>> _constantBuffers;
-    // std::unordered_map<std::string, Ptr<SBuffer>> _sBuffers;
+    std::unordered_map<std::string, Ptr<Shader>>          _shaders;
+    std::unordered_map<std::string, Ptr<ConstantBuffer>>  _constantBuffers;
+    std::unordered_map<std::string, Ptr<StructureBuffer>> _structureBuffers;
 
     ComPtr<ID3D11SamplerState> _samplers[SamplerType::End];
 
@@ -48,15 +48,15 @@ public:
         return nullptr;
     }
 
-    // template <typename T>
-    // Ptr<T> FindSBuffer(const std::string& name)
-    //{
-    //     auto it = _sBuffers.find(name);
-    //     if (_sBuffers.end() == it)
-    //         return nullptr;
+    template <typename T>
+    Ptr<T> FindStructureBuffer(const std::string& name)
+    {
+        auto it = _structureBuffers.find(name);
+        if (_structureBuffers.end() == it)
+            return nullptr;
 
-    //    return Cast<SBuffer, T>(it->second);
-    //}
+        return Cast<StructureBuffer, T>(it->second);
+    }
 
 private:
     template <typename T>
@@ -78,10 +78,8 @@ private:
     }
 
     template <typename T>
-    Ptr<T> CreateCBuffer(const std::string& name,
-      uint32                                size,
-      uint32                                registerNum,
-      uint8                                 shaderType)
+    Ptr<T> CreateConstantBuffer(
+      const std::string& name, uint32 size, int32 registerNum, uint8 shaderType)
     {
         Ptr<T> constantBufferFound = FindConstantBuffer<T>(name);
         if (constantBufferFound)
@@ -98,25 +96,26 @@ private:
         return constantBuffer;
     }
 
-    // template <typename T>
-    // bool CreateSBuffer(const std::string& name,
-    //   int32                               size,
-    //   int32                               elementCount,
-    //   int32                               registerNum,
-    //   int32                               shaderType)
-    //{
-    //     Ptr<T> structBufferFound = FindConstantBuffer<T>(name);
-    //     if (structBufferFound)
-    //         return structBufferFound;
+    template <typename T>
+    Ptr<T> CreateStructureBuffer(const std::string& name,
+      int32                                         size,
+      int32                                         elementCount,
+      int32                                         registerNum,
+      int32                                         shaderType)
+    {
+        Ptr<T> structureBufferFound = FindConstantBuffer<T>(name);
+        if (structureBufferFound)
+            return structureBufferFound;
 
-    //    Ptr<T> structBuffer = New<T>();
-    //    if (!structBuffer->Create(size, registerNum, shaderType))
-    //    {
-    //        DESTROY(structBuffer);
-    //        return nullptr;
-    //    }
+        Ptr<T> structureBuffer = New<T>();
+        if (!structureBuffer->Create(
+              size, elementCount, registerNum, shaderType))
+        {
+            DESTROY(structureBuffer);
+            return nullptr;
+        }
 
-    //    _sBuffers[name] = structBuffer;
-    //    return _sBuffers[name];
-    //}
+        _structureBuffers[name] = structureBuffer;
+        return structureBuffer;
+    }
 };

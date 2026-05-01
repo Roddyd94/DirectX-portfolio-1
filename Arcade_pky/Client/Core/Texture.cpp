@@ -69,7 +69,7 @@ bool Texture::LoadTexture(const std::wstring& fileName)
 }
 
 void Texture::SetShader(
-  uint32 registerNum, uint32 shaderBufferType, uint32 textureIndex)
+  int32 registerNum, uint32 shaderBufferType, uint32 textureIndex)
 {
     if (shaderBufferType & ShaderType::Vertex)
         DeviceManager::Instance().GetContext()->VSSetShaderResources(
@@ -80,7 +80,7 @@ void Texture::SetShader(
           registerNum, 1, _textureInfos[textureIndex].srv.GetAddressOf());
 }
 
-void Texture::ResetShader(uint32 registerNum, uint32 shaderBufferType)
+void Texture::ResetShader(int32 registerNum, uint32 shaderBufferType)
 {
     ID3D11ShaderResourceView* srv = nullptr;
 

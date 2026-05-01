@@ -103,7 +103,7 @@ void StaticMeshComponent::SetMaterial(uint32 slotIndex, const std::string& name)
 
 void StaticMeshComponent::AddTexture(uint32 slotIndex,
   const std::string&                        name,
-  uint32                                    registerNum,
+  int32                                    registerNum,
   uint32                                    shaderBufferType,
   uint32                                    textureIndex)
 {

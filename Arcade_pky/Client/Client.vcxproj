@@ -367,8 +367,6 @@
     <ClInclude Include="Core\TagManager.h" />
     <ClInclude Include="Core\Texture.h" />
     <ClInclude Include="Core\TextureManager.h" />
-    <ClInclude Include="Core\TileLineStructureBuffer.h" />
-    <ClInclude Include="Core\TileStructureBuffer.h" />
     <ClInclude Include="Core\TimeManager.h" />
     <ClInclude Include="Core\Timer.h" />
     <ClInclude Include="Core\Transform.h" />
@@ -387,6 +385,13 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Test\TestActor.h" />
     <ClInclude Include="Test\TestLevel.h" />
+    <ClInclude Include="Tilemap\Tile.h" />
+    <ClInclude Include="Tilemap\TileInstanceShader.h" />
+    <ClInclude Include="Tilemap\Tilemap.h" />
+    <ClInclude Include="Tilemap\TilemapComponent.h" />
+    <ClInclude Include="Tilemap\TileOutlineInstanceShader.h" />
+    <ClInclude Include="Tilemap\TileOutlineStructureBuffer.h" />
+    <ClInclude Include="Tilemap\TileStructureBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
@@ -445,8 +450,6 @@
     <ClCompile Include="Core\TagManager.cpp" />
     <ClCompile Include="Core\Texture.cpp" />
     <ClCompile Include="Core\TextureManager.cpp" />
-    <ClCompile Include="Core\TileLineStructureBuffer.cpp" />
-    <ClCompile Include="Core\TileStructureBuffer.cpp" />
     <ClCompile Include="Core\TimeManager.cpp" />
     <ClCompile Include="Core\Timer.cpp" />
     <ClCompile Include="Core\Transform.cpp" />
@@ -469,6 +472,13 @@
     </ClCompile>
     <ClCompile Include="Test\TestActor.cpp" />
     <ClCompile Include="Test\TestLevel.cpp" />
+    <ClCompile Include="Tilemap\Tile.cpp" />
+    <ClCompile Include="Tilemap\TileInstanceShader.cpp" />
+    <ClCompile Include="Tilemap\Tilemap.cpp" />
+    <ClCompile Include="Tilemap\TilemapComponent.cpp" />
+    <ClCompile Include="Tilemap\TileOutlineInstanceShader.cpp" />
+    <ClCompile Include="Tilemap\TileOutlineStructureBuffer.cpp" />
+    <ClCompile Include="Tilemap\TileStructureBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />
@@ -582,7 +592,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="..\HLSL\TileLineInstance.fx">
+    <FxCompile Include="..\HLSL\TileOutlineInstance.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TileLineInstanceVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>

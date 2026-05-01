@@ -208,12 +208,6 @@
     <ClInclude Include="Core\StructureBuffer.h">
       <Filter>Core\Rendering\Buffer\StructureBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="Core\TileLineStructureBuffer.h">
-      <Filter>Tilemap\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\TileStructureBuffer.h">
-      <Filter>Tilemap\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="Core\CameraComponent.h">
       <Filter>Core\World\Camera\Component</Filter>
     </ClInclude>
@@ -224,31 +218,52 @@
       <Filter>Core\World\Component\SceneComponent\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\OBBCollisionComponent.h">
-      <Filter>Collision\Component</Filter>
+      <Filter>Core\Collision\Component</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\SphereCollisionComponent.h">
-      <Filter>Collision\Component</Filter>
+      <Filter>Core\Collision\Component</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\AABBCollisionComponent.h">
-      <Filter>Collision\Component</Filter>
+      <Filter>Core\Collision\Component</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\CollisionComponent.h">
-      <Filter>Collision\Component</Filter>
+      <Filter>Core\Collision\Component</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\CollisionProfile.h">
-      <Filter>Collision\Profile</Filter>
+      <Filter>Core\Collision\Profile</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\CollisionProfileManager.h">
-      <Filter>Collision\Profile</Filter>
+      <Filter>Core\Collision\Profile</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\CollisionSystem.h">
-      <Filter>Collision</Filter>
+      <Filter>Core\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\CollisionManager.h">
-      <Filter>Collision</Filter>
+      <Filter>Core\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Core\TagManager.h">
       <Filter>Core\World\Tag</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap\Tilemap.h">
+      <Filter>Tilemap\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap\TilemapComponent.h">
+      <Filter>Tilemap\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap\Tile.h">
+      <Filter>Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap\TileOutlineStructureBuffer.h">
+      <Filter>Tilemap\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap\TileStructureBuffer.h">
+      <Filter>Tilemap\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap\TileInstanceShader.h">
+      <Filter>Tilemap\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap\TileOutlineInstanceShader.h">
+      <Filter>Tilemap\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -431,12 +446,6 @@
     <ClCompile Include="Core\StructureBuffer.cpp">
       <Filter>Core\Rendering\Buffer\StructureBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="Core\TileLineStructureBuffer.cpp">
-      <Filter>Tilemap\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\TileStructureBuffer.cpp">
-      <Filter>Tilemap\Buffer</Filter>
-    </ClCompile>
     <ClCompile Include="Core\CameraComponent.cpp">
       <Filter>Core\World\Camera\Component</Filter>
     </ClCompile>
@@ -447,31 +456,52 @@
       <Filter>Core\World\Component\SceneComponent\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\SphereCollisionComponent.cpp">
-      <Filter>Collision\Component</Filter>
+      <Filter>Core\Collision\Component</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\AABBCollisionComponent.cpp">
-      <Filter>Collision\Component</Filter>
+      <Filter>Core\Collision\Component</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\CollisionComponent.cpp">
-      <Filter>Collision\Component</Filter>
+      <Filter>Core\Collision\Component</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\OBBCollisionComponent.cpp">
-      <Filter>Collision\Component</Filter>
+      <Filter>Core\Collision\Component</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\CollisionProfile.cpp">
-      <Filter>Collision\Profile</Filter>
+      <Filter>Core\Collision\Profile</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\CollisionProfileManager.cpp">
-      <Filter>Collision\Profile</Filter>
+      <Filter>Core\Collision\Profile</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\CollisionSystem.cpp">
-      <Filter>Collision</Filter>
+      <Filter>Core\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\CollisionManager.cpp">
-      <Filter>Collision</Filter>
+      <Filter>Core\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Core\TagManager.cpp">
       <Filter>Core\World\Tag</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap\Tilemap.cpp">
+      <Filter>Tilemap\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap\TilemapComponent.cpp">
+      <Filter>Tilemap\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap\Tile.cpp">
+      <Filter>Tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap\TileOutlineStructureBuffer.cpp">
+      <Filter>Tilemap\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap\TileStructureBuffer.cpp">
+      <Filter>Tilemap\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap\TileInstanceShader.cpp">
+      <Filter>Tilemap\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap\TileOutlineInstanceShader.cpp">
+      <Filter>Tilemap\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -619,13 +649,13 @@
     <Filter Include="Core\World\Tag">
       <UniqueIdentifier>{4f11710a-5715-4fe9-8c51-8eebba578e90}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Collision">
+    <Filter Include="Core\Collision">
       <UniqueIdentifier>{b7323b80-52b9-4162-a472-f20543fc4d2d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Collision\Component">
+    <Filter Include="Core\Collision\Component">
       <UniqueIdentifier>{4e30cfb2-d88b-4e4e-8c6e-cafd58a525cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Collision\Profile">
+    <Filter Include="Core\Collision\Profile">
       <UniqueIdentifier>{83931460-2bcb-477a-88a3-93ac95e79769}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -647,7 +677,7 @@
     <FxCompile Include="..\HLSL\TileInstance.fx">
       <Filter>Tilemap\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\HLSL\TileLineInstance.fx">
+    <FxCompile Include="..\HLSL\TileOutlineInstance.fx">
       <Filter>Tilemap\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

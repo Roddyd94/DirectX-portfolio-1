@@ -17,11 +17,11 @@ protected:
     Transform       _world;
     Transform       _relative;
 
-    std::string                          _renderLayerName;
+    std::string                                _renderLayerName;
     std::map<int32, Ptr<class SceneComponent>> _children;
 
     Weak<class TransformConstantBuffer> _transformConstantBuffer;
-    Weak<class SceneComponent>              _parent;
+    Weak<class SceneComponent>          _parent;
 
     Vector3 _axis[AxisType::End] = {
       Vector3(Vector3::axisX),
@@ -48,21 +48,20 @@ public:
     const std::string&  GetRenderLayerName() const;
 
     const Transform& GetWorldTransform() const;
-    Vector3   GetWorldScale() const;
-    Vector3   GetWorldPosition() const;
-    Vector3   GetWorldRotation() const;
+    Vector3          GetWorldScale() const;
+    Vector3          GetWorldPosition() const;
+    Vector3          GetWorldRotation() const;
 
     const Transform& GetRelativeTransform() const;
-    Vector3   GetRelativeScale() const;
-    Vector3   GetRelativePosition() const;
-    Vector3   GetRelativeRotation() const;
+    Vector3          GetRelativeScale() const;
+    Vector3          GetRelativePosition() const;
+    Vector3          GetRelativeRotation() const;
 
     void AddChild(Ptr<SceneComponent> comp);
     void SetRenderLayer(const std::string& name);
 
     void SetWorldTransform(const Transform& transform);
-    void SetWorldTransform(
-      Vector3 position, Vector3 scale, Vector3 rotation);
+    void SetWorldTransform(Vector3 position, Vector3 scale, Vector3 rotation);
     void SetWorldScale(Vector3 scale);
     void SetWorldPosition(Vector3 position);
     void SetWorldRotation(Vector3 rotation);

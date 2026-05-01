@@ -13,7 +13,7 @@ struct TextureVertex
     }
 };
 
-struct SpriteData
+struct TextureFrameData
 {
     Vector2 start;
     Vector2 size;
@@ -21,9 +21,9 @@ struct SpriteData
 
 struct AnimationFrameData
 {
-    SpriteData sprite;
-    Vector2    pivot;
-    Vector2    meshSize;
+    TextureFrameData frame;
+    Vector2          pivot;
+    Vector2          meshSize;
 };
 
 namespace ShaderType

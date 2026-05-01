@@ -21,7 +21,7 @@ void GraphicShader::SetShader()
     CONTEXT->IASetInputLayout(_inputLayout.Get());
 }
 
-void GraphicShader::AddInputLayoutDesc(const char* semetic,
+void GraphicShader::AddInputLayoutDesc(const char* sementic,
   uint32                                           sementicIndex,
   DXGI_FORMAT                                      fmt,
   uint32                                           inputSlot,
@@ -31,7 +31,7 @@ void GraphicShader::AddInputLayoutDesc(const char* semetic,
 {
     D3D11_INPUT_ELEMENT_DESC desc = {};
 
-    desc.SemanticName         = semetic;
+    desc.SemanticName         = sementic;
     desc.SemanticIndex        = sementicIndex;
     desc.Format               = fmt;
     desc.InputSlot            = inputSlot;

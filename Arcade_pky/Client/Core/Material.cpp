@@ -33,7 +33,7 @@ void Material::SetSamplerType(uint8 type)
 }
 
 void Material::AddTexture(Ptr<Texture> texture,
-  uint32                               registerNum,
+  int32                                registerNum,
   uint32                               shaderBufferType,
   uint32                               textureIndex)
 {
@@ -51,7 +51,7 @@ void Material::AddTexture(Ptr<Texture> texture,
 }
 
 void Material::AddTexture(const std::string& name,
-  uint32                                     registerNum,
+  int32                                     registerNum,
   uint32                                     shaderBufferType,
   uint32                                     textureIndex)
 {

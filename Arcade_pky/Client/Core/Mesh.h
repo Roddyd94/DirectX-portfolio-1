@@ -5,7 +5,7 @@
 
 struct MeshSlot
 {
-    IndexBufferData      indexBufferData;
+    IndexBufferData     indexBufferData;
     Ptr<class Material> material;
 };
 
@@ -24,18 +24,18 @@ public:
     void Destroy() override;
 
     bool CreateMesh(void*      vertexData,
-      uint32                    size,
-      uint32                    count,
+      uint32                   size,
+      int32                    count,
       D3D11_USAGE              vertexUsage,
       D3D11_PRIMITIVE_TOPOLOGY primitive,
       void*                    indexData,
-      uint32                    indexSize,
-      uint32                    indexCount,
+      uint32                   indexSize,
+      int32                    indexCount,
       DXGI_FORMAT              format,
       D3D11_USAGE              indexUsage = D3D11_USAGE_DEFAULT);
 
     void Render();
-    void RenderInstancing(uint32 count);
+    void RenderInstancing(int32 count);
 
     const MeshSlot* GetSlot(uint32 index);
     size_t          GetSlotCount() { return _meshSlots.size(); }
@@ -45,6 +45,6 @@ private:
       D3D11_BIND_FLAG                       flag,
       void*                                 data,
       uint32                                size,
-      uint32                                count,
+      int32                                 count,
       D3D11_USAGE                           usage);
 };

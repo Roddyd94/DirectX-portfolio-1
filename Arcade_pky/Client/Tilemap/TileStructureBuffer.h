@@ -1,6 +1,5 @@
 #pragma once
-#include "Rendering.h"
-#include "StructureBuffer.h"
+#include "Core/StructureBuffer.h"
 
 struct TileInstanceData
 {
@@ -22,8 +21,8 @@ private:
 public:
     void Update() override;
 
-    uint32 GetElementCount() const override;
-    void   Clear() override;
+    int32 GetElementCount() const override;
+    void  Clear() override;
 
     void AddData(Vector2 worldPos, Vector2 uvLT, Vector2 uvRB, Vector2 size);
 };

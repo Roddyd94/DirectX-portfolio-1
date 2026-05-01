@@ -47,9 +47,9 @@ public:
 
 private:
     template <typename T>
-    void PreAlloc(uint32 count)
+    void PreAlloc(int32 count)
     {
-        for (uint32 i = 0; i < count; ++i)
+        for (int32 i = 0; i < count; ++i)
         {
             T* obj = new T();
             _pools[std::type_index(typeid(T))].push(obj);

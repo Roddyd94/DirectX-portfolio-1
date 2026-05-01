@@ -20,7 +20,7 @@ void SegmentPool::Create()
     byte* chunk = new byte[_buffSize * _bucketSize]();
     _chunks.push_back(chunk);
 
-    for (uint32 i = 0; i < _bucketSize; ++i)
+    for (int32 i = 0; i < _bucketSize; ++i)
     {
         MemorySegment seg;
         seg.data     = chunk + (i * _buffSize);

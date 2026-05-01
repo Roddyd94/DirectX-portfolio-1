@@ -57,10 +57,15 @@ public:
 #define FONT_MANAGER                                                           \
     ResourceManager::Instance().Get<FontManager>(ResourceType::Font)
 
-#define FIND_SHADER(x, T)          SHADER_MANAGER->FindShader<T>(x)
-#define FIND_CONSTANT_BUFFER(x, T) SHADER_MANAGER->FindConstantBuffer<T>(x)
-// #define FIND_STRUCTURE_BUFFER(x, T) SHADER_MANAGER->FindStructureBuffer<T>(x)
+#define FIND_SHADER(x, T)           SHADER_MANAGER->FindShader<T>(x)
+#define FIND_CONSTANT_BUFFER(x, T)  SHADER_MANAGER->FindConstantBuffer<T>(x)
+#define FIND_STRUCTURE_BUFFER(x, T) SHADER_MANAGER->FindStructureBuffer<T>(x)
 
 #define MESH_LINE_RECT    MESH_MANAGER->FindMesh("FrameRect")
 #define MESH_LINE_SPHERE  MESH_MANAGER->FindMesh("FrameSphere")
 #define MESH_TEXTURE_RECT MESH_MANAGER->FindMesh("TextureRect")
+
+#define CONSTANT_BUFFER_TRANSFORM                                              \
+    SHADER_MANAGER->FindConstantBuffer<TransformConstantBuffer>("Transform")
+#define CONSTANT_BUFFER_COLOR                                                  \
+    SHADER_MANAGER->FindConstantBuffer<ColorConstantBuffer>("Color")
