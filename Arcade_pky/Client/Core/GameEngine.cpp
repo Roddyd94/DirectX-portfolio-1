@@ -11,7 +11,6 @@
 #include "WindowManager.h"
 #include "Common/LogManager.h"
 
-#include "Info.h"  // TODO Remove later
 #include "Types.h" // TODO Remove later
 #include "World.h"
 #include "Common/Random.h" // TODO Remove later
@@ -111,9 +110,9 @@ bool GameEngine::InitManagers()
     if (!TimeManager::Instance().Init())
         return false;
 
-    uint32 width = defaultResolution.width;
+    uint32 width  = defaultResolution.width;
     uint32 height = defaultResolution.height;
-    auto hWnd = WindowsManager::Instance().GetHWND();
+    auto   hWnd   = WindowsManager::Instance().GetHWND();
     if (!DeviceManager::Instance().Init(hWnd, width, height, true))
         return false;
 
@@ -124,9 +123,6 @@ bool GameEngine::InitManagers()
     //_input->Init();
 
     // if (!InputSystem::Instance().Init(_input))
-    //     return false;
-
-    // if (!CollisionProfileManager::Instance().Init())
     //     return false;
 
     if (!RenderManager::Instance().Init())

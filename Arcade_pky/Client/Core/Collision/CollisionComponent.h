@@ -1,7 +1,7 @@
 #pragma once
 #include "CollisionSystem.h"
-#include "SceneComponent.h"
-#include "Types.h"
+#include "Core/SceneComponent.h"
+#include "Core/Types.h"
 
 class CollisionComponent : public SceneComponent
 {

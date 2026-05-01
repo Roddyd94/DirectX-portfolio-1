@@ -2,7 +2,7 @@
 
 #include "AABBCollisionComponent.h"
 
-#include "ResourceManager.h"
+#include "Core/ResourceManager.h"
 
 #include "CollisionSystem.h"
 #include "OBBCollisionComponent.h"

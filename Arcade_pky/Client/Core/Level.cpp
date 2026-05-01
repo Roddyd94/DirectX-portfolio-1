@@ -3,11 +3,14 @@
 #include "Level.h"
 
 #include "CameraManager.h"
-#include "CollisionManager.h"
 
 #include "Actor.h"
 #include "Camera.h"
 #include "World.h"
+
+#ifdef _HAS_COLLISION_MODULE
+#include "Core/Collision/CollisionManager.h"
+#endif // _HAS_COLLISION_MODULE
 
 bool Level::Init(Ptr<World> world, const std::string& path)
 {
@@ -19,8 +22,10 @@ bool Level::Init(Ptr<World> world, const std::string& path)
     _cameraManager = New<CameraManager>();
     _cameraManager->Init(This<Level>());
 
+#ifdef _HAS_COLLISION_MODULE
     _collisionManager = New<CollisionManager>();
     _collisionManager->Init();
+#endif // _HAS_COLLISION_MODULE
 
     //_uiManager = New<UIManager>();
     //_uiManager->Init(This<Level>());
@@ -44,7 +49,10 @@ void Level::Destroy()
     // TODO
     // DESTROY(_tagManager);
     // DESTROY(_uiManager);
+
+#ifdef _HAS_COLLISION_MODULE
     DESTROY(_collisionManager);
+#endif // _HAS_COLLISION_MODULE
     DESTROY(_cameraManager);
 }
 
@@ -83,7 +91,9 @@ void Level::Tick(float deltaTime)
 
 void Level::Collision(float deltaTime)
 {
+#ifdef _HAS_COLLISION_MODULE
     _collisionManager->Collision(deltaTime);
+#endif // _HAS_COLLISION_MODULE
 
     // TODO _uiManager->MouseEvent();
 
@@ -143,12 +153,12 @@ Ptr<World> Level::GetWorld() const
 {
     return Lock(_world);
 }
-
+#ifdef _HAS_COLLISION_MODULE
 Ptr<CollisionProfileManager> Level::GetCollisionProfileManager() const
 {
     return Lock(_world)->GetCollisionProfileManager();
 }
-
+#endif // _HAS_COLLISION_MODULE
 Ptr<CameraComponent> Level::GetMainCamera() const
 {
     return _cameraManager->GetMainCamera();
@@ -157,11 +167,6 @@ Ptr<CameraComponent> Level::GetMainCamera() const
 Vector3 Level::GetCameraWorldPosition() const
 {
     return _cameraManager->GetCameraWorldPosition();
-}
-
-Ptr<CollisionComponent> Level::FindCollider(const ComponentIDPair& colliderID)
-{
-    return _collisionManager->FindCollider(colliderID);
 }
 
 void Level::RemoveActor(int32 actorID)
@@ -174,6 +179,12 @@ void Level::SetMainCamera(Ptr<CameraComponent> camera)
     _cameraManager->SetMainCamera(camera);
 }
 
+#ifdef _HAS_COLLISION_MODULE
+Ptr<CollisionComponent> Level::FindCollider(const ComponentIDPair& colliderID)
+{
+    return _collisionManager->FindCollider(colliderID);
+}
+
 void Level::AddCollision(
   const ComponentIDPair& colliderID, Ptr<CollisionComponent> component)
 {
@@ -184,3 +195,4 @@ void Level::RemoveCollision(const ComponentIDPair& colliderID)
 {
     _collisionManager->Remove(colliderID);
 }
+#endif // _HAS_COLLISION_MODULE

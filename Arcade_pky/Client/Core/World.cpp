@@ -2,17 +2,22 @@
 
 #include "World.h"
 
-#include "CollisionProfileManager.h"
-
 #include "Level.h"
 #include "Test/TestLevel.h"
 
+
+#ifdef _HAS_COLLISION_MODULE
+#include "Core/Collision/CollisionProfileManager.h"
+#endif // _HAS_COLLISION_MODULE
+
 void World::Init(const std::string& name)
 {
+#ifdef _HAS_COLLISION_MODULE
     _collisionProfileManager = New<CollisionProfileManager>();
     _collisionProfileManager->Init();
 
     // TODO Create Collision Profiles
+#endif // _HAS_COLLISION_MODULE
 
     // TODO save & load
     // TODO _currentLevel = CreateLevel<Level>(name);
@@ -44,20 +49,20 @@ void World::RenderUI(float deltaTime)
     // if (_currentLevel)
     //     _currentLevel->RenderUI(deltaTime);
 }
-
-Ptr<class CollisionProfileManager> World::GetCollisionProfileManager() const
+#ifdef _HAS_COLLISION_MODULE
+Ptr<CollisionProfileManager> World::GetCollisionProfileManager() const
 {
     return _collisionProfileManager;
 }
-
-Ptr<class Level> World::GetCurLevel() const
+#endif // _HAS_COLLISION_MODULE
+Ptr<Level> World::GetCurLevel() const
 {
     return _currentLevel;
 }
 
-Ptr<class Actor> World::GetPlayer() const
+Ptr<Actor> World::GetPlayer() const
 {
     return Lock<Actor>(_player);
 }
 
-void World::SetMainPlayer(Ptr<class Actor> player) {}
+void World::SetMainPlayer(Ptr<Actor> player) {}

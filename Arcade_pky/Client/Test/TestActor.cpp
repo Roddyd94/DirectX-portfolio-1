@@ -4,8 +4,11 @@
 
 #include "Core/ResourceManager.h"
 
-#include "Core/AABBCollisionComponent.h"
 #include "Core/StaticMeshComponent.h"
+
+#ifdef _HAS_COLLISION_MODULE
+#include "Core/Collision/AABBCollisionComponent.h"
+#endif // _HAS_COLLISION_MODULE
 
 bool TestActor::Init(
   int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
@@ -19,9 +22,11 @@ bool TestActor::Init(
 
     SetRoot(rootComp);
 
-    auto collisionComp = CreateSceneComponent<AABBCollisionComponent>("Collider");
+#ifdef _HAS_COLLISION_MODULE
+    auto collisionComp
+      = CreateSceneComponent<AABBCollisionComponent>("Collider");
     collisionComp->AttachToComponent(rootComp);
-    
+#endif // _HAS_COLLISION_MODULE
 
     return true;
 }

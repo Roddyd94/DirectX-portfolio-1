@@ -47,3 +47,5 @@ using namespace Microsoft::WRL;
 #include "Core/Color.h"
 #include "Core/Matrix.h"
 #include "Core/Ptr.h"
+
+#define _HAS_COLLISION_MODULE

@@ -1,6 +1,6 @@
 #pragma once
 #include "CollisionSystem.h"
-#include "Object.h"
+#include "Core/Object.h"
 
 using CollisionChannel = std::pair<ColliderType::Type, CollisionResponse::Type>;
 

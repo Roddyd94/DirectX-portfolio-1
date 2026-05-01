@@ -1,4 +1,5 @@
 #pragma once
+#include "Rendering.h"
 #include "Resource.h"
 
 struct MaterialTextureInfo

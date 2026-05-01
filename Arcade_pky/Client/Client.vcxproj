@@ -47,21 +47,21 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -69,28 +69,28 @@
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -98,7 +98,7 @@
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -308,18 +308,20 @@
     <ClInclude Include="Common\Logger.h" />
     <ClInclude Include="Common\LogManager.h" />
     <ClInclude Include="Common\Random.h" />
-    <ClInclude Include="Core\AABBCollisionComponent.h" />
     <ClInclude Include="Core\Actor.h" />
     <ClInclude Include="Core\ActorComponent.h" />
     <ClInclude Include="Core\BlendState.h" />
     <ClInclude Include="Core\Camera.h" />
     <ClInclude Include="Core\CameraComponent.h" />
     <ClInclude Include="Core\CameraManager.h" />
-    <ClInclude Include="Core\CollisionComponent.h" />
-    <ClInclude Include="Core\CollisionManager.h" />
-    <ClInclude Include="Core\CollisionProfile.h" />
-    <ClInclude Include="Core\CollisionProfileManager.h" />
-    <ClInclude Include="Core\CollisionSystem.h" />
+    <ClInclude Include="Core\Collision\AABBCollisionComponent.h" />
+    <ClInclude Include="Core\Collision\CollisionComponent.h" />
+    <ClInclude Include="Core\Collision\CollisionManager.h" />
+    <ClInclude Include="Core\Collision\CollisionProfile.h" />
+    <ClInclude Include="Core\Collision\CollisionProfileManager.h" />
+    <ClInclude Include="Core\Collision\CollisionSystem.h" />
+    <ClInclude Include="Core\Collision\OBBCollisionComponent.h" />
+    <ClInclude Include="Core\Collision\SphereCollisionComponent.h" />
     <ClInclude Include="Core\Color.h" />
     <ClInclude Include="Core\ColorConstantBuffer.h" />
     <ClInclude Include="Core\Component.h" />
@@ -342,7 +344,6 @@
     <ClInclude Include="Core\Mesh.h" />
     <ClInclude Include="Core\MeshComponent.h" />
     <ClInclude Include="Core\MeshManager.h" />
-    <ClInclude Include="Core\OBBCollisionComponent.h" />
     <ClInclude Include="Core\Object.h" />
     <ClInclude Include="Core\ObjectPool.h" />
     <ClInclude Include="Core\Ptr.h" />
@@ -359,7 +360,6 @@
     <ClInclude Include="Core\Singleton.h" />
     <ClInclude Include="Core\Sound.h" />
     <ClInclude Include="Core\SoundManager.h" />
-    <ClInclude Include="Core\SphereCollisionComponent.h" />
     <ClInclude Include="Core\StaticMeshComponent.h" />
     <ClInclude Include="Core\StaticMeshShader.h" />
     <ClInclude Include="Core\StructureBuffer.h" />
@@ -392,18 +392,20 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Common\Logger.cpp" />
     <ClCompile Include="Common\LogManager.cpp" />
-    <ClCompile Include="Core\AABBCollisionComponent.cpp" />
     <ClCompile Include="Core\Actor.cpp" />
     <ClCompile Include="Core\ActorComponent.cpp" />
     <ClCompile Include="Core\BlendState.cpp" />
     <ClCompile Include="Core\Camera.cpp" />
     <ClCompile Include="Core\CameraComponent.cpp" />
     <ClCompile Include="Core\CameraManager.cpp" />
-    <ClCompile Include="Core\CollisionComponent.cpp" />
-    <ClCompile Include="Core\CollisionManager.cpp" />
-    <ClCompile Include="Core\CollisionProfile.cpp" />
-    <ClCompile Include="Core\CollisionProfileManager.cpp" />
-    <ClCompile Include="Core\CollisionSystem.cpp" />
+    <ClCompile Include="Core\Collision\AABBCollisionComponent.cpp" />
+    <ClCompile Include="Core\Collision\CollisionComponent.cpp" />
+    <ClCompile Include="Core\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Core\Collision\CollisionProfile.cpp" />
+    <ClCompile Include="Core\Collision\CollisionProfileManager.cpp" />
+    <ClCompile Include="Core\Collision\CollisionSystem.cpp" />
+    <ClCompile Include="Core\Collision\OBBCollisionComponent.cpp" />
+    <ClCompile Include="Core\Collision\SphereCollisionComponent.cpp" />
     <ClCompile Include="Core\Color.cpp" />
     <ClCompile Include="Core\ColorConstantBuffer.cpp" />
     <ClCompile Include="Core\Component.cpp" />
@@ -423,7 +425,6 @@
     <ClCompile Include="Core\Mesh.cpp" />
     <ClCompile Include="Core\MeshComponent.cpp" />
     <ClCompile Include="Core\MeshManager.cpp" />
-    <ClCompile Include="Core\OBBCollisionComponent.cpp" />
     <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="Core\ObjectPool.cpp" />
     <ClCompile Include="Core\RenderManager.cpp" />
@@ -437,7 +438,6 @@
     <ClCompile Include="Core\ShaderManager.cpp" />
     <ClCompile Include="Core\Sound.cpp" />
     <ClCompile Include="Core\SoundManager.cpp" />
-    <ClCompile Include="Core\SphereCollisionComponent.cpp" />
     <ClCompile Include="Core\StaticMeshComponent.cpp" />
     <ClCompile Include="Core\StaticMeshShader.cpp" />
     <ClCompile Include="Core\StructureBuffer.cpp" />

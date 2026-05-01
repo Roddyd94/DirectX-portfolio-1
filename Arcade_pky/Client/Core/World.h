@@ -9,7 +9,9 @@ public:
     DELETE_SPECIAL_FUNC(World)
 
 public:
-    Ptr<class CollisionProfileManager>                _collisionProfileManager;
+#ifdef _HAS_COLLISION_MODULE
+    Ptr<class CollisionProfileManager> _collisionProfileManager;
+#endif // _HAS_COLLISION_MODULE
     Ptr<class Level>                                  _currentLevel;
     std::unordered_map<std::string, Ptr<class Level>> _levels;
     Weak<class Actor>                                 _player;
@@ -22,9 +24,11 @@ public:
     virtual void Collision(float deltaTime);
     virtual void RenderUI(float deltaTime);
 
+#ifdef _HAS_COLLISION_MODULE
     Ptr<class CollisionProfileManager> GetCollisionProfileManager() const;
-    Ptr<class Level>                   GetCurLevel() const;
-    Ptr<class Actor>                   GetPlayer() const;
+#endif // _HAS_COLLISION_MODULE
+    Ptr<class Level> GetCurLevel() const;
+    Ptr<class Actor> GetPlayer() const;
 
     void SetMainPlayer(Ptr<class Actor> player);
 

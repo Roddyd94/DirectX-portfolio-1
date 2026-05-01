@@ -25,5 +25,5 @@ namespace AxisType
     };
 }
 
-Resolution defaultResolution = {1'024, 896};
-ViewVolume defaultViewVolume = {16.f, 14.f};
+inline Resolution defaultResolution = {1'024, 896};
+inline ViewVolume defaultViewVolume = {16.f, 14.f};

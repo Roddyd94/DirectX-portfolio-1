@@ -5,7 +5,6 @@
 #include "DeviceManager.h"
 
 #include "CameraComponent.h"
-#include "Info.h"
 
 bool CameraManager::Init(Ptr<class Level> level)
 {

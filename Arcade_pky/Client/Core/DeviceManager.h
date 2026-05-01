@@ -1,6 +1,6 @@
 #pragma once
+#include "Info.h"
 #include "Singleton.h"
-#include "Core/Info.h"
 
 class DeviceManager : public Singleton<DeviceManager>
 {

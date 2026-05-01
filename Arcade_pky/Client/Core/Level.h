@@ -14,7 +14,9 @@ private:
     std::map<int32, Ptr<class Actor>> _actors;
     Weak<class World>                 _world;
     Ptr<class CameraManager>          _cameraManager;
-    Ptr<class CollisionManager>       _collisionManager;
+#ifdef _HAS_COLLISION_MODULE
+    Ptr<class CollisionManager> _collisionManager;
+#endif // _HAS_COLLISION_MODULE
     // Ptr<class TagManager>             _tagManager;
     // Ptr<class UIManager>              _uiManager;
     int32 _actorIDCounter = 0;
@@ -34,15 +36,14 @@ public:
     const Matrix& GetViewMatrix() const;
     const Matrix& GetProjMatrix() const;
 
-    Ptr<class World>                   GetWorld() const;
+    Ptr<class World> GetWorld() const;
+    Ptr<class CameraComponent> GetMainCamera() const;
+    Vector3                    GetCameraWorldPosition() const;
+#ifdef _HAS_COLLISION_MODULE
     Ptr<class CollisionProfileManager> GetCollisionProfileManager() const;
-    Ptr<class CameraComponent>         GetMainCamera() const;
-    Vector3                     GetCameraWorldPosition() const;
+#endif // _HAS_COLLISION_MODULE
 
     // TODO //const Matrix& GetUIProjMatrix() const;
-
-    Ptr<class CollisionComponent> FindCollider(
-      const ComponentIDPair& colliderID);
 
     // void AddTag(const std::string& tag, int32 actorID);
     // void DeleteTag(Ptr<class Actor> actor);
@@ -50,9 +51,13 @@ public:
     void RemoveActor(int32 actorID);
     void SetMainCamera(Ptr<class CameraComponent> camera);
 
+#ifdef _HAS_COLLISION_MODULE
+    Ptr<class CollisionComponent> FindCollider(
+      const ComponentIDPair& colliderID);
     void AddCollision(const ComponentIDPair& colliderID,
       Ptr<class CollisionComponent>          component);
     void RemoveCollision(const ComponentIDPair& colliderID);
+#endif // _HAS_COLLISION_MODULE
 
 public:
     template <typename T>
@@ -65,8 +70,7 @@ public:
     }
 
     template <typename T>
-    Ptr<T> SpawnActor(
-      Vector3 position, Vector3 scale, Vector3 rotation)
+    Ptr<T> SpawnActor(Vector3 position, Vector3 scale, Vector3 rotation)
     {
         Ptr<T> actor = New<T>();
         actor->SetLevel(This<Level>());

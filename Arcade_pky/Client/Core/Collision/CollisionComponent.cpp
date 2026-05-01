@@ -4,16 +4,16 @@
 
 #include "CollisionProfileManager.h"
 
-#include "Actor.h"
-#include "Level.h"
+#include "Core/Actor.h"
+#include "Core/Level.h"
 
 #ifdef _DEBUG
-#include "ResourceManager.h"
+#include "Core/ResourceManager.h"
 
-#include "ColorConstantBuffer.h"
-#include "Mesh.h"
-#include "Shader.h"
-#include "TransformConstantBuffer.h"
+#include "Core/ColorConstantBuffer.h"
+#include "Core/Mesh.h"
+#include "Core/Shader.h"
+#include "Core/TransformConstantBuffer.h"
 #endif // _DEBUG
 
 CollisionComponent::CollisionComponent()

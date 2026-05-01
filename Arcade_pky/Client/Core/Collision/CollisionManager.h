@@ -1,7 +1,7 @@
 #pragma once
-#include "SubManager.h"
+#include "Core/SubManager.h"
 
-#include "Types.h"
+#include "Core/Types.h"
 
 class CollisionManager : public SubManager
 {

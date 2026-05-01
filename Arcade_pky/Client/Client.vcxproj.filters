@@ -202,24 +202,6 @@
     <ClInclude Include="Core\Camera.h">
       <Filter>Core\World\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Core\CollisionManager.h">
-      <Filter>Core\World\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\CollisionSystem.h">
-      <Filter>Core\World\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\AABBCollisionComponent.h">
-      <Filter>Core\World\Collision\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\OBBCollisionComponent.h">
-      <Filter>Core\World\Collision\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\SphereCollisionComponent.h">
-      <Filter>Core\World\Collision\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\CollisionComponent.h">
-      <Filter>Core\World\Collision\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Core\ColorConstantBuffer.h">
       <Filter>Core\Rendering\Buffer\ConstantBuffer</Filter>
     </ClInclude>
@@ -238,17 +220,35 @@
     <ClInclude Include="Core\CameraComponent.h">
       <Filter>Core\World\Camera\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Core\CollisionProfile.h">
-      <Filter>Core\World\Collision\Profile</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\CollisionProfileManager.h">
-      <Filter>Core\World\Collision\Profile</Filter>
-    </ClInclude>
     <ClInclude Include="Core\StaticMeshComponent.h">
       <Filter>Core\World\Component\SceneComponent\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Core\MeshComponent.h">
       <Filter>Core\World\Component\SceneComponent\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Collision\OBBCollisionComponent.h">
+      <Filter>Collision\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Collision\SphereCollisionComponent.h">
+      <Filter>Collision\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Collision\AABBCollisionComponent.h">
+      <Filter>Collision\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Collision\CollisionComponent.h">
+      <Filter>Collision\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Collision\CollisionProfile.h">
+      <Filter>Collision\Profile</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Collision\CollisionProfileManager.h">
+      <Filter>Collision\Profile</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Collision\CollisionSystem.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Collision\CollisionManager.h">
+      <Filter>Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -425,24 +425,6 @@
     <ClCompile Include="Core\Camera.cpp">
       <Filter>Core\World\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Core\CollisionManager.cpp">
-      <Filter>Core\World\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\CollisionSystem.cpp">
-      <Filter>Core\World\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\AABBCollisionComponent.cpp">
-      <Filter>Core\World\Collision\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\SphereCollisionComponent.cpp">
-      <Filter>Core\World\Collision\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\OBBCollisionComponent.cpp">
-      <Filter>Core\World\Collision\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\CollisionComponent.cpp">
-      <Filter>Core\World\Collision\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Core\ColorConstantBuffer.cpp">
       <Filter>Core\Rendering\Buffer\ConstantBuffer</Filter>
     </ClCompile>
@@ -461,17 +443,35 @@
     <ClCompile Include="Core\CameraComponent.cpp">
       <Filter>Core\World\Camera\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Core\CollisionProfile.cpp">
-      <Filter>Core\World\Collision\Profile</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\CollisionProfileManager.cpp">
-      <Filter>Core\World\Collision\Profile</Filter>
-    </ClCompile>
     <ClCompile Include="Core\MeshComponent.cpp">
       <Filter>Core\World\Component\SceneComponent\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Core\StaticMeshComponent.cpp">
       <Filter>Core\World\Component\SceneComponent\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Collision\SphereCollisionComponent.cpp">
+      <Filter>Collision\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Collision\AABBCollisionComponent.cpp">
+      <Filter>Collision\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Collision\CollisionComponent.cpp">
+      <Filter>Collision\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Collision\OBBCollisionComponent.cpp">
+      <Filter>Collision\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Collision\CollisionProfile.cpp">
+      <Filter>Collision\Profile</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Collision\CollisionProfileManager.cpp">
+      <Filter>Collision\Profile</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Collision\CollisionSystem.cpp">
+      <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Collision\CollisionManager.cpp">
+      <Filter>Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -571,9 +571,6 @@
     <Filter Include="Core\World\Camera">
       <UniqueIdentifier>{f5bfec43-1a46-44cb-ab0a-fcfff9302f69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\World\Collision">
-      <UniqueIdentifier>{b7323b80-52b9-4162-a472-f20543fc4d2d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Test">
       <UniqueIdentifier>{f60c71d4-3fd0-4ef9-b553-e752b4b0ab3a}</UniqueIdentifier>
     </Filter>
@@ -595,9 +592,6 @@
     <Filter Include="Core\World\Component\SceneComponent">
       <UniqueIdentifier>{30602968-6402-4d9d-b563-a793f9ca5a80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\World\Collision\Component">
-      <UniqueIdentifier>{4e30cfb2-d88b-4e4e-8c6e-cafd58a525cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tilemap">
       <UniqueIdentifier>{e5e23673-fb29-4dfe-bee2-36cdf14453a2}</UniqueIdentifier>
     </Filter>
@@ -616,11 +610,23 @@
     <Filter Include="Core\World\Camera\Component">
       <UniqueIdentifier>{87a06df9-3b3d-4dee-80c3-848abab9e341}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\World\Collision\Profile">
-      <UniqueIdentifier>{83931460-2bcb-477a-88a3-93ac95e79769}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\World\Component\SceneComponent\Mesh">
       <UniqueIdentifier>{4c963f17-aa80-47e1-bd73-2785bbdcb455}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tilemap\Shader">
+      <UniqueIdentifier>{7065a92c-b41f-48a3-b812-264701993c26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\World\Tag">
+      <UniqueIdentifier>{4f11710a-5715-4fe9-8c51-8eebba578e90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{b7323b80-52b9-4162-a472-f20543fc4d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision\Component">
+      <UniqueIdentifier>{4e30cfb2-d88b-4e4e-8c6e-cafd58a525cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision\Profile">
+      <UniqueIdentifier>{83931460-2bcb-477a-88a3-93ac95e79769}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
