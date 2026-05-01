@@ -3,6 +3,7 @@
 #include "Level.h"
 
 #include "CameraManager.h"
+#include "TagManager.h"
 
 #include "Actor.h"
 #include "Camera.h"
@@ -16,8 +17,8 @@ bool Level::Init(Ptr<World> world, const std::string& path)
 {
     _world = world;
 
-    //_tagManager = New<TagManager>();
-    //_tagManager->Init();
+    _tagManager = New<TagManager>();
+    _tagManager->Init();
 
     _cameraManager = New<CameraManager>();
     _cameraManager->Init(This<Level>());
@@ -46,8 +47,7 @@ void Level::Destroy()
 
     _actors.clear();
 
-    // TODO
-    // DESTROY(_tagManager);
+    DESTROY(_tagManager);
     // DESTROY(_uiManager);
 
 #ifdef _HAS_COLLISION_MODULE
@@ -64,7 +64,7 @@ void Level::Tick(float deltaTime)
         if (nullptr == actor)
             continue;
 
-        // TODO DeleteTag(actor);
+        DeleteTag(actor);
 
         DESTROY(actor)
         _actors.erase(actorID);
@@ -124,9 +124,9 @@ void Level::FindActors(
   const std::string& tag, OUT std::vector<Ptr<Actor>>& outArray)
 {
     std::vector<int32> actorIDs;
-    // TODO _tagManager->GetActorIDs(tag, actorIDs);
+    _tagManager->GetActorIDs(tag, actorIDs);
 
-    if (actorIDs.size() < 1)
+    if (actorIDs.empty())
         return;
 
     for (auto actorID : actorIDs)
@@ -167,6 +167,20 @@ Ptr<CameraComponent> Level::GetMainCamera() const
 Vector3 Level::GetCameraWorldPosition() const
 {
     return _cameraManager->GetCameraWorldPosition();
+}
+
+void Level::AddTag(const std::string& tag, int32 actorID)
+{
+    _tagManager->Add(tag, actorID);
+}
+
+void Level::DeleteTag(Ptr<Actor> actor)
+{
+    if (actor->_tags.empty())
+        return;
+
+    for (auto& tag : actor->_tags)
+        _tagManager->Erase(tag, actor->GetActorID());
 }
 
 void Level::RemoveActor(int32 actorID)

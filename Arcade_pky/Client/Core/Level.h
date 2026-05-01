@@ -17,7 +17,7 @@ private:
 #ifdef _HAS_COLLISION_MODULE
     Ptr<class CollisionManager> _collisionManager;
 #endif // _HAS_COLLISION_MODULE
-    // Ptr<class TagManager>             _tagManager;
+    Ptr<class TagManager> _tagManager;
     // Ptr<class UIManager>              _uiManager;
     int32 _actorIDCounter = 0;
 
@@ -36,7 +36,7 @@ public:
     const Matrix& GetViewMatrix() const;
     const Matrix& GetProjMatrix() const;
 
-    Ptr<class World> GetWorld() const;
+    Ptr<class World>           GetWorld() const;
     Ptr<class CameraComponent> GetMainCamera() const;
     Vector3                    GetCameraWorldPosition() const;
 #ifdef _HAS_COLLISION_MODULE
@@ -45,8 +45,8 @@ public:
 
     // TODO //const Matrix& GetUIProjMatrix() const;
 
-    // void AddTag(const std::string& tag, int32 actorID);
-    // void DeleteTag(Ptr<class Actor> actor);
+    void AddTag(const std::string& tag, int32 actorID);
+    void DeleteTag(Ptr<class Actor> actor);
 
     void RemoveActor(int32 actorID);
     void SetMainCamera(Ptr<class CameraComponent> camera);

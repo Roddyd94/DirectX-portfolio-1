@@ -6,10 +6,7 @@
 #include "Level.h"
 #include "SceneComponent.h"
 
-bool Actor::Init(int32 id,
-  Vector3       position,
-  Vector3       scale,
-  Vector3       rotation)
+bool Actor::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
     _id = id;
 
@@ -153,8 +150,7 @@ void Actor::AddTag(const std::string& tag)
     if (nullptr == level)
         return;
 
-    // TODO
-    // level->AddTag(tag, _id);
+    level->AddTag(tag, _id);
 }
 
 void Actor::SetLevel(Ptr<Level> level)
@@ -190,8 +186,7 @@ void Actor::SetWorldTransform(const Transform& transform)
     _root->SetWorldTransform(transform);
 }
 
-void Actor::SetWorldTransform(
-  Vector3 position, Vector3 scale, Vector3 rotation)
+void Actor::SetWorldTransform(Vector3 position, Vector3 scale, Vector3 rotation)
 {
     _root->SetWorldTransform(position, scale, rotation);
 }
@@ -240,7 +235,7 @@ void Actor::SetRelativeRotation(Vector3 rotation)
 void Actor::Remove()
 {
     Ptr<Level> level = Lock<Level>(_level);
-    
-     if (level)
+
+    if (level)
         level->RemoveActor(_id);
 }

@@ -196,9 +196,6 @@
     <ClInclude Include="Core\Level.h">
       <Filter>Core\World\Level</Filter>
     </ClInclude>
-    <ClInclude Include="Core\TagManager.h">
-      <Filter>Core\World\Level</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Camera.h">
       <Filter>Core\World\Camera</Filter>
     </ClInclude>
@@ -249,6 +246,9 @@
     </ClInclude>
     <ClInclude Include="Core\Collision\CollisionManager.h">
       <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\TagManager.h">
+      <Filter>Core\World\Tag</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -419,9 +419,6 @@
     <ClCompile Include="Core\Level.cpp">
       <Filter>Core\World\Level</Filter>
     </ClCompile>
-    <ClCompile Include="Core\TagManager.cpp">
-      <Filter>Core\World\Level</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Camera.cpp">
       <Filter>Core\World\Camera</Filter>
     </ClCompile>
@@ -472,6 +469,9 @@
     </ClCompile>
     <ClCompile Include="Core\Collision\CollisionManager.cpp">
       <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\TagManager.cpp">
+      <Filter>Core\World\Tag</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
