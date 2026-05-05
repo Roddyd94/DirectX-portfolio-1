@@ -74,7 +74,7 @@ void TilemapComponent::Render(float deltaTime)
     RenderOutline();
 }
 
-int32 TilemapComponent::GetTileIndexX(const Vector2& pos) const
+int32 TilemapComponent::GetTileIndexX(Vector2 pos) const
 {
     Ptr<Actor> owner = GetOwner();
     if (nullptr == owner)
@@ -94,7 +94,7 @@ int32 TilemapComponent::GetTileIndexX(const Vector2& pos) const
     return indexX;
 }
 
-int32 TilemapComponent::GetTileIndexY(const Vector2& pos) const
+int32 TilemapComponent::GetTileIndexY(Vector2 pos) const
 {
     Ptr<Actor> owner = GetOwner();
     if (nullptr == owner)
@@ -114,7 +114,7 @@ int32 TilemapComponent::GetTileIndexY(const Vector2& pos) const
     return indexY;
 }
 
-int32 TilemapComponent::GetTileIndex(const Vector2& pos) const
+int32 TilemapComponent::GetTileIndex(Vector2 pos) const
 {
     int32 indexX = GetTileIndexX(pos);
     int32 indexY = GetTileIndexY(pos);
@@ -125,7 +125,7 @@ int32 TilemapComponent::GetTileIndex(const Vector2& pos) const
     return indexY * _countX + indexX;
 }
 
-Ptr<class Tile> TilemapComponent::GetTile(const Vector2& pos)
+Ptr<class Tile> TilemapComponent::GetTile(Vector2 pos)
 {
     int32 index = GetTileIndex(pos);
     return GetTile(index);
@@ -153,7 +153,7 @@ std::optional<Vector2> TilemapComponent::GetTileWorldPos(int32 index)
 }
 
 void TilemapComponent::CreateTile(
-  int32 countX, int32 countY, const Vector2& tileSize, int32 textureFrameIndex)
+  int32 countX, int32 countY, Vector2 tileSize, int32 textureFrameIndex)
 {
     _countX = countX;
     _countY = countY;
@@ -215,7 +215,7 @@ void TilemapComponent::SetTexture(
     SetTexture(name);
 }
 
-void TilemapComponent::AddTileFrame(const Vector2& start, const Vector2& size)
+void TilemapComponent::AddTileFrame(Vector2 start, Vector2 size)
 {
     AddTileFrame(start.x, start.y, size.x, size.y);
 }

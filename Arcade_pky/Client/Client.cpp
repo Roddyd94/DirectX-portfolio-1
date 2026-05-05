@@ -3,7 +3,7 @@
 #include "Client.h"
 
 #include "Core/GameEngine.h"
-#include "Core/WindowManager.h"
+#include "Core/WindowsManager.h"
 
 #include "framework.h"
 

@@ -111,7 +111,7 @@ bool DeviceManager::Init(
 
 void DeviceManager::Destroy() {}
 
-const Vector2 DeviceManager::GetResolutionRate() const
+Vector2 DeviceManager::GetResolutionRate() const
 {
     RECT windowRC;
     GetClientRect(_hWnd, &windowRC);

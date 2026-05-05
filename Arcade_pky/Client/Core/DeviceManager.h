@@ -51,7 +51,7 @@ public:
 
     bool              GetWindowMode() { return _isWindowed; }
     const Resolution& GetResolution() const { return _resolution; }
-    const Vector2     GetResolutionRate() const;
+    Vector2           GetResolutionRate() const;
 
     ComPtr<ID3D11Texture2D>        FindTexture2D(const std::string& name) const;
     ComPtr<ID3D11RenderTargetView> FindRenderTargetView(

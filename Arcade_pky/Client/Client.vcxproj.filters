@@ -31,9 +31,6 @@
     <ClInclude Include="Core\GameEngine.h">
       <Filter>Core\GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Core\WindowManager.h">
-      <Filter>Core\GameEngine</Filter>
-    </ClInclude>
     <ClInclude Include="Core\EngineMath.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
@@ -265,6 +262,27 @@
     <ClInclude Include="Tilemap\TileOutlineInstanceShader.h">
       <Filter>Tilemap\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Core\WindowsManager.h">
+      <Filter>Core\GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\Types.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\InputAction.h">
+      <Filter>Input\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\InputContext.h">
+      <Filter>Input\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\InputSystem.h">
+      <Filter>Input\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\InputComponent.h">
+      <Filter>Input\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -288,9 +306,6 @@
       <Filter>Core\Object</Filter>
     </ClCompile>
     <ClCompile Include="Core\GameEngine.cpp">
-      <Filter>Core\GameEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\WindowManager.cpp">
       <Filter>Core\GameEngine</Filter>
     </ClCompile>
     <ClCompile Include="Core\Matrix.cpp">
@@ -503,6 +518,24 @@
     <ClCompile Include="Tilemap\TileOutlineInstanceShader.cpp">
       <Filter>Tilemap\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="Core\WindowsManager.cpp">
+      <Filter>Core\GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input\Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input\InputAction.cpp">
+      <Filter>Input\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input\InputContext.cpp">
+      <Filter>Input\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input\InputSystem.cpp">
+      <Filter>Input\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input\InputComponent.cpp">
+      <Filter>Input\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -657,6 +690,15 @@
     </Filter>
     <Filter Include="Core\Collision\Profile">
       <UniqueIdentifier>{83931460-2bcb-477a-88a3-93ac95e79769}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{2e0c4a69-fd58-4403-8b20-e250d047e234}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Component">
+      <UniqueIdentifier>{bfa6db99-513e-49fe-a1da-3b3e17b7a094}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\InputSystem">
+      <UniqueIdentifier>{295fd4bd-bb9b-4002-8747-ea2e1ba3a3c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

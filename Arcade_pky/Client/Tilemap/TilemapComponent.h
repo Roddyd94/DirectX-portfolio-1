@@ -49,30 +49,30 @@ public:
         return static_cast<int32>(_tileFrames.size());
     }
 
-    const Vector2& GetTileSize() const { return _tileSize; }
+    Vector2 GetTileSize() const { return _tileSize; }
 
     int32 GetTileCountX() const { return _countX; }
     int32 GetTileCountY() const { return _countY; }
 
-    int32 GetTileIndexX(const Vector2& pos) const;
-    int32 GetTileIndexY(const Vector2& pos) const;
-    int32 GetTileIndex(const Vector2& pos) const;
+    int32 GetTileIndexX(Vector2 pos) const;
+    int32 GetTileIndexY(Vector2 pos) const;
+    int32 GetTileIndex(Vector2 pos) const;
 
-    Ptr<class Tile> GetTile(const Vector2& pos);
+    Ptr<class Tile> GetTile(Vector2 pos);
     Ptr<class Tile> GetTile(int32 index);
 
     std::optional<Vector2> GetTileWorldPos(int32 index);
 
     void CreateTile(int32 countX,
       int32               countY,
-      const Vector2&      tileSize,
+      Vector2      tileSize,
       int32               textureFrameIndex);
 
     void SetTexture(Ptr<class Texture> texture);
     void SetTexture(const std::string& name);
     void SetTexture(const std::string& name, const std::wstring& fileName);
 
-    void AddTileFrame(const Vector2& start, const Vector2& size);
+    void AddTileFrame(Vector2 start, Vector2 size);
     void AddTileFrame(float startX, float startY, float sizeX, float sizeY);
 
     void RefreshTileInstance(bool refresh)

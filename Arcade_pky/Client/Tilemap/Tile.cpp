@@ -4,17 +4,17 @@
 
 void Tile::Destroy() {}
 
-const Vector2& Tile::GetPosition() const
+Vector2 Tile::GetPosition() const
 {
     return _position;
 }
 
-const Vector2& Tile::GetSize() const
+Vector2 Tile::GetSize() const
 {
     return _size;
 }
 
-const Vector2& Tile::GetCenter() const
+Vector2 Tile::GetCenter() const
 {
     return _center;
 }
@@ -29,17 +29,17 @@ uint32 Tile::GetTextureFrameIndex() const
     return _frameIndex;
 }
 
-void Tile::SetPosition(const Vector2& position)
+void Tile::SetPosition(Vector2 position)
 {
     _position = position;
 }
 
-void Tile::SetSize(const Vector2& size)
+void Tile::SetSize(Vector2 size)
 {
     _size = size;
 }
 
-void Tile::SetCenter(const Vector2& center)
+void Tile::SetCenter(Vector2 center)
 {
     _center = center;
 }

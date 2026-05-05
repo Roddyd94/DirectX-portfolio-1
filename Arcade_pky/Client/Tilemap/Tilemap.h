@@ -19,16 +19,16 @@ public:
 
     void CreateTile(int32 countX,
       int32               countY,
-      const Vector2&      tileSize,
+      Vector2      tileSize,
       int32               textureFrameIndex);
 
     void SetTexture(Ptr<class Texture> texture);
     void SetTexture(const std::string& name);
     void SetTexture(const std::string& name, const std::wstring& fileName);
 
-    void AddTileFrame(const Vector2& start, const Vector2& size);
+    void AddTileFrame(Vector2 start, Vector2 size);
     void AddTileFrame(float startX, float startY, float sizeX, float sizeY);
 
-    // void ChangeTileTexture(const Vector2& pos);
-    // void ChangeTileType(const Vector2& pos);
+    // void ChangeTileTexture(Vector2 pos);
+    // void ChangeTileType(Vector2 pos);
 };

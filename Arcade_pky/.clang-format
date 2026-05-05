@@ -38,7 +38,7 @@ BinPackArguments: true
 BinPackParameters: OnePerLine
 PackConstructorInitializers: NextLine
 
-ColumnLimit: 80
+ColumnLimit: 100
 ContinuationIndentWidth: 2
 
 EmptyLineBeforeAccessModifier: LogicalBlock

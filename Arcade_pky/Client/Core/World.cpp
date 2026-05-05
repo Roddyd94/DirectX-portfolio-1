@@ -55,7 +55,7 @@ Ptr<CollisionProfileManager> World::GetCollisionProfileManager() const
     return _collisionProfileManager;
 }
 #endif // _HAS_COLLISION_MODULE
-Ptr<Level> World::GetCurLevel() const
+Ptr<Level> World::GetCurrentLevel() const
 {
     return _currentLevel;
 }

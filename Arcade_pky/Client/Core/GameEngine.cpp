@@ -8,7 +8,7 @@
 #include "ResourceManager.h"
 #include "SoundManager.h"
 #include "TimeManager.h"
-#include "WindowManager.h"
+#include "WindowsManager.h"
 #include "Common/LogManager.h"
 
 #include "Types.h" // TODO Remove later

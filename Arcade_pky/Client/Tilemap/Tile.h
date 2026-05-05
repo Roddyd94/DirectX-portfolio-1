@@ -30,16 +30,16 @@ private:
 public:
     void Destroy() override;
 
-    const Vector2& GetPosition() const;
-    const Vector2& GetSize() const;
-    const Vector2& GetCenter() const;
+    Vector2 GetPosition() const;
+    Vector2 GetSize() const;
+    Vector2 GetCenter() const;
 
     TileType GetTileType() const;
     uint32   GetTextureFrameIndex() const;
 
-    void SetPosition(const Vector2& position);
-    void SetSize(const Vector2& size);
-    void SetCenter(const Vector2& center);
+    void SetPosition(Vector2 position);
+    void SetSize(Vector2 size);
+    void SetCenter(Vector2 center);
 
     void SetTileType(TileType type);
     void SetTextureFrame(uint32 frameIndex);

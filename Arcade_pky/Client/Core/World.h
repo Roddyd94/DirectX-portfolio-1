@@ -27,7 +27,7 @@ public:
 #ifdef _HAS_COLLISION_MODULE
     Ptr<class CollisionProfileManager> GetCollisionProfileManager() const;
 #endif // _HAS_COLLISION_MODULE
-    Ptr<class Level> GetCurLevel() const;
+    Ptr<class Level> GetCurrentLevel() const;
     Ptr<class Actor> GetPlayer() const;
 
     void SetMainPlayer(Ptr<class Actor> player);
