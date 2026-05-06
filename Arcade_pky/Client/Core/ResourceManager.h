@@ -2,6 +2,7 @@
 #include "MaterialManager.h"
 #include "MeshManager.h"
 #include "ShaderManager.h"
+#include "SoundManager.h"
 #include "TextureManager.h"
 
 #include "Resource.h"
@@ -42,20 +43,13 @@ public:
     }
 };
 
-#define SHADER_MANAGER                                                         \
-    ResourceManager::Instance().Get<ShaderManager>(ResourceType::Shader)
-#define TEXTURE_MANAGER                                                        \
-    ResourceManager::Instance().Get<TextureManager>(ResourceType::Texture)
-#define MATERIAL_MANAGER                                                       \
-    ResourceManager::Instance().Get<MaterialManager>(ResourceType::Material)
-#define MESH_MANAGER                                                           \
-    ResourceManager::Instance().Get<MeshManager>(ResourceType::Mesh)
-#define ANIMATION_MANAGER                                                      \
-    ResourceManager::Instance().Get<AnimationManager>(ResourceType::Animation)
-#define SOUND_MANAGER                                                          \
-    ResourceManager::Instance().Get<SoundManager>(ResourceType::Sound)
-#define FONT_MANAGER                                                           \
-    ResourceManager::Instance().Get<FontManager>(ResourceType::Font)
+#define SHADER_MANAGER    ResourceManager::Instance().Get<ShaderManager>(ResourceType::Shader)
+#define TEXTURE_MANAGER   ResourceManager::Instance().Get<TextureManager>(ResourceType::Texture)
+#define MATERIAL_MANAGER  ResourceManager::Instance().Get<MaterialManager>(ResourceType::Material)
+#define MESH_MANAGER      ResourceManager::Instance().Get<MeshManager>(ResourceType::Mesh)
+#define ANIMATION_MANAGER ResourceManager::Instance().Get<AnimationManager>(ResourceType::Animation)
+#define SOUND_MANAGER     ResourceManager::Instance().Get<SoundManager>(ResourceType::Sound)
+#define FONT_MANAGER      ResourceManager::Instance().Get<FontManager>(ResourceType::Font)
 
 #define FIND_SHADER(x, T)           SHADER_MANAGER->FindShader<T>(x)
 #define FIND_CONSTANT_BUFFER(x, T)  SHADER_MANAGER->FindConstantBuffer<T>(x)
@@ -65,7 +59,6 @@ public:
 #define MESH_LINE_SPHERE  MESH_MANAGER->FindMesh("FrameSphere")
 #define MESH_TEXTURE_RECT MESH_MANAGER->FindMesh("TextureRect")
 
-#define CONSTANT_BUFFER_TRANSFORM                                              \
+#define CONSTANT_BUFFER_TRANSFORM                                                                  \
     SHADER_MANAGER->FindConstantBuffer<TransformConstantBuffer>("Transform")
-#define CONSTANT_BUFFER_COLOR                                                  \
-    SHADER_MANAGER->FindConstantBuffer<ColorConstantBuffer>("Color")
+#define CONSTANT_BUFFER_COLOR SHADER_MANAGER->FindConstantBuffer<ColorConstantBuffer>("Color")
