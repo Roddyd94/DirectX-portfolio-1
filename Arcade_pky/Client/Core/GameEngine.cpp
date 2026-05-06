@@ -31,7 +31,7 @@ int GameEngine::Init()
         _world->Init("Default");
     }
 
-    return WindowsManager::Instance().Run();
+    return true;
 }
 
 void GameEngine::Destroy()
@@ -68,7 +68,7 @@ Ptr<class World> GameEngine::GetWorld() const
 
 void GameEngine::Tick(float deltaTime)
 {
-    //_input->Tick(deltaTime);
+    // TODO _input->Tick(deltaTime);
     // InputSystem::Instance().Tick(deltaTime);
     // 상태를 갱신(down? hold? up?)
 
@@ -95,7 +95,9 @@ void GameEngine::Render(float deltaTime)
     //_world->RenderUI(deltaTime);
     // DeviceManager::Instance().GetDefaultRenderTarget2D()->EndDraw();
 
+#ifndef _EDITOR
     DeviceManager::Instance().Render();
+#endif // _EDITOR
 }
 
 bool GameEngine::InitManagers()

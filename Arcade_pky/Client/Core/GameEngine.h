@@ -3,6 +3,10 @@
 
 class GameEngine : public Singleton<GameEngine>
 {
+#ifdef _EDITOR
+    friend class EditorEngine;
+#endif // _EDITOR
+
     DECLARE_SINGLETON(GameEngine)
 private:
     Ptr<class World> _world;
@@ -13,7 +17,7 @@ public:
     int  Init();
     void Destroy();
 
-    void Logic();
+    void             Logic();
     Ptr<class World> GetWorld() const;
 
 private:

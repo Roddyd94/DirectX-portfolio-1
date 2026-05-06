@@ -2,10 +2,11 @@
 
 #include "Client.h"
 
-#include "Core/GameEngine.h"
 #include "Core/WindowsManager.h"
 
 #include "framework.h"
+#include "Core/GameEngine.h"
+#include "Editor/EditorEngine.h"
 
 #ifdef _DEBUG
 #include <crtdbg.h>
@@ -25,12 +26,26 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     WindowsManager::Instance().Init(hInstance, L"Arcade");
+
+#ifdef _EDITOR
+    WindowsManager::Instance().OnUpdate = [&]() -> void
+    {
+        EditorEngine::Instance().Logic();
+    };
+
+    int result = EditorEngine::Instance().Init();
+    WindowsManager::Instance().Run();
+    EditorEngine::Instance().Destroy();
+#else
     WindowsManager::Instance().OnUpdate = [&]() -> void
     {
         GameEngine::Instance().Logic();
     };
+
     int result = GameEngine::Instance().Init();
+    WindowsManager::Instance().Run();
     GameEngine::Instance().Destroy();
+#endif // _EDITOR
 
     return result;
 }

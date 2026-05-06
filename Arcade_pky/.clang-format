@@ -46,28 +46,28 @@ EmptyLineBeforeAccessModifier: LogicalBlock
 FixNamespaceComments: true
 
 IncludeCategories:
-  - Regex: '^"pch\.h"$'                        # 미리 컴파일된 헤더
+  - Regex: '^"pch\.h"$'                       # 미리 컴파일된 헤더
     Priority: -1        
     SortPriority : -1
-  - Regex: '(^"|^"[^"/]+[\\/])GameEngine\.h"$' # GameEngine 헤더
+  - Regex: '(^"|^"[^"/]+[\\/])Engine\.h"$'    # *Engine 헤더
     Priority: 1
     SortPriority : 10
-  - Regex: '^"[^"/]*Manager\.h"$'              # 현재 디렉터리 매니저 헤더
+  - Regex: '^"[^"/]*Manager\.h"$'             # 현재 디렉터리 매니저 헤더
     Priority: 1
     SortPriority : 12
-  - Regex: '^"InputSystem\.h"$'                # InputSystem 헤더
+  - Regex: '^"InputSystem\.h"$'               # InputSystem 헤더
     Priority: 1
     SortPriority : 13
-  - Regex: '^"[^"/]+[\\/].*Manager\.h"$'       # 타 디렉터리 매니저 헤더
+  - Regex: '^"[^"/]+[\\/].*Manager\.h"$'      # 타 디렉터리 매니저 헤더
     Priority: 1
     SortPriority : 14
-  - Regex: '^"[^"/]+[\\/]InputSystem\.h"$'     # InputSystem 헤더
+  - Regex: '^"[^"/]+[\\/]InputSystem\.h"$'    # InputSystem 헤더
     Priority: 1
     SortPriority : 15
-  - Regex: '^"[^"/]+"$'                        # 현재 디렉터리 / 루트 헤더
+  - Regex: '^"[^"/]+"$'                       # 현재 디렉터리 / 루트 헤더
     Priority: 2
     SortPriority : 20
-  - Regex: '^"[^"/]+[\\/].*"$'                 # 타 디렉터리 헤더
+  - Regex: '^"[^"/]+[\\/].*"$'                # 타 디렉터리 헤더
     Priority: 2
     SortPriority : 21
   - Regex: '^<.*>'                             # 표준 라이브러리

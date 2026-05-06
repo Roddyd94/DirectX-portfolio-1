@@ -7,6 +7,10 @@
 #include "Info.h"
 #include "Resource.h"
 
+#ifdef _EDITOR
+#include "imgui/imgui_impl_win32.h"
+#endif // _EDITOR
+
 bool WindowsManager::Init(HINSTANCE inst, const wchar_t* name)
 {
     _hInst = inst;
@@ -48,8 +52,8 @@ void WindowsManager::RegisterWindowClass()
 
 bool WindowsManager::Create()
 {
-    _hWnd = CreateWindowW(_className, _titleName, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, _hInst, nullptr);
+    _hWnd = CreateWindowW(_className, _titleName, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0,
+      CW_USEDEFAULT, 0, nullptr, nullptr, _hInst, nullptr);
 
     if (!_hWnd)
         return false;
@@ -89,9 +93,12 @@ int WindowsManager::Run()
     return (int)msg.wParam;
 }
 
-LRESULT WindowsManager::WndProc(
-  HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT WindowsManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+#ifdef _EDITOR
+    ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
+#endif // _EDITOR
+
     switch (message)
     {
     case WM_PAINT:

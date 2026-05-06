@@ -26,12 +26,11 @@ public:
     HINSTANCE GetHINSTANCE() const { return _hInst; }
     HWND      GetHWND() const { return _hWnd; }
     HDC       GetHDC() const { return _hdc; }
+    int       Run();
 
 private:
     void RegisterWindowClass();
     bool Create();
-    int  Run();
 
-    static LRESULT CALLBACK WndProc(
-      HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };
