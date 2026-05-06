@@ -215,28 +215,28 @@
       <Filter>Core\World\Component\SceneComponent\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\OBBCollisionComponent.h">
-      <Filter>Core\Collision\Component</Filter>
+      <Filter>Collision\Component</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\SphereCollisionComponent.h">
-      <Filter>Core\Collision\Component</Filter>
+      <Filter>Collision\Component</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\AABBCollisionComponent.h">
-      <Filter>Core\Collision\Component</Filter>
+      <Filter>Collision\Component</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\CollisionComponent.h">
-      <Filter>Core\Collision\Component</Filter>
+      <Filter>Collision\Component</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\CollisionProfile.h">
-      <Filter>Core\Collision\Profile</Filter>
+      <Filter>Collision\Profile</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\CollisionProfileManager.h">
-      <Filter>Core\Collision\Profile</Filter>
+      <Filter>Collision\Profile</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\CollisionSystem.h">
-      <Filter>Core\Collision</Filter>
+      <Filter>Collision</Filter>
     </ClInclude>
     <ClInclude Include="Core\Collision\CollisionManager.h">
-      <Filter>Core\Collision</Filter>
+      <Filter>Collision</Filter>
     </ClInclude>
     <ClInclude Include="Core\TagManager.h">
       <Filter>Core\World\Tag</Filter>
@@ -297,6 +297,30 @@
     </ClInclude>
     <ClInclude Include="Core\Pawn.h">
       <Filter>Core\World\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AIComponent.h">
+      <Filter>AI\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AIController.h">
+      <Filter>AI\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Types.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AICondition.h">
+      <Filter>AI\AIStateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AIState.h">
+      <Filter>AI\AIStateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AIStateMachine.h">
+      <Filter>AI\AIStateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AITransition.h">
+      <Filter>AI\AIStateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\AIBoard.h">
+      <Filter>AI\AIStateMachine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -486,28 +510,28 @@
       <Filter>Core\World\Component\SceneComponent\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\SphereCollisionComponent.cpp">
-      <Filter>Core\Collision\Component</Filter>
+      <Filter>Collision\Component</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\AABBCollisionComponent.cpp">
-      <Filter>Core\Collision\Component</Filter>
+      <Filter>Collision\Component</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\CollisionComponent.cpp">
-      <Filter>Core\Collision\Component</Filter>
+      <Filter>Collision\Component</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\OBBCollisionComponent.cpp">
-      <Filter>Core\Collision\Component</Filter>
+      <Filter>Collision\Component</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\CollisionProfile.cpp">
-      <Filter>Core\Collision\Profile</Filter>
+      <Filter>Collision\Profile</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\CollisionProfileManager.cpp">
-      <Filter>Core\Collision\Profile</Filter>
+      <Filter>Collision\Profile</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\CollisionSystem.cpp">
-      <Filter>Core\Collision</Filter>
+      <Filter>Collision</Filter>
     </ClCompile>
     <ClCompile Include="Core\Collision\CollisionManager.cpp">
-      <Filter>Core\Collision</Filter>
+      <Filter>Collision</Filter>
     </ClCompile>
     <ClCompile Include="Core\TagManager.cpp">
       <Filter>Core\World\Tag</Filter>
@@ -565,6 +589,27 @@
     </ClCompile>
     <ClCompile Include="Core\Pawn.cpp">
       <Filter>Core\World\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\AIComponent.cpp">
+      <Filter>AI\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\AIController.cpp">
+      <Filter>AI\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\AICondition.cpp">
+      <Filter>AI\AIStateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\AIState.cpp">
+      <Filter>AI\AIStateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\AIStateMachine.cpp">
+      <Filter>AI\AIStateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\AITransition.cpp">
+      <Filter>AI\AIStateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\AIBoard.cpp">
+      <Filter>AI\AIStateMachine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -712,15 +757,6 @@
     <Filter Include="Core\World\Tag">
       <UniqueIdentifier>{4f11710a-5715-4fe9-8c51-8eebba578e90}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Collision">
-      <UniqueIdentifier>{b7323b80-52b9-4162-a472-f20543fc4d2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Collision\Component">
-      <UniqueIdentifier>{4e30cfb2-d88b-4e4e-8c6e-cafd58a525cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Collision\Profile">
-      <UniqueIdentifier>{83931460-2bcb-477a-88a3-93ac95e79769}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{2e0c4a69-fd58-4403-8b20-e250d047e234}</UniqueIdentifier>
     </Filter>
@@ -735,6 +771,27 @@
     </Filter>
     <Filter Include="Input\Actor">
       <UniqueIdentifier>{c3ecb1d2-45c3-4675-bf20-2bb1da26c2e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{b7323b80-52b9-4162-a472-f20543fc4d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision\Component">
+      <UniqueIdentifier>{4e30cfb2-d88b-4e4e-8c6e-cafd58a525cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision\Profile">
+      <UniqueIdentifier>{83931460-2bcb-477a-88a3-93ac95e79769}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{0785a916-ed70-4eed-af1e-9035af9107fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Component">
+      <UniqueIdentifier>{72241eb2-0af2-4d04-ab33-856869ed0c7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Actor">
+      <UniqueIdentifier>{bfc60d81-5c4c-4114-b79b-094ae4a197b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\AIStateMachine">
+      <UniqueIdentifier>{d4b8ae52-53d0-4f6a-8698-dc884fc0d8d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

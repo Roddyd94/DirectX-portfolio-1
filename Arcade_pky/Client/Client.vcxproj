@@ -374,6 +374,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AI\AIBoard.h" />
+    <ClInclude Include="AI\AIComponent.h" />
+    <ClInclude Include="AI\AICondition.h" />
+    <ClInclude Include="AI\AIController.h" />
+    <ClInclude Include="AI\AIStateMachine.h" />
+    <ClInclude Include="AI\AIState.h" />
+    <ClInclude Include="AI\AITransition.h" />
+    <ClInclude Include="AI\Types.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Common\Logger.h" />
     <ClInclude Include="Common\LogManager.h" />
@@ -475,6 +483,13 @@
     <ClInclude Include="Tilemap\TileStructureBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AI\AIBoard.cpp" />
+    <ClCompile Include="AI\AIComponent.cpp" />
+    <ClCompile Include="AI\AICondition.cpp" />
+    <ClCompile Include="AI\AIController.cpp" />
+    <ClCompile Include="AI\AIStateMachine.cpp" />
+    <ClCompile Include="AI\AIState.cpp" />
+    <ClCompile Include="AI\AITransition.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Common\Logger.cpp" />
     <ClCompile Include="Common\LogManager.cpp" />

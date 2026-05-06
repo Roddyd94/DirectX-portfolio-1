@@ -9,7 +9,7 @@ public:
 
 public:
     bool Init(
-      int32 id, const std::string& name, Ptr<class Actor> owner) override;
+      int32 componentID, const std::string& name, Ptr<class Actor> owner) override;
     void Destroy() override;
 
     void Tick(float deltaTime) override;

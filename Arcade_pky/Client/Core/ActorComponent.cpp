@@ -2,9 +2,9 @@
 #include "ActorComponent.h"
 
 bool ActorComponent::Init(
-  int32 id, const std::string& name, Ptr<class Actor> owner)
+  int32 componentID, const std::string& name, Ptr<class Actor> owner)
 {
-    return Component::Init(id, name, owner);
+    return Component::Init(componentID, name, owner);
 }
 
 void ActorComponent::Destroy() {
