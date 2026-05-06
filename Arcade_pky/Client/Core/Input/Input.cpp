@@ -2,10 +2,10 @@
 
 #include "Input.h"
 
-#include "Core/GameEngine.h"
 #include "Core/DeviceManager.h"
 #include "Core/WindowsManager.h"
 
+#include "Core/GameEngine.h"
 #include "Core/Level.h"
 #include "Core/World.h"
 
@@ -14,8 +14,8 @@ bool Input::Init()
     _hInst = WindowsManager::Instance().GetHINSTANCE();
     _hWnd  = WindowsManager::Instance().GetHWND();
 
-    if (FAILED(DirectInput8Create(_hInst, DIRECTINPUT_VERSION,
-          IID_IDirectInput8, (void**)_input.GetAddressOf(), nullptr)))
+    if (FAILED(DirectInput8Create(
+          _hInst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)_input.GetAddressOf(), nullptr)))
         _type = InputSystemType::Window;
     else
         _type = InputSystemType::DInput;
@@ -51,11 +51,20 @@ bool Input::GetKeyState(uint8 key)
     return _keyState[key] & KEY_PUSH;
 }
 
+void Input::SetMouseEventOn(uint16 mouseButton, uint16 buttonEvent)
+{
+    _mouseEvents |= ((1 << (mouseButton << 1)) * buttonEvent);
+}
+
+void Input::SetMouseEventOff(uint16 mouseButton, uint16 buttonEvent)
+{
+    _mouseEvents &= ~((1 << (mouseButton << 1)) * buttonEvent);
+}
+
 bool Input::CreateInputDevice(
   ComPtr<IDirectInputDevice8W> device, GUID deviceGuid, LPCDIDATAFORMAT df)
 {
-    if (FAILED(
-          _input->CreateDevice(deviceGuid, device.GetAddressOf(), nullptr)))
+    if (FAILED(_input->CreateDevice(deviceGuid, device.GetAddressOf(), nullptr)))
         return false;
 
     if (FAILED(device->SetDataFormat(df)))
@@ -63,14 +72,12 @@ bool Input::CreateInputDevice(
 
     if (DeviceManager::Instance().GetWindowMode())
     {
-        if (FAILED(device->SetCooperativeLevel(
-              _hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)))
+        if (FAILED(device->SetCooperativeLevel(_hWnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)))
             return false;
     }
     else
     {
-        if (FAILED(device->SetCooperativeLevel(
-              _hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE)))
+        if (FAILED(device->SetCooperativeLevel(_hWnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE)))
             return false;
     }
 
@@ -80,9 +87,8 @@ bool Input::CreateInputDevice(
     return true;
 }
 
-bool Input::UpdateInputDevice(ComPtr<IDirectInputDevice8W> device,
-  LPVOID                                                   deviceState,
-  DWORD                                                    sizeOfDeviceState)
+bool Input::UpdateInputDevice(
+  ComPtr<IDirectInputDevice8W> device, LPVOID deviceState, DWORD sizeOfDeviceState)
 {
     if (!device)
         return false;
@@ -103,7 +109,7 @@ void Input::UpdateMousePosition(float deltaTime)
     GetCursorPos(&mousePoint);
     ScreenToClient(_hWnd, &mousePoint);
 
-    Vector2    ratio = DeviceManager::Instance().GetResolutionRate();
+    Vector2    ratio              = DeviceManager::Instance().GetResolutionRate();
     Resolution viewportResolution = DeviceManager::Instance().GetResolution();
 
     Vector2 newMousePos;
@@ -126,41 +132,40 @@ void Input::UpdateMousePosition(float deltaTime)
 
     Vector3 cameraPos = level->GetCameraWorldPosition();
 
-    _mouseWorldPosition.x
-      = cameraPos.x + _mousePosition.x - viewportResolution.width * 0.5f;
-    _mouseWorldPosition.y
-      = cameraPos.y + _mousePosition.y - viewportResolution.height * 0.5f;
+    _mouseWorldPosition.x = cameraPos.x + _mousePosition.x - viewportResolution.width * 0.5f;
+    _mouseWorldPosition.y = cameraPos.y + _mousePosition.y - viewportResolution.height * 0.5f;
 }
 
 void Input::UpdateMouseState(float deltaTime)
 {
     if (_type == InputSystemType::DInput)
     {
-        for (int i = 0; i < MouseButtonType::Type::End; ++i)
+        for (uint16 i = 0; i < MouseButtonType::Type::End; ++i)
         {
             if (_mouseState.rgbButtons[i] & KEY_PUSH)
             {
-                if (!_mouseDown[i] && !_mouseHold[i])
+                if (!GetMouseEvent(i, ButtonEventType::Down)
+                    && !GetMouseEvent(i, ButtonEventType::Hold))
                 {
-                    _mouseDown[i] = true;
-                    _mouseHold[i] = true;
+                    SetMouseEventOn(i, ButtonEventType::Down);
+                    SetMouseEventOn(i, ButtonEventType::Hold);
                 }
                 else
                 {
-                    _mouseDown[i] = false;
+                    SetMouseEventOff(i, ButtonEventType::Down);
                 }
             }
             else
             {
-                if (_mouseHold[i])
+                if (GetMouseEvent(i, ButtonEventType::Hold))
                 {
-                    _mouseDown[i] = false;
-                    _mouseHold[i] = false;
-                    _mouseUp[i]   = true;
+                    SetMouseEventOff(i, ButtonEventType::Down);
+                    SetMouseEventOff(i, ButtonEventType::Hold);
+                    SetMouseEventOn(i, ButtonEventType::Up);
                 }
                 else
                 {
-                    _mouseUp[i] = false;
+                    SetMouseEventOff(i, ButtonEventType::Up);
                 }
             }
         }
@@ -410,9 +415,7 @@ uint8 Input::ConvertKey(uint8 key)
         case VK_OEM_102:
             return DIK_OEM_102;
         }
-
         return 0xff;
     }
-
     return key;
 }

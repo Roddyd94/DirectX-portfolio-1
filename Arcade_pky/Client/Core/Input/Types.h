@@ -2,7 +2,7 @@
 
 namespace MouseButtonType
 {
-    enum Type
+    enum Type : unsigned short
     {
         LButton = 0,
         RButton = 1,
@@ -14,7 +14,7 @@ namespace MouseButtonType
 
 namespace ButtonEventType
 {
-    enum Type
+    enum Type : unsigned short
     {
         Down,
         Hold,

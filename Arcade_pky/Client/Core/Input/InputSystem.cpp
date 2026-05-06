@@ -36,29 +36,14 @@ void InputSystem::Tick(float deltaTime)
         {
             uint8 key = mapping.key;
 
-            if (key == DIK_MOUSELBUTTON)
+            if (key == DIK_MOUSELBUTTON || key == DIK_MOUSERBUTTON || key == DIK_MOUSEMBUTTON)
             {
-                mapping.buttonState[ButtonEventType::Down]
-                  = _input->GetMouseDown(MouseButtonType::LButton);
-                mapping.buttonState[ButtonEventType::Hold]
-                  = _input->GetMouseHold(MouseButtonType::LButton);
-                mapping.buttonState[ButtonEventType::Up] = _input->GetMouseUp(MouseButtonType::LButton);
-            }
-            else if (key == DIK_MOUSERBUTTON)
-            {
-                mapping.buttonState[ButtonEventType::Down]
-                  = _input->GetMouseDown(MouseButtonType::RButton);
-                mapping.buttonState[ButtonEventType::Hold]
-                  = _input->GetMouseHold(MouseButtonType::RButton);
-                mapping.buttonState[ButtonEventType::Up] = _input->GetMouseUp(MouseButtonType::RButton);
-            }
-            else if (key == DIK_MOUSEWHEEL)
-            {
-                mapping.buttonState[ButtonEventType::Down]
-                  = _input->GetMouseDown(MouseButtonType::Wheel);
-                mapping.buttonState[ButtonEventType::Hold]
-                  = _input->GetMouseHold(MouseButtonType::Wheel);
-                mapping.buttonState[ButtonEventType::Up] = _input->GetMouseUp(MouseButtonType::Wheel);
+                mapping.buttonState[ButtonEventType::Down] = _input->GetMouseEvent(
+                  static_cast<uint16>(key - DIK_MOUSELBUTTON), ButtonEventType::Down);
+                mapping.buttonState[ButtonEventType::Hold] = _input->GetMouseEvent(
+                  static_cast<uint16>(key - DIK_MOUSELBUTTON), ButtonEventType::Hold);
+                mapping.buttonState[ButtonEventType::Up] = _input->GetMouseEvent(
+                  static_cast<uint16>(key - DIK_MOUSELBUTTON), ButtonEventType::Up);
             }
             else
             {
@@ -107,22 +92,12 @@ Vector2 InputSystem::GetMousePos() const
 
 Vector2 InputSystem::GetMouseMove() const
 {
-    return _input->GetMouseMove();
+    return _input->GetMouseDelta();
 }
 
-bool InputSystem::GetMouseDown(MouseButtonType::Type type) const
+bool InputSystem::GetMouseEvent(uint16 mouseButton, uint16 buttonEvent) const
 {
-    return _input->GetMouseDown(type);
-}
-
-bool InputSystem::GetMouseHold(MouseButtonType::Type type) const
-{
-    return _input->GetMouseHold(type);
-}
-
-bool InputSystem::GetMouseUp(MouseButtonType::Type type) const
-{
-    return _input->GetMouseUp(type);
+    return _input->GetMouseEvent(mouseButton, buttonEvent);
 }
 
 bool InputSystem::IsActiveContext(const std::string& name) const

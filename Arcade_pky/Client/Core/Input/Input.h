@@ -42,11 +42,8 @@ private:
     Vector2 _mouseWorldPosition;
     Vector2 _mouseDelta;
 
-    bool _mouseDown[MouseButtonType::End] = {};
-    bool _mouseHold[MouseButtonType::End] = {};
-    bool _mouseUp[MouseButtonType::End]   = {};
-
-    bool _mouseCompute = true;
+    uint16 _mouseEvents  = 0x00;
+    bool   _mouseCompute = true;
 
 public:
     bool Init();
@@ -56,20 +53,26 @@ public:
 
     bool GetKeyState(uint8 key);
 
-    bool GetMouseDown(MouseButtonType::Type type) const { return _mouseDown[type]; } // TODO 하나로
-    bool GetMouseHold(MouseButtonType::Type type) const { return _mouseHold[type]; }
-    bool GetMouseUp(MouseButtonType::Type type) const { return _mouseUp[type]; }
+    bool GetMouseEvent(uint16 mouseButton, uint16 buttonEvent) const
+    {
+        return _mouseEvents & (1 << buttonEvent) << (mouseButton << 2);
+    }
 
     Vector2 GetMouseWorldPosition() const { return _mouseWorldPosition; }
     Vector2 GetMousePosition() const { return _mousePosition; }
-    Vector2 GetMouseMove() const { return _mouseDelta; }
+    Vector2 GetMouseDelta() const { return _mouseDelta; }
 
 private:
+    void SetMouseEventOn(uint16 mouseButton, uint16 buttonEvent);
+    void SetMouseEventOff(uint16 mouseButton, uint16 buttonEvent);
+
     bool CreateInputDevice(
       ComPtr<IDirectInputDevice8W> device, GUID deviceGuid, LPCDIDATAFORMAT df);
     bool UpdateInputDevice(
       ComPtr<IDirectInputDevice8W> device, LPVOID deviceState, DWORD sizeOfDeviceState);
-    void  UpdateMousePosition(float deltaTime);
-    void  UpdateMouseState(float deltaTime);
+
+    void UpdateMousePosition(float deltaTime);
+    void UpdateMouseState(float deltaTime);
+
     uint8 ConvertKey(uint8 key);
 };

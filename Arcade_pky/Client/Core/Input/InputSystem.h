@@ -25,9 +25,7 @@ public:
     Vector2 GetMousePos() const;
     Vector2 GetMouseMove() const;
 
-    bool GetMouseDown(MouseButtonType::Type type) const;
-    bool GetMouseHold(MouseButtonType::Type type) const;
-    bool GetMouseUp(MouseButtonType::Type type) const;
+    bool GetMouseEvent(uint16 mouseButton, uint16 buttonEvent) const;
 
     bool IsActiveContext(const std::string& name) const;
 

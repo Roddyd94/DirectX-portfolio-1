@@ -283,6 +283,21 @@
     <ClInclude Include="Core\Input\InputComponent.h">
       <Filter>Input\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\EditorEngine.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorUI.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\PlayerController.h">
+      <Filter>Input\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Controller.h">
+      <Filter>Core\World\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Pawn.h">
+      <Filter>Core\World\Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -536,6 +551,21 @@
     <ClCompile Include="Core\Input\InputComponent.cpp">
       <Filter>Input\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\EditorEngine.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorUI.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input\PlayerController.cpp">
+      <Filter>Input\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Controller.cpp">
+      <Filter>Core\World\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Pawn.cpp">
+      <Filter>Core\World\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -699,6 +729,12 @@
     </Filter>
     <Filter Include="Input\InputSystem">
       <UniqueIdentifier>{295fd4bd-bb9b-4002-8747-ea2e1ba3a3c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{1ac0053f-e188-4023-88e6-6e74dc821645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Actor">
+      <UniqueIdentifier>{c3ecb1d2-45c3-4675-bf20-2bb1da26c2e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

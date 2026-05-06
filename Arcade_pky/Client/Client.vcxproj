@@ -396,6 +396,7 @@
     <ClInclude Include="Core\ColorConstantBuffer.h" />
     <ClInclude Include="Core\Component.h" />
     <ClInclude Include="Core\ConstantBuffer.h" />
+    <ClInclude Include="Core\Controller.h" />
     <ClInclude Include="Core\Defines.h" />
     <ClInclude Include="Core\DepthStencilState.h" />
     <ClInclude Include="Core\DeviceManager.h" />
@@ -410,6 +411,7 @@
     <ClInclude Include="Core\Input\InputComponent.h" />
     <ClInclude Include="Core\Input\InputContext.h" />
     <ClInclude Include="Core\Input\InputSystem.h" />
+    <ClInclude Include="Core\Input\PlayerController.h" />
     <ClInclude Include="Core\Input\Types.h" />
     <ClInclude Include="Core\Level.h" />
     <ClInclude Include="Core\Material.h" />
@@ -422,6 +424,7 @@
     <ClInclude Include="Core\MeshManager.h" />
     <ClInclude Include="Core\Object.h" />
     <ClInclude Include="Core\ObjectPool.h" />
+    <ClInclude Include="Core\Pawn.h" />
     <ClInclude Include="Core\Ptr.h" />
     <ClInclude Include="Core\Rendering.h" />
     <ClInclude Include="Core\RenderManager.h" />
@@ -493,6 +496,7 @@
     <ClCompile Include="Core\ColorConstantBuffer.cpp" />
     <ClCompile Include="Core\Component.cpp" />
     <ClCompile Include="Core\ConstantBuffer.cpp" />
+    <ClCompile Include="Core\Controller.cpp" />
     <ClCompile Include="Core\DepthStencilState.cpp" />
     <ClCompile Include="Core\DeviceManager.cpp" />
     <ClCompile Include="Core\DirectoryManager.cpp" />
@@ -504,6 +508,7 @@
     <ClCompile Include="Core\Input\InputComponent.cpp" />
     <ClCompile Include="Core\Input\InputContext.cpp" />
     <ClCompile Include="Core\Input\InputSystem.cpp" />
+    <ClCompile Include="Core\Input\PlayerController.cpp" />
     <ClCompile Include="Core\Level.cpp" />
     <ClCompile Include="Core\Material.cpp" />
     <ClCompile Include="Core\MaterialConstantBuffer.cpp" />
@@ -515,6 +520,7 @@
     <ClCompile Include="Core\MeshManager.cpp" />
     <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="Core\ObjectPool.cpp" />
+    <ClCompile Include="Core\Pawn.cpp" />
     <ClCompile Include="Core\RenderManager.cpp" />
     <ClCompile Include="Core\RenderState.cpp" />
     <ClCompile Include="Core\RenderStateManager.cpp" />
