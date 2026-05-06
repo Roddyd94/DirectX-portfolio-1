@@ -102,6 +102,11 @@ Ptr<ActorComponent> Actor::FindActorComponent(const std::string& name) const
     return nullptr;
 }
 
+const std::string& Actor::GetName() const
+{
+    return _name;
+}
+
 const Transform& Actor::GetWorldTransform() const
 {
     return _root->GetWorldTransform();
@@ -181,6 +186,11 @@ void Actor::SetRoot(const Ptr<SceneComponent> comp)
     }
 }
 
+void Actor::SetName(const std::string& name)
+{
+    _name = name;
+}
+
 void Actor::SetWorldTransform(const Transform& transform)
 {
     _root->SetWorldTransform(transform);
@@ -211,8 +221,7 @@ void Actor::SetRelativeTransform(const Transform& transform)
     _root->SetRelativeTransform(transform);
 }
 
-void Actor::SetRelativeTransform(
-  Vector3 position, Vector3 scale, Vector3 rotation)
+void Actor::SetRelativeTransform(Vector3 position, Vector3 scale, Vector3 rotation)
 {
     _root->SetRelativeTransform(position, scale, rotation);
 }

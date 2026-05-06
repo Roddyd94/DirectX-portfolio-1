@@ -7,9 +7,9 @@
 #include "Info.h"
 #include "Resource.h"
 
-#ifdef _EDITOR
+#ifdef _DEBUG
 #include "imgui/imgui_impl_win32.h"
-#endif // _EDITOR
+#endif // _DEBUG
 
 bool WindowsManager::Init(HINSTANCE inst, const wchar_t* name)
 {
@@ -95,9 +95,9 @@ int WindowsManager::Run()
 
 LRESULT WindowsManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-#ifdef _EDITOR
+#ifdef _DEBUG
     ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
-#endif // _EDITOR
+#endif // _DEBUG
 
     switch (message)
     {

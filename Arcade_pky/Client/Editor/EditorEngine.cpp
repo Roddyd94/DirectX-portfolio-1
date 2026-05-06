@@ -21,6 +21,7 @@ bool EditorEngine::Init()
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     ImGui_ImplWin32_Init(WindowsManager::Instance().GetHWND());
     ImGui_ImplDX11_Init(DEVICE.Get(), CONTEXT.Get());

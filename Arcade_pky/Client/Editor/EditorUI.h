@@ -1,6 +1,10 @@
 #pragma once
 #include "Core/Object.h"
 
+#ifdef _DEBUG
+#pragma comment(lib, "imgui-win32-dx11.lib")
+#endif // _DEBUG
+
 class EditorUI : public Object
 {
 public:

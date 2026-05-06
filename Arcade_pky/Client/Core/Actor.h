@@ -8,10 +8,11 @@ class Actor : public Object
     friend class Level;
 
 public:
-    Actor() = default;
+    Actor()           = default;
     ~Actor() override = default;
 
 protected:
+    std::string                                _name;
     std::unordered_map<std::string, int32>     _componentFinder;
     std::map<int32, Ptr<class ActorComponent>> _actorComponents;
     std::set<std::string>                      _tags;
@@ -21,10 +22,7 @@ protected:
     int32                                      _id                 = -1;
 
 public:
-    virtual bool Init(int32 id,
-      Vector3        position,
-      Vector3        scale,
-      Vector3        rotation);
+    virtual bool Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation);
     void         Destroy() override;
 
     virtual void Tick(float deltaTime);
@@ -41,31 +39,33 @@ public:
     Ptr<class ActorComponent> FindActorComponent(int32 id) const;
     Ptr<class ActorComponent> FindActorComponent(const std::string& name) const;
 
+    const std::string& GetName() const;
+
     const Transform& GetWorldTransform() const;
-    Vector3   GetWorldScale() const;
-    Vector3   GetWorldPosition() const;
-    Vector3   GetWorldRotation() const;
+    Vector3          GetWorldScale() const;
+    Vector3          GetWorldPosition() const;
+    Vector3          GetWorldRotation() const;
 
     const Transform& GetRelativeTransform() const;
-    Vector3   GetRelativeScale() const;
-    Vector3   GetRelativePosition() const;
-    Vector3   GetRelativeRotation() const;
+    Vector3          GetRelativeScale() const;
+    Vector3          GetRelativePosition() const;
+    Vector3          GetRelativeRotation() const;
 
     void AddTag(const std::string& tag);
 
     void SetLevel(Ptr<class Level> level);
     void SetRoot(const Ptr<class SceneComponent> comp);
 
+    void SetName(const std::string& name);
+
     void SetWorldTransform(const Transform& transform);
-    void SetWorldTransform(
-      Vector3 position, Vector3 scale, Vector3 rotation);
+    void SetWorldTransform(Vector3 position, Vector3 scale, Vector3 rotation);
     void SetWorldScale(Vector3 scale);
     void SetWorldPosition(Vector3 position);
     void SetWorldRotation(Vector3 rotation);
 
     void SetRelativeTransform(const Transform& transform);
-    void SetRelativeTransform(
-      Vector3 position, Vector3 scale, Vector3 rotation);
+    void SetRelativeTransform(Vector3 position, Vector3 scale, Vector3 rotation);
     void SetRelativeScale(Vector3 scale);
     void SetRelativePosition(Vector3 pos);
     void SetRelativeRotation(Vector3 rot);

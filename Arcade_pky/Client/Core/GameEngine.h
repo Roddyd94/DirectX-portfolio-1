@@ -3,9 +3,9 @@
 
 class GameEngine : public Singleton<GameEngine>
 {
-#ifdef _EDITOR
+#ifdef _DEBUG
     friend class EditorEngine;
-#endif // _EDITOR
+#endif // _DEBUG
 
     DECLARE_SINGLETON(GameEngine)
 private:

@@ -27,7 +27,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     WindowsManager::Instance().Init(hInstance, L"Arcade");
 
-#ifdef _EDITOR
+#ifdef _DEBUG
     WindowsManager::Instance().OnUpdate = [&]() -> void
     {
         EditorEngine::Instance().Logic();
@@ -45,7 +45,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     int result = GameEngine::Instance().Init();
     WindowsManager::Instance().Run();
     GameEngine::Instance().Destroy();
-#endif // _EDITOR
+#endif // _DEBUG
 
     return result;
 }

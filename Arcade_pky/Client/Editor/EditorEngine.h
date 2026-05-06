@@ -1,4 +1,5 @@
 #pragma once
+#include "EditorUI.h"
 #include "Core/Singleton.h"
 
 class EditorEngine : public Singleton<EditorEngine>
@@ -6,7 +7,7 @@ class EditorEngine : public Singleton<EditorEngine>
     DECLARE_SINGLETON(EditorEngine)
 
 private:
-    std::unordered_map<std::string, Ptr<class EditorUI>> _editorUIs;
+    std::unordered_map<std::string, Ptr<EditorUI>> _editorUIs;
 
 public:
     bool Init();

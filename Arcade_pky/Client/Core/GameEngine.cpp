@@ -95,9 +95,9 @@ void GameEngine::Render(float deltaTime)
     //_world->RenderUI(deltaTime);
     // DeviceManager::Instance().GetDefaultRenderTarget2D()->EndDraw();
 
-#ifndef _EDITOR
+#ifndef _DEBUG
     DeviceManager::Instance().Render();
-#endif // _EDITOR
+#endif // _DEBUG
 }
 
 bool GameEngine::InitManagers()
