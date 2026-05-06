@@ -470,3 +470,5 @@ FodyWeavers.xsd
 # debug information files
 *.dwo
 
+# imgui generated files
+imgui.ini
