@@ -10,15 +10,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Main\Header</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Defines.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Info.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Singleton.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\MemoryPool.h">
       <Filter>Core\Object\Memory</Filter>
     </ClInclude>
@@ -45,9 +36,6 @@
     </ClInclude>
     <ClInclude Include="Core\Vector4.h">
       <Filter>Core\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Types.h">
-      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\Ptr.h">
       <Filter>Core\Object\Memory</Filter>
@@ -87,9 +75,6 @@
     </ClInclude>
     <ClInclude Include="Core\DeviceManager.h">
       <Filter>Core\Rendering\DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\SubManager.h">
-      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\Resource.h">
       <Filter>Core\Resource</Filter>
@@ -322,6 +307,24 @@
     <ClInclude Include="AI\AIBoard.h">
       <Filter>AI\AIStateMachine</Filter>
     </ClInclude>
+    <ClInclude Include="Core\SoundComponent.h">
+      <Filter>Core\World\Component\SceneComponent\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Defines.h">
+      <Filter>Core\Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Info.h">
+      <Filter>Core\Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Singleton.h">
+      <Filter>Core\Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\SubManager.h">
+      <Filter>Core\Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Types.h">
+      <Filter>Core\Etc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -388,9 +391,6 @@
     </ClCompile>
     <ClCompile Include="Core\DeviceManager.cpp">
       <Filter>Core\Rendering\DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\SubManager.cpp">
-      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\Resource.cpp">
       <Filter>Core\Resource</Filter>
@@ -611,6 +611,12 @@
     <ClCompile Include="AI\AIBoard.cpp">
       <Filter>AI\AIStateMachine</Filter>
     </ClCompile>
+    <ClCompile Include="Core\SoundComponent.cpp">
+      <Filter>Core\World\Component\SceneComponent\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\SubManager.cpp">
+      <Filter>Core\Etc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -792,6 +798,12 @@
     </Filter>
     <Filter Include="AI\AIStateMachine">
       <UniqueIdentifier>{d4b8ae52-53d0-4f6a-8698-dc884fc0d8d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\World\Component\SceneComponent\Sound">
+      <UniqueIdentifier>{151caa57-a48a-4f15-9b9b-d2d79c346c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Etc">
+      <UniqueIdentifier>{4fbeaf0a-b589-4a09-bdb7-560d2cc82c06}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

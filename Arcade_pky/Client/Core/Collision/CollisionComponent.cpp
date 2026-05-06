@@ -143,7 +143,7 @@ void CollisionComponent::SetCollisionProfile(const std::string& name)
 
 bool CollisionComponent::Collision(Weak<CollisionComponent> other)
 {
-    return false; // 다른 충돌체에서 구현
+    return false;
 }
 
 void CollisionComponent::Invoke(

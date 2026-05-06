@@ -446,6 +446,7 @@
     <ClInclude Include="Core\ShaderManager.h" />
     <ClInclude Include="Core\Singleton.h" />
     <ClInclude Include="Core\Sound.h" />
+    <ClInclude Include="Core\SoundComponent.h" />
     <ClInclude Include="Core\SoundManager.h" />
     <ClInclude Include="Core\StaticMeshComponent.h" />
     <ClInclude Include="Core\StaticMeshShader.h" />
@@ -546,6 +547,7 @@
     <ClCompile Include="Core\Shader.cpp" />
     <ClCompile Include="Core\ShaderManager.cpp" />
     <ClCompile Include="Core\Sound.cpp" />
+    <ClCompile Include="Core\SoundComponent.cpp" />
     <ClCompile Include="Core\SoundManager.cpp" />
     <ClCompile Include="Core\StaticMeshComponent.cpp" />
     <ClCompile Include="Core\StaticMeshShader.cpp" />

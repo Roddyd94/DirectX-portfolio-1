@@ -10,8 +10,8 @@
 #include "TimeManager.h"
 #include "WindowsManager.h"
 #include "Common/LogManager.h"
+#include "Input/InputSystem.h"
 
-#include "Types.h" // TODO Remove later
 #include "World.h"
 #include "Common/Random.h" // TODO Remove later
 
@@ -46,8 +46,8 @@ void GameEngine::Destroy()
     ObjectPool::Instance().Destroy();
 #endif
 
-    //_input->Destroy();
-    // InputSystem::Instance().Destroy();
+    _input->Destroy();
+    InputSystem::Instance().Destroy();
 
     LogManager::Instance().Destroy();
     DirectoryManager::Instance().Destroy();
@@ -68,9 +68,8 @@ Ptr<class World> GameEngine::GetWorld() const
 
 void GameEngine::Tick(float deltaTime)
 {
-    // TODO _input->Tick(deltaTime);
-    // InputSystem::Instance().Tick(deltaTime);
-    // 상태를 갱신(down? hold? up?)
+    _input->Tick(deltaTime);
+    InputSystem::Instance().Tick(deltaTime);
 
     SOUND_MANAGER->Tick();
 
@@ -90,7 +89,6 @@ void GameEngine::Render(float deltaTime)
     DeviceManager::Instance().SetTarget();
 
     // DeviceManager::Instance().GetDefaultRenderTarget2D()->BeginDraw();
-    //_world->Render(deltaTime);
     RenderManager::Instance().Render(deltaTime);
     //_world->RenderUI(deltaTime);
     // DeviceManager::Instance().GetDefaultRenderTarget2D()->EndDraw();
@@ -125,11 +123,11 @@ bool GameEngine::InitManagers()
     if (!ResourceManager::Instance().Init())
         return false;
 
-    //_input = New<Input>();
-    //_input->Init();
+    _input = New<Input>();
+    _input->Init();
 
-    // if (!InputSystem::Instance().Init(_input))
-    //     return false;
+    if (!InputSystem::Instance().Init(_input))
+        return false;
 
     if (!RenderManager::Instance().Init())
         return false;

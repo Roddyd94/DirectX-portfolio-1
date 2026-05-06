@@ -10,7 +10,8 @@ class GameEngine : public Singleton<GameEngine>
     DECLARE_SINGLETON(GameEngine)
 private:
     Ptr<class World> _world;
-    // Ptr<class Input> _input;
+    Ptr<class Input> _input;
+
     float _clearColor[4] = {0.2f, 0.2f, 0.2f, 1.f};
 
 public:
