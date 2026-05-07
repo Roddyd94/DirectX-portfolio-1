@@ -21,6 +21,8 @@ void DirectoryManager::Init()
     RegisterPath("Logs");
     RegisterPath("HLSL");
     RegisterPath("Resources");
+    RegisterPath("Resources/Texture");
+    RegisterPath("Resources/Stage");
 }
 
 void DirectoryManager::Destroy()

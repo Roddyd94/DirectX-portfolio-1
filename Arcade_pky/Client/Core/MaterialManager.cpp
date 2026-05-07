@@ -10,8 +10,7 @@
 
 bool MaterialManager::Init()
 {
-    if (!CreateMaterial(
-          "DefaultMaterial", "StaticMeshShader", SamplerType::Point))
+    if (!CreateMaterial("DefaultMaterial", "StaticMeshShader", SamplerType::Point))
         return false;
 
     return true;
@@ -25,15 +24,20 @@ void MaterialManager::Destroy()
 
 Ptr<Material> MaterialManager::FindMaterial(const std::string& name)
 {
-    if (auto it = _materials.find(name); _materials.end() != it)
-        return it->second;
+    auto itFinder = _materialFinder.find(name);
+    if (_materialFinder.end() == itFinder)
+        return nullptr;
 
-    return nullptr;
+    int32 id         = itFinder->second;
+    auto  itMaterial = _materials.find(id);
+    if (_materials.end() == itMaterial)
+        return nullptr;
+
+    return itMaterial->second;
 }
 
-Ptr<Material> MaterialManager::CreateMaterial(const std::string& name,
-  const std::string& pixelShaderName,
-  uint8              samplerType)
+Ptr<Material> MaterialManager::CreateMaterial(
+  const std::string& name, const std::string& pixelShaderName, uint8 samplerType)
 {
     Ptr<Material> matFound = FindMaterial(name);
     if (matFound)
@@ -41,12 +45,14 @@ Ptr<Material> MaterialManager::CreateMaterial(const std::string& name,
 
     Ptr<Material> mat = New<Material>();
     mat->SetName(name);
+    mat->SetID(_idCounter);
     mat->SetSamplerType(samplerType);
     mat->SetPixelShader(pixelShaderName);
 
-    mat->_constantBuffer
-      = SHADER_MANAGER->FindConstantBuffer<MaterialConstantBuffer>("Material");
-    _materials[name] = mat;
+    mat->_constantBuffer   = SHADER_MANAGER->FindConstantBuffer<MaterialConstantBuffer>("Material");
+    _materials[_idCounter] = mat;
+    _materialFinder[name]  = _idCounter;
+    _idCounter++;
 
     return mat;
 }

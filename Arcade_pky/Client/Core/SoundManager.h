@@ -6,14 +6,19 @@
 class SoundManager : public SubManager
 {
 public:
-    SoundManager()          = default;
-    virtual ~SoundManager() = default;
+    SoundManager()           = default;
+    ~SoundManager() override = default;
+    DELETE_SPECIAL_FUNC(SoundManager)
 
 private:
-    FMOD::System*                                        _system;
-    FMOD::ChannelGroup*                                  _masterGroup;
-    std::unordered_map<std::string, Ptr<Sound>>          _sounds;
     std::unordered_map<std::string, FMOD::ChannelGroup*> _channelGroups;
+    std::unordered_map<std::string, int32>               _soundFinder;
+    std::map<int32, Ptr<Sound>>                          _sounds;
+
+    FMOD::System*       _system;
+    FMOD::ChannelGroup* _masterGroup;
+
+    int32 _idCounter = 0;
 
 public:
     bool Init() override;
@@ -23,11 +28,9 @@ public:
     Ptr<Sound> FindSound(const std::string& name);
 
     FMOD::ChannelGroup* CreateChannelGroup(const std::string& name);
-    Ptr<Sound>          LoadSound(const std::string& name,
-               const std::string&                    groupName,
-               bool                                  loop,
-               const char*                           fileName);
-    void                SetMasterVolume(float volume);
+    Ptr<Sound>          LoadSound(
+               const std::string& name, const std::string& groupName, bool loop, const char* fileName);
+    void SetMasterVolume(float volume);
     void SetGroupVolume(const std::string& groupName, float volume);
 
     void Play(const std::string& name);

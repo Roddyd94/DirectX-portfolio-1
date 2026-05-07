@@ -4,6 +4,7 @@
 #include "ShaderManager.h"
 #include "SoundManager.h"
 #include "TextureManager.h"
+#include "Animation/Animation2DManager.h"
 
 #include "Resource.h"
 #include "Singleton.h"
@@ -43,17 +44,25 @@ public:
     }
 };
 
-#define SHADER_MANAGER    ResourceManager::Instance().Get<ShaderManager>(ResourceType::Shader)
-#define TEXTURE_MANAGER   ResourceManager::Instance().Get<TextureManager>(ResourceType::Texture)
-#define MATERIAL_MANAGER  ResourceManager::Instance().Get<MaterialManager>(ResourceType::Material)
-#define MESH_MANAGER      ResourceManager::Instance().Get<MeshManager>(ResourceType::Mesh)
-#define ANIMATION_MANAGER ResourceManager::Instance().Get<AnimationManager>(ResourceType::Animation)
-#define SOUND_MANAGER     ResourceManager::Instance().Get<SoundManager>(ResourceType::Sound)
-#define FONT_MANAGER      ResourceManager::Instance().Get<FontManager>(ResourceType::Font)
+#define SHADER_MANAGER   ResourceManager::Instance().Get<ShaderManager>(ResourceType::Shader)
+#define TEXTURE_MANAGER  ResourceManager::Instance().Get<TextureManager>(ResourceType::Texture)
+#define MATERIAL_MANAGER ResourceManager::Instance().Get<MaterialManager>(ResourceType::Material)
+#define MESH_MANAGER     ResourceManager::Instance().Get<MeshManager>(ResourceType::Mesh)
+#define ANIMATION_MANAGER                                                                          \
+    ResourceManager::Instance().Get<Animation2DManager>(ResourceType::Animation)
+#define SOUND_MANAGER ResourceManager::Instance().Get<SoundManager>(ResourceType::Sound)
+#define FONT_MANAGER  ResourceManager::Instance().Get<FontManager>(ResourceType::Font)
 
 #define FIND_SHADER(x, T)           SHADER_MANAGER->FindShader<T>(x)
 #define FIND_CONSTANT_BUFFER(x, T)  SHADER_MANAGER->FindConstantBuffer<T>(x)
 #define FIND_STRUCTURE_BUFFER(x, T) SHADER_MANAGER->FindStructureBuffer<T>(x)
+
+#define FIND_SPRITESHEET(x)        ANIMATION_MANAGER->FindSpriteSheet(x)
+#define FIND_ANIMATION_CLIP(x)     ANIMATION_MANAGER->FindAnimationClip(x)
+#define FIND_ANIMATION_SEQUENCE(x) ANIMATION_MANAGER->FindAnimationSequence(x)
+
+#define FIND_TEXTURE(x) TEXTURE_MANAGER->FindTexture(x)
+#define FIND_SOUND(x)   SOUND_MANAGER->FindSound(x)
 
 #define MESH_LINE_RECT    MESH_MANAGER->FindMesh("FrameRect")
 #define MESH_LINE_SPHERE  MESH_MANAGER->FindMesh("FrameSphere")

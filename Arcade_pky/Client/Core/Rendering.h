@@ -7,23 +7,14 @@ struct TextureVertex
 
     TextureVertex(Vector3 pos, Vector2 uv) : pos(pos), uv(uv) {}
 
-    TextureVertex(float x, float y, float z, float u, float v)
-        : pos(x, y, z), uv(u, v)
-    {
-    }
+    TextureVertex(float x, float y, float z, float u, float v) : pos(x, y, z), uv(u, v) {}
 };
 
-struct TextureFrameData
+struct SpriteData
 {
     Vector2 start;
     Vector2 size;
-};
-
-struct AnimationFrameData
-{
-    TextureFrameData frame;
-    Vector2          pivot;
-    Vector2          meshSize;
+    // Vector2 pivot;
 };
 
 namespace ShaderType

@@ -22,9 +22,10 @@ public:
     void ResetState() override;
 
 public:
-    bool CreateState(bool alphaToCoverage, bool independent);
+    bool CreateState(bool alphaToCoverage, bool independent, D3D11_RENDER_TARGET_BLEND_DESC rtBlendDesc);
     void SetBlendFactor(float r, float g, float b, float a);
     void SetSampleMask(UINT mask);
+    void AddBlendDesc(D3D11_RENDER_TARGET_BLEND_DESC rtBlendDesc);
     void AddBlendDesc(bool enable,
       D3D11_BLEND          src,
       D3D11_BLEND          dest,

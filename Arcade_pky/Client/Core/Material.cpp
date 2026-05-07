@@ -32,10 +32,8 @@ void Material::SetSamplerType(uint8 type)
     _samplerType = type;
 }
 
-void Material::AddTexture(Ptr<Texture> texture,
-  int32                                registerNum,
-  uint32                               shaderBufferType,
-  uint32                               textureIndex)
+void Material::AddTexture(
+  Ptr<Texture> texture, int32 registerNum, uint32 shaderBufferType, uint32 textureIndex)
 {
     MaterialTextureInfo info;
     info.texture          = texture;
@@ -44,16 +42,14 @@ void Material::AddTexture(Ptr<Texture> texture,
     info.textureIndex     = textureIndex;
 
     auto cBuffer = Lock(_constantBuffer);
-    cBuffer->SetTextureWidth(texture->GetTexture(textureIndex)->width);
-    cBuffer->SetTextureHeight(texture->GetTexture(textureIndex)->height);
+    cBuffer->SetTextureWidth(texture->GetWidth());
+    cBuffer->SetTextureHeight(texture->GetHeight());
 
     _textureInfos.emplace_back(info);
 }
 
-void Material::AddTexture(const std::string& name,
-  int32                                     registerNum,
-  uint32                                     shaderBufferType,
-  uint32                                     textureIndex)
+void Material::AddTexture(
+  const std::string& name, int32 registerNum, uint32 shaderBufferType, uint32 textureIndex)
 {
     Ptr<Texture> texture = TEXTURE_MANAGER->FindTexture(name);
     if (nullptr == texture)
@@ -84,8 +80,8 @@ void Material::SetMaterial()
         if (nullptr == texture)
             continue;
 
-        texture->SetShader(textureInfo.registerNum,
-          textureInfo.shaderBufferType, textureInfo.textureIndex);
+        texture->SetShaderResource(
+          textureInfo.registerNum, textureInfo.shaderBufferType, textureInfo.textureIndex);
     }
 }
 
@@ -97,8 +93,7 @@ void Material::ResetMaterial()
         if (nullptr == texture)
             continue;
 
-        texture->ResetShader(
-          textureInfo.registerNum, textureInfo.shaderBufferType);
+        texture->ResetShaderResource(textureInfo.registerNum, textureInfo.shaderBufferType);
     }
 }
 

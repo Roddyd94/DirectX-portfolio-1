@@ -46,6 +46,7 @@ void SoundManager::Destroy()
     }
 
     _sounds.clear();
+    _soundFinder.clear();
     _channelGroups.clear();
     _system = nullptr;
 }
@@ -57,10 +58,16 @@ void SoundManager::Tick()
 
 Ptr<Sound> SoundManager::FindSound(const std::string& name)
 {
-    if (auto it = _sounds.find(name); _sounds.end() != it)
-        return it->second;
+    auto itFinder = _soundFinder.find(name);
+    if (_soundFinder.end() == itFinder)
+        return nullptr;
 
-    return nullptr;
+    int32 id      = itFinder->second;
+    auto  itSound = _sounds.find(id);
+    if (_sounds.end() == itSound)
+        return nullptr;
+
+    return itSound->second;
 }
 
 FMOD::ChannelGroup* SoundManager::CreateChannelGroup(const std::string& name)
@@ -69,8 +76,8 @@ FMOD::ChannelGroup* SoundManager::CreateChannelGroup(const std::string& name)
     if (nullptr != groupFound)
         return groupFound;
 
-    FMOD::ChannelGroup* group = nullptr;
-    FMOD_RESULT result = _system->createChannelGroup(name.c_str(), &group);
+    FMOD::ChannelGroup* group  = nullptr;
+    FMOD_RESULT         result = _system->createChannelGroup(name.c_str(), &group);
     if (result != FMOD_OK)
         return nullptr;
 
@@ -80,10 +87,8 @@ FMOD::ChannelGroup* SoundManager::CreateChannelGroup(const std::string& name)
     return group;
 }
 
-Ptr<Sound> SoundManager::LoadSound(const std::string& name,
-  const std::string&                                  groupName,
-  bool                                                loop,
-  const char*                                         fileName)
+Ptr<Sound> SoundManager::LoadSound(
+  const std::string& name, const std::string& groupName, bool loop, const char* fileName)
 {
     FMOD::ChannelGroup* group = FindChannelGroup(groupName);
     if (nullptr == group)
@@ -100,7 +105,12 @@ Ptr<Sound> SoundManager::LoadSound(const std::string& name,
         return nullptr;
     }
 
-    _sounds[name] = sound;
+    sound->SetName(name);
+    sound->SetID(_idCounter);
+    _sounds[_idCounter] = sound;
+    _soundFinder[name]  = _idCounter;
+    _idCounter++;
+
     return sound;
 }
 

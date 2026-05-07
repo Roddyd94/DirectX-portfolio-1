@@ -23,7 +23,7 @@ bool ResourceManager::Init()
     if (!RegisterManager<MeshManager>(ResourceType::Mesh))
         return false;
 
-    // if (!RegisterManager<AnimationManager>(ResourceType::Animation))
+    // if (!RegisterManager<Animation2DManager>(ResourceType::Animation))
     //     return false;
 
     if (!RegisterManager<SoundManager>(ResourceType::Sound))

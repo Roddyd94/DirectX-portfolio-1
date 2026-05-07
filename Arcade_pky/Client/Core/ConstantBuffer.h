@@ -1,7 +1,7 @@
 #pragma once
-#include "Object.h"
+#include "Resource.h"
 
-class ConstantBuffer : public Object
+class ConstantBuffer : public Resource
 {
 public:
     ConstantBuffer()           = default;

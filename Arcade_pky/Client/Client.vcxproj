@@ -388,6 +388,14 @@
     <ClInclude Include="Common\Random.h" />
     <ClInclude Include="Core\Actor.h" />
     <ClInclude Include="Core\ActorComponent.h" />
+    <ClInclude Include="Core\Animation\Animation2D.h" />
+    <ClInclude Include="Core\Animation\Animation2DConstantBuffer.h" />
+    <ClInclude Include="Core\Animation\Animation2DClip.h" />
+    <ClInclude Include="Core\Animation\Animation2DManager.h" />
+    <ClInclude Include="Core\Animation\Animation2DSequence.h" />
+    <ClInclude Include="Core\Animation\Animation2DSprite.h" />
+    <ClInclude Include="Core\Animation\SpriteComponent.h" />
+    <ClInclude Include="Core\Animation\SpriteShader.h" />
     <ClInclude Include="Core\BlendState.h" />
     <ClInclude Include="Core\Camera.h" />
     <ClInclude Include="Core\CameraComponent.h" />
@@ -473,6 +481,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Test\SnowBrosTileParser.h" />
     <ClInclude Include="Test\TestActor.h" />
     <ClInclude Include="Test\TestLevel.h" />
     <ClInclude Include="Tilemap\Tile.h" />
@@ -496,6 +505,14 @@
     <ClCompile Include="Common\LogManager.cpp" />
     <ClCompile Include="Core\Actor.cpp" />
     <ClCompile Include="Core\ActorComponent.cpp" />
+    <ClCompile Include="Core\Animation\Animation2D.cpp" />
+    <ClCompile Include="Core\Animation\Animation2DConstantBuffer.cpp" />
+    <ClCompile Include="Core\Animation\Animation2DClip.cpp" />
+    <ClCompile Include="Core\Animation\Animation2DManager.cpp" />
+    <ClCompile Include="Core\Animation\Animation2DSequence.cpp" />
+    <ClCompile Include="Core\Animation\Animation2DSprite.cpp" />
+    <ClCompile Include="Core\Animation\SpriteComponent.cpp" />
+    <ClCompile Include="Core\Animation\SpriteShader.cpp" />
     <ClCompile Include="Core\BlendState.cpp" />
     <ClCompile Include="Core\Camera.cpp" />
     <ClCompile Include="Core\CameraComponent.cpp" />
@@ -580,6 +597,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Test\SnowBrosTileParser.cpp" />
     <ClCompile Include="Test\TestActor.cpp" />
     <ClCompile Include="Test\TestLevel.cpp" />
     <ClCompile Include="Tilemap\Tile.cpp" />
@@ -627,6 +645,38 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">FrameMeshVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\Sprite.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SpriteVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">SpriteVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">SpriteVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SpriteVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">SpriteVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SpriteVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">SpriteVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">SpriteVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SpriteVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">SpriteVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">5.0</ShaderModel>
     </FxCompile>

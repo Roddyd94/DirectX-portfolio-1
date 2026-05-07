@@ -1,7 +1,7 @@
 #pragma once
-#include "Object.h"
+#include "Resource.h"
 
-class StructureBuffer : public Object
+class StructureBuffer : public Resource
 {
 public:
     StructureBuffer()           = default;

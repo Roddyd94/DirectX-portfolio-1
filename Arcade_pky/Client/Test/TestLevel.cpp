@@ -2,8 +2,10 @@
 
 #include "TestLevel.h"
 
+#include "SnowBrosTileParser.h"
 #include "TestActor.h"
 #include "Core/Camera.h"
+#include "Tilemap/Tile.h"
 #include "Tilemap/Tilemap.h"
 
 bool TestLevel::Init(Ptr<World> world, const std::string& path)
@@ -20,13 +22,34 @@ bool TestLevel::Init(Ptr<World> world, const std::string& path)
     position.y = -6.5f;
 
     Ptr<Tilemap> tilemap = SpawnActor<Tilemap>(position, scale, rotation);
-    tilemap->SetTexture("Tile", L"TileSet.png");
+    tilemap->SetTexture("Tile", L"snowbros_stages_flat.png");
     tilemap->CreateTile(16, 14, {1.f, 1.f}, 0);
-    tilemap->AddTileFrame(0.f, 0.f, 64.f, 64.f);
-    tilemap->AddTileFrame(0.f, 64.f, 64.f, 64.f);
-    tilemap->AddTileFrame(0.f, 128.f, 64.f, 64.f);
-    tilemap->AddTileFrame(0.f, 192.f, 64.f, 64.f);
-    tilemap->AddTileFrame(0.f, 256.f, 64.f, 64.f);
+
+    float tileSize = 16.f;
+
+    for (size_t i = 0; i < 12; i++)
+    {
+        for (size_t j = 0; j < 13; j++)
+        {
+            float startX = tileSize * j;
+            float startY = tileSize * i;
+            tilemap->AddTileSprite(startX, startY, tileSize, tileSize);
+        }
+    }
+
+    int32 tileCount = 12 * 13;
+
+    byte stageData[224] = {};
+    SnowBrosTileParser::ParseStageData(L"snowbros_stage_3.bin", stageData, 224);
+
+    for (size_t i = 0; i < 14; i++)
+    {
+        for (size_t j = 0; j < 16; j++)
+        {
+            Ptr<Tile> tile = tilemap->GetTile((13 - i) * 16 + j);
+            tile->SetTextureFrame(stageData[i * 16 + j]);
+        }
+    }
 
     return true;
 }

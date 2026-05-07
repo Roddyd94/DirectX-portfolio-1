@@ -18,18 +18,26 @@ void TextureManager::Destroy()
 {
     for (auto& [_, texture] : _textures)
         DESTROY(texture)
+
+    _textures.clear();
+    _textureFinder.clear();
 }
 
 Ptr<Texture> TextureManager::FindTexture(const std::string& name)
 {
-    if (auto it = _textures.find(name); _textures.end() != it)
-        return it->second;
+    auto itFinder = _textureFinder.find(name);
+    if (_textureFinder.end() == itFinder)
+        return nullptr;
 
-    return nullptr;
+    int32 id        = itFinder->second;
+    auto  itTexture = _textures.find(id);
+    if (_textures.end() == itTexture)
+        return nullptr;
+
+    return itTexture->second;
 }
 
-Ptr<Texture> TextureManager::LoadTexture(
-  const std::string& name, const std::wstring& fileName)
+Ptr<Texture> TextureManager::LoadTexture(const std::string& name, const std::wstring& fileName)
 {
     Ptr<Texture> texture = FindTexture(name);
     if (texture)
@@ -43,7 +51,10 @@ Ptr<Texture> TextureManager::LoadTexture(
     }
 
     texture->SetName(name);
-    _textures[name] = texture;
+    texture->SetID(_idCounter);
+    _textures[_idCounter] = texture;
+    _textureFinder[name]  = _idCounter;
+    _idCounter++;
 
-    return _textures[name];
+    return texture;
 }

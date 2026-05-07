@@ -119,10 +119,7 @@ protected:
     {
         Ptr<T> comp = New<T>();
         if (!comp->Init(_componentIDCounter, name, This<Actor>()))
-        {
-            comp->Destroy();
-            Delete(comp);
-        }
+            DESTROY(comp)
 
         _componentFinder[name] = _componentIDCounter;
         _componentIDCounter++;

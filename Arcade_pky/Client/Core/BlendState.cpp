@@ -10,23 +10,23 @@ BlendState::~BlendState() {}
 
 void BlendState::SetState()
 {
-    CONTEXT->OMGetBlendState((ID3D11BlendState**)_prevState.GetAddressOf(),
-      _previousBlendFactor, &_previousSampleMask);
-    CONTEXT->OMSetBlendState(
-      (ID3D11BlendState*)_state.Get(), _blendFactor, _sampleMask);
+    CONTEXT->OMGetBlendState(
+      (ID3D11BlendState**)_prevState.GetAddressOf(), _previousBlendFactor, &_previousSampleMask);
+    CONTEXT->OMSetBlendState((ID3D11BlendState*)_state.Get(), _blendFactor, _sampleMask);
 }
 
 void BlendState::ResetState()
 {
-    CONTEXT->OMSetBlendState((ID3D11BlendState*)_prevState.Get(),
-      _previousBlendFactor, _previousSampleMask);
+    CONTEXT->OMSetBlendState(
+      (ID3D11BlendState*)_prevState.Get(), _previousBlendFactor, _previousSampleMask);
 
     _prevState = nullptr;
 }
 
 void BlendState::Destroy() {}
 
-bool BlendState::CreateState(bool alphaToCoverage, bool independent)
+bool BlendState::CreateState(
+  bool alphaToCoverage, bool independent, D3D11_RENDER_TARGET_BLEND_DESC rtBlendDesc)
 {
     if (_descs.empty())
         return false;
@@ -37,23 +37,11 @@ bool BlendState::CreateState(bool alphaToCoverage, bool independent)
     desc.IndependentBlendEnable = independent;
 
     for (int i = 0; i < 8; ++i)
-    {
-        desc.RenderTarget[i].BlendEnable    = false;
-        desc.RenderTarget[i].SrcBlend       = D3D11_BLEND_ONE;
-        desc.RenderTarget[i].DestBlend      = D3D11_BLEND_ZERO;
-        desc.RenderTarget[i].BlendOp        = D3D11_BLEND_OP_ADD;
-        desc.RenderTarget[i].SrcBlendAlpha  = D3D11_BLEND_ONE;
-        desc.RenderTarget[i].DestBlendAlpha = D3D11_BLEND_ZERO;
-        desc.RenderTarget[i].BlendOpAlpha   = D3D11_BLEND_OP_ADD;
-        desc.RenderTarget[i].RenderTargetWriteMask
-          = D3D11_COLOR_WRITE_ENABLE_ALL;
-    }
+        desc.RenderTarget[i] = rtBlendDesc;
 
-    memcpy(desc.RenderTarget, &_descs[0],
-      sizeof(D3D11_RENDER_TARGET_BLEND_DESC) * _descs.size());
+    memcpy(desc.RenderTarget, &_descs[0], sizeof(D3D11_RENDER_TARGET_BLEND_DESC) * _descs.size());
 
-    if (FAILED(DEVICE->CreateBlendState(
-          &desc, (ID3D11BlendState**)_state.GetAddressOf())))
+    if (FAILED(DEVICE->CreateBlendState(&desc, (ID3D11BlendState**)_state.GetAddressOf())))
         return false;
 
     return true;
@@ -70,6 +58,11 @@ void BlendState::SetBlendFactor(float r, float g, float b, float a)
 void BlendState::SetSampleMask(UINT mask)
 {
     _sampleMask = mask;
+}
+
+void BlendState::AddBlendDesc(D3D11_RENDER_TARGET_BLEND_DESC rtBlendDesc)
+{
+    _descs.emplace_back(rtBlendDesc);
 }
 
 void BlendState::AddBlendDesc(bool enable,

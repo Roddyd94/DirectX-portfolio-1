@@ -7,7 +7,10 @@ public:
     ~MeshManager() override = default;
     DELETE_SPECIAL_FUNC(MeshManager)
 private:
-    std::unordered_map<std::string, Ptr<class Mesh>> _meshes;
+    std::unordered_map<std::string, int32> _meshFinder;
+    std::map<int32, Ptr<class Mesh>>       _meshes;
+
+    int32 _idCounter = 0;
 
 public:
     bool Init() override;
@@ -23,6 +26,6 @@ public:
       void*                                       indexData  = nullptr,
       uint32                                      indexSize  = 0,
       int32                                       indexCount = 0,
-      DXGI_FORMAT                                 fmt = DXGI_FORMAT_UNKNOWN,
-      D3D11_USAGE indexUsage                          = D3D11_USAGE_DEFAULT);
+      DXGI_FORMAT                                 fmt        = DXGI_FORMAT_UNKNOWN,
+      D3D11_USAGE                                 indexUsage = D3D11_USAGE_DEFAULT);
 };

@@ -16,8 +16,7 @@ public:
     void Destroy() override;
 
 public:
-    void SetBlendFactor(
-      const std::string& name, float r, float g, float b, float a);
+    void SetBlendFactor(const std::string& name, float r, float g, float b, float a);
     void SetSampleMask(const std::string& name, UINT mask);
     void AddBlendDesc(const std::string& name,
       bool                               enable,
@@ -28,20 +27,23 @@ public:
       D3D11_BLEND                        destAlpha,
       D3D11_BLEND_OP                     alphaOp,
       UINT8                              renderTargetWriteMask);
-    bool CreateState(
-      const std::string& name, bool alphaToCoverage, bool independent);
+    void AddBlendDesc(const std::string& name, D3D11_RENDER_TARGET_BLEND_DESC rtBlendDesc);
+    bool CreateState(const std::string& name,
+      bool                              alphaToCoverage,
+      bool                              independent,
+      D3D11_RENDER_TARGET_BLEND_DESC    rtBlendDesc);
 
     bool CreateDepthStencilState(const std::string& name,
-      bool                                          depthEnable = true,
-      D3D11_DEPTH_WRITE_MASK depthWriteMask  = D3D11_DEPTH_WRITE_MASK_ALL,
-      D3D11_COMPARISON_FUNC  depthFunc       = D3D11_COMPARISON_LESS,
-      bool                   stencilEnable   = false,
-      UINT8                  stencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK,
-      UINT8 stencilWriteMask                 = D3D11_DEFAULT_STENCIL_WRITE_MASK,
-      D3D11_DEPTH_STENCILOP_DESC frontFace   = {D3D11_STENCIL_OP_KEEP,
-          D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_KEEP, D3D11_COMPARISON_ALWAYS},
-      D3D11_DEPTH_STENCILOP_DESC backFace    = {D3D11_STENCIL_OP_KEEP,
-           D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_KEEP, D3D11_COMPARISON_ALWAYS});
+      bool                                          depthEnable    = true,
+      D3D11_DEPTH_WRITE_MASK                        depthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL,
+      D3D11_COMPARISON_FUNC                         depthFunc      = D3D11_COMPARISON_LESS,
+      bool                                          stencilEnable  = false,
+      UINT8                      stencilReadMask  = D3D11_DEFAULT_STENCIL_READ_MASK,
+      UINT8                      stencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK,
+      D3D11_DEPTH_STENCILOP_DESC frontFace        = {D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_KEEP,
+               D3D11_STENCIL_OP_KEEP, D3D11_COMPARISON_ALWAYS},
+      D3D11_DEPTH_STENCILOP_DESC backFace         = {D3D11_STENCIL_OP_KEEP, D3D11_STENCIL_OP_KEEP,
+                D3D11_STENCIL_OP_KEEP, D3D11_COMPARISON_ALWAYS});
 
     template <typename T>
     Ptr<T> FindRenderState(const std::string& name)

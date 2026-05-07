@@ -21,14 +21,6 @@ cbuffer FrameMesh : register(b0)
 }
 // !PIXEL CONSTANT BUFFER
 
-/*cbuffer Animation2D : register(b1)
-{
-    float2 gAnim2DLTUV;
-    float2 gAnim2DRBUV;
-    int gAnimFilp;
-    float3 gAnimEmpty;
-}*/
-
 // GLOBAL SAMPLER AND TEXTURE
 SamplerState gBaseSampler : register(s0);
 Texture2D gBaseTexture : register(t0);

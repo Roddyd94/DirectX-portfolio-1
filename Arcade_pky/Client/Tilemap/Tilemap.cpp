@@ -29,8 +29,7 @@ void Tilemap::Collision(float deltaTime)
     Actor::Collision(deltaTime);
 }
 
-void Tilemap::CreateTile(
-  int32 countX, int32 countY, Vector2 tileSize, int32 textureFrameIndex)
+void Tilemap::CreateTile(int32 countX, int32 countY, Vector2 tileSize, int32 textureFrameIndex)
 {
     _tileComponent->CreateTile(countX, countY, tileSize, textureFrameIndex);
 }
@@ -50,12 +49,17 @@ void Tilemap::SetTexture(const std::string& name, const std::wstring& fileName)
     _tileComponent->SetTexture(name, fileName);
 }
 
-void Tilemap::AddTileFrame(Vector2 start, Vector2 size)
+void Tilemap::AddTileSprite(Vector2 start, Vector2 size)
 {
-    _tileComponent->AddTileFrame(start, size);
+    _tileComponent->AddTileSprite(start, size);
 }
 
-void Tilemap::AddTileFrame(float startX, float startY, float sizeX, float sizeY)
+void Tilemap::AddTileSprite(float startX, float startY, float sizeX, float sizeY)
 {
-    _tileComponent->AddTileFrame(startX, startY, sizeX, sizeY);
+    _tileComponent->AddTileSprite(startX, startY, sizeX, sizeY);
+}
+
+Ptr<class Tile> Tilemap::GetTile(int32 index)
+{
+    return _tileComponent->GetTile(index);
 }

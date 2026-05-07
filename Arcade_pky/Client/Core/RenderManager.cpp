@@ -24,7 +24,7 @@ bool RenderManager::Init()
         return false;
 
     _alphaBlend
-      = _renderStateManager->FindRenderState<BlendState>("AlphaBlend");
+      = _renderStateManager->FindRenderState<BlendState>("PMA");
     _depthStencilState
       = _renderStateManager->FindRenderState<DepthStencilState>("DepthStencil");
 

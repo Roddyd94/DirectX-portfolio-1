@@ -137,13 +137,13 @@
       <Filter>Core\Rendering\Render</Filter>
     </ClInclude>
     <ClInclude Include="Core\BlendState.h">
-      <Filter>Core\Rendering\Render\BlendState</Filter>
+      <Filter>Core\Rendering\Render\RenderState</Filter>
     </ClInclude>
     <ClInclude Include="Core\DepthStencilState.h">
-      <Filter>Core\Rendering\Render\BlendState</Filter>
+      <Filter>Core\Rendering\Render\RenderState</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderState.h">
-      <Filter>Core\Rendering\Render\BlendState</Filter>
+      <Filter>Core\Rendering\Render\RenderState</Filter>
     </ClInclude>
     <ClInclude Include="Core\Actor.h">
       <Filter>Core\World\Actor</Filter>
@@ -325,6 +325,33 @@
     <ClInclude Include="Core\Types.h">
       <Filter>Core\Etc</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Animation\Animation2DSequence.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Animation\Animation2DClip.h">
+      <Filter>Animation\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Animation\Animation2DManager.h">
+      <Filter>Animation\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Animation\Animation2DSprite.h">
+      <Filter>Animation\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Animation\Animation2D.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Animation\Animation2DConstantBuffer.h">
+      <Filter>Animation\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Test\SnowBrosTileParser.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Animation\SpriteComponent.h">
+      <Filter>Animation\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Animation\SpriteShader.h">
+      <Filter>Animation\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -447,13 +474,13 @@
       <Filter>Core\Rendering\Render</Filter>
     </ClCompile>
     <ClCompile Include="Core\BlendState.cpp">
-      <Filter>Core\Rendering\Render\BlendState</Filter>
+      <Filter>Core\Rendering\Render\RenderState</Filter>
     </ClCompile>
     <ClCompile Include="Core\DepthStencilState.cpp">
-      <Filter>Core\Rendering\Render\BlendState</Filter>
+      <Filter>Core\Rendering\Render\RenderState</Filter>
     </ClCompile>
     <ClCompile Include="Core\RenderState.cpp">
-      <Filter>Core\Rendering\Render\BlendState</Filter>
+      <Filter>Core\Rendering\Render\RenderState</Filter>
     </ClCompile>
     <ClCompile Include="Core\Actor.cpp">
       <Filter>Core\World\Actor</Filter>
@@ -617,6 +644,33 @@
     <ClCompile Include="Core\SubManager.cpp">
       <Filter>Core\Etc</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Animation\Animation2DSequence.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Animation\Animation2DClip.cpp">
+      <Filter>Animation\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Animation\Animation2DManager.cpp">
+      <Filter>Animation\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Animation\Animation2DSprite.cpp">
+      <Filter>Animation\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Animation\Animation2D.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Animation\Animation2DConstantBuffer.cpp">
+      <Filter>Animation\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Test\SnowBrosTileParser.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Animation\SpriteComponent.cpp">
+      <Filter>Animation\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Animation\SpriteShader.cpp">
+      <Filter>Animation\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -670,9 +724,6 @@
     <Filter Include="Core\Resource\Font">
       <UniqueIdentifier>{18db1a55-348f-4ed3-8a67-98d67b886fb0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Resource\Animation">
-      <UniqueIdentifier>{fc619711-8ec6-402c-b8ef-8b23addace81}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Resource\Material">
       <UniqueIdentifier>{86a52ab0-7dfe-411b-97af-162100dd32dc}</UniqueIdentifier>
     </Filter>
@@ -702,9 +753,6 @@
     </Filter>
     <Filter Include="Core\Rendering\Render">
       <UniqueIdentifier>{91a18530-1525-4676-8457-8eb6ef0fc888}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Rendering\Render\BlendState">
-      <UniqueIdentifier>{f2a14541-ce4a-42f2-9a2d-7ef52d5a3f23}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Rendering\DirectX">
       <UniqueIdentifier>{ac612413-379c-4a11-9ad7-014ac2a678cb}</UniqueIdentifier>
@@ -805,6 +853,27 @@
     <Filter Include="Core\Etc">
       <UniqueIdentifier>{4fbeaf0a-b589-4a09-bdb7-560d2cc82c06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{8beee01b-8dcb-447c-acb2-4a2396201b7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation\Resource">
+      <UniqueIdentifier>{3001cafa-9b1e-44fb-a443-ff62e8284aad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation\Buffer">
+      <UniqueIdentifier>{6b6ba63c-e26a-4f8c-9569-5026dff3c1a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Rendering\Render\RenderState">
+      <UniqueIdentifier>{f2a14541-ce4a-42f2-9a2d-7ef52d5a3f23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation\Component">
+      <UniqueIdentifier>{e59267c3-f24c-4143-978d-b9661189c501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation\Shader">
+      <UniqueIdentifier>{30da2f30-db75-4dae-ac61-aa9da62efe76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation\HLSL">
+      <UniqueIdentifier>{ea91eab1-9380-43bc-b73d-279ee11c5857}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -826,6 +895,9 @@
     </FxCompile>
     <FxCompile Include="..\HLSL\TileOutlineInstance.fx">
       <Filter>Tilemap\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\Sprite.fx">
+      <Filter>Animation\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

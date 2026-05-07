@@ -10,7 +10,7 @@ public:
 
 protected:
     std::vector<Ptr<class Tile>>  _tiles;
-    std::vector<TextureFrameData> _tileFrames;
+    std::vector<SpriteData> _tileSprites;
 
     Ptr<class Mesh>                _tileMesh;
     Ptr<class Texture>             _tileTexture;
@@ -46,7 +46,7 @@ public:
 public:
     int32 GetTileFrameCount() const
     {
-        return static_cast<int32>(_tileFrames.size());
+        return static_cast<int32>(_tileSprites.size());
     }
 
     Vector2 GetTileSize() const { return _tileSize; }
@@ -72,8 +72,8 @@ public:
     void SetTexture(const std::string& name);
     void SetTexture(const std::string& name, const std::wstring& fileName);
 
-    void AddTileFrame(Vector2 start, Vector2 size);
-    void AddTileFrame(float startX, float startY, float sizeX, float sizeY);
+    void AddTileSprite(Vector2 start, Vector2 size);
+    void AddTileSprite(float startX, float startY, float sizeX, float sizeY);
 
     void RefreshTileInstance(bool refresh)
     {

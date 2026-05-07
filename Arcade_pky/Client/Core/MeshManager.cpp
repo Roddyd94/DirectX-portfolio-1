@@ -15,9 +15,9 @@ bool MeshManager::Init()
     };
 
     uint16 frameRectIndices[5]{0, 1, 3, 2, 0};
-    if (!CreateMesh("FrameRect", frameRectVertices, sizeof(Vector3), 4,
-          D3D11_USAGE_DEFAULT, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
-          frameRectIndices, sizeof(uint16), 5, DXGI_FORMAT_R16_UINT))
+    if (!CreateMesh("FrameRect", frameRectVertices, sizeof(Vector3), 4, D3D11_USAGE_DEFAULT,
+          D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP, frameRectIndices, sizeof(uint16), 5,
+          DXGI_FORMAT_R16_UINT))
         return false;
 
     Vector3 sphereVertices[36] = {};
@@ -35,22 +35,20 @@ bool MeshManager::Init()
         sphereIndices[i] = i;
     }
     sphereIndices[36] = 0;
-    if (!CreateMesh("FrameSphere", sphereVertices, sizeof(Vector3), 36,
-          D3D11_USAGE_DEFAULT, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
-          sphereIndices, sizeof(uint16), 37, DXGI_FORMAT_R16_UINT))
+    if (!CreateMesh("FrameSphere", sphereVertices, sizeof(Vector3), 36, D3D11_USAGE_DEFAULT,
+          D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP, sphereIndices, sizeof(uint16), 37,
+          DXGI_FORMAT_R16_UINT))
         return false;
 
-    TextureVertex textureRectVertices[4]{
-      TextureVertex(-0.5f, 0.5f, 0.f, 0.f, 0.f),
-      TextureVertex(0.5f, 0.5f, 0.f, 1.f, 0.f),
-      TextureVertex(-0.5f, -0.5f, 0.f, 0.f, 1.f),
+    TextureVertex textureRectVertices[4]{TextureVertex(-0.5f, 0.5f, 0.f, 0.f, 0.f),
+      TextureVertex(0.5f, 0.5f, 0.f, 1.f, 0.f), TextureVertex(-0.5f, -0.5f, 0.f, 0.f, 1.f),
       TextureVertex(0.5f, -0.5f, 0.f, 1.f, 1.f)};
 
     uint16 textureRectIndices[6]{0, 1, 3, 0, 3, 2};
 
-    if (!CreateMesh("TextureRect", textureRectVertices, sizeof(TextureVertex),
-          4, D3D11_USAGE_DEFAULT, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-          textureRectIndices, sizeof(uint16), 6, DXGI_FORMAT_R16_UINT))
+    if (!CreateMesh("TextureRect", textureRectVertices, sizeof(TextureVertex), 4,
+          D3D11_USAGE_DEFAULT, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, textureRectIndices,
+          sizeof(uint16), 6, DXGI_FORMAT_R16_UINT))
         return false;
 
     return true;
@@ -71,10 +69,16 @@ void MeshManager::Destroy()
 
 Ptr<Mesh> MeshManager::FindMesh(const std::string& name)
 {
-    if (auto it = _meshes.find(name); _meshes.end() != it)
-        return it->second;
+    auto itFinder = _meshFinder.find(name);
+    if (_meshFinder.end() == itFinder)
+        return nullptr;
 
-    return nullptr;
+    int32 id     = itFinder->second;
+    auto  itMesh = _meshes.find(id);
+    if (_meshes.end() == itMesh)
+        return nullptr;
+
+    return itMesh->second;
 }
 
 Ptr<Mesh> MeshManager::CreateMesh(const std::string& name,
@@ -94,13 +98,18 @@ Ptr<Mesh> MeshManager::CreateMesh(const std::string& name,
         return meshFound;
 
     Ptr<Mesh> mesh = New<Mesh>();
-    if (!mesh->CreateMesh(vertexData, size, count, vertexUsage, primitive,
-          indexData, indexSize, indexCount, fmt, indexUsage))
+    if (!mesh->CreateMesh(vertexData, size, count, vertexUsage, primitive, indexData, indexSize,
+          indexCount, fmt, indexUsage))
     {
         DESTROY(mesh)
         return nullptr;
     }
 
-    _meshes[name] = mesh;
+    mesh->SetName(name);
+    mesh->SetID(_idCounter);
+    _meshes[_idCounter] = mesh;
+    _meshFinder[name]   = _idCounter;
+    _idCounter++;
+
     return mesh;
 }
