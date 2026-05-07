@@ -17,7 +17,8 @@ void Pawn::Destroy()
     if (!level)
         return;
 
-    level->RemoveActor(_controller->GetActorID());
+    _controller->SetActive(false);
+    //level->RemoveActor(_controller->GetActorID());
 }
 
 void Pawn::Tick(float deltaTime)
