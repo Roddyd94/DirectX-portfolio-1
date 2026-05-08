@@ -21,7 +21,7 @@ public:
     void Update() override;
 
     int32 GetElementCount() const override;
-    void   Clear() override;
+    void  Clear() override;
 
     void AddData(Vector4 color, Vector2 worldPos, Vector2 size);
 };

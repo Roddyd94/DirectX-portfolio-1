@@ -77,7 +77,7 @@ bool GraphicShader::LoadVertexShader(
           _vsBlob.GetAddressOf(), &errorBlob)))
     {
 #ifdef _DEBUG
-        char errorText[255] = {};
+        char errorText[1024] = {};
         strcpy_s(errorText, (const char*)errorBlob->GetBufferPointer());
         LogManager::Instance().Debug(errorText);
 #endif

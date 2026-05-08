@@ -32,6 +32,7 @@ bool TilemapComponent::Init(int32 componentID, const std::string& name, Ptr<clas
     _tileInstanceShader  = FIND_SHADER("TileInstanceShader", TileInstanceShader);
 
 #ifdef _DEBUG
+    _shouldRenderOutline        = true;
     _tileOutlineMesh            = MESH_LINE_RECT;
     _tileOutlineConstantBuffer  = CONSTANT_BUFFER_COLOR;
     _tileOutlineStructureBuffer = FIND_STRUCTURE_BUFFER("TileOutline", TileOutlineStructureBuffer);
@@ -173,15 +174,16 @@ void TilemapComponent::CreateTile(
             tile->_position.x = j * _tileSize.x;
             tile->_position.y = i * _tileSize.y;
 
-            tile->_size       = _tileSize;
-            tile->_center     = tile->_position + tileSize * 0.5f;
-            tile->_frameIndex = textureFrameIndex;
+            tile->_size        = _tileSize;
+            tile->_center      = tile->_position + tileSize * 0.5f;
+            tile->_spriteIndex = textureFrameIndex;
 
             _tiles[i * _countX + j] = tile;
         }
     }
 
     RefreshTileInstance(true);
+    RefreshTileOutlineInstance(true);
 }
 
 void TilemapComponent::SetTexture(Ptr<class Texture> texture)
@@ -192,6 +194,7 @@ void TilemapComponent::SetTexture(Ptr<class Texture> texture)
     _tileTextureSize.y = static_cast<float>(_tileTexture->GetHeight());
 
     RefreshTileInstance(true);
+    RefreshTileOutlineInstance(true);
 }
 
 void TilemapComponent::SetTexture(const std::string& name)
@@ -227,6 +230,7 @@ void TilemapComponent::AddTileSprite(float startX, float startY, float sizeX, fl
     _tileSprites.push_back(sprite);
 
     RefreshTileInstance(true);
+    RefreshTileOutlineInstance(true);
 }
 
 void TilemapComponent::RenderTile()
@@ -255,17 +259,17 @@ void TilemapComponent::RenderTile()
                 int32     index = i * _countX + j;
                 Ptr<Tile> tile  = _tiles[index];
 
-                int32 frameIndex = tile->GetTextureFrameIndex();
-                if (frameIndex < 0 || frameIndex >= _tileSprites.size())
+                int32 spriteIndex = tile->GetSpriteIndex();
+                if (spriteIndex < 0 || spriteIndex >= _tileSprites.size())
                     continue;
 
                 std::optional<Vector2> worldPos = GetTileWorldPos(index);
 
                 Vector2 uvLT, uvRB;
-                uvLT.x = _tileSprites[frameIndex].start.x / _tileTextureSize.x;
-                uvLT.y = _tileSprites[frameIndex].start.y / _tileTextureSize.y;
-                uvRB.x = uvLT.x + _tileSprites[frameIndex].size.x / _tileTextureSize.x;
-                uvRB.y = uvLT.y + _tileSprites[frameIndex].size.y / _tileTextureSize.y;
+                uvLT.x = _tileSprites[spriteIndex].start.x / _tileTextureSize.x;
+                uvLT.y = _tileSprites[spriteIndex].start.y / _tileTextureSize.y;
+                uvRB.x = uvLT.x + _tileSprites[spriteIndex].size.x / _tileTextureSize.x;
+                uvRB.y = uvLT.y + _tileSprites[spriteIndex].size.y / _tileTextureSize.y;
 
                 _tileStructureBuffer->AddData(worldPos.value(), uvLT, uvRB, _tileSize);
             }
@@ -293,7 +297,7 @@ void TilemapComponent::RenderTile()
 
 void TilemapComponent::RenderOutline()
 {
-    if (!_outLineRender)
+    if (!_shouldRenderOutline)
         return;
 
     Ptr<Level> level = GetLevel();
@@ -309,8 +313,8 @@ void TilemapComponent::RenderOutline()
                 int32     index = i * _countX + j;
                 Ptr<Tile> tile  = _tiles[index];
 
-                int32 frameIndex = tile->GetTextureFrameIndex();
-                if (frameIndex < 0 || frameIndex >= _tileSprites.size())
+                int32 spriteIndex = tile->GetSpriteIndex();
+                if (spriteIndex < 0 || spriteIndex >= _tileSprites.size())
                     continue;
 
                 std::optional<Vector2> worldPos = GetTileWorldPos(index);
@@ -318,14 +322,17 @@ void TilemapComponent::RenderOutline()
                 Vector4 color;
                 switch (tile->GetTileType())
                 {
-                case TileType::Background:
+                case TileType::Platform:
                     color = Vector4(0.f, 1.f, 0.f, 1.f);
                     break;
                 case TileType::Wall:
-                case TileType::Platform:
                     color = Vector4(1.f, 0.f, 0.f, 1.f);
                     break;
+                case TileType::Floor:
+                    color = Vector4(1.f, 1.f, 0.f, 1.f);
+                    break;
                 default:
+                    color = Vector4(0.f, 0.f, 0.f, 0.f);
                     break;
                 }
 

@@ -1,15 +1,20 @@
 #pragma once
 #include "Core/Object.h"
 
-enum class TileType
+namespace TileType
 {
-    Background,
-    Wall,
-    Platform,
-    SlopeLeft,
-    SlopeRight,
-    End
-};
+    enum Type : uint16
+    {
+        Background,
+        Ceiling = 0,
+        Platform,
+        Wall,
+        Floor = Platform | Wall,
+        SlopeLeft,
+        SlopeRight = 8,
+        End
+    };
+}
 
 class Tile : public Object
 {
@@ -24,8 +29,8 @@ private:
     Vector2 _size;
     Vector2 _center;
 
-    uint32   _frameIndex = -1;
-    TileType _type       = TileType::End;
+    uint32         _spriteIndex = -1;
+    TileType::Type _type        = TileType::Background;
 
 public:
     void Destroy() override;
@@ -34,13 +39,16 @@ public:
     Vector2 GetSize() const;
     Vector2 GetCenter() const;
 
-    TileType GetTileType() const;
-    uint32   GetTextureFrameIndex() const;
+    TileType::Type GetTileType() const;
+    uint32         GetSpriteIndex() const;
+
+    bool IsWall() const;
+    bool IsPlatform() const;
 
     void SetPosition(Vector2 position);
     void SetSize(Vector2 size);
     void SetCenter(Vector2 center);
 
-    void SetTileType(TileType type);
-    void SetTextureFrame(uint32 frameIndex);
+    void SetTileType(TileType::Type type);
+    void SetSprite(uint32 index);
 };

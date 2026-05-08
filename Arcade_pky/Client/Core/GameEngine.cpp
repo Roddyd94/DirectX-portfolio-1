@@ -46,7 +46,7 @@ void GameEngine::Destroy()
     ObjectPool::Instance().Destroy();
 #endif
 
-    _input->Destroy();
+    DESTROY(_input)
     InputSystem::Instance().Destroy();
 
     LogManager::Instance().Destroy();

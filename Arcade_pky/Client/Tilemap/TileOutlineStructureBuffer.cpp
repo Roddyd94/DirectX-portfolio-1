@@ -22,8 +22,7 @@ void TileOutlineStructureBuffer::Clear()
     _dataArray.clear();
 }
 
-void TileOutlineStructureBuffer::AddData(
-  Vector4 color, Vector2 worldPos, Vector2 size)
+void TileOutlineStructureBuffer::AddData(Vector4 color, Vector2 worldPos, Vector2 size)
 {
     TileOutlineInstanceData data;
     data.color    = color;

@@ -39,15 +39,26 @@ bool TestLevel::Init(Ptr<World> world, const std::string& path)
 
     int32 tileCount = 12 * 13;
 
-    byte stageData[224] = {};
-    SnowBrosTileParser::ParseStageData(L"snowbros_stage_3.bin", stageData, 224);
+    TileMetadata tileMetadata;
+    SnowBrosTileParser::ParseTileMetadata(tileMetadata);
 
+    byte stageData[224] = {};
+    SnowBrosTileParser::ParseStageData(L"snowbros_stage_2.bin", stageData, 224);
     for (size_t i = 0; i < 14; i++)
     {
         for (size_t j = 0; j < 16; j++)
         {
             Ptr<Tile> tile = tilemap->GetTile((13 - i) * 16 + j);
-            tile->SetTextureFrame(stageData[i * 16 + j]);
+
+            int32 spriteIndex = stageData[i * 16 + j];
+            tile->SetSprite(spriteIndex);
+
+            if (tileMetadata.tiles[TileType::Platform].contains(spriteIndex))
+                tile->SetTileType(TileType::Platform);
+            else if (tileMetadata.tiles[TileType::Wall].contains(spriteIndex))
+                tile->SetTileType(TileType::Wall);
+            else if (tileMetadata.tiles[TileType::Floor].contains(spriteIndex))
+                tile->SetTileType(TileType::Floor);
         }
     }
 

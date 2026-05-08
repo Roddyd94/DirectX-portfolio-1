@@ -9,8 +9,8 @@ public:
     ~TilemapComponent() override;
 
 protected:
-    std::vector<Ptr<class Tile>>  _tiles;
-    std::vector<SpriteData> _tileSprites;
+    std::vector<Ptr<class Tile>> _tiles;
+    std::vector<SpriteData>      _tileSprites;
 
     Ptr<class Mesh>                _tileMesh;
     Ptr<class Texture>             _tileTexture;
@@ -29,14 +29,12 @@ protected:
     int32 _countX = 0;
     int32 _countY = 0;
 
-    bool _outLineRender                    = false;
+    bool _shouldRenderOutline              = false;
     bool _shouldRefreshTileInstance        = false;
     bool _shouldRefreshTileOutlineInstance = false;
 
 public:
-    bool Init(int32      componentID,
-      const std::string& name,
-      Ptr<class Actor>   owner) override;
+    bool Init(int32 componentID, const std::string& name, Ptr<class Actor> owner) override;
     void Destroy() override;
 
     void Tick(float deltaTime) override;
@@ -44,10 +42,7 @@ public:
     void Render(float deltaTime) override;
 
 public:
-    int32 GetTileFrameCount() const
-    {
-        return static_cast<int32>(_tileSprites.size());
-    }
+    int32 GetTileFrameCount() const { return static_cast<int32>(_tileSprites.size()); }
 
     Vector2 GetTileSize() const { return _tileSize; }
 
@@ -63,10 +58,7 @@ public:
 
     std::optional<Vector2> GetTileWorldPos(int32 index);
 
-    void CreateTile(int32 countX,
-      int32               countY,
-      Vector2      tileSize,
-      int32               textureFrameIndex);
+    void CreateTile(int32 countX, int32 countY, Vector2 tileSize, int32 textureFrameIndex);
 
     void SetTexture(Ptr<class Texture> texture);
     void SetTexture(const std::string& name);
@@ -75,14 +67,8 @@ public:
     void AddTileSprite(Vector2 start, Vector2 size);
     void AddTileSprite(float startX, float startY, float sizeX, float sizeY);
 
-    void RefreshTileInstance(bool refresh)
-    {
-        _shouldRefreshTileInstance = refresh;
-    }
-    void RefreshTileOutlineInstance(bool refresh)
-    {
-        _shouldRefreshTileOutlineInstance = refresh;
-    }
+    void RefreshTileInstance(bool refresh) { _shouldRefreshTileInstance = refresh; }
+    void RefreshTileOutlineInstance(bool refresh) { _shouldRefreshTileOutlineInstance = refresh; }
 
 private:
     void RenderTile();
