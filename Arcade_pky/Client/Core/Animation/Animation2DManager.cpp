@@ -10,10 +10,6 @@
 
 bool Animation2DManager::Init()
 {
-    // TODO read files and create animation data
-    CreateSpriteSheet("Player", "Player", L"snowbros_player.png");
-    CreateSpriteSheet("Enemy", "Enemy", L"snowbros_enemies.png");
-
     return true;
 }
 
@@ -90,21 +86,22 @@ Ptr<Animation2DSequence> Animation2DManager::FindAnimationSequence(const std::st
     return itSequence->second;
 }
 
-bool Animation2DManager::CreateSpriteSheet(const std::string& name, Ptr<Texture> texture)
+Ptr<class Animation2DSpriteSheet> Animation2DManager::CreateSpriteSheet(
+  const std::string& name, Ptr<Texture> texture)
 {
     if (nullptr == texture)
-        return false;
+        return nullptr;
 
     Ptr<Animation2DSpriteSheet> sheet = FindSpriteSheet(name);
 
-    if (sheet)
-        return false;
+    if (nullptr != sheet && sheet->GetTexture() == texture)
+        return sheet;
 
     sheet = New<Animation2DSpriteSheet>();
     if (!sheet->Init(texture))
     {
         DESTROY(sheet)
-        return false;
+        return nullptr;
     }
 
     sheet->SetName(name);
@@ -113,29 +110,29 @@ bool Animation2DManager::CreateSpriteSheet(const std::string& name, Ptr<Texture>
     _spriteSheetFinder[name]             = _spriteSheetIDCounter;
     _spriteSheetIDCounter++;
 
-    return true;
+    return sheet;
 }
 
-bool Animation2DManager::CreateSpriteSheet(
+Ptr<class Animation2DSpriteSheet> Animation2DManager::CreateSpriteSheet(
   const std::string& spriteSheetName, const std::string& textureName)
 {
     Ptr<Texture> texture = FIND_TEXTURE(textureName);
     return CreateSpriteSheet(spriteSheetName, texture);
 }
 
-bool Animation2DManager::CreateSpriteSheet(
+Ptr<class Animation2DSpriteSheet> Animation2DManager::CreateSpriteSheet(
   const std::string& spriteSheetName, const std::string& textureName, const std::wstring& fileName)
 {
     Ptr<Texture> texture = TEXTURE_MANAGER->LoadTexture(textureName, fileName);
     return CreateSpriteSheet(spriteSheetName, texture);
 }
 
-bool Animation2DManager::CreateAnimationClip(const std::string& name)
+Ptr<class Animation2DClip> Animation2DManager::CreateAnimationClip(const std::string& name)
 {
     Ptr<Animation2DClip> clip = FindAnimationClip(name);
 
     if (clip)
-        return false;
+        return clip;
 
     clip = New<Animation2DClip>();
 
@@ -145,15 +142,15 @@ bool Animation2DManager::CreateAnimationClip(const std::string& name)
     _animationClipFinder[name]               = _animationClipIDCounter;
     _animationClipIDCounter++;
 
-    return true;
+    return clip;
 }
 
-bool Animation2DManager::CreateAnimationSequence(const std::string& name)
+Ptr<class Animation2DSequence> Animation2DManager::CreateAnimationSequence(const std::string& name)
 {
     Ptr<Animation2DSequence> sequence = FindAnimationSequence(name);
 
     if (sequence)
-        return false;
+        return sequence;
 
     sequence = New<Animation2DSequence>();
 
@@ -163,7 +160,7 @@ bool Animation2DManager::CreateAnimationSequence(const std::string& name)
     _animationSequenceFinder[name]                   = _animationSequenceIDCounter;
     _animationSequenceIDCounter++;
 
-    return true;
+    return sequence;
 }
 
 void Animation2DManager::AddSprite(const std::string& spriteSheetName, Vector2 start, Vector2 size)

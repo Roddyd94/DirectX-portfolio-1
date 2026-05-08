@@ -6,12 +6,18 @@ namespace TileType
     enum Type : uint16
     {
         Background,
-        Ceiling = 0,
-        Platform,
-        Wall,
-        Floor = Platform | Wall,
-        SlopeLeft,
-        SlopeRight = 8,
+        IsCeiling           = 0x1,
+        IsFloor             = 0x2,
+        IsWall              = 0x4,
+        IsSlope             = 0x8,
+        IsSlopeAntiDiagonal = 0x10,
+        Ceiling             = IsCeiling,
+        PlatformEnd         = IsFloor,
+        Platform            = IsCeiling | IsFloor,
+        Wall                = IsWall,
+        Roof                = IsFloor | Wall,
+        SlopeDiagonal       = IsSlope,
+        SlopeAntiDiagonal   = IsSlope | IsSlopeAntiDiagonal,
         End
     };
 }

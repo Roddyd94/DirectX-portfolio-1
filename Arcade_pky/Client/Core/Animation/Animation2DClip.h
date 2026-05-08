@@ -11,7 +11,7 @@ public:
 private:
     std::vector<Animation2DSprite> _frames;
 
-    float _frameTime = 0.f;
+    float _frameTime = 1.f;
     bool  _isLoop    = false;
 
 public:

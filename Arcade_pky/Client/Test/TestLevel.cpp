@@ -16,8 +16,6 @@ bool TestLevel::Init(Ptr<World> world, const std::string& path)
     Vector3 scale    = Vector3{1.f, 1.f, 1.f};
     Vector3 rotation = Vector3{0.f, 0.f, 0.f};
 
-    Ptr<TestActor> testActor = SpawnActor<TestActor>(position, scale, rotation);
-
     position.x = -7.5f;
     position.y = -6.5f;
 
@@ -53,14 +51,27 @@ bool TestLevel::Init(Ptr<World> world, const std::string& path)
             int32 spriteIndex = stageData[i * 16 + j];
             tile->SetSprite(spriteIndex);
 
-            if (tileMetadata.tiles[TileType::Platform].contains(spriteIndex))
+            if (tileMetadata.tiles[TileType::Ceiling].contains(spriteIndex))
+                tile->SetTileType(TileType::Ceiling);
+            else if (tileMetadata.tiles[TileType::PlatformEnd].contains(spriteIndex))
+                tile->SetTileType(TileType::PlatformEnd);
+            else if (tileMetadata.tiles[TileType::Platform].contains(spriteIndex))
                 tile->SetTileType(TileType::Platform);
             else if (tileMetadata.tiles[TileType::Wall].contains(spriteIndex))
                 tile->SetTileType(TileType::Wall);
-            else if (tileMetadata.tiles[TileType::Floor].contains(spriteIndex))
-                tile->SetTileType(TileType::Floor);
+            else if (tileMetadata.tiles[TileType::Roof].contains(spriteIndex))
+                tile->SetTileType(TileType::Roof);
         }
     }
+
+    SnowBrosTileParser::ParseAnimationData("snowbros_player", L"snowbros_player.png",
+      "snowbros_player", L"snowbros_player_animation.bin");
+
+    position.x = 0.f;
+    position.y = 0.f;
+    scale *= 2.f;
+
+    Ptr<TestActor> testActor = SpawnActor<TestActor>(position, scale, rotation);
 
     return true;
 }

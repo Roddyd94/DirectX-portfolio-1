@@ -26,7 +26,7 @@ private:
 
     int32 _frameIndex = 0;
     float _accTime    = 0.f;
-    float _playRate   = 0.f;
+    float _playRate   = 1.f;
     bool  _isPlaying  = true;
     bool  _isReversed = false;
     bool  _flipX      = false;
@@ -38,6 +38,11 @@ public:
 
     bool IsPlaying() const { return _isPlaying; }
 
+    Ptr<class Animation2DSequence> GetSequence() const;
+    Ptr<class Animation2DClip>     GetCurrentClip() const;
+
+    void SetAnimationSequence(Ptr<class Animation2DSequence> sequence);
+    void SetAnimationSequence(const std::string& sequenceName);
     void SetPlayRate(float playRate);
     void SetReversed(bool isReversed);
     void SetFlipX(bool flipX);

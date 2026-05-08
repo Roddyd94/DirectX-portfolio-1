@@ -319,21 +319,21 @@ void TilemapComponent::RenderOutline()
 
                 std::optional<Vector2> worldPos = GetTileWorldPos(index);
 
-                Vector4 color;
-                switch (tile->GetTileType())
+                Vector4 color(0.f, 0.f, 0.f, 0.f);
+                if (tile->GetTileType() & TileType::IsCeiling)
                 {
-                case TileType::Platform:
-                    color = Vector4(0.f, 1.f, 0.f, 1.f);
-                    break;
-                case TileType::Wall:
-                    color = Vector4(1.f, 0.f, 0.f, 1.f);
-                    break;
-                case TileType::Floor:
-                    color = Vector4(1.f, 1.f, 0.f, 1.f);
-                    break;
-                default:
-                    color = Vector4(0.f, 0.f, 0.f, 0.f);
-                    break;
+                    color.b = 1.f;
+                    color.a = 1.f;
+                }
+                if (tile->GetTileType() & TileType::IsFloor)
+                {
+                    color.g = 1.f;
+                    color.a = 1.f;
+                }
+                if (tile->GetTileType() & TileType::IsWall)
+                {
+                    color.r = 1.f;
+                    color.a = 1.f;
                 }
 
                 _tileOutlineStructureBuffer->AddData(color, worldPos.value(), _tileSize);

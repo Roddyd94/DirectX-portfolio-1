@@ -2,12 +2,17 @@
 
 #include "Animation2D.h"
 
+#include "Animation2DManager.h"
+#include "Core/ResourceManager.h"
+
 #include "Animation2DConstantBuffer.h"
 #include "Core/Texture.h"
 
 bool Animation2D::Init()
 {
-    return false;
+    _buffer = FIND_CONSTANT_BUFFER("Animation2D", Animation2DConstantBuffer);
+
+    return true;
 }
 
 void Animation2D::Destroy()
@@ -64,6 +69,27 @@ void Animation2D::Tick(float deltaTime)
         InvokeNotify();
 }
 
+Ptr<class Animation2DSequence> Animation2D::GetSequence() const
+{
+    return _animationSequence;
+}
+
+Ptr<class Animation2DClip> Animation2D::GetCurrentClip() const
+{
+    return _currentAnimationClip;
+}
+
+void Animation2D::SetAnimationSequence(Ptr<class Animation2DSequence> sequence)
+{
+    _animationSequence = sequence;
+}
+
+void Animation2D::SetAnimationSequence(const std::string& sequenceName)
+{
+    Ptr<Animation2DSequence> sequence = ANIMATION_MANAGER->FindAnimationSequence(sequenceName);
+    SetAnimationSequence(sequence);
+}
+
 void Animation2D::SetPlayRate(float playRate)
 {
     _playRate = playRate;
@@ -85,6 +111,7 @@ void Animation2D::SetShader()
     SpriteData        data   = sprite.spriteSheet->GetSpriteData(sprite.spriteIndex);
 
     Ptr<Texture> texture = sprite.spriteSheet->GetTexture();
+    texture->SetShaderResource(0, ShaderType::Pixel, 0);
 
     Vector2 uvLT;
     Vector2 uvRB;

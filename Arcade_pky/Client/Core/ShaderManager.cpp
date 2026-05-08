@@ -17,6 +17,9 @@
 #include "Tilemap/TileStructureBuffer.h"
 #endif // _HAS_TILEMAP_MODULE
 
+#include "Core/Animation/Animation2DConstantBuffer.h"
+#include "Core/Animation/SpriteShader.h"
+
 bool ShaderManager::Init()
 {
     // TODO Create Shaders, Buffers
@@ -34,12 +37,19 @@ bool ShaderManager::Init()
 
     if (!CreateShader<TileOutlineInstanceShader>("TileOutlineInstanceShader"))
         return false;
+
+    if (!CreateShader<SpriteShader>("SpriteShader"))
+        return false;
 #endif // _HAS_TILEMAP_MODULE
 #pragma endregion SHADERS
 
 #pragma region VERTEX_CONSTANT_BUFFERS
-    if (!CreateConstantBuffer<TransformConstantBuffer>("Transform",
-          sizeof(TransformConstantBufferData), 0, ShaderType::Vertex))
+    if (!CreateConstantBuffer<TransformConstantBuffer>(
+          "Transform", sizeof(TransformConstantBufferData), 0, ShaderType::Vertex))
+        return false;
+
+    if (!CreateConstantBuffer<Animation2DConstantBuffer>(
+          "Animation2D", sizeof(Animation2DConstantBufferData), 1, ShaderType::Vertex))
         return false;
 #pragma endregion VERTEX_CONSTANT_BUFFERS
 
@@ -59,8 +69,8 @@ bool ShaderManager::Init()
           "Tile", sizeof(TileInstanceData), 128, 1, ShaderType::Vertex))
         return false;
 
-    if (!CreateStructureBuffer<TileOutlineStructureBuffer>("TileOutline",
-          sizeof(TileOutlineInstanceData), 128, 1, ShaderType::Vertex))
+    if (!CreateStructureBuffer<TileOutlineStructureBuffer>(
+          "TileOutline", sizeof(TileOutlineInstanceData), 128, 1, ShaderType::Vertex))
         return false;
 #endif // _HAS_TILEMAP_MODULE
 #pragma endregion STRUCTURE_BUFFERS
@@ -103,16 +113,13 @@ void ShaderManager::CreateSamplers()
     desc.MaxLOD = D3D11_FLOAT32_MAX;
 
     desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-    DEVICE->CreateSamplerState(
-      &desc, _samplers[SamplerType::Point].GetAddressOf());
+    DEVICE->CreateSamplerState(&desc, _samplers[SamplerType::Point].GetAddressOf());
 
     desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    DEVICE->CreateSamplerState(
-      &desc, _samplers[SamplerType::Linear].GetAddressOf());
+    DEVICE->CreateSamplerState(&desc, _samplers[SamplerType::Linear].GetAddressOf());
 
     desc.Filter        = D3D11_FILTER_ANISOTROPIC;
     desc.MaxAnisotropy = 16;
 
-    DEVICE->CreateSamplerState(
-      &desc, _samplers[SamplerType::Anisotropic].GetAddressOf());
+    DEVICE->CreateSamplerState(&desc, _samplers[SamplerType::Anisotropic].GetAddressOf());
 }

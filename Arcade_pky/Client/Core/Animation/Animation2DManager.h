@@ -36,14 +36,14 @@ public:
     Ptr<class Animation2DClip>     FindAnimationClip(const std::string& name);
     Ptr<class Animation2DSequence> FindAnimationSequence(const std::string& name);
 
-    bool CreateSpriteSheet(const std::string& name, Ptr<class Texture> texture);
-    bool CreateSpriteSheet(const std::string& spriteSheetName, const std::string& textureName);
-    bool CreateSpriteSheet(const std::string& spriteSheetName,
+    Ptr<class Animation2DSpriteSheet> CreateSpriteSheet(const std::string& name, Ptr<class Texture> texture);
+    Ptr<class Animation2DSpriteSheet> CreateSpriteSheet(const std::string& spriteSheetName, const std::string& textureName);
+    Ptr<class Animation2DSpriteSheet> CreateSpriteSheet(const std::string& spriteSheetName,
       const std::string&                      textureName,
       const std::wstring&                     fileName);
 
-    bool CreateAnimationClip(const std::string& name);
-    bool CreateAnimationSequence(const std::string& name);
+    Ptr<class Animation2DClip> CreateAnimationClip(const std::string& name);
+    Ptr<class Animation2DSequence> CreateAnimationSequence(const std::string& name);
 
     void AddSprite(const std::string& spriteSheetName, Vector2 start, Vector2 size);
     void AddSprite(

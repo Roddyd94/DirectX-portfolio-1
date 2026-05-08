@@ -9,7 +9,6 @@ bool TextureManager::Init()
     // TODO: Read Metadata and Load Textures
 
     // TODO: Remove this after implementing parser
-    LoadTexture("Apeach", L"apeach.png");
 
     return true;
 }
