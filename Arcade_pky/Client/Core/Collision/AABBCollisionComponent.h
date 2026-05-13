@@ -33,5 +33,6 @@ public:
     {
         _boxSize.x = x;
         _boxSize.y = y;
+        SetWorldScale(_boxSize);
     }
 };

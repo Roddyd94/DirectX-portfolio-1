@@ -1,22 +1,24 @@
 #pragma once
 
 #include "Tilemap/Tile.h"
-
-struct TileMetadata
+namespace snowbros
 {
-    std::map<TileType::Type, std::set<uint32>> tiles;
+    struct TileMetadata
+    {
+        std::map<TileType::Type, std::set<uint32>> tiles;
 
-    uint16 tileSize      = 1;
-    uint16 tileTypeCount = 0;
-};
+        uint16 tileSize      = 1;
+        uint16 tileTypeCount = 0;
+    };
 
-class SnowBrosTileParser
-{
-public:
-    static bool ParseStageData(const std::wstring& filename, byte* pData, size_t dataLength);
-    static bool ParseTileMetadata(TileMetadata& data);
-    static bool ParseAnimationData(const std::string& textureName,
-      const std::wstring&                              textureFilename,
-      const std::string&                               spriteSheetName,
-      const std::wstring&                              spriteDataFilename);
-};
+    class SnowBrosTileParser
+    {
+    public:
+        static bool ParseStageData(const std::wstring& filename, byte* pData, size_t dataLength);
+        static bool ParseTileMetadata(TileMetadata& data);
+        static bool ParseAnimationData(const std::string& textureName,
+          const std::wstring&                             textureFilename,
+          const std::string&                              spriteSheetName,
+          const std::wstring&                             spriteDataFilename);
+    };
+} // namespace snowbros

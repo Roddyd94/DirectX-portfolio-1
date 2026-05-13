@@ -29,7 +29,7 @@ protected:
       Vector3(Vector3::axisZ),
     };
 
-    bool _isRendering = false;
+    bool _shouldRender = false;
 
 public:
     bool Init(int32      componentID,
@@ -63,15 +63,21 @@ public:
     void SetWorldTransform(const Transform& transform);
     void SetWorldTransform(Vector3 position, Vector3 scale, Vector3 rotation);
     void SetWorldScale(Vector3 scale);
+    void SetWorldScale(Vector2 scale);
     void SetWorldPosition(Vector3 position);
+    void SetWorldPosition(Vector2 position);
     void SetWorldRotation(Vector3 rotation);
+    void SetWorldRotation(Vector2 rotation);
 
     void SetRelativeTransform(const Transform& transform);
     void SetRelativeTransform(
       Vector3 position, Vector3 scale, Vector3 rotation);
     void SetRelativeScale(Vector3 scale);
+    void SetRelativeScale(Vector2 scale);
     void SetRelativePosition(Vector3 position);
+    void SetRelativePosition(Vector2 position);
     void SetRelativeRotation(Vector3 rotation);
+    void SetRelativeRotation(Vector2 rotation);
 
 private:
     void UpdateTransform();

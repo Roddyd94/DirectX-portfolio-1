@@ -31,6 +31,7 @@ public:
     ~Tile() override = default;
 
 private:
+    Weak<class TilemapComponent> _owner;
     Vector2 _position;
     Vector2 _size;
     Vector2 _center;
@@ -41,6 +42,7 @@ private:
 public:
     void Destroy() override;
 
+    Vector2 GetWorldPosition() const;
     Vector2 GetPosition() const;
     Vector2 GetSize() const;
     Vector2 GetCenter() const;
@@ -49,7 +51,8 @@ public:
     uint32         GetSpriteIndex() const;
 
     bool IsWall() const;
-    bool IsPlatform() const;
+    bool IsFloor() const;
+    bool IsCeiling() const;
 
     void SetPosition(Vector2 position);
     void SetSize(Vector2 size);

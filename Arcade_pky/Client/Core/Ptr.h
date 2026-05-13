@@ -31,6 +31,12 @@ Ptr<T> Lock(Weak<T> ptr)
 {
     return ptr;
 }
+
+template <typename T>
+T* Raw(Ptr<T> ptr)
+{
+    return ptr;
+}
 #elif _USE_OBJECT_POOL
 #include "ObjectPool.h"
 
@@ -64,6 +70,12 @@ Ptr<T> Lock(Weak<T> ptr)
 {
     return ptr;
 }
+
+template <typename T>
+T* Raw(Ptr<T> ptr)
+{
+    return ptr;
+}
 #else
 template <typename T>
 using Ptr = std::shared_ptr<T>;
@@ -93,6 +105,12 @@ template <typename T>
 Ptr<T> Lock(Weak<T> ptr)
 {
     return ptr.lock();
+}
+
+template <typename T>
+T* Raw(Ptr<T> ptr)
+{
+    return ptr.get();
 }
 #endif
 

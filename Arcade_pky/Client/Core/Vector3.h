@@ -64,6 +64,8 @@ public:
     bool operator==(Vector3 other);
     bool operator!=(Vector3 other);
 
+    Vector2 ToVector2() const;
+
     void Set(int32 value);
     void Set(float value);
     void Set(double value);

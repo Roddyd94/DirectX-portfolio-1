@@ -36,26 +36,30 @@ int GameEngine::Init()
 
 void GameEngine::Destroy()
 {
-    if (_world)
-        _world->Destroy();
+    DESTROY(_world)
     ResourceManager::Instance().Destroy();
-
-#ifdef _USE_MEMORY_POOL
-    MemoryPool::Instance().Destroy();
-#elif _USE_OBJECT_POOL
-    ObjectPool::Instance().Destroy();
-#endif
 
     DESTROY(_input)
     InputSystem::Instance().Destroy();
 
     LogManager::Instance().Destroy();
     DirectoryManager::Instance().Destroy();
+    
+#ifdef _USE_MEMORY_POOL
+    MemoryPool::Instance().Destroy();
+#elif _USE_OBJECT_POOL
+    ObjectPool::Instance().Destroy();
+#endif
 }
 
 void GameEngine::Logic()
 {
     float deltaTime = TimeManager::Instance().Tick();
+#ifdef _DEBUG
+    float fps = TimeManager::Instance().GetFPS();
+    LogManager::Instance().Debug(fps);
+#endif // _DEBUG
+
     Tick(deltaTime);
     Collision(deltaTime);
     Render(deltaTime);
@@ -93,9 +97,9 @@ void GameEngine::Render(float deltaTime)
     //_world->RenderUI(deltaTime);
     // DeviceManager::Instance().GetDefaultRenderTarget2D()->EndDraw();
 
-#ifndef _DEBUG
+#ifndef _EDITOR
     DeviceManager::Instance().Render();
-#endif // _DEBUG
+#endif // _EDITOR
 }
 
 bool GameEngine::InitManagers()

@@ -3,14 +3,12 @@
 
 class GameEngine : public Singleton<GameEngine>
 {
-#ifdef _DEBUG
     friend class EditorEngine;
-#endif // _DEBUG
 
     DECLARE_SINGLETON(GameEngine)
 private:
-    Ptr<class World> _world;
-    Ptr<class Input> _input;
+    Ptr<class World> _world = nullptr;
+    Ptr<class Input> _input = nullptr;
 
     float _clearColor[4] = {1.f, 1.f, 1.f, 1.f};
 

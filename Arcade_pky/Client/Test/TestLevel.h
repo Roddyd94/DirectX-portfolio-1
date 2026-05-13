@@ -1,8 +1,18 @@
 #pragma once
 #include "Core/Level.h"
+#include "Core/World.h"
+#include "Tilemap/Tilemap.h"
 
-class TestLevel : public Level
+namespace snowbros
 {
-public:
-    bool Init(Ptr<class World> world, const std::string& path) override;
-};
+    class TestLevel : public ::Level
+    {
+    private:
+        Ptr<class Tilemap> _tilemap;
+
+    public:
+        bool Init(Ptr<class World> world, const std::string& path) override;
+
+        Ptr<class Tilemap> GetTilemap() const;
+    };
+} // namespace snowbros

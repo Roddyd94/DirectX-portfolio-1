@@ -3,6 +3,7 @@
     <BuildType Name="Debug" />
     <BuildType Name="Debug_MemoryPool" />
     <BuildType Name="Debug_ObjectPool" />
+    <BuildType Name="Editor" />
     <BuildType Name="Release" />
     <Platform Name="x64" />
     <Platform Name="x86" />

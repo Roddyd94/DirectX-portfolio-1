@@ -62,7 +62,7 @@ void Input::SetMouseEventOff(uint16 mouseButton, uint16 buttonEvent)
 }
 
 bool Input::CreateInputDevice(
-  ComPtr<IDirectInputDevice8W> device, GUID deviceGuid, LPCDIDATAFORMAT df)
+  ComPtr<IDirectInputDevice8W>& device, GUID deviceGuid, LPCDIDATAFORMAT df)
 {
     if (FAILED(_input->CreateDevice(deviceGuid, device.GetAddressOf(), nullptr)))
         return false;
@@ -118,10 +118,10 @@ void Input::UpdateMousePosition(float deltaTime)
 
     newMousePos.y = viewportResolution.height - newMousePos.y;
 
-    if (_mouseCompute)
+    if (_shouldComputeMouse)
         _mouseDelta = newMousePos - _mousePosition;
     else
-        _mouseCompute = true;
+        _shouldComputeMouse = true;
 
     _mousePosition = newMousePos;
 

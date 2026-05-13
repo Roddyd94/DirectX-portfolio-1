@@ -11,7 +11,7 @@ private:
     Ptr<class TilemapComponent> _tileComponent;
 
 public:
-    bool Init(int32 id, Vector3 pos, Vector3 scale, Vector3 rot) override;
+    bool Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation) override;
     void Destroy() override;
 
     void Tick(float deltaTime) override;
@@ -27,6 +27,7 @@ public:
     void AddTileSprite(float startX, float startY, float sizeX, float sizeY);
 
     Ptr<class Tile> GetTile(int32 index);
+    Ptr<class Tile> GetTile(Vector2 worldPosition);
 
     // void ChangeTileTexture(Vector2 pos);
     // void ChangeTileType(Vector2 pos);

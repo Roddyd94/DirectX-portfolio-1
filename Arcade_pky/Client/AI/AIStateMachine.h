@@ -13,7 +13,7 @@ public:
     ~AIStateMachine() override = default;
 
 protected:
-    std::unordered_map<std::string, Ptr<class AIState>> _stateFinder;
+    std::unordered_map<std::string, Ptr<class AIState>> _states;
 
     Weak<class AIComponent> _owner;
     Ptr<class AIBoard>      _board;
@@ -43,8 +43,8 @@ public:
     template <typename T>
     Ptr<T> FindAIState(const std::string& name)
     {
-        auto it = _stateFinder.find(name);
-        if (_stateFinder.end() == it)
+        auto it = _states.find(name);
+        if (_states.end() == it)
             return nullptr;
 
         return it->second;
@@ -67,7 +67,7 @@ public:
         if (!_currentState)
             _currentState = state;
 
-        _stateFinder[name] = state;
+        _states[name] = state;
 
         return state;
     }

@@ -24,7 +24,7 @@ bool RenderManager::Init()
         return false;
 
     _alphaBlend
-      = _renderStateManager->FindRenderState<BlendState>("PMA");
+      = _renderStateManager->FindRenderState<BlendState>("AlphaBlend");
     _depthStencilState
       = _renderStateManager->FindRenderState<DepthStencilState>("DepthStencil");
 
@@ -97,7 +97,7 @@ void RenderManager::Tick(float deltaTime)
                 ComponentIDPair key
                   = {owner->GetActorID(), renderer->GetComponentID()};
 
-                rendererLayer->renderersByIDPair[key] = itRenderer->second;
+                rendererLayer->renderersByIDPair[key] = renderer;
                 itRenderer = layer.renderersByIDPair.erase(itRenderer);
 
                 rendererLayer->refreshRenders = true;
@@ -184,9 +184,9 @@ RenderLayer* RenderManager::FindLayer(const std::string& name)
     return &(itLayer->second);
 }
 
-void RenderManager::SetYSort(bool shouldSort)
+void RenderManager::SetYSort(bool sortY)
 {
-    _shouldSortY = shouldSort;
+    _shouldSortY = sortY;
 }
 
 void RenderManager::AddRenderComponent(int32 actorID, Ptr<SceneComponent> comp)

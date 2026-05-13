@@ -63,3 +63,8 @@ Ptr<class Tile> Tilemap::GetTile(int32 index)
 {
     return _tileComponent->GetTile(index);
 }
+
+Ptr<class Tile> Tilemap::GetTile(Vector2 worldPosition)
+{
+    return _tileComponent->GetTile(worldPosition);
+}

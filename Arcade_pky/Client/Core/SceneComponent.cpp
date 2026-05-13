@@ -9,24 +9,19 @@
 #include "Actor.h"
 #include "TransformConstantBuffer.h"
 
-SceneComponent::SceneComponent()
-    : _renderLayerName("Default"), _isRendering(false)
-{
-}
+SceneComponent::SceneComponent() : _renderLayerName("Default"), _shouldRender(false) {}
 
 SceneComponent::~SceneComponent() {}
 
-bool SceneComponent::Init(
-  int32 componentID, const std::string& name, Ptr<Actor> owner)
+bool SceneComponent::Init(int32 componentID, const std::string& name, Ptr<Actor> owner)
 {
     if (!Component::Init(componentID, name, owner))
         return false;
 
     _transformConstantBuffer = CONSTANT_BUFFER_TRANSFORM;
 
-    if (_isRendering)
-        RenderManager::Instance().AddRenderComponent(
-          owner->GetActorID(), This<SceneComponent>());
+    if (_shouldRender)
+        RenderManager::Instance().AddRenderComponent(owner->GetActorID(), This<SceneComponent>());
 
     return true;
 }
@@ -36,7 +31,7 @@ void SceneComponent::Destroy()
     for (auto& [_, child] : _children)
         DESTROY(child)
 
-    if (_isRendering)
+    if (_shouldRender)
     {
         Ptr<Actor> owner = Lock<Actor>(_owner);
         if (!owner)
@@ -156,8 +151,7 @@ void SceneComponent::SetRenderLayer(const std::string& name)
     _renderLayerName = name;
 
     int32 actorID = GetOwner()->GetActorID();
-    RenderManager::Instance().AddRenderComponent(
-      actorID, This<SceneComponent>());
+    RenderManager::Instance().AddRenderComponent(actorID, This<SceneComponent>());
     RenderManager::Instance().RefreshLayer();
 }
 
@@ -166,8 +160,7 @@ void SceneComponent::SetWorldTransform(const Transform& transform)
     SetWorldTransform(transform.position, transform.scale, transform.rotation);
 }
 
-void SceneComponent::SetWorldTransform(
-  Vector3 position, Vector3 scale, Vector3 rotation)
+void SceneComponent::SetWorldTransform(Vector3 position, Vector3 scale, Vector3 rotation)
 {
     SetWorldScale(scale);
     SetWorldPosition(position);
@@ -192,14 +185,19 @@ void SceneComponent::SetWorldScale(Vector3 scale)
     UpdateTransform();
 }
 
+void SceneComponent::SetWorldScale(Vector2 scale)
+{
+    SetWorldScale({scale.x, scale.y, _world.scale.z});
+}
+
 void SceneComponent::SetWorldPosition(Vector3 position)
 {
     if (Ptr<SceneComponent> parentComp = Lock<SceneComponent>(_parent))
     {
         Matrix matParentInv = parentComp->_matrix.world;
         matParentInv.Inverse();
-        _relative.position = Vector3(position.x, position.y, position.z)
-                               .TransformCoord(matParentInv);
+        _relative.position
+          = Vector3(position.x, position.y, position.z).TransformCoord(matParentInv);
     }
     else
     {
@@ -209,6 +207,11 @@ void SceneComponent::SetWorldPosition(Vector3 position)
     }
 
     UpdateTransform();
+}
+
+void SceneComponent::SetWorldPosition(Vector2 position)
+{
+    SetWorldPosition({position.x, position.y, _world.position.z});
 }
 
 void SceneComponent::SetWorldRotation(Vector3 rotation)
@@ -229,14 +232,17 @@ void SceneComponent::SetWorldRotation(Vector3 rotation)
     UpdateTransform();
 }
 
-void SceneComponent::SetRelativeTransform(const Transform& transform)
+void SceneComponent::SetWorldRotation(Vector2 rotation)
 {
-    SetRelativeTransform(
-      transform.position, transform.scale, transform.rotation);
+    SetWorldRotation({rotation.x, rotation.y, _world.rotation.z});
 }
 
-void SceneComponent::SetRelativeTransform(
-  Vector3 position, Vector3 scale, Vector3 rotation)
+void SceneComponent::SetRelativeTransform(const Transform& transform)
+{
+    SetRelativeTransform(transform.position, transform.scale, transform.rotation);
+}
+
+void SceneComponent::SetRelativeTransform(Vector3 position, Vector3 scale, Vector3 rotation)
 {
     SetRelativePosition(position);
     SetRelativeScale(scale);
@@ -249,16 +255,31 @@ void SceneComponent::SetRelativeScale(Vector3 scale)
     UpdateTransform();
 }
 
+void SceneComponent::SetRelativeScale(Vector2 scale)
+{
+    SetRelativeScale({scale.x, scale.y, _relative.scale.z});
+}
+
 void SceneComponent::SetRelativePosition(Vector3 position)
 {
     _relative.position = position;
     UpdateTransform();
 }
 
+void SceneComponent::SetRelativePosition(Vector2 position)
+{
+    SetRelativePosition({position.x, position.y, _relative.position.z});
+}
+
 void SceneComponent::SetRelativeRotation(Vector3 rotation)
 {
     _relative.rotation = rotation;
     UpdateTransform();
+}
+
+void SceneComponent::SetRelativeRotation(Vector2 rotation)
+{
+    SetRelativeRotation({rotation.x, rotation.y, _relative.rotation.z});
 }
 
 void SceneComponent::UpdateTransform()

@@ -8,7 +8,7 @@ public:
     ~World() override = default;
     DELETE_SPECIAL_FUNC(World)
 
-public:
+protected:
 #ifdef _HAS_COLLISION_MODULE
     Ptr<class CollisionProfileManager> _collisionProfileManager;
 #endif // _HAS_COLLISION_MODULE

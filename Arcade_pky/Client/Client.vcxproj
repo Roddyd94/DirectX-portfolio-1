@@ -84,7 +84,7 @@
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -120,7 +120,7 @@
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -159,44 +159,44 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\$(Configuration)\obj\</IntDir>
+    <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Builds\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">
-    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\$(Configuration)\obj\</IntDir>
+    <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Builds\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">
-    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\$(Configuration)\obj\</IntDir>
+    <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Builds\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">
-    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\$(Configuration)\obj\</IntDir>
+    <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Builds\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\$(Configuration)\obj\</IntDir>
+    <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Builds\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\$(Configuration)\obj\</IntDir>
+    <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Builds\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">
-    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\$(Configuration)\obj\</IntDir>
+    <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Builds\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">
-    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\$(Configuration)\obj\</IntDir>
+    <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Builds\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">
-    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\$(Configuration)\obj\</IntDir>
+    <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Builds\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)\$(Configuration)\obj\</IntDir>
+    <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Builds\$(Configuration)\obj\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -214,6 +214,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(solutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(solutionDir)ThirdParty\fmod.dll" "$(OutDir)"
+xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">
     <ClCompile>
@@ -231,6 +235,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(solutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(solutionDir)ThirdParty\fmod.dll" "$(OutDir)"
+xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">
     <ClCompile>
@@ -248,6 +256,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(solutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(solutionDir)ThirdParty\fmod.dll" "$(OutDir)"
+xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">
     <ClCompile>
@@ -265,6 +277,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(solutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(solutionDir)ThirdParty\fmod.dll" "$(OutDir)"
+xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -284,6 +300,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(solutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(solutionDir)ThirdParty\fmod.dll" "$(OutDir)"
+xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -301,6 +321,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(solutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(solutionDir)ThirdParty\fmod.dll" "$(OutDir)"
+xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">
     <ClCompile>
@@ -318,6 +342,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(solutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(solutionDir)ThirdParty\fmod.dll" "$(OutDir)"
+xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">
     <ClCompile>
@@ -336,6 +364,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(solutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(solutionDir)ThirdParty\fmod.dll" "$(OutDir)"
+xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">
     <ClCompile>
@@ -353,6 +385,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(solutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(solutionDir)ThirdParty\fmod.dll" "$(OutDir)"
+xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -372,6 +408,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(solutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(solutionDir)ThirdParty\fmod.dll" "$(OutDir)"
+xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AI\AIBoard.h" />
@@ -394,6 +434,7 @@
     <ClInclude Include="Core\Animation\Animation2DManager.h" />
     <ClInclude Include="Core\Animation\Animation2DSequence.h" />
     <ClInclude Include="Core\Animation\Animation2DSprite.h" />
+    <ClInclude Include="Core\Animation\Animation2DStateMachine.h" />
     <ClInclude Include="Core\Animation\SpriteComponent.h" />
     <ClInclude Include="Core\Animation\SpriteShader.h" />
     <ClInclude Include="Core\BlendState.h" />
@@ -479,10 +520,19 @@
     <ClInclude Include="Editor\EditorUI.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Platformer\PlatformerKinematicComponent.h" />
+    <ClInclude Include="Platformer\PlatformerMovementComponent.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Test\PlayerComponent.h" />
+    <ClInclude Include="Test\PlayerState.h" />
+    <ClInclude Include="Test\PlayerStateDead.h" />
+    <ClInclude Include="Test\PlayerStateGround.h" />
+    <ClInclude Include="Test\PlayerStateMachine.h" />
+    <ClInclude Include="Test\PlayerStateMidair.h" />
+    <ClInclude Include="Test\PlayerStateSnowball.h" />
     <ClInclude Include="Test\SnowBrosTileParser.h" />
-    <ClInclude Include="Test\TestActor.h" />
+    <ClInclude Include="Test\Player.h" />
     <ClInclude Include="Test\TestLevel.h" />
     <ClInclude Include="Tilemap\Tile.h" />
     <ClInclude Include="Tilemap\TileInstanceShader.h" />
@@ -511,6 +561,7 @@
     <ClCompile Include="Core\Animation\Animation2DManager.cpp" />
     <ClCompile Include="Core\Animation\Animation2DSequence.cpp" />
     <ClCompile Include="Core\Animation\Animation2DSprite.cpp" />
+    <ClCompile Include="Core\Animation\Animation2DStateMachine.cpp" />
     <ClCompile Include="Core\Animation\SpriteComponent.cpp" />
     <ClCompile Include="Core\Animation\SpriteShader.cpp" />
     <ClCompile Include="Core\BlendState.cpp" />
@@ -597,8 +648,17 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Platformer\PlatformerKinematicComponent.cpp" />
+    <ClCompile Include="Platformer\PlatformerMovementComponent.cpp" />
+    <ClCompile Include="Test\PlayerComponent.cpp" />
+    <ClCompile Include="Test\PlayerState.cpp" />
+    <ClCompile Include="Test\PlayerStateDead.cpp" />
+    <ClCompile Include="Test\PlayerStateGround.cpp" />
+    <ClCompile Include="Test\PlayerStateMachine.cpp" />
+    <ClCompile Include="Test\PlayerStateMidair.cpp" />
+    <ClCompile Include="Test\PlayerStateSnowball.cpp" />
     <ClCompile Include="Test\SnowBrosTileParser.cpp" />
-    <ClCompile Include="Test\TestActor.cpp" />
+    <ClCompile Include="Test\Player.cpp" />
     <ClCompile Include="Test\TestLevel.cpp" />
     <ClCompile Include="Tilemap\Tile.cpp" />
     <ClCompile Include="Tilemap\TileInstanceShader.cpp" />
@@ -808,6 +868,11 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">5.0</ShaderModel>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ThirdParty\fmod.dll">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,4 +1,5 @@
 #pragma once
+#ifdef _EDITOR
 #include "EditorUI.h"
 #include "Core/Singleton.h"
 
@@ -47,3 +48,4 @@ private:
         _editorUIs[name] = editorUI;
     }
 };
+#endif // _EDITOR

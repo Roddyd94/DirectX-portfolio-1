@@ -39,7 +39,7 @@ public:
 
     RenderLayer* FindLayer(const std::string& name);
 
-    void SetYSort(bool sort);
+    void SetYSort(bool sortY);
     void AddRenderComponent(int32 actorID, Ptr<class SceneComponent> comp);
 
     void RemoveRenderComponent(

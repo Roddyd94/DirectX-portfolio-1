@@ -9,6 +9,7 @@
 #include "Editor/EditorEngine.h"
 
 #ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 #endif
 
@@ -27,7 +28,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     WindowsManager::Instance().Init(hInstance, L"Arcade");
 
-#ifdef _DEBUG
+#ifdef _EDITOR
     WindowsManager::Instance().OnUpdate = [&]() -> void
     {
         EditorEngine::Instance().Logic();
@@ -45,7 +46,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     int result = GameEngine::Instance().Init();
     WindowsManager::Instance().Run();
     GameEngine::Instance().Destroy();
-#endif // _DEBUG
+#endif
 
     return result;
 }

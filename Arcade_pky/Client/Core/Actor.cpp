@@ -189,6 +189,7 @@ void Actor::SetRoot(const Ptr<SceneComponent> comp)
 void Actor::SetName(const std::string& name)
 {
     _name = name;
+    AddTag(name);
 }
 
 void Actor::SetWorldTransform(const Transform& transform)
@@ -206,12 +207,27 @@ void Actor::SetWorldScale(Vector3 scale)
     _root->SetWorldScale(scale);
 }
 
+void Actor::SetWorldScale(Vector2 scale)
+{
+    _root->SetWorldScale(scale);
+}
+
 void Actor::SetWorldPosition(Vector3 position)
 {
-    _root->SetWorldScale(position);
+    _root->SetWorldPosition(position);
+}
+
+void Actor::SetWorldPosition(Vector2 position)
+{
+    _root->SetWorldPosition(position);
 }
 
 void Actor::SetWorldRotation(Vector3 rotation)
+{
+    _root->SetWorldRotation(rotation);
+}
+
+void Actor::SetWorldRotation(Vector2 rotation)
 {
     _root->SetWorldRotation(rotation);
 }
@@ -231,12 +247,27 @@ void Actor::SetRelativeScale(Vector3 scale)
     _root->SetRelativeScale(scale);
 }
 
+void Actor::SetRelativeScale(Vector2 scale)
+{
+    _root->SetRelativeScale(scale);
+}
+
 void Actor::SetRelativePosition(Vector3 position)
 {
     _root->SetRelativePosition(position);
 }
 
+void Actor::SetRelativePosition(Vector2 position)
+{
+    _root->SetRelativePosition(position);
+}
+
 void Actor::SetRelativeRotation(Vector3 rotation)
+{
+    _root->SetRelativeRotation(rotation);
+}
+
+void Actor::SetRelativeRotation(Vector2 rotation)
 {
     _root->SetRelativeRotation(rotation);
 }

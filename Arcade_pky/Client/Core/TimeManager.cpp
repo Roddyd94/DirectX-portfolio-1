@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "TimeManager.h"
+
 #include <utility>
 
 bool TimeManager::Init()
@@ -21,12 +22,14 @@ void TimeManager::Destroy()
 
 float TimeManager::Tick()
 {
-    auto curTime = std::chrono::high_resolution_clock::now();
+    auto                         curTime   = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float> frameTime = curTime - _prevTime;
 
     _deltaTime = frameTime.count();
 #ifdef _DEBUG
     _deltaTime = std::min(_deltaTime, _targetDeltaTime);
+    Sleep((_targetDeltaTime - _deltaTime) * 1'000);
+    _deltaTime = _targetDeltaTime;
 #endif // _DEBUG
 
     _prevTime = curTime;

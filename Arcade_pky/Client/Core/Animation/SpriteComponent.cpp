@@ -10,7 +10,7 @@
 
 SpriteComponent::SpriteComponent()
 {
-    _isRendering = true;
+    _shouldRender = true;
 }
 
 SpriteComponent::~SpriteComponent() {}

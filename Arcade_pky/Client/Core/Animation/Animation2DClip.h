@@ -26,7 +26,7 @@ public:
     int32 GetFrameCount() const;
 
     void SetFrameTime(float frameTime) { _frameTime = frameTime; }
-    void SetLoop(bool isLoop) { _isLoop = isLoop; }
+    void SetLoop(bool loop) { _isLoop = loop; }
 
     void AddFrameData(Ptr<class Animation2DSpriteSheet> sprite, int32 spriteIndex);
 };

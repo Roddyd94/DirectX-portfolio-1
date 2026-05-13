@@ -5,7 +5,6 @@
 #include "Level.h"
 #include "Test/TestLevel.h"
 
-
 #ifdef _HAS_COLLISION_MODULE
 #include "Core/Collision/CollisionProfileManager.h"
 #endif // _HAS_COLLISION_MODULE
@@ -21,7 +20,7 @@ void World::Init(const std::string& name)
 
     // TODO save & load
     // TODO _currentLevel = CreateLevel<Level>(name);
-    _currentLevel = CreateLevel<TestLevel>(This<World>(), name);
+    _currentLevel = CreateLevel<snowbros::TestLevel>(This<World>(), name);
 }
 
 void World::Destroy()

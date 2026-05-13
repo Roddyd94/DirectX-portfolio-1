@@ -2,6 +2,8 @@
 
 #include "Controller.h"
 
+#include "Pawn.h"
+
 bool Controller::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
     Actor::Init(id, position, scale, rotation);
@@ -31,4 +33,5 @@ Ptr<Pawn> Controller::GetPawn() const
 void Controller::SetPawn(Ptr<Pawn> pawn)
 {
     _pawn = pawn;
+    pawn->SetController(This<Controller>());
 }

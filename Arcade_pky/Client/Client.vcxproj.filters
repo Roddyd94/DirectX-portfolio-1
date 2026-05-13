@@ -164,10 +164,10 @@
       <Filter>Core\World\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Test\TestLevel.h">
-      <Filter>Test</Filter>
+      <Filter>Snowbros</Filter>
     </ClInclude>
-    <ClInclude Include="Test\TestActor.h">
-      <Filter>Test</Filter>
+    <ClInclude Include="Test\Player.h">
+      <Filter>Snowbros</Filter>
     </ClInclude>
     <ClInclude Include="Core\GraphicShader.h">
       <Filter>Core\Resource\Shader</Filter>
@@ -344,13 +344,43 @@
       <Filter>Animation\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="Test\SnowBrosTileParser.h">
-      <Filter>Test</Filter>
+      <Filter>Snowbros</Filter>
     </ClInclude>
     <ClInclude Include="Core\Animation\SpriteComponent.h">
       <Filter>Animation\Component</Filter>
     </ClInclude>
     <ClInclude Include="Core\Animation\SpriteShader.h">
       <Filter>Animation\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Platformer\PlatformerKinematicComponent.h">
+      <Filter>Platformer\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Platformer\PlatformerMovementComponent.h">
+      <Filter>Platformer\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Animation\Animation2DStateMachine.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Test\PlayerStateMachine.h">
+      <Filter>Snowbros\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Test\PlayerState.h">
+      <Filter>Snowbros\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Test\PlayerComponent.h">
+      <Filter>Snowbros\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Test\PlayerStateGround.h">
+      <Filter>Snowbros\StateMachine\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Test\PlayerStateMidair.h">
+      <Filter>Snowbros\StateMachine\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Test\PlayerStateDead.h">
+      <Filter>Snowbros\StateMachine\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Test\PlayerStateSnowball.h">
+      <Filter>Snowbros\StateMachine\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -501,10 +531,10 @@
       <Filter>Core\World\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Test\TestLevel.cpp">
-      <Filter>Test</Filter>
+      <Filter>Snowbros</Filter>
     </ClCompile>
-    <ClCompile Include="Test\TestActor.cpp">
-      <Filter>Test</Filter>
+    <ClCompile Include="Test\Player.cpp">
+      <Filter>Snowbros</Filter>
     </ClCompile>
     <ClCompile Include="Core\GraphicShader.cpp">
       <Filter>Core\Resource\Shader</Filter>
@@ -663,13 +693,43 @@
       <Filter>Animation\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="Test\SnowBrosTileParser.cpp">
-      <Filter>Test</Filter>
+      <Filter>Snowbros</Filter>
     </ClCompile>
     <ClCompile Include="Core\Animation\SpriteComponent.cpp">
       <Filter>Animation\Component</Filter>
     </ClCompile>
     <ClCompile Include="Core\Animation\SpriteShader.cpp">
       <Filter>Animation\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Platformer\PlatformerKinematicComponent.cpp">
+      <Filter>Platformer\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Platformer\PlatformerMovementComponent.cpp">
+      <Filter>Platformer\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Animation\Animation2DStateMachine.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Test\PlayerStateMachine.cpp">
+      <Filter>Snowbros\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Test\PlayerState.cpp">
+      <Filter>Snowbros\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Test\PlayerComponent.cpp">
+      <Filter>Snowbros\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Test\PlayerStateGround.cpp">
+      <Filter>Snowbros\StateMachine\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Test\PlayerStateMidair.cpp">
+      <Filter>Snowbros\StateMachine\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Test\PlayerStateDead.cpp">
+      <Filter>Snowbros\StateMachine\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Test\PlayerStateSnowball.cpp">
+      <Filter>Snowbros\StateMachine\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -762,9 +822,6 @@
     </Filter>
     <Filter Include="Core\World\Camera">
       <UniqueIdentifier>{f5bfec43-1a46-44cb-ab0a-fcfff9302f69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Test">
-      <UniqueIdentifier>{f60c71d4-3fd0-4ef9-b553-e752b4b0ab3a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\World\Actor">
       <UniqueIdentifier>{2b0a6991-821c-4e8a-be02-0380f991b7fc}</UniqueIdentifier>
@@ -874,6 +931,24 @@
     <Filter Include="Animation\HLSL">
       <UniqueIdentifier>{ea91eab1-9380-43bc-b73d-279ee11c5857}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platformer">
+      <UniqueIdentifier>{02d7de91-71da-491f-b60b-f51016497e8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platformer\Component">
+      <UniqueIdentifier>{7bf96ee7-43af-4396-88a0-fe9e675492ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros">
+      <UniqueIdentifier>{f60c71d4-3fd0-4ef9-b553-e752b4b0ab3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\Component">
+      <UniqueIdentifier>{cf565e9b-537e-4897-a037-851e95aca34f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\StateMachine">
+      <UniqueIdentifier>{c70b120e-e345-46c5-a9e9-7b9daa5fd407}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\StateMachine\State">
+      <UniqueIdentifier>{32a1990a-a603-4381-a4af-0bdc46a37ac6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -899,5 +974,10 @@
     <FxCompile Include="..\HLSL\Sprite.fx">
       <Filter>Animation\HLSL</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ThirdParty\fmod.dll">
+      <Filter>Core\Etc</Filter>
+    </None>
   </ItemGroup>
 </Project>

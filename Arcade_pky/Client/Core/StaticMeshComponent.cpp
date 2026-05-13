@@ -9,7 +9,7 @@
 
 StaticMeshComponent::StaticMeshComponent()
 {
-    _isRendering = true;
+    _shouldRender = true;
 }
 
 StaticMeshComponent::~StaticMeshComponent() {}

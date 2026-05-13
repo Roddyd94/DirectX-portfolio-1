@@ -18,7 +18,7 @@
 
 TilemapComponent::TilemapComponent()
 {
-    _isRendering = true;
+    _shouldRender = true;
 }
 
 TilemapComponent::~TilemapComponent() {}
@@ -73,7 +73,7 @@ void TilemapComponent::Render(float deltaTime)
     RenderOutline();
 }
 
-int32 TilemapComponent::GetTileIndexX(Vector2 pos) const
+int32 TilemapComponent::GetTileIndexX(Vector2 worldPosition) const
 {
     Ptr<Actor> owner = GetOwner();
     if (nullptr == owner)
@@ -81,7 +81,7 @@ int32 TilemapComponent::GetTileIndexX(Vector2 pos) const
 
     float startX = owner->GetWorldPosition().x - (_tileSize.x * 0.5f);
 
-    float localX = pos.x - startX;
+    float localX = worldPosition.x - startX;
 
     if (localX < 0.f)
         return -1;
@@ -93,7 +93,7 @@ int32 TilemapComponent::GetTileIndexX(Vector2 pos) const
     return indexX;
 }
 
-int32 TilemapComponent::GetTileIndexY(Vector2 pos) const
+int32 TilemapComponent::GetTileIndexY(Vector2 worldPosition) const
 {
     Ptr<Actor> owner = GetOwner();
     if (nullptr == owner)
@@ -101,7 +101,7 @@ int32 TilemapComponent::GetTileIndexY(Vector2 pos) const
 
     float startY = owner->GetWorldPosition().y - (_tileSize.y * 0.5f);
 
-    float localY = pos.y - startY;
+    float localY = worldPosition.y - startY;
 
     if (localY < 0.f)
         return -1;
@@ -113,10 +113,10 @@ int32 TilemapComponent::GetTileIndexY(Vector2 pos) const
     return indexY;
 }
 
-int32 TilemapComponent::GetTileIndex(Vector2 pos) const
+int32 TilemapComponent::GetTileIndex(Vector2 worldPosition) const
 {
-    int32 indexX = GetTileIndexX(pos);
-    int32 indexY = GetTileIndexY(pos);
+    int32 indexX = GetTileIndexX(worldPosition);
+    int32 indexY = GetTileIndexY(worldPosition);
 
     if (indexX == -1 || indexY == -1)
         return -1;
@@ -124,9 +124,9 @@ int32 TilemapComponent::GetTileIndex(Vector2 pos) const
     return indexY * _countX + indexX;
 }
 
-Ptr<class Tile> TilemapComponent::GetTile(Vector2 pos)
+Ptr<class Tile> TilemapComponent::GetTile(Vector2 worldPosition)
 {
-    int32 index = GetTileIndex(pos);
+    int32 index = GetTileIndex(worldPosition);
     return GetTile(index);
 }
 
@@ -164,12 +164,16 @@ void TilemapComponent::CreateTile(
 
     _tiles.resize(countX * countY);
 
+    Vector3 tilemapWorldPosition = GetWorldPosition();
+
     for (int32 i = 0; i < _countY; ++i)
     {
         for (int32 j = 0; j < _countX; ++j)
         {
             Ptr<Tile> tile = New<Tile>();
-            tile->_type    = TileType::Background;
+
+            tile->_owner = This<TilemapComponent>();
+            tile->_type  = TileType::Background;
 
             tile->_position.x = j * _tileSize.x;
             tile->_position.y = i * _tileSize.y;

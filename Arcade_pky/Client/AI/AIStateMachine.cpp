@@ -11,10 +11,10 @@ void AIStateMachine::Destroy()
 {
     DESTROY(_board)
 
-    for (auto& [_, state] : _stateFinder)
+    for (auto& [_, state] : _states)
         DESTROY(state)
 
-    _stateFinder.clear();
+    _states.clear();
 }
 
 void AIStateMachine::Tick(float deltaTime)

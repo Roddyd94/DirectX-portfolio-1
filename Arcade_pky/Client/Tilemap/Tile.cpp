@@ -2,7 +2,15 @@
 
 #include "Tile.h"
 
+#include "TilemapComponent.h"
+
 void Tile::Destroy() {}
+
+Vector2 Tile::GetWorldPosition() const
+{
+    Vector3 tilemapPosition = Lock(_owner)->GetWorldPosition();
+    return _position + Vector2{tilemapPosition.x, tilemapPosition.y};
+}
 
 Vector2 Tile::GetPosition() const
 {
@@ -31,12 +39,17 @@ uint32 Tile::GetSpriteIndex() const
 
 bool Tile::IsWall() const
 {
-    return _type & TileType::Wall;
+    return _type & TileType::IsWall;
 }
 
-bool Tile::IsPlatform() const
+bool Tile::IsFloor() const
 {
-    return _type & TileType::Platform;
+    return _type & TileType::IsFloor;
+}
+
+bool Tile::IsCeiling() const
+{
+    return _type & TileType::IsCeiling;
 }
 
 void Tile::SetPosition(Vector2 position)

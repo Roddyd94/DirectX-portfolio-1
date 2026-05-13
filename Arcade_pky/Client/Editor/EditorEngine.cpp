@@ -1,5 +1,5 @@
 #include "pch.h"
-
+#ifdef _EDITOR
 #include "EditorEngine.h"
 
 #include "Core/DeviceManager.h"
@@ -81,3 +81,4 @@ void EditorEngine::Render(float deltaTime)
 
     DeviceManager::Instance().Render();
 }
+#endif // _EDITOR

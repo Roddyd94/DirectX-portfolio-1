@@ -2,6 +2,8 @@
 
 #include "DeviceManager.h"
 
+#include "Common/LogManager.h"
+
 bool DeviceManager::Init(HWND hWnd, uint32 width, uint32 height, bool isWindowed)
 {
     _hWnd              = hWnd;
@@ -23,7 +25,8 @@ bool DeviceManager::Init(HWND hWnd, uint32 width, uint32 height, bool isWindowed
 
     uint32 sampleCount   = 4;
     uint32 qualityLevels = 0;
-    _device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, sampleCount, &qualityLevels);
+    _device->CheckMultisampleQualityLevels(
+      DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, sampleCount, &qualityLevels);
 
     if (qualityLevels <= 0)
         sampleCount = 1;
@@ -60,9 +63,6 @@ bool DeviceManager::Init(HWND hWnd, uint32 width, uint32 height, bool isWindowed
           _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)_backBuffer.GetAddressOf())))
         return false;
 
-    if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, _factory2D.GetAddressOf())))
-        return false;
-
     _rtvDefault = CreateRenderTargetView("Default");
     if (nullptr == _rtvDefault)
         return false;
@@ -94,9 +94,26 @@ bool DeviceManager::Init(HWND hWnd, uint32 width, uint32 height, bool isWindowed
 
     _context->RSSetViewports(1, &vp);
 
-    //_renderTargetDefault2D = CreateRenderTarget2D("Default");
-    // if (nullptr == _renderTargetDefault2D)
-    //    return false;
+    if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, __uuidof(ID2D1Factory1),
+          (void**)_factory2D.GetAddressOf())))
+        return false;
+
+    // RENDERDOC FAILS HERE
+    if (FAILED(_factory2D->CreateDevice(dxgiDevice.Get(), _device2D.GetAddressOf())))
+        return false;
+    
+    if (FAILED(_device2D->CreateDeviceContext(
+          D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS,
+          _context2D.GetAddressOf())))
+        return false;
+
+    ComPtr<IDXGISurface> dxgiSurface;
+    if (FAILED(_backBuffer->QueryInterface(IID_PPV_ARGS(&dxgiSurface))))
+        return false;
+
+    _bitmapDefault = CreateBitmap("Default", dxgiSurface);
+    if (nullptr == _bitmapDefault)
+        return false;
 
     return true;
 }
@@ -147,9 +164,9 @@ ComPtr<ID3D11DepthStencilView> DeviceManager::FindDepthStencilView(const std::st
     return nullptr;
 }
 
-ComPtr<ID2D1RenderTarget> DeviceManager::FindRenderTarget2D(const std::string& name) const
+ComPtr<ID2D1Bitmap1> DeviceManager::FindBitmap(const std::string& name) const
 {
-    if (auto it = _renderTargets2D.find(name); _renderTargets2D.end() != it)
+    if (auto it = _bitmaps.find(name); _bitmaps.end() != it)
         return it->second;
 
     return nullptr;
@@ -248,27 +265,27 @@ ComPtr<ID3D11DepthStencilView> DeviceManager::CreateDepthStencilView(
     return CreateDepthStencilView(name, texture, desc);
 }
 
-ComPtr<ID2D1RenderTarget> DeviceManager::CreateRenderTarget2D(
+ComPtr<ID2D1Bitmap1> DeviceManager::CreateBitmap(
   const std::string& name, ComPtr<IDXGISurface> surface)
 {
-    ComPtr<ID2D1RenderTarget> renderTarget2DFound = FindRenderTarget2D(name);
-    if (renderTarget2DFound)
-        return renderTarget2DFound;
+    ComPtr<ID2D1Bitmap1> bitmapFound = FindBitmap(name);
+    if (bitmapFound)
+        return bitmapFound;
 
     if (nullptr == surface)
         _swapChain->GetBuffer(0, IID_PPV_ARGS(surface.GetAddressOf()));
 
-    D2D1_RENDER_TARGET_PROPERTIES renderTargetProperties
-      = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_HARDWARE,
-        D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED));
+    ComPtr<ID2D1Bitmap1> bitmap = nullptr;
+    HRESULT              hResult
+      = _context2D->CreateBitmapFromDxgiSurface(surface.Get(), nullptr, bitmap.GetAddressOf());
 
-    ComPtr<ID2D1RenderTarget> renderTarget2D = nullptr;
-    if (FAILED(_factory2D->CreateDxgiSurfaceRenderTarget(
-          surface.Get(), renderTargetProperties, renderTarget2D.GetAddressOf())))
+    if (FAILED(hResult))
         return nullptr;
 
-    _renderTargets2D[name] = renderTarget2D;
-    return _renderTargets2D[name];
+    _context2D->SetTarget(bitmap.Get());
+
+    _bitmaps[name] = bitmap;
+    return _bitmaps[name];
 }
 
 void DeviceManager::SetTarget()

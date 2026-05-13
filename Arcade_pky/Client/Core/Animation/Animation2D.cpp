@@ -95,9 +95,9 @@ void Animation2D::SetPlayRate(float playRate)
     _playRate = playRate;
 }
 
-void Animation2D::SetReversed(bool isReversed)
+void Animation2D::SetReversed(bool reverse)
 {
-    _isReversed = isReversed;
+    _isReversed = reverse;
 }
 
 void Animation2D::SetFlipX(bool flipX)

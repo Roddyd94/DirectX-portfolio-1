@@ -22,6 +22,9 @@ void Pawn::Destroy()
 
 void Pawn::Tick(float deltaTime)
 {
+    if (_controller)
+        _controller->Tick(deltaTime);
+
     Actor::Tick(deltaTime);
 }
 

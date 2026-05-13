@@ -49,8 +49,7 @@ void LogManager::ProcessLog()
         }
 
         auto now = std::chrono::steady_clock::now();
-        if (_logger._logs.size() > MAX_LINES
-            || now - _lastDumpTime >= std::chrono::minutes(5))
+        if (_logger._logs.size() > MAX_LINES || now - _lastDumpTime >= std::chrono::minutes(5))
         {
             FlushToFile();
             _lastDumpTime = std::chrono::steady_clock::now();
@@ -75,8 +74,10 @@ void LogManager::FlushLogs()
         std::string msg = _logger._logs.front();
         _logger._logs.pop();
 
+#ifndef _DEBUG
         if (!_file.is_open())
             continue;
+#endif // !_DEBUG
 
         msg += "\n";
 
@@ -98,9 +99,8 @@ void LogManager::OpenNewFile()
     GetLocalTime(&sysTime);
 
     char fileName[128] = {};
-    sprintf_s(fileName, "%4d-%2d-%2dT%2d_%2d_%2d_%3d.txt", sysTime.wYear,
-      sysTime.wMonth, sysTime.wDay, sysTime.wHour, sysTime.wMinute,
-      sysTime.wSecond, sysTime.wMilliseconds);
+    sprintf_s(fileName, "%4d-%2d-%2dT%2d_%2d_%2d_%3d.txt", sysTime.wYear, sysTime.wMonth,
+      sysTime.wDay, sysTime.wHour, sysTime.wMinute, sysTime.wSecond, sysTime.wMilliseconds);
 
     std::filesystem::path filePath = *logPath / fileName;
 

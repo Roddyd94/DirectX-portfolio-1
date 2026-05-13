@@ -19,7 +19,7 @@
 CollisionComponent::CollisionComponent()
 {
 #ifdef _DEBUG
-    _isRendering     = true;
+    _shouldRender     = true;
     _renderLayerName = "Collider";
 #endif // _DEBUG
 }

@@ -1,6 +1,6 @@
 #pragma once
-#include "Timer.h"
 #include "Singleton.h"
+#include "Timer.h"
 
 #include <chrono>
 
@@ -10,7 +10,7 @@ class TimeManager : public Singleton<TimeManager>
     using TimePoint = std::chrono::high_resolution_clock::time_point;
 
 private:
-    inline static const float _targetDeltaTime = 0.0069444444f;
+    inline static const float _targetDeltaTime = 0.01333333333333333333333333333f;
 
 private:
     std::map<int32, Ptr<class Timer>> _timers;

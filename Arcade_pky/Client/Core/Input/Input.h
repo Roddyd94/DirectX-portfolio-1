@@ -43,7 +43,7 @@ private:
     Vector2 _mouseDelta;
 
     uint16 _mouseEvents  = 0x00;
-    bool   _mouseCompute = true;
+    bool   _shouldComputeMouse = true;
 
 public:
     bool Init();
@@ -67,7 +67,7 @@ private:
     void SetMouseEventOff(uint16 mouseButton, uint16 buttonEvent);
 
     bool CreateInputDevice(
-      ComPtr<IDirectInputDevice8W> device, GUID deviceGuid, LPCDIDATAFORMAT df);
+      ComPtr<IDirectInputDevice8W>& device, GUID deviceGuid, LPCDIDATAFORMAT df);
     bool UpdateInputDevice(
       ComPtr<IDirectInputDevice8W> device, LPVOID deviceState, DWORD sizeOfDeviceState);
 

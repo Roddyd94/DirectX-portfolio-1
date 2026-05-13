@@ -124,11 +124,11 @@ Ptr<InputAction> InputSystem::FindOrAddInputAction(const std::string& name)
     if (_allActions.end() != it)
         return it->second;
 
-    Ptr<InputAction> context = New<InputAction>();
-    context->_name           = name;
-    _allActions[name]        = context;
+    Ptr<InputAction> action = New<InputAction>();
+    action->_name           = name;
+    _allActions[name]        = action;
 
-    return context;
+    return action;
 }
 
 void InputSystem::AddActiveInputContext(Ptr<InputContext> context)

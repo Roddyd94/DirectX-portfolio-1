@@ -161,6 +161,11 @@ bool Vector3::operator!=(Vector3 other)
     return !(*this == other);
 }
 
+Vector2 Vector3::ToVector2() const
+{
+    return {x, y};
+}
+
 void Vector3::Set(int32 value)
 {
     float v = static_cast<float>(value);
@@ -258,16 +263,14 @@ float Vector3::Dot(Vector3 other) const
 
 Vector3 Vector3::Cross(Vector3 other) const
 {
-    return Vector3(y * other.z - z * other.y, z * other.x - x * other.z,
-      x * other.y - y * other.x);
+    return Vector3(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x);
 }
 
 Vector3 Vector3::TransformNormal(const Matrix& mat) const
 {
     DirectX::XMMATRIX invTranspose
       = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, mat.m));
-    DirectX::XMVECTOR result
-      = DirectX::XMVector3TransformNormal(*this, invTranspose);
+    DirectX::XMVECTOR result = DirectX::XMVector3TransformNormal(*this, invTranspose);
 
     return result;
 }
