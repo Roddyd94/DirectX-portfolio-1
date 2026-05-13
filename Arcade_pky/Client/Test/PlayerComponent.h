@@ -1,22 +1,24 @@
 #pragma once
+#include "PlayerState.h"
 #include "Core/Actor.h"
 #include "Core/ActorComponent.h"
 
-namespace snowbros
+class PlayerComponent : public ActorComponent
 {
-    class PlayerComponent : public ActorComponent
-    {
-    public:
-        PlayerComponent()           = default;
-        ~PlayerComponent() override = default;
+public:
+    PlayerComponent()           = default;
+    ~PlayerComponent() override = default;
 
-    private:
-        Ptr<class PlayerStateMachine> _stateMachine = nullptr;
+private:
+    Ptr<class PlayerStateMachine> _stateMachine = nullptr;
 
-    public:
-        bool Init(int32 componentID, const std::string& name, Ptr<Actor> owner) override;
-        void Destroy() override;
+public:
+    bool Init(int32 componentID, const std::string& name, Ptr<Actor> owner) override;
+    void Destroy() override;
+    void Tick(float deltaTime) override;
 
-        void Tick(float deltaTime) override;
-    };
-} // namespace snowbros
+    void Transition(Ptr<class PlayerState> state);
+    void HandleInput(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
+
+    PlayerStateType GetStateType() const;
+};

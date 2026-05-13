@@ -109,7 +109,8 @@ void SpriteComponent::Stop()
 
 void SpriteComponent::ChangeAnimation(const std::string& name, bool play)
 {
-    _animation->ChangeAnimationClip(name, play);
+    if (GetCurrentClipName() != name)
+        _animation->ChangeAnimationClip(name, play);
 }
 
 Ptr<class Animation2D> SpriteComponent::CreateAnimation()
@@ -129,4 +130,9 @@ Ptr<class Animation2D> SpriteComponent::CreateAnimation()
 Ptr<class Animation2D> SpriteComponent::GetAnimation()
 {
     return _animation;
+}
+
+const std::string& SpriteComponent::GetCurrentClipName() const
+{
+    return _animation->GetCurrentClip()->GetName();
 }

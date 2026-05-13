@@ -7,10 +7,11 @@
 #include "PlayerStateMidair.h"
 #include "PlayerStateSnowball.h"
 
-namespace snowbros
-{
-    Ptr<PlayerStateGround>   PlayerState::ground   = New<PlayerStateGround>();
-    Ptr<PlayerStateSnowball> PlayerState::snowball = New<PlayerStateSnowball>();
+Ptr<PlayerStateGround>   PlayerState::ground   = New<PlayerStateGround>();
+Ptr<PlayerStateSnowball> PlayerState::snowball = New<PlayerStateSnowball>();
 
-    void PlayerState::Destroy() {}
-} // namespace snowbros
+void            PlayerState::Destroy() {}
+PlayerStateType PlayerState::GetType() const
+{
+    return _stateType;
+}

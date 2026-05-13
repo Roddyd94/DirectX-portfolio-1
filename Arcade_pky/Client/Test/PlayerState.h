@@ -3,28 +3,38 @@
 #include "Core/Input/Types.h"
 #include "Core/Object.h"
 
-namespace snowbros
+enum class PlayerStateType : uint8
 {
-    class PlayerState : public Object
-    {
-    public:
-        PlayerState()           = default;
-        ~PlayerState() override = default;
+    Ground,
+    Midair,
+    Snowball,
+    Dead,
+    End
+};
 
-    public:
-        static Ptr<class PlayerStateGround>   ground;
-        static Ptr<class PlayerStateSnowball> snowball;
+class PlayerState : public Object
+{
+public:
+    PlayerState()           = default;
+    ~PlayerState() override = default;
 
-    public:
-        void Destroy() override;
+protected:
+    PlayerStateType _stateType = PlayerStateType::End;
 
-        virtual Ptr<PlayerState> HandleInput(Ptr<class PlayerComponent> player,
-          Ptr<InputAction>                                              action,
-          ButtonEventType::Type                                         buttonEvent)
-          = 0;
+public:
+    static Ptr<class PlayerStateGround>   ground;
+    static Ptr<class PlayerStateSnowball> snowball;
 
-        virtual void Enter(Ptr<class PlayerComponent> player) {}
-        virtual void Exit(Ptr<class PlayerComponent> player) {}
-        virtual void Tick(Ptr<class PlayerComponent> player, float deltaTime) {}
-    };
-} // namespace snowbros
+public:
+    void Destroy() override;
+
+    virtual Ptr<PlayerState> HandleInput(
+      Ptr<class PlayerComponent> player, Ptr<InputAction> action, ButtonEventType::Type buttonEvent)
+      = 0;
+
+    virtual void Enter(Ptr<class PlayerComponent> player) {}
+    virtual void Exit(Ptr<class PlayerComponent> player) {}
+    virtual void Tick(Ptr<class PlayerComponent> player, float deltaTime) {}
+
+    PlayerStateType GetType() const;
+};

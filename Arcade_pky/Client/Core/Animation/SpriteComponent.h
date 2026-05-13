@@ -34,6 +34,7 @@ public:
 
     Ptr<class Animation2D> CreateAnimation();
     Ptr<class Animation2D> GetAnimation();
+    const std::string&     GetCurrentClipName() const;
 
 public:
     template <typename T>

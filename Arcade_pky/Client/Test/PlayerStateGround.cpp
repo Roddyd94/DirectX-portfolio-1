@@ -2,19 +2,85 @@
 
 #include "PlayerStateGround.h"
 
-namespace snowbros
+#include "PlayerComponent.h"
+#include "PlayerStateMidair.h"
+#include "Core/Animation/SpriteComponent.h"
+#include "Platformer/PlatformerKinematicComponent.h"
+#include "Platformer/PlatformerMovementComponent.h"
+
+PlayerStateGround::PlayerStateGround()
 {
-    Ptr<PlayerState> snowbros::PlayerStateGround::HandleInput(Ptr<class PlayerComponent> player,
-      Ptr<class InputAction>                                                             action,
-      ButtonEventType::Type buttonEvent)
+    _stateType = PlayerStateType::Ground;
+}
+
+Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playerComponent,
+  Ptr<class InputAction>                                                   action,
+  ButtonEventType::Type                                                    buttonEvent)
+{
+    Ptr<Actor>                       player = playerComponent->GetOwner();
+    Ptr<PlatformerMovementComponent> movement
+      = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
+
+    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
+
+    if (action->GetName() == "MoveLeft")
     {
-        return nullptr;
+        switch (buttonEvent)
+        {
+        case ButtonEventType::Hold:
+            movement->MoveLeft();
+            sprite->ChangeAnimation("player_walk");
+            sprite->SetFlipX(false);
+            break;
+        case ButtonEventType::Up:
+            movement->Stop();
+            sprite->ChangeAnimation("player_stand");
+            break;
+        }
+    }
+    else if (action->GetName() == "MoveRight")
+    {
+        switch (buttonEvent)
+        {
+        case ButtonEventType::Hold:
+            movement->MoveRight();
+            sprite->ChangeAnimation("player_walk");
+            sprite->SetFlipX(true);
+            break;
+        case ButtonEventType::Up:
+            movement->Stop();
+            sprite->ChangeAnimation("player_stand");
+            break;
+        }
+    }
+    else if (action->GetName() == "Jump")
+    {
+        switch (buttonEvent)
+        {
+        case ButtonEventType::Down:
+            movement->Jump();
+            return New<PlayerStateMidair>();
+            break;
+        }
     }
 
-    void snowbros::PlayerStateGround::Enter(Ptr<class PlayerComponent> player) {}
+    return nullptr;
+}
 
-    void snowbros::PlayerStateGround::Exit(Ptr<class PlayerComponent> player) {}
+void PlayerStateGround::Enter(Ptr<class PlayerComponent> playerComponent)
+{
+    Ptr<Actor>                        player = playerComponent->GetOwner();
+    Ptr<PlatformerKinematicComponent> kinematic
+      = player->FindActorComponent<PlatformerKinematicComponent>("PlatformerKinematic");
+    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
 
-    void snowbros::PlayerStateGround::Tick(Ptr<class PlayerComponent> player, float deltaTime) {}
+    float deltaX = kinematic->GetVelocity().x;
+    if (std::abs(deltaX) < FLT_EPSILON)
+        sprite->ChangeAnimation("player_stand");
+    else
+        sprite->ChangeAnimation("player_walk");
+}
 
-} // namespace snowbros
+void PlayerStateGround::Exit(Ptr<class PlayerComponent> playerComponent) {}
+
+void PlayerStateGround::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime) {}

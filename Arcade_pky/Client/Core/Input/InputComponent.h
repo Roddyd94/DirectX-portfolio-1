@@ -62,7 +62,7 @@ public:
       const std::string&               actionName,
       uint8                            key,
       T*                               obj,
-      void (T::*memFunc)(Ptr<class InputAction>))
+      void (T::*memFunc)(Ptr<class InputAction>, ButtonEventType::Type))
     {
         Ptr<InputContext> context = InputSystem::Instance().FindOrAddInputContext(contextName);
         Ptr<InputAction>  action  = InputSystem::Instance().FindOrAddInputAction(actionName);
@@ -76,6 +76,6 @@ public:
             return;
 
         _bindingsByContext[contextName][actionName].callback
-          = std::bind(memFunc, obj, std::placeholders::_1);
+          = std::bind(memFunc, obj, std::placeholders::_1, std::placeholders::_2);
     }
 };

@@ -20,7 +20,7 @@ void World::Init(const std::string& name)
 
     // TODO save & load
     // TODO _currentLevel = CreateLevel<Level>(name);
-    _currentLevel = CreateLevel<snowbros::TestLevel>(This<World>(), name);
+    _currentLevel = CreateLevel<TestLevel>(This<World>(), name);
 }
 
 void World::Destroy()

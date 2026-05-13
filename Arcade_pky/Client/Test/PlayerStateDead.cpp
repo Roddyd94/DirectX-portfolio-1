@@ -2,16 +2,19 @@
 
 #include "PlayerStateDead.h"
 
-namespace snowbros
+PlayerStateDead::PlayerStateDead()
 {
-    Ptr<PlayerState> snowbros::PlayerStateDead::HandleInput(Ptr<class PlayerComponent> player, Ptr<InputAction> action, ButtonEventType::Type buttonEvent)
-    {
-        return nullptr;
-    }
+    _stateType = PlayerStateType::Dead;
+}
 
-    void snowbros::PlayerStateDead::Enter(Ptr<class PlayerComponent> player) {}
+Ptr<PlayerState> PlayerStateDead::HandleInput(
+  Ptr<class PlayerComponent> player, Ptr<InputAction> action, ButtonEventType::Type buttonEvent)
+{
+    return nullptr;
+}
 
-    void snowbros::PlayerStateDead::Exit(Ptr<class PlayerComponent> player) {}
+void PlayerStateDead::Enter(Ptr<class PlayerComponent> player) {}
 
-    void snowbros::PlayerStateDead::Tick(Ptr<class PlayerComponent> player, float deltaTime) {}
-} // namespace snowbros
+void PlayerStateDead::Exit(Ptr<class PlayerComponent> player) {}
+
+void PlayerStateDead::Tick(Ptr<class PlayerComponent> player, float deltaTime) {} 
