@@ -9,8 +9,6 @@ const Vector4 Vector4::axisY{0.f, 1.f, 0.f, 0.f};
 const Vector4 Vector4::axisZ{0.f, 0.f, 1.f, 0.f};
 const Vector4 Vector4::axisW{0.f, 0.f, 0.f, 1.f};
 
-Vector4::Vector4() : Vector4(0.f, 0.f, 0.f, 0.f) {}
-
 Vector4::Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
 Vector4& Vector4::operator=(Vector4 other)

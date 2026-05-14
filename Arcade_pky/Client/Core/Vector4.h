@@ -5,7 +5,7 @@
 
 union Vector4
 {
-    float data[4] = {0.f, 0.f, 0.f, 0.f};
+    float data[4] = {};
     struct
     {
         float x;
@@ -22,10 +22,10 @@ union Vector4
     };
 
 public:
-    Vector4();
-    Vector4(float x, float y, float z, float w);
+    Vector4()                         = default;
     Vector4(const Vector4& other)     = default;
     Vector4(Vector4&& other) noexcept = default;
+    Vector4(float x, float y, float z, float w);
 
     static const Vector4 zero;
     static const Vector4 one;

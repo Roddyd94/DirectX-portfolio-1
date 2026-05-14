@@ -3,7 +3,7 @@
 
 union Vector2
 {
-    float data[2] = {0.f, 0.f};
+    float data[2] = {};
     struct
     {
         float x;
@@ -11,10 +11,11 @@ union Vector2
     };
 
 public:
-    Vector2();
-    Vector2(float x, float y);
-    Vector2(const Vector2& other) = default;
+    Vector2()                         = default;
+    Vector2(const Vector2& other)     = default;
     Vector2(Vector2&& other) noexcept = default;
+
+    Vector2(float x, float y);
 
     static const Vector2 zero;
     static const Vector2 one;

@@ -46,7 +46,7 @@ using namespace Microsoft::WRL;
 #include "Core/Color.h"
 #include "Core/Matrix.h"
 #include "Core/Ptr.h"
+#include "Core/Rect.h"
 
 #define _HAS_COLLISION_MODULE
 #define _HAS_TILEMAP_MODULE
-

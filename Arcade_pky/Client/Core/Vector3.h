@@ -7,7 +7,7 @@ union Matrix;
 
 union Vector3
 {
-    float data[3] = {0.f, 0.f, 0.f};
+    float data[3] = {};
     struct
     {
         float x;
@@ -22,10 +22,10 @@ union Vector3
     };
 
 public:
-    Vector3();
-    Vector3(float x, float y, float z);
+    Vector3()                         = default;
     Vector3(const Vector3& other)     = default;
     Vector3(Vector3&& other) noexcept = default;
+    Vector3(float x, float y, float z);
     Vector3(const DirectX::XMVECTOR& v);
 
     operator DirectX::XMVECTOR() const;

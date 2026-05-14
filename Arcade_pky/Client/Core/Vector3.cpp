@@ -10,8 +10,6 @@ const Vector3 Vector3::axisX{1.f, 0.f, 0.f};
 const Vector3 Vector3::axisY{0.f, 1.f, 0.f};
 const Vector3 Vector3::axisZ{0.f, 0.f, 1.f};
 
-Vector3::Vector3() : Vector3(0.f, 0.f, 0.f) {}
-
 Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
 Vector3::Vector3(const DirectX::XMVECTOR& v)
