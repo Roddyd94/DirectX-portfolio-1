@@ -36,3 +36,8 @@ Ptr<class InputComponent> PlayerController::GetInputComponent() const
 {
     return _inputComponent;
 }
+
+void PlayerController::SetActiveContext(const std::string& name)
+{
+    _inputComponent->SetActiveContext(name);
+}

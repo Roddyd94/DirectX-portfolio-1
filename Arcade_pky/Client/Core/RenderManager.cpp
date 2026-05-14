@@ -11,9 +11,14 @@
 
 bool RenderManager::Init()
 {
-    CreateRenderLayer("Background", 100);
-    CreateRenderLayer("Default", 500);
-    CreateRenderLayer("Player", 1'000);
+    CreateRenderLayer("Background", 1'000);
+    CreateRenderLayer("Default", 5'000);
+    CreateRenderLayer("Item", 3'000);
+    CreateRenderLayer("Enemy", 4'000);
+    CreateRenderLayer("Snowball", 5'000);
+    CreateRenderLayer("EnemyProjectile", 5'000);
+    CreateRenderLayer("PlayerProjectile", 6'000);
+    CreateRenderLayer("Player", 6'000);
 
 #ifdef _DEBUG
     CreateRenderLayer("Collider", INT_MAX);
@@ -23,10 +28,8 @@ bool RenderManager::Init()
     if (!_renderStateManager->Init())
         return false;
 
-    _alphaBlend
-      = _renderStateManager->FindRenderState<BlendState>("AlphaBlend");
-    _depthStencilState
-      = _renderStateManager->FindRenderState<DepthStencilState>("DepthStencil");
+    _alphaBlend        = _renderStateManager->FindRenderState<BlendState>("AlphaBlend");
+    _depthStencilState = _renderStateManager->FindRenderState<DepthStencilState>("DepthStencil");
 
     return true;
 }
@@ -64,8 +67,7 @@ void RenderManager::Tick(float deltaTime)
             auto itRenderer = layer.renderersByIDPair.begin();
             while (itRenderer != layer.renderersByIDPair.end())
             {
-                Ptr<SceneComponent> renderer
-                  = Lock<SceneComponent>(itRenderer->second);
+                Ptr<SceneComponent> renderer = Lock<SceneComponent>(itRenderer->second);
                 if (nullptr == renderer)
                 {
                     itRenderer++;
@@ -80,8 +82,7 @@ void RenderManager::Tick(float deltaTime)
                 }
 
                 // 렌더러가 속한 레이어?
-                RenderLayer* rendererLayer
-                  = FindLayer(renderer->GetRenderLayerName());
+                RenderLayer* rendererLayer = FindLayer(renderer->GetRenderLayerName());
                 if (nullptr == rendererLayer)
                 {
                     itRenderer++;
@@ -94,11 +95,10 @@ void RenderManager::Tick(float deltaTime)
                     continue;
                 }
 
-                ComponentIDPair key
-                  = {owner->GetActorID(), renderer->GetComponentID()};
+                ComponentIDPair key = {owner->GetActorID(), renderer->GetComponentID()};
 
                 rendererLayer->renderersByIDPair[key] = renderer;
-                itRenderer = layer.renderersByIDPair.erase(itRenderer);
+                itRenderer                            = layer.renderersByIDPair.erase(itRenderer);
 
                 rendererLayer->refreshRenders = true;
                 layer.refreshRenders          = true;
@@ -127,8 +127,7 @@ void RenderManager::Render(float deltaTime)
         if (_shouldSortY)
         {
             std::sort(layer.renderers.begin(), layer.renderers.end(),
-              [](const Weak<SceneComponent>& lhs,
-                const Weak<SceneComponent>&  rhs)
+              [](const Weak<SceneComponent>& lhs, const Weak<SceneComponent>& rhs)
               {
                   Ptr<SceneComponent> rendererLHS = Lock<SceneComponent>(lhs);
                   Ptr<SceneComponent> rendererRHS = Lock<SceneComponent>(rhs);
@@ -136,8 +135,7 @@ void RenderManager::Render(float deltaTime)
                   if (!rendererLHS || !rendererRHS)
                       return false;
 
-                  return rendererLHS->GetWorldPosition().y
-                       < rendererRHS->GetWorldPosition().y;
+                  return rendererLHS->GetWorldPosition().y < rendererRHS->GetWorldPosition().y;
               });
         }
 
@@ -202,8 +200,7 @@ void RenderManager::AddRenderComponent(int32 actorID, Ptr<SceneComponent> comp)
 void RenderManager::RemoveRenderComponent(
   const std::string& layerName, int32 actorID, int32 componentID)
 {
-    std::tuple<std::string, int32, int32> key
-      = {layerName, actorID, componentID};
+    std::tuple<std::string, int32, int32> key = {layerName, actorID, componentID};
     _renderersToRemove.push_back(key);
 }
 

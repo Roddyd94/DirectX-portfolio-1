@@ -19,5 +19,7 @@ public:
     void Transition(Ptr<class PlayerState> state);
     void HandleInput(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
 
+    Ptr<class Player> GetPlayer() const;
+
     uint8 GetStateType() const;
 };

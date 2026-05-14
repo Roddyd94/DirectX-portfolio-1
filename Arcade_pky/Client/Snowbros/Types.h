@@ -1,6 +1,6 @@
 #pragma once
 
-namespace PlayerStateType
+namespace SnowbrosPlayerStateType
 {
     enum Type : uint8
     {
@@ -9,5 +9,19 @@ namespace PlayerStateType
         Snowball,
         Dead,
         End
+    };
+}
+
+namespace SnowbrosColliderType
+{
+    enum Type : uint8
+    {
+        Player,
+        Enemy,
+        Boss,
+        PlayerProjectile,
+        EnemyProjectile,
+        Item,
+        End,
     };
 }

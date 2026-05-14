@@ -9,11 +9,6 @@ public:
 
 private:
     bool  _jumped  = true;
-    float _accTime = 0.f;
-
-private:
-    inline static const float jumpTime   = 0.13333333333333333333f;
-    inline static const float tumbleTime = 0.53333333333333333333f;
 
 public:
     Ptr<PlayerState> HandleInput(Ptr<class PlayerComponent> playerComponent,

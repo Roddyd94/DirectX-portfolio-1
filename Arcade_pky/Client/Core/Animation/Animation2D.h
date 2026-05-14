@@ -40,6 +40,7 @@ public:
 
     Ptr<class Animation2DSequence> GetSequence() const;
     Ptr<class Animation2DClip>     GetCurrentClip() const;
+    int32                          GetClipFrameCount(const std::string& name) const;
 
     void SetAnimationSequence(Ptr<class Animation2DSequence> sequence);
     void SetAnimationSequence(const std::string& sequenceName);
@@ -68,11 +69,7 @@ public:
 
         std::pair<int32, int32> key = {clip->GetID(), frameIndex};
 
-        auto it = _notifies.find(key);
-        if (_notifies.end() == it)
-            return;
-
-        _notifies[key] = std::bind(memFunc, obj);
+        _notifies[key].callbacks.push_back(std::bind(memFunc, obj));
     }
 
     template <typename T>
@@ -84,10 +81,6 @@ public:
 
         std::pair<int32, int32> key = {clip->GetID(), frameIndex};
 
-        auto it = _notifies.find(key);
-        if (_notifies.end() == it)
-            return;
-
-        _notifies[key] = std::forward<T>(func);
+        _notifies[key].callbacks.push_back(std::forward<T>(func));
     }
 };

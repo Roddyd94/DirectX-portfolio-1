@@ -22,6 +22,11 @@ void PlatformerMovementComponent::Tick(float deltaTime)
     ActorComponent::Tick(deltaTime);
 }
 
+float PlatformerMovementComponent::GetDirection() const
+{
+    return _direction;
+}
+
 void PlatformerMovementComponent::SetKinematic(Ptr<class PlatformerKinematicComponent> kinematic)
 {
     _kinematic = kinematic;
@@ -40,11 +45,13 @@ void PlatformerMovementComponent::SetJumpForce(float force)
 void PlatformerMovementComponent::MoveLeft()
 {
     _kinematic->MoveX(-_speedX);
+    _direction = -1.f;
 }
 
 void PlatformerMovementComponent::MoveRight()
 {
     _kinematic->MoveX(_speedX);
+    _direction = 1.f;
 }
 
 void PlatformerMovementComponent::Stop()

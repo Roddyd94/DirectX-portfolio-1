@@ -38,10 +38,10 @@ namespace ColliderType
     enum Type : uint8
     {
         Player,
-        Monster,
-        Boss,
+        Enemy,
+        Snowball,
         PlayerProjectile,
-        MonsterProjectile,
+        EnemyProjectile,
         Item,
         End,
     };

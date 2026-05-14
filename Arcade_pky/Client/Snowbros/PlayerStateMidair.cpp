@@ -3,14 +3,15 @@
 #include "PlayerStateMidair.h"
 
 #include "Types.h"
-#include "Core/Actor.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
+#include "Player/Player.h"
 #include "Player/PlayerComponent.h"
+#include "Player/PlayerController.h"
 
 PlayerStateMidair::PlayerStateMidair(bool jumped) : _jumped(jumped)
 {
-    _stateType = PlayerStateType::Midair;
+    _stateType = SnowbrosPlayerStateType::Midair;
 }
 
 Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playerComponent,
@@ -55,10 +56,16 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
 
 void PlayerStateMidair::Enter(Ptr<class PlayerComponent> playerComponent)
 {
-    Ptr<Actor>           player = playerComponent->GetOwner();
-    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
+    Ptr<Player>          player = playerComponent->GetPlayer();
 
-    sprite->ChangeAnimation("player_jump");
+    auto controller = player->GetController();
+    controller->SetActiveContext("Midair");
+
+    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
+    if (_jumped)
+        sprite->ChangeAnimation("player_jump");
+    else
+        sprite->ChangeAnimation("player_midair");
 }
 
 void PlayerStateMidair::Exit(Ptr<class PlayerComponent> playerComponent) {}
@@ -68,21 +75,6 @@ void PlayerStateMidair::Tick(Ptr<class PlayerComponent> playerComponent, float d
     Ptr<Actor>                       player = playerComponent->GetOwner();
     Ptr<PlatformerMovementComponent> movement
       = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
-    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
-
-    if (_jumped)
-    {
-        _accTime += deltaTime;
-
-        if (_accTime > tumbleTime)
-        {
-            sprite->ChangeAnimation("player_jump");
-            _jumped = false;
-        }
-
-        if (_jumped && _accTime > jumpTime)
-            sprite->ChangeAnimation("player_tumble");
-    }
 
     movement->AccelerateGravity(deltaTime);
 }

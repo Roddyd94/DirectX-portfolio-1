@@ -2,14 +2,19 @@
 
 #include "PlayerStateSnowball.h"
 
+#include "Types.h"
+#include "Player/Player.h"
+#include "Player/PlayerComponent.h"
+#include "Player/PlayerController.h"
+
 const Ptr<PlayerStateSnowball> PlayerStateSnowball::instance = New<PlayerStateSnowball>();
 
 PlayerStateSnowball::PlayerStateSnowball()
 {
-    _stateType = PlayerStateType::Snowball;
+    _stateType = SnowbrosPlayerStateType::Snowball;
 }
 
-Ptr<PlayerState> PlayerStateSnowball::HandleInput(Ptr<class PlayerComponent> player,
+Ptr<PlayerState> PlayerStateSnowball::HandleInput(Ptr<class PlayerComponent> playerComponent,
   Ptr<class InputAction>                                                     action,
   ButtonEventType::Type                                                      buttonEvent)
 {
@@ -18,8 +23,14 @@ Ptr<PlayerState> PlayerStateSnowball::HandleInput(Ptr<class PlayerComponent> pla
     return nullptr;
 }
 
-void PlayerStateSnowball::Enter(Ptr<class PlayerComponent> player) {}
+void PlayerStateSnowball::Enter(Ptr<class PlayerComponent> playerComponent)
+{
+    Ptr<Player> player = playerComponent->GetPlayer();
 
-void PlayerStateSnowball::Exit(Ptr<class PlayerComponent> player) {}
+    auto controller = player->GetController();
+    controller->SetActiveContext("Snowball");
+}
 
-void PlayerStateSnowball::Tick(Ptr<class PlayerComponent> player, float deltaTime) {}
+void PlayerStateSnowball::Exit(Ptr<class PlayerComponent> playerComponent) {}
+
+void PlayerStateSnowball::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime) {}

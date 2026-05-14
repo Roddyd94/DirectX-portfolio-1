@@ -4,11 +4,11 @@
 
 struct RenderLayer
 {
-    std::string                                     name;
+    std::string                                           name;
     std::map<ComponentIDPair, Weak<class SceneComponent>> renderersByIDPair;
     std::vector<Weak<class SceneComponent>>               renderers;
-    int32                                           order;
-    bool                                            refreshRenders;
+    int32                                                 order;
+    bool                                                  refreshRenders;
 };
 
 class RenderManager : public Singleton<RenderManager>
@@ -39,13 +39,11 @@ public:
 
     RenderLayer* FindLayer(const std::string& name);
 
-    void SetYSort(bool sortY);
+    void CreateRenderLayer(const std::string& name, int32 order);
     void AddRenderComponent(int32 actorID, Ptr<class SceneComponent> comp);
 
-    void RemoveRenderComponent(
-      const std::string& layerName, int32 actorID, int32 componentID);
-    void RefreshLayer();
+    void SetYSort(bool sortY);
 
-private:
-    void CreateRenderLayer(const std::string& name, int32 order);
+    void RemoveRenderComponent(const std::string& layerName, int32 actorID, int32 componentID);
+    void RefreshLayer();
 };

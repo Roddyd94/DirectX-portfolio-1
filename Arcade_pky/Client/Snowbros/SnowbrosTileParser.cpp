@@ -97,10 +97,10 @@ bool SnowbrosTileParser::ParseAnimationData(const std::string& textureName,
 
     std::fstream fs{filePath.native(), fs.binary | fs.in};
 
-    uint16 spriteCount;
-    fs.read(reinterpret_cast<char*>(&spriteCount), sizeof(uint16));
     ANIMATION_MANAGER->CreateSpriteSheet(spriteSheetName, texture);
 
+    uint16 spriteCount;
+    fs.read(reinterpret_cast<char*>(&spriteCount), sizeof(uint16));
     for (size_t i = 0; i < spriteCount; i++)
     {
         uint16 startX;
@@ -123,7 +123,19 @@ bool SnowbrosTileParser::ParseAnimationData(const std::string& textureName,
         ANIMATION_MANAGER->AddSprite(spriteSheetName, start, size);
     }
 
-    ANIMATION_MANAGER->CreateAnimationSequence(spriteSheetName);
+    uint16 sequenceCount;
+    fs.read(reinterpret_cast<char*>(&sequenceCount), sizeof(uint16));
+    for (size_t i = 0; i < sequenceCount; i++)
+    {
+        uint16 sequenceNameLength;
+        fs.read(reinterpret_cast<char*>(&sequenceNameLength), sizeof(uint16));
+
+        std::string sequenceName;
+        sequenceName.resize(sequenceNameLength);
+        fs.read(sequenceName.data(), sequenceNameLength);
+        ANIMATION_MANAGER->CreateAnimationSequence(sequenceName);
+    }
+
     uint16 clipCount;
     fs.read(reinterpret_cast<char*>(&clipCount), sizeof(uint16));
     for (size_t i = 0; i < clipCount; i++)
@@ -131,11 +143,18 @@ bool SnowbrosTileParser::ParseAnimationData(const std::string& textureName,
         uint16 clipNameLength;
         fs.read(reinterpret_cast<char*>(&clipNameLength), sizeof(uint16));
 
-        char clipName[256] = {};
-        fs.read(reinterpret_cast<char*>(&clipName), clipNameLength);
-
+        std::string clipName;
+        clipName.resize(clipNameLength);
+        fs.read(clipName.data(), clipNameLength);
         Ptr<Animation2DClip> clip = ANIMATION_MANAGER->CreateAnimationClip(clipName);
-        ANIMATION_MANAGER->AddClip(spriteSheetName, clipName);
+
+        uint16 sequenceNameLength;
+        fs.read(reinterpret_cast<char*>(&sequenceNameLength), sizeof(uint16));
+
+        std::string sequenceName;
+        sequenceName.resize(sequenceNameLength);
+        fs.read(sequenceName.data(), sequenceNameLength);
+        ANIMATION_MANAGER->AddClip(sequenceName, clipName);
 
         uint16 isLoop;
         fs.read(reinterpret_cast<char*>(&isLoop), sizeof(uint16));

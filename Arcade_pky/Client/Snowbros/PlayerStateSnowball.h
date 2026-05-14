@@ -11,11 +11,11 @@ public:
     static const Ptr<class PlayerStateSnowball> instance;
 
 public:
-    Ptr<PlayerState> HandleInput(Ptr<class PlayerComponent> player,
+    Ptr<PlayerState> HandleInput(Ptr<class PlayerComponent> playerComponent,
       Ptr<class InputAction>                                action,
       ButtonEventType::Type                                 buttonEvent) override;
 
-    void Enter(Ptr<class PlayerComponent> player) override;
-    void Exit(Ptr<class PlayerComponent> player) override;
-    void Tick(Ptr<class PlayerComponent> player, float deltaTime) override;
+    void Enter(Ptr<class PlayerComponent> playerComponent) override;
+    void Exit(Ptr<class PlayerComponent> playerComponent) override;
+    void Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime) override;
 };

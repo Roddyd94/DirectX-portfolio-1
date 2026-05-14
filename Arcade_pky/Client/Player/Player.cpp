@@ -22,3 +22,8 @@ bool Player::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 
     return true;
 }
+
+Ptr<class PlayerController> Player::GetController() const
+{
+    return _playerController;
+}

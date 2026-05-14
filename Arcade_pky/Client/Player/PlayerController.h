@@ -19,4 +19,6 @@ public:
     void Collision(float deltaTime) override;
 
     Ptr<class InputComponent> GetInputComponent() const;
+    
+    void SetActiveContext(const std::string& name);
 };

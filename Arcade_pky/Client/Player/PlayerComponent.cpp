@@ -2,6 +2,7 @@
 
 #include "PlayerComponent.h"
 
+#include "Player.h"
 #include "PlayerStateMachine.h"
 
 bool PlayerComponent::Init(int32 componentID, const std::string& name, Ptr<class Actor> owner)
@@ -33,6 +34,11 @@ void PlayerComponent::Transition(Ptr<class PlayerState> state)
 void PlayerComponent::HandleInput(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)
 {
     _stateMachine->HandleInput(action, buttonEvent);
+}
+
+Ptr<class Player> PlayerComponent::GetPlayer() const
+{
+    return Cast<Actor, Player>(GetOwner());
 }
 
 uint8 PlayerComponent::GetStateType() const

@@ -521,6 +521,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Platformer\PlatformerKinematicComponent.h" />
+    <ClInclude Include="Platformer\PlatformerKinematicPlayerComponent.h" />
     <ClInclude Include="Platformer\PlatformerMovementComponent.h" />
     <ClInclude Include="Platformer\Types.h" />
     <ClInclude Include="Player\Player.h" />
@@ -533,9 +534,12 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Snowbros\PlayerStateGround.h" />
     <ClInclude Include="Snowbros\PlayerStateMidair.h" />
     <ClInclude Include="Snowbros\PlayerStateSnowball.h" />
+    <ClInclude Include="Snowbros\ShootComponent.h" />
     <ClInclude Include="Snowbros\SnowbrosLevel.h" />
     <ClInclude Include="Snowbros\SnowbrosPlayer.h" />
     <ClInclude Include="Snowbros\SnowbrosTileParser.h" />
+    <ClInclude Include="Snowbros\SnowProjectile.h" />
+    <ClInclude Include="Snowbros\SnowProjectileComponent.h" />
     <ClInclude Include="Snowbros\Types.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Tilemap\Tile.h" />
@@ -654,6 +658,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Platformer\PlatformerKinematicComponent.cpp" />
+    <ClCompile Include="Platformer\PlatformerKinematicPlayerComponent.cpp" />
     <ClCompile Include="Platformer\PlatformerMovementComponent.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Player\PlayerComponent.cpp" />
@@ -664,9 +669,12 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Snowbros\PlayerStateGround.cpp" />
     <ClCompile Include="Snowbros\PlayerStateMidair.cpp" />
     <ClCompile Include="Snowbros\PlayerStateSnowball.cpp" />
+    <ClCompile Include="Snowbros\ShootComponent.cpp" />
     <ClCompile Include="Snowbros\SnowbrosLevel.cpp" />
     <ClCompile Include="Snowbros\SnowbrosPlayer.cpp" />
     <ClCompile Include="Snowbros\SnowbrosTileParser.cpp" />
+    <ClCompile Include="Snowbros\SnowProjectile.cpp" />
+    <ClCompile Include="Snowbros\SnowProjectileComponent.cpp" />
     <ClCompile Include="Tilemap\Tile.cpp" />
     <ClCompile Include="Tilemap\TileInstanceShader.cpp" />
     <ClCompile Include="Tilemap\Tilemap.cpp" />

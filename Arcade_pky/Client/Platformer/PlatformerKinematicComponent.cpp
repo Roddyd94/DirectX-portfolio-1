@@ -27,53 +27,10 @@ void PlatformerKinematicComponent::Tick(float deltaTime)
 {
     ActorComponent::Tick(deltaTime);
 
-    Ptr<Actor> actor    = GetOwner();
-    Vector2    worldPos = actor->GetWorldPosition().ToVector2();
+    Ptr<Actor> actor = GetOwner();
 
-    switch (_state)
-    {
-    case PlatformerKinematicState::OnGround:
-    {
-        if (IsColliderTouchedBoundaryX(worldPos, _velocity.x)
-            || IsColliderTouchedWall(worldPos, _velocity.x))
-            return;
-
-        worldPos.x += _velocity.x * deltaTime;
-
-        bool isOnFloor = IsColliderOnFloor(worldPos);
-        if (!isOnFloor)
-            ChangeStateTo(PlatformerKinematicState::OnAir);
-    }
-    break;
-    case PlatformerKinematicState::OnAir:
-    {
-        if (!IsColliderTouchedBoundaryX(worldPos, _velocity.x)
-            && !IsColliderTouchedWall(worldPos, _velocity.x))
-            worldPos.x += _velocity.x * deltaTime;
-
-        bool isOnFloorPrev = IsColliderOnFloor(worldPos);
-        worldPos.y += _velocity.y * deltaTime;
-        bool isOnFloorNext = IsColliderOnFloor(worldPos);
-
-        if (_velocity.y < 0 && !isOnFloorPrev && isOnFloorNext)
-        {
-            AdjustPositionToFloor(worldPos);
-            _velocity.y = 0.f;
-            ChangeStateTo(PlatformerKinematicState::OnGround);
-        }
-    }
-    break;
-    case PlatformerKinematicState::OnSlope:
-        break;
-    case PlatformerKinematicState::OnLadder:
-        break;
-    case PlatformerKinematicState::Attached:
-    {
-        if (_attachedTo)
-            worldPos = _attachedTo->GetWorldPosition().ToVector2();
-    }
-    break;
-    }
+    Vector2 worldPos = actor->GetWorldPosition().ToVector2();
+    worldPos += _velocity * deltaTime;
 
     actor->SetWorldPosition(worldPos);
 }
@@ -93,24 +50,15 @@ void PlatformerKinematicComponent::SetCollider(Ptr<class AABBCollisionComponent>
     _collider = collider;
 }
 
-void PlatformerKinematicComponent::ChangeStateTo(PlatformerKinematicState::Type state)
-{
-    _state = state;
-    _onStateChangedTo[_state]();
-}
-
-void PlatformerKinematicComponent::SetUseGravity(bool useGravity)
-{
-    _useGravity = useGravity;
-}
-
 void PlatformerKinematicComponent::AttachTo(Ptr<class Actor> actor)
 {
+    if (nullptr == actor)
+        _attachedTo = nullptr;
+
     if (GetOwner()->GetActorID() == actor->GetActorID())
         return;
 
     _attachedTo = actor;
-    _state      = PlatformerKinematicState::Attached;
 }
 
 void PlatformerKinematicComponent::MoveX(float speed)

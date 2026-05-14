@@ -4,17 +4,18 @@
 
 #include "PlayerStateMidair.h"
 #include "Types.h"
-#include "Core/Actor.h"
 #include "Core/Animation/SpriteComponent.h"
-#include "Platformer/PlatformerKinematicComponent.h"
+#include "Platformer/PlatformerKinematicPlayerComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
+#include "Player/Player.h"
 #include "Player/PlayerComponent.h"
+#include "Player/PlayerController.h"
 
 const Ptr<PlayerStateGround> PlayerStateGround::instance = New<PlayerStateGround>();
 
 PlayerStateGround::PlayerStateGround()
 {
-    _stateType = PlayerStateType::Ground;
+    _stateType = SnowbrosPlayerStateType::Ground;
 }
 
 Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playerComponent,
@@ -33,7 +34,8 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         {
         case ButtonEventType::Hold:
             movement->MoveLeft();
-            sprite->ChangeAnimation("player_walk");
+            if (sprite->GetCurrentClipName() != "player_shoot")
+                sprite->ChangeAnimation("player_walk");
             sprite->SetFlipX(false);
             break;
         case ButtonEventType::Up:
@@ -48,12 +50,14 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         {
         case ButtonEventType::Hold:
             movement->MoveRight();
-            sprite->ChangeAnimation("player_walk");
+            if (sprite->GetCurrentClipName() != "player_shoot")
+                sprite->ChangeAnimation("player_walk");
             sprite->SetFlipX(true);
             break;
         case ButtonEventType::Up:
             movement->Stop();
-            sprite->ChangeAnimation("player_stand");
+            if (sprite->GetCurrentClipName() != "player_shoot")
+                sprite->ChangeAnimation("player_stand");
             break;
         }
     }
@@ -63,13 +67,13 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         {
         case ButtonEventType::Down:
         {
-            Ptr<PlatformerKinematicComponent> kinematic
-              = player->FindActorComponent<PlatformerKinematicComponent>("PlatformerKinematic");
+            Ptr<PlatformerKinematicPlayerComponent> kinematic
+              = player->FindActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
 
             movement->Jump();
             kinematic->ChangeStateTo(PlatformerKinematicState::OnAir);
 
-            return New<PlayerStateMidair>();
+            return New<PlayerStateMidair>(true);
         }
         break;
         }
@@ -80,12 +84,16 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
 
 void PlayerStateGround::Enter(Ptr<class PlayerComponent> playerComponent)
 {
-    Ptr<Actor>                        player = playerComponent->GetOwner();
-    Ptr<PlatformerKinematicComponent> kinematic
-      = player->FindActorComponent<PlatformerKinematicComponent>("PlatformerKinematic");
-    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
+    Ptr<Player> player = playerComponent->GetPlayer();
 
+    auto controller = player->GetController();
+    controller->SetActiveContext("Ground");
+
+    Ptr<PlatformerKinematicComponent> kinematic
+      = player->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
     float deltaX = kinematic->GetVelocity().x;
+
+    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
     if (std::abs(deltaX) < FLT_EPSILON)
         sprite->ChangeAnimation("player_stand");
     else

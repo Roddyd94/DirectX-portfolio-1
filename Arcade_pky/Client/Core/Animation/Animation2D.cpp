@@ -31,37 +31,18 @@ void Animation2D::Tick(float deltaTime)
         return;
 
     _accTime -= _currentAnimationClip->GetFrameTime();
+    ++_frameIndex;
 
-    if (_isReversed)
+    if (_frameIndex >= _currentAnimationClip->GetFrameCount())
     {
-        --_frameIndex;
-
-        if (_frameIndex < 0)
+        if (_currentAnimationClip->IsLoop())
+            _frameIndex = 0;
+        else
         {
-            if (_currentAnimationClip->IsLoop())
-            {
+            _isPlaying       = false;
+            InvokeNotify();
+            if (_frameIndex != 0)
                 _frameIndex = _currentAnimationClip->GetFrameCount() - 1;
-            }
-            else
-            {
-                _frameIndex = 0;
-                _isPlaying  = false;
-            }
-        }
-    }
-    else
-    {
-        ++_frameIndex;
-
-        if (_frameIndex >= _currentAnimationClip->GetFrameCount())
-        {
-            if (_currentAnimationClip->IsLoop())
-                _frameIndex = 0;
-            else
-            {
-                _frameIndex = _currentAnimationClip->GetFrameCount() - 1;
-                _isPlaying  = false;
-            }
         }
     }
 
@@ -77,6 +58,16 @@ Ptr<class Animation2DSequence> Animation2D::GetSequence() const
 Ptr<class Animation2DClip> Animation2D::GetCurrentClip() const
 {
     return _currentAnimationClip;
+}
+
+int32 Animation2D::GetClipFrameCount(const std::string& name) const
+{
+    auto animationClip = _animationSequence->FindAnimationClip(name);
+
+    if (nullptr == animationClip)
+        return 0;
+
+    return animationClip->GetFrameCount();
 }
 
 void Animation2D::SetAnimationSequence(Ptr<class Animation2DSequence> sequence)
@@ -107,7 +98,10 @@ void Animation2D::SetFlipX(bool flipX)
 
 void Animation2D::SetShader()
 {
-    Animation2DSprite sprite = _currentAnimationClip->GetFrame(_frameIndex);
+    int32 frameIndex
+      = _isReversed ? _currentAnimationClip->GetFrameCount() - 1 - _frameIndex : _frameIndex;
+    frameIndex = std::clamp(frameIndex, 0, _currentAnimationClip->GetFrameCount() - 1);
+    Animation2DSprite sprite = _currentAnimationClip->GetFrame(frameIndex);
     SpriteData        data   = sprite.spriteSheet->GetSpriteData(sprite.spriteIndex);
 
     Ptr<Texture> texture = sprite.spriteSheet->GetTexture();

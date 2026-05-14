@@ -370,7 +370,6 @@
     <ClInclude Include="Tilemap\TilemapLevel.h">
       <Filter>Tilemap\World</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Rect.h" />
     <ClInclude Include="Snowbros\PlayerStateDead.h">
       <Filter>Snowbros\PlayerState</Filter>
     </ClInclude>
@@ -394,6 +393,21 @@
     </ClInclude>
     <ClInclude Include="Snowbros\Types.h">
       <Filter>Snowbros</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Rect.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowProjectile.h">
+      <Filter>Snowbros\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\ShootComponent.h">
+      <Filter>Snowbros\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowProjectileComponent.h">
+      <Filter>Snowbros\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Platformer\PlatformerKinematicPlayerComponent.h">
+      <Filter>Platformer\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -729,7 +743,6 @@
     <ClCompile Include="Tilemap\TilemapLevel.cpp">
       <Filter>Tilemap\World</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Rect.cpp" />
     <ClCompile Include="Snowbros\PlayerStateDead.cpp">
       <Filter>Snowbros\PlayerState</Filter>
     </ClCompile>
@@ -750,6 +763,21 @@
     </ClCompile>
     <ClCompile Include="Snowbros\SnowbrosLevel.cpp">
       <Filter>Snowbros\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Rect.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowProjectile.cpp">
+      <Filter>Snowbros\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\ShootComponent.cpp">
+      <Filter>Snowbros\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Platformer\PlatformerKinematicPlayerComponent.cpp">
+      <Filter>Platformer\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowProjectileComponent.cpp">
+      <Filter>Snowbros\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,35 @@
 bool CollisionProfileManager::Init()
 {
     // TODO Read configs and create profiles?
+    CreateChannel(ColliderType::Player, CollisionResponse::Ignore);
+    CreateChannel(ColliderType::Enemy, CollisionResponse::Ignore);
+    CreateChannel(ColliderType::PlayerProjectile, CollisionResponse::Ignore);
+    CreateChannel(ColliderType::Item, CollisionResponse::Ignore);
+    CreateChannel(ColliderType::Snowball, CollisionResponse::Ignore);
+
+    CreateProfile("Player", ColliderType::Player);
+    CreateProfile("Enemy", ColliderType::Enemy);
+    CreateProfile("PlayerProjectile", ColliderType::PlayerProjectile);
+    CreateProfile("Item", ColliderType::Item);
+    CreateProfile("Snowball", ColliderType::Snowball);
+
+    SetProfileResponse("Player", std::make_pair(ColliderType::Enemy, CollisionResponse::Overlap),
+      std::make_pair(ColliderType::EnemyProjectile, CollisionResponse::Block),
+      std::make_pair(ColliderType::Snowball, CollisionResponse::Block),
+      std::make_pair(ColliderType::Item, CollisionResponse::Block));
+
+    SetProfileResponse("Enemy",
+      std::make_pair(ColliderType::PlayerProjectile, CollisionResponse::Block),
+      std::make_pair(ColliderType::Snowball, CollisionResponse::Block));
+
+    SetProfileResponse("PlayerProjectile",
+      std::make_pair(ColliderType::Enemy, CollisionResponse::Block),
+      std::make_pair(ColliderType::Snowball, CollisionResponse::Block));
+
+    SetProfileResponse("Item", std::make_pair(ColliderType::Player, CollisionResponse::Block));
+
+    SetProfileResponse(
+      "Snowball", std::make_pair(ColliderType::PlayerProjectile, CollisionResponse::Block));
 
     return true;
 }
@@ -18,8 +47,7 @@ void CollisionProfileManager::Destroy()
     _channels.clear();
 }
 
-Ptr<CollisionProfile> CollisionProfileManager::FindProfile(
-  const std::string& name)
+Ptr<CollisionProfile> CollisionProfileManager::FindProfile(const std::string& name)
 {
     if (auto it = _profiles.find(name); _profiles.end() != it)
         return it->second;
@@ -50,7 +78,7 @@ void CollisionProfileManager::CreateProfile(
     profile->_name     = proflieName;
     profile->_thisType = profileType;
 
-    for (auto [channelType, defaultResponse] : _channels)
+    for (auto& [channelType, defaultResponse] : _channels)
         profile->_responses[channelType] = defaultResponse;
 
     _profiles[profile->_name] = profile;
