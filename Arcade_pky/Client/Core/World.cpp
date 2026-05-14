@@ -2,8 +2,8 @@
 
 #include "World.h"
 
-#include "Level.h"
-#include "Test/TestLevel.h"
+//#include "Level.h"
+#include "Snowbros/SnowbrosLevel.h"
 
 #ifdef _HAS_COLLISION_MODULE
 #include "Core/Collision/CollisionProfileManager.h"
@@ -20,7 +20,7 @@ void World::Init(const std::string& name)
 
     // TODO save & load
     // TODO _currentLevel = CreateLevel<Level>(name);
-    _currentLevel = CreateLevel<TestLevel>(This<World>(), name);
+    _currentLevel = CreateLevel<SnowbrosLevel>(This<World>(), name);
 }
 
 void World::Destroy()

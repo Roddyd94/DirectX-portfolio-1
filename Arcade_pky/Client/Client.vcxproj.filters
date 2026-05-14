@@ -163,12 +163,6 @@
     <ClInclude Include="Core\CameraManager.h">
       <Filter>Core\World\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Test\TestLevel.h">
-      <Filter>Snowbros</Filter>
-    </ClInclude>
-    <ClInclude Include="Test\Player.h">
-      <Filter>Snowbros</Filter>
-    </ClInclude>
     <ClInclude Include="Core\GraphicShader.h">
       <Filter>Core\Resource\Shader</Filter>
     </ClInclude>
@@ -274,9 +268,6 @@
     <ClInclude Include="Editor\EditorUI.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Input\PlayerController.h">
-      <Filter>Input\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Controller.h">
       <Filter>Core\World\Actor</Filter>
     </ClInclude>
@@ -343,9 +334,6 @@
     <ClInclude Include="Core\Animation\Animation2DConstantBuffer.h">
       <Filter>Animation\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="Test\SnowBrosTileParser.h">
-      <Filter>Snowbros</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Animation\SpriteComponent.h">
       <Filter>Animation\Component</Filter>
     </ClInclude>
@@ -361,26 +349,51 @@
     <ClInclude Include="Core\Animation\Animation2DStateMachine.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Test\PlayerStateMachine.h">
-      <Filter>Snowbros\StateMachine</Filter>
+    <ClInclude Include="Player\PlayerComponent.h">
+      <Filter>Player\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Test\PlayerState.h">
-      <Filter>Snowbros\StateMachine</Filter>
+    <ClInclude Include="Player\PlayerState.h">
+      <Filter>Player\StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="Test\PlayerComponent.h">
-      <Filter>Snowbros\Component</Filter>
+    <ClInclude Include="Player\PlayerStateMachine.h">
+      <Filter>Player\StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="Test\PlayerStateGround.h">
-      <Filter>Snowbros\StateMachine\State</Filter>
+    <ClInclude Include="Player\PlayerController.h">
+      <Filter>Player\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Test\PlayerStateMidair.h">
-      <Filter>Snowbros\StateMachine\State</Filter>
+    <ClInclude Include="Player\Player.h">
+      <Filter>Player\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Test\PlayerStateDead.h">
-      <Filter>Snowbros\StateMachine\State</Filter>
+    <ClInclude Include="Platformer\Types.h">
+      <Filter>Platformer</Filter>
     </ClInclude>
-    <ClInclude Include="Test\PlayerStateSnowball.h">
-      <Filter>Snowbros\StateMachine\State</Filter>
+    <ClInclude Include="Tilemap\TilemapLevel.h">
+      <Filter>Tilemap\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Rect.h" />
+    <ClInclude Include="Snowbros\PlayerStateDead.h">
+      <Filter>Snowbros\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\PlayerStateGround.h">
+      <Filter>Snowbros\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\PlayerStateMidair.h">
+      <Filter>Snowbros\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\PlayerStateSnowball.h">
+      <Filter>Snowbros\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosTileParser.h">
+      <Filter>Snowbros</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosPlayer.h">
+      <Filter>Snowbros\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosLevel.h">
+      <Filter>Snowbros\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\Types.h">
+      <Filter>Snowbros</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -530,12 +543,6 @@
     <ClCompile Include="Core\CameraManager.cpp">
       <Filter>Core\World\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Test\TestLevel.cpp">
-      <Filter>Snowbros</Filter>
-    </ClCompile>
-    <ClCompile Include="Test\Player.cpp">
-      <Filter>Snowbros</Filter>
-    </ClCompile>
     <ClCompile Include="Core\GraphicShader.cpp">
       <Filter>Core\Resource\Shader</Filter>
     </ClCompile>
@@ -638,9 +645,6 @@
     <ClCompile Include="Editor\EditorUI.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Input\PlayerController.cpp">
-      <Filter>Input\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Controller.cpp">
       <Filter>Core\World\Actor</Filter>
     </ClCompile>
@@ -692,9 +696,6 @@
     <ClCompile Include="Core\Animation\Animation2DConstantBuffer.cpp">
       <Filter>Animation\Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="Test\SnowBrosTileParser.cpp">
-      <Filter>Snowbros</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Animation\SpriteComponent.cpp">
       <Filter>Animation\Component</Filter>
     </ClCompile>
@@ -710,26 +711,45 @@
     <ClCompile Include="Core\Animation\Animation2DStateMachine.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Test\PlayerStateMachine.cpp">
-      <Filter>Snowbros\StateMachine</Filter>
+    <ClCompile Include="Player\PlayerComponent.cpp">
+      <Filter>Player\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Test\PlayerState.cpp">
-      <Filter>Snowbros\StateMachine</Filter>
+    <ClCompile Include="Player\PlayerState.cpp">
+      <Filter>Player\StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="Test\PlayerComponent.cpp">
-      <Filter>Snowbros\Component</Filter>
+    <ClCompile Include="Player\PlayerStateMachine.cpp">
+      <Filter>Player\StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="Test\PlayerStateGround.cpp">
-      <Filter>Snowbros\StateMachine\State</Filter>
+    <ClCompile Include="Player\PlayerController.cpp">
+      <Filter>Player\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Test\PlayerStateMidair.cpp">
-      <Filter>Snowbros\StateMachine\State</Filter>
+    <ClCompile Include="Player\Player.cpp">
+      <Filter>Player\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Test\PlayerStateDead.cpp">
-      <Filter>Snowbros\StateMachine\State</Filter>
+    <ClCompile Include="Tilemap\TilemapLevel.cpp">
+      <Filter>Tilemap\World</Filter>
     </ClCompile>
-    <ClCompile Include="Test\PlayerStateSnowball.cpp">
-      <Filter>Snowbros\StateMachine\State</Filter>
+    <ClCompile Include="Core\Rect.cpp" />
+    <ClCompile Include="Snowbros\PlayerStateDead.cpp">
+      <Filter>Snowbros\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\PlayerStateGround.cpp">
+      <Filter>Snowbros\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\PlayerStateMidair.cpp">
+      <Filter>Snowbros\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\PlayerStateSnowball.cpp">
+      <Filter>Snowbros\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosTileParser.cpp">
+      <Filter>Snowbros</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosPlayer.cpp">
+      <Filter>Snowbros\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosLevel.cpp">
+      <Filter>Snowbros\World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -880,9 +900,6 @@
     <Filter Include="Editor">
       <UniqueIdentifier>{1ac0053f-e188-4023-88e6-6e74dc821645}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Input\Actor">
-      <UniqueIdentifier>{c3ecb1d2-45c3-4675-bf20-2bb1da26c2e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Collision">
       <UniqueIdentifier>{b7323b80-52b9-4162-a472-f20543fc4d2d}</UniqueIdentifier>
     </Filter>
@@ -943,11 +960,29 @@
     <Filter Include="Snowbros\Component">
       <UniqueIdentifier>{cf565e9b-537e-4897-a037-851e95aca34f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Snowbros\StateMachine">
-      <UniqueIdentifier>{c70b120e-e345-46c5-a9e9-7b9daa5fd407}</UniqueIdentifier>
+    <Filter Include="Player">
+      <UniqueIdentifier>{8d0c4551-1609-46ee-967e-0b3937bf3d8d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Snowbros\StateMachine\State">
+    <Filter Include="Player\Component">
+      <UniqueIdentifier>{dc3905c9-32cd-44d1-95a1-074dafd528d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\StateMachine">
+      <UniqueIdentifier>{ae4bd6a0-aa92-4575-802f-81061638a1f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\PlayerState">
       <UniqueIdentifier>{32a1990a-a603-4381-a4af-0bdc46a37ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\Actor">
+      <UniqueIdentifier>{e41cc026-e989-41b2-91bb-c8b819ded84d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\Actor">
+      <UniqueIdentifier>{865b387b-e80b-407f-add9-64cb2ba87e4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tilemap\World">
+      <UniqueIdentifier>{014cff5b-a65b-4839-b9dd-9336c6dcef4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\World">
+      <UniqueIdentifier>{573efb8a-41b7-4ae3-9e08-fc2c67eec764}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

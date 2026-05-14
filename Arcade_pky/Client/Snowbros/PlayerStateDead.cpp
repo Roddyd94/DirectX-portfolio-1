@@ -2,6 +2,8 @@
 
 #include "PlayerStateDead.h"
 
+#include "Types.h"
+
 PlayerStateDead::PlayerStateDead()
 {
     _stateType = PlayerStateType::Dead;
@@ -17,4 +19,4 @@ void PlayerStateDead::Enter(Ptr<class PlayerComponent> player) {}
 
 void PlayerStateDead::Exit(Ptr<class PlayerComponent> player) {}
 
-void PlayerStateDead::Tick(Ptr<class PlayerComponent> player, float deltaTime) {} 
+void PlayerStateDead::Tick(Ptr<class PlayerComponent> player, float deltaTime) {}

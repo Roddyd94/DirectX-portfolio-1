@@ -9,7 +9,7 @@ bool PlayerComponent::Init(int32 componentID, const std::string& name, Ptr<class
     ActorComponent::Init(componentID, name, owner);
 
     _stateMachine = New<PlayerStateMachine>();
-    _stateMachine->Init(This<PlayerComponent>());
+    _stateMachine->Init(This<PlayerComponent>(), nullptr);
 
     return true;
 }
@@ -35,7 +35,7 @@ void PlayerComponent::HandleInput(Ptr<class InputAction> action, ButtonEventType
     _stateMachine->HandleInput(action, buttonEvent);
 }
 
-PlayerStateType PlayerComponent::GetStateType() const
+uint8 PlayerComponent::GetStateType() const
 {
     return _stateMachine->GetStateType();
 }

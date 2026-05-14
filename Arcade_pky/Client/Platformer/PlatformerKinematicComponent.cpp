@@ -6,21 +6,14 @@
 
 #include "Core/Actor.h"
 #include "Core/Collision/AABBCollisionComponent.h"
-#include "Test/PlayerComponent.h"
-#include "Test/PlayerState.h"
-#include "Test/PlayerStateGround.h"
-#include "Test/PlayerStateMidair.h"
-#include "Test/TestLevel.h"
 #include "Tilemap/Tile.h"
 #include "Tilemap/Tilemap.h"
+#include "Tilemap/TilemapLevel.h"
 
 bool PlatformerKinematicComponent::Init(
   int32 componentID, const std::string& name, Ptr<class Actor> owner)
 {
     ActorComponent::Init(componentID, name, owner);
-
-    Ptr<Actor> actor = GetOwner();
-    _playerComponent = actor->FindActorComponent<PlayerComponent>("Player");
 
     return true;
 }
@@ -37,45 +30,49 @@ void PlatformerKinematicComponent::Tick(float deltaTime)
     Ptr<Actor> actor    = GetOwner();
     Vector2    worldPos = actor->GetWorldPosition().ToVector2();
 
-    PlayerStateType playerState = _playerComponent->GetStateType();
-    switch (playerState)
+    switch (_state)
     {
-    case PlayerStateType::Ground:
+    case PlatformerKinematicState::OnGround:
     {
         if (IsColliderTouchedBoundaryX(worldPos, _velocity.x)
             || IsColliderTouchedWall(worldPos, _velocity.x))
-            break;
+            return;
 
         worldPos.x += _velocity.x * deltaTime;
 
         bool isOnFloor = IsColliderOnFloor(worldPos);
         if (!isOnFloor)
-            _playerComponent->Transition(New<PlayerStateMidair>(false));
+            ChangeStateTo(PlatformerKinematicState::OnAir);
     }
     break;
-    case PlayerStateType::Midair:
+    case PlatformerKinematicState::OnAir:
     {
-        bool isOnFloorPrev = IsColliderOnFloor(worldPos);
-        worldPos.y += _velocity.y * deltaTime;
-        bool isOnFloorNext = IsColliderOnFloor(worldPos);
-
         if (!IsColliderTouchedBoundaryX(worldPos, _velocity.x)
             && !IsColliderTouchedWall(worldPos, _velocity.x))
             worldPos.x += _velocity.x * deltaTime;
+
+        bool isOnFloorPrev = IsColliderOnFloor(worldPos);
+        worldPos.y += _velocity.y * deltaTime;
+        bool isOnFloorNext = IsColliderOnFloor(worldPos);
 
         if (_velocity.y < 0 && !isOnFloorPrev && isOnFloorNext)
         {
             AdjustPositionToFloor(worldPos);
             _velocity.y = 0.f;
-            _playerComponent->Transition(PlayerState::ground);
+            ChangeStateTo(PlatformerKinematicState::OnGround);
         }
     }
     break;
-    case PlayerStateType::Snowball:
-        // TODO PlayerComponent에 눈덩이 관련 넣기
+    case PlatformerKinematicState::OnSlope:
         break;
-    default:
-        return;
+    case PlatformerKinematicState::OnLadder:
+        break;
+    case PlatformerKinematicState::Attached:
+    {
+        if (_attachedTo)
+            worldPos = _attachedTo->GetWorldPosition().ToVector2();
+    }
+    break;
     }
 
     actor->SetWorldPosition(worldPos);
@@ -94,6 +91,26 @@ void PlatformerKinematicComponent::SetTilemap(Ptr<class Tilemap> tilemap)
 void PlatformerKinematicComponent::SetCollider(Ptr<class AABBCollisionComponent> collider)
 {
     _collider = collider;
+}
+
+void PlatformerKinematicComponent::ChangeStateTo(PlatformerKinematicState::Type state)
+{
+    _state = state;
+    _onStateChangedTo[_state]();
+}
+
+void PlatformerKinematicComponent::SetUseGravity(bool useGravity)
+{
+    _useGravity = useGravity;
+}
+
+void PlatformerKinematicComponent::AttachTo(Ptr<class Actor> actor)
+{
+    if (GetOwner()->GetActorID() == actor->GetActorID())
+        return;
+
+    _attachedTo = actor;
+    _state      = PlatformerKinematicState::Attached;
 }
 
 void PlatformerKinematicComponent::MoveX(float speed)
@@ -162,10 +179,12 @@ bool PlatformerKinematicComponent::IsColliderOnFloor(Vector2 worldPos2D)
 bool PlatformerKinematicComponent::IsColliderTouchedWall(Vector2 worldPos2D, float deltaX)
 {
     float colliderExtentX = _collider->GetBoxSize().x / 2.f;
+    float colliderExtentY = _collider->GetBoxSize().y / 2.f;
 
     Vector2 colliderBoundary = worldPos2D;
     float   direction        = deltaX > 0 ? 1.f : -1.f;
     colliderBoundary.x += colliderExtentX * direction;
+    colliderBoundary.y += epsilonTile - colliderExtentY;
 
     Ptr<Tile> tile = _tilemap->GetTile(colliderBoundary);
 
@@ -176,15 +195,19 @@ bool PlatformerKinematicComponent::IsColliderTouchedBoundaryX(Vector2 worldPos2D
 {
     float colliderExtentX = _collider->GetBoxSize().x / 2.f;
 
+    Ptr<TilemapLevel> level = Cast<Level, TilemapLevel>(GetLevel());
+
+    Rect boundary = level->GetBoundary();
+
     Vector2 colliderBoundary = worldPos2D;
     bool    isMovingRight    = deltaX > 0;
     float   direction        = isMovingRight ? 1.f : -1.f;
     colliderBoundary.x += colliderExtentX * direction;
 
     if (isMovingRight)
-        return colliderBoundary.x > TestLevel::boundaryEnd.x;
+        return colliderBoundary.x > boundary.right;
     else
-        return colliderBoundary.x < TestLevel::boundaryStart.x;
+        return colliderBoundary.x < boundary.left;
 
     return false;
 }

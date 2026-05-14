@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "SnowBrosTileParser.h"
+#include "SnowbrosTileParser.h"
 
 #include "Core/Animation/Animation2DManager.h"
 #include "Core/DirectoryManager.h"
@@ -12,7 +12,7 @@
 
 #include <fstream>
 
-bool SnowBrosTileParser::ParseStageData(
+bool SnowbrosTileParser::ParseStageData(
   const std::wstring& filename, byte* pData, size_t dataLength)
 {
     auto path = DirectoryManager::Instance().GetCachePath("Resources/Stage");
@@ -28,7 +28,7 @@ bool SnowBrosTileParser::ParseStageData(
     fs.read(reinterpret_cast<char*>(pData), dataLength);
 }
 
-bool SnowBrosTileParser::ParseTileMetadata(TileMetadata& data)
+bool SnowbrosTileParser::ParseTileMetadata(TileMetadata& data)
 {
     auto path = DirectoryManager::Instance().GetCachePath("Resources/Stage");
 
@@ -80,7 +80,7 @@ bool SnowBrosTileParser::ParseTileMetadata(TileMetadata& data)
     }
 }
 
-bool SnowBrosTileParser::ParseAnimationData(const std::string& textureName,
+bool SnowbrosTileParser::ParseAnimationData(const std::string& textureName,
   const std::wstring&                                          textureFilename,
   const std::string&                                           spriteSheetName,
   const std::wstring&                                          animationDataFilename)

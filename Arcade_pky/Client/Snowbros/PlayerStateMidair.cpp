@@ -2,9 +2,11 @@
 
 #include "PlayerStateMidair.h"
 
-#include "PlayerComponent.h"
+#include "Types.h"
+#include "Core/Actor.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
+#include "Player/PlayerComponent.h"
 
 PlayerStateMidair::PlayerStateMidair(bool jumped) : _jumped(jumped)
 {

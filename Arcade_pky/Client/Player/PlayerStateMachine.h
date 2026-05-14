@@ -14,7 +14,7 @@ private:
     Ptr<class PlayerState>      _currentState = nullptr;
 
 public:
-    void Init(Ptr<class PlayerComponent> player);
+    void Init(Ptr<class PlayerComponent> player, Ptr<class PlayerState> state);
     void Destroy() override;
     void Tick(float deltaTime);
 
@@ -22,5 +22,5 @@ public:
     void HandleInput(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
 
     Ptr<class PlayerComponent> GetOwner() const;
-    PlayerStateType            GetStateType() const;
+    uint8                      GetStateType() const;
 };

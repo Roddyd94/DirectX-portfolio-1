@@ -2,11 +2,15 @@
 
 #include "PlayerStateGround.h"
 
-#include "PlayerComponent.h"
 #include "PlayerStateMidair.h"
+#include "Types.h"
+#include "Core/Actor.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Platformer/PlatformerKinematicComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
+#include "Player/PlayerComponent.h"
+
+const Ptr<PlayerStateGround> PlayerStateGround::instance = New<PlayerStateGround>();
 
 PlayerStateGround::PlayerStateGround()
 {
@@ -58,9 +62,16 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         switch (buttonEvent)
         {
         case ButtonEventType::Down:
+        {
+            Ptr<PlatformerKinematicComponent> kinematic
+              = player->FindActorComponent<PlatformerKinematicComponent>("PlatformerKinematic");
+
             movement->Jump();
+            kinematic->ChangeStateTo(PlatformerKinematicState::OnAir);
+
             return New<PlayerStateMidair>();
-            break;
+        }
+        break;
         }
     }
 

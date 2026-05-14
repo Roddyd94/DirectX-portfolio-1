@@ -1,16 +1,16 @@
 #include "pch.h"
 
-#include "TestLevel.h"
+#include "SnowbrosLevel.h"
 
-#include "Player.h"
-#include "SnowBrosTileParser.h"
+#include "SnowbrosPlayer.h"
+#include "SnowbrosTileParser.h"
 #include "Core/Camera.h"
 #include "Tilemap/Tile.h"
 #include "Tilemap/Tilemap.h"
 
-bool TestLevel::Init(Ptr<World> world, const std::string& path)
+bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
 {
-    Level::Init(world, path);
+    TilemapLevel::Init(world, path);
 
     Vector3 position = Vector3{0.f, 0.f, 1.f};
     Vector3 scale    = Vector3{1.f, 1.f, 1.f};
@@ -20,7 +20,7 @@ bool TestLevel::Init(Ptr<World> world, const std::string& path)
     position.y = -6.5f;
 
     _tilemap = SpawnActor<Tilemap>(position, scale, rotation);
-    _tilemap->SetTexture("Tile", L"snowbros_stages_flat.png");
+    _tilemap->SetTexture("Tile", L"snowbros_tilemap.png");
     _tilemap->CreateTile(16, 14, {1.f, 1.f}, 0);
 
     float tileSize = 16.f;
@@ -38,10 +38,10 @@ bool TestLevel::Init(Ptr<World> world, const std::string& path)
     int32 tileCount = 12 * 13;
 
     TileMetadata tileMetadata;
-    SnowBrosTileParser::ParseTileMetadata(tileMetadata);
+    SnowbrosTileParser::ParseTileMetadata(tileMetadata);
 
     byte stageData[224] = {};
-    SnowBrosTileParser::ParseStageData(L"snowbros_stage_2.bin", stageData, 224);
+    SnowbrosTileParser::ParseStageData(L"snowbros_stage_2.bin", stageData, 224);
     for (size_t i = 0; i < 14; i++)
     {
         for (size_t j = 0; j < 16; j++)
@@ -64,20 +64,20 @@ bool TestLevel::Init(Ptr<World> world, const std::string& path)
         }
     }
 
-    SnowBrosTileParser::ParseAnimationData("snowbros_player", L"snowbros_player.png",
+    SnowbrosTileParser::ParseAnimationData("snowbros_player", L"snowbros_player.png",
       "snowbros_player", L"snowbros_player_animation.bin");
 
     position.x = 0.f;
     position.y = 0.f;
     scale *= 2.f;
 
-    Ptr<Player> player = SpawnActor<Player>(position, scale, rotation);
+    Ptr<SnowbrosPlayer> player = SpawnActor<SnowbrosPlayer>(position, scale, rotation);
     player->SetName("Player");
 
     return true;
 }
 
-Ptr<class Tilemap> TestLevel::GetTilemap() const
+void SnowbrosLevel::Destroy()
 {
-    return _tilemap;
+    TilemapLevel::Destroy();
 }

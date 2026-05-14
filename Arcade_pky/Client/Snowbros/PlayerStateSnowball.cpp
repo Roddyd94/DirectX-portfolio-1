@@ -2,6 +2,8 @@
 
 #include "PlayerStateSnowball.h"
 
+const Ptr<PlayerStateSnowball> PlayerStateSnowball::instance = New<PlayerStateSnowball>();
+
 PlayerStateSnowball::PlayerStateSnowball()
 {
     _stateType = PlayerStateType::Snowball;

@@ -1,15 +1,15 @@
 #pragma once
-#include "PlayerState.h"
+#include "Player/PlayerState.h"
 
-class PlayerStateSnowball : public PlayerState
+class PlayerStateDead : public PlayerState
 {
 public:
-    PlayerStateSnowball();
-    ~PlayerStateSnowball() override = default;
+    PlayerStateDead();
+    ~PlayerStateDead() override = default;
 
 public:
     Ptr<PlayerState> HandleInput(Ptr<class PlayerComponent> player,
-      Ptr<class InputAction>                                action,
+      Ptr<InputAction>                                      action,
       ButtonEventType::Type                                 buttonEvent) override;
 
     void Enter(Ptr<class PlayerComponent> player) override;
