@@ -19,7 +19,7 @@ protected:
     ComponentIDPair             _colliderID;
     Ptr<class CollisionProfile> _profile;
     std::function<void(Weak<CollisionComponent>)>
-      _collisionCallBack[CollisionState::None];
+      _collisionCallback[CollisionState::None];
     std::map<ComponentIDPair, CollisionState::Type> _collisionStates;
 
 #if _DEBUG
@@ -56,17 +56,17 @@ private:
 
 public:
     template <typename T>
-    void SetCollisionCallBack(CollisionState::Type state,
+    void RegisterCollisionCallBack(CollisionState::Type state,
       T*                                           obj,
       void (T::*memFunc)(Weak<CollisionComponent>))
     {
-        _collisionCallBack[state]
+        _collisionCallback[state]
           = std::bind(memFunc, obj, std::placeholders::_1);
     }
 
     template <typename T>
-    void SetCollisionCallBack(CollisionState::Type state, T&& func)
+    void RegisterCollisionCallBack(CollisionState::Type state, T&& func)
     {
-        _collisionCallBack[state] = std::forward<T>(func);
+        _collisionCallback[state] = std::forward<T>(func);
     }
 };

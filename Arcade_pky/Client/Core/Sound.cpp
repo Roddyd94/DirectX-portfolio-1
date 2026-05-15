@@ -46,7 +46,7 @@ void Sound::Play()
     _system->playSound(_sound, _group, false, &_channel);
     ++_playCount;
 
-    _channel->setCallback(Sound::SoundCallBack);
+    _channel->setCallback(Sound::SoundCallback);
 }
 
 void Sound::Stop()
@@ -92,7 +92,7 @@ void Sound::Resume()
     }
 }
 
-FMOD_RESULT Sound::SoundCallBack(FMOD_CHANNELCONTROL* channelcontrol,
+FMOD_RESULT Sound::SoundCallback(FMOD_CHANNELCONTROL* channelcontrol,
   FMOD_CHANNELCONTROL_TYPE                            controltype,
   FMOD_CHANNELCONTROL_CALLBACK_TYPE                   callbacktype,
   void*                                               commanddata1,

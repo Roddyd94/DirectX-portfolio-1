@@ -31,7 +31,7 @@ public:
     void Resume();
 
 public:
-    static FMOD_RESULT SoundCallBack(FMOD_CHANNELCONTROL* channelcontrol,
+    static FMOD_RESULT SoundCallback(FMOD_CHANNELCONTROL* channelcontrol,
       FMOD_CHANNELCONTROL_TYPE                            controltype,
       FMOD_CHANNELCONTROL_CALLBACK_TYPE                   callbacktype,
       void*                                               commanddata1,

@@ -159,6 +159,6 @@ void CollisionComponent::Invoke(
     else
         _collisionStates.erase(otherColliderID);
 
-    if (_collisionCallBack[state])
-        _collisionCallBack[state](otherCollider);
+    if (_collisionCallback[state])
+        _collisionCallback[state](otherCollider);
 }
