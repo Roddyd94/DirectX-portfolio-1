@@ -10,7 +10,7 @@ public:
 private:
     std::function<void()>          _onStateChangedTo[PlatformerKinematicState::End];
     PlatformerKinematicState::Type _state = PlatformerKinematicState::OnAir;
-    
+
 public:
     bool Init(int32 componentID, const std::string& name, Ptr<class Actor> owner) override;
     void Destroy() override;
@@ -18,8 +18,11 @@ public:
     void Tick(float deltaTime) override;
 
     void AttachTo(Ptr<class Actor> actor) override;
-    
+
     void ChangeStateTo(PlatformerKinematicState::Type state);
+
+protected:
+    bool IsColliderMoveAgainstWall(Vector2 delta);
 
 public:
     template <typename T>

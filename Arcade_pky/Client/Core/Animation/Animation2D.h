@@ -40,7 +40,9 @@ public:
 
     Ptr<class Animation2DSequence> GetSequence() const;
     Ptr<class Animation2DClip>     GetCurrentClip() const;
-    int32                          GetClipFrameCount(const std::string& name) const;
+
+    int32 GetClipFrameCount(const std::string& name) const;
+    bool  GetFlipX() const;
 
     void SetAnimationSequence(Ptr<class Animation2DSequence> sequence);
     void SetAnimationSequence(const std::string& sequenceName);

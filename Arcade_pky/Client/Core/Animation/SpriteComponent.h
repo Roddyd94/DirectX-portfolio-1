@@ -21,6 +21,8 @@ public:
     void Collision(float deltaTime) override;
     void Render(float deltaTime) override;
 
+    bool GetFlipX() const;
+
     void SetShader(const std::string& name);
     void SetPlayRate(float playRate);
     void SetReversed(bool isReversed);

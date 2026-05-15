@@ -24,12 +24,15 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
 
     Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
 
+    if (sprite->GetFlipX() != _initialFlipX)
+        _flippedX = true;
+
     if (action->GetName() == "MoveLeft")
     {
         switch (buttonEvent)
         {
         case ButtonEventType::Hold:
-            movement->MoveLeft();
+            movement->MoveLeft(_flippedX ? 0.5f : 1.f);
             sprite->SetFlipX(false);
             break;
         case ButtonEventType::Up:
@@ -42,7 +45,7 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
         switch (buttonEvent)
         {
         case ButtonEventType::Hold:
-            movement->MoveRight();
+            movement->MoveRight(_flippedX ? 0.5f : 1.f);
             sprite->SetFlipX(true);
             break;
         case ButtonEventType::Up:
@@ -56,16 +59,18 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
 
 void PlayerStateMidair::Enter(Ptr<class PlayerComponent> playerComponent)
 {
-    Ptr<Player>          player = playerComponent->GetPlayer();
+    Ptr<Player> player = playerComponent->GetPlayer();
 
     auto controller = player->GetController();
     controller->SetActiveContext("Midair");
 
     Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
+
     if (_jumped)
         sprite->ChangeAnimation("player_jump");
     else
         sprite->ChangeAnimation("player_midair");
+    _initialFlipX = sprite->GetFlipX();
 }
 
 void PlayerStateMidair::Exit(Ptr<class PlayerComponent> playerComponent) {}

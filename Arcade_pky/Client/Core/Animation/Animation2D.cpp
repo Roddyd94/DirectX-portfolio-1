@@ -39,7 +39,7 @@ void Animation2D::Tick(float deltaTime)
             _frameIndex = 0;
         else
         {
-            _isPlaying       = false;
+            _isPlaying = false;
             InvokeNotify();
             if (_frameIndex != 0)
                 _frameIndex = _currentAnimationClip->GetFrameCount() - 1;
@@ -68,6 +68,11 @@ int32 Animation2D::GetClipFrameCount(const std::string& name) const
         return 0;
 
     return animationClip->GetFrameCount();
+}
+
+bool Animation2D::GetFlipX() const
+{
+    return _flipX;
 }
 
 void Animation2D::SetAnimationSequence(Ptr<class Animation2DSequence> sequence)

@@ -27,10 +27,20 @@ void PlatformerKinematicComponent::Tick(float deltaTime)
 {
     ActorComponent::Tick(deltaTime);
 
-    Ptr<Actor> actor = GetOwner();
+    Vector2 delta = _velocity * deltaTime;
 
-    Vector2 worldPos = actor->GetWorldPosition().ToVector2();
-    worldPos += _velocity * deltaTime;
+    Ptr<Actor> actor    = GetOwner();
+    Vector2    worldPos = actor->GetWorldPosition().ToVector2();
+    worldPos += delta;
+
+    for (auto& [tileType, callback] : _onCollidedWithTileCallbacks)
+    {
+        if (!this->IsColliderTouchedTile(tileType, delta))
+            continue;
+
+        if (callback)
+            callback();
+    }
 
     actor->SetWorldPosition(worldPos);
 }
@@ -118,32 +128,33 @@ bool PlatformerKinematicComponent::IsColliderOnFloor(Vector2 delta)
     return false;
 }
 
-bool PlatformerKinematicComponent::IsColliderTouchedWall(Vector2 delta)
+bool PlatformerKinematicComponent::IsColliderTouchedTile(TileType::Type tileType, Vector2 delta)
 {
-    if (std::abs(delta.x) < FLT_EPSILON)
-        return false;
-
     Rect colliderBox = _collider->GetBox();
     colliderBox.Move(delta);
 
-    Vector2 tilePositionUpper = {0.f, colliderBox.top};
-    Vector2 tilePositionLower = {0.f, colliderBox.bottom + epsilonTile};
+    Ptr<Tile> tileLT = _tilemap->GetTile({colliderBox.left, colliderBox.top});
+    Ptr<Tile> tileLB = _tilemap->GetTile({colliderBox.left, colliderBox.bottom + epsilonTile});
+    Ptr<Tile> tileRT = _tilemap->GetTile({colliderBox.right, colliderBox.top});
+    Ptr<Tile> tileRB = _tilemap->GetTile({colliderBox.right, colliderBox.bottom + epsilonTile});
 
-    if (delta.x > 0)
-    {
-        tilePositionUpper.x = colliderBox.right;
-        tilePositionLower.x = colliderBox.right;
-    }
-    else
-    {
-        tilePositionUpper.x = colliderBox.left;
-        tilePositionLower.x = colliderBox.left;
-    }
+    return (tileLT && tileLT->GetType() == tileType) || (tileLB && tileLB->GetType() == tileType)
+        || (tileRT && tileRT->GetType() == tileType) || (tileRB && tileRB->GetType() == tileType);
+}
 
-    Ptr<Tile> tileUpper = _tilemap->GetTile(tilePositionUpper);
-    Ptr<Tile> tileLower = _tilemap->GetTile(tilePositionLower);
+bool PlatformerKinematicComponent::IsColliderTouchedWall(Vector2 delta)
+{
+    return IsColliderTouchedTile(TileType::IsWall, delta);
+}
 
-    return (tileUpper && tileUpper->IsWall()) || (tileLower && tileLower->IsWall());
+bool PlatformerKinematicComponent::IsColliderTouchedFloor(Vector2 delta)
+{
+    return IsColliderTouchedTile(TileType::IsFloor, delta);
+}
+
+bool PlatformerKinematicComponent::IsColliderTouchedCeiling(Vector2 delta)
+{
+    return IsColliderTouchedTile(TileType::IsCeiling, delta);
 }
 
 bool PlatformerKinematicComponent::IsColliderTouchedBoundary(Vector2 delta)
@@ -181,4 +192,44 @@ bool PlatformerKinematicComponent::IsPositionOutOfBoundary(Vector2 position)
 
     return position.x < boundary.left || position.x > boundary.right || position.y > boundary.top
         || position.y < boundary.bottom;
+}
+
+TileType::Type PlatformerKinematicComponent::GetAdjacentTileType(Direction::Type direction)
+{
+    Ptr<Tile> tile             = nullptr;
+    Rect      colliderBox      = _collider->GetBox();
+    Vector2   colliderPosition = _collider->GetWorldPosition().ToVector2();
+
+    switch (direction)
+    {
+    case Direction::Top:
+        tile = _tilemap->GetTile({colliderPosition.x, colliderBox.top});
+        break;
+    case Direction::RightTop:
+        tile = _tilemap->GetTile({colliderBox.right, colliderBox.top});
+        break;
+    case Direction::Right:
+        tile = _tilemap->GetTile({colliderBox.right, colliderPosition.y});
+        break;
+    case Direction::RightBottom:
+        tile = _tilemap->GetTile({colliderBox.right, colliderBox.bottom + epsilonTile});
+        break;
+    case Direction::Bottom:
+        tile = _tilemap->GetTile({colliderPosition.x, colliderBox.bottom + epsilonTile});
+        break;
+    case Direction::LeftBottom:
+        tile = _tilemap->GetTile({colliderBox.left, colliderBox.bottom + epsilonTile});
+        break;
+    case Direction::Left:
+        tile = _tilemap->GetTile({colliderBox.left, colliderPosition.y});
+        break;
+    case Direction::LeftTop:
+        tile = _tilemap->GetTile({colliderBox.left, colliderBox.top});
+        break;
+    }
+
+    if (nullptr == tile)
+        return TileType::End;
+
+    return tile->GetType();
 }

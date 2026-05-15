@@ -26,8 +26,8 @@ public:
     void SetSpeedX(float speed);
     void SetJumpForce(float force);
 
-    void MoveLeft();
-    void MoveRight();
+    void MoveLeft(float speedMultiplier = 1.f);
+    void MoveRight(float speedMultiplier = 1.f);
     void Stop();
     void Jump();
     void AccelerateGravity(float deltaTime);

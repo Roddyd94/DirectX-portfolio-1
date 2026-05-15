@@ -27,7 +27,7 @@ Vector2 Tile::GetCenter() const
     return _center;
 }
 
-TileType::Type Tile::GetTileType() const
+TileType::Type Tile::GetType() const
 {
     return _type;
 }

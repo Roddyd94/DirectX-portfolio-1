@@ -47,7 +47,7 @@ public:
     Vector2 GetSize() const;
     Vector2 GetCenter() const;
 
-    TileType::Type GetTileType() const;
+    TileType::Type GetType() const;
     uint32         GetSpriteIndex() const;
 
     bool IsWall() const;

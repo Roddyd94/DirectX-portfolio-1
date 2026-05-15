@@ -30,9 +30,7 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
     {
     case PlatformerKinematicState::OnGround:
     {
-        delta.y = std::max(delta.y, 0.f);
-
-        if (IsColliderMoveAgainstBoundaryX(delta) || IsColliderTouchedWall(delta))
+        if (IsColliderMoveAgainstBoundaryX(delta) || IsColliderMoveAgainstWall(delta))
             return;
 
         worldPos.x += delta.x;
@@ -44,7 +42,7 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
     break;
     case PlatformerKinematicState::OnAir:
     {
-        if (!IsColliderMoveAgainstBoundaryX(delta) && !IsColliderTouchedWall(delta))
+        if (!IsColliderMoveAgainstBoundaryX(delta) && !IsColliderMoveAgainstWall(delta))
             worldPos.x += delta.x;
 
         bool isOnFloorPrev = IsColliderOnFloor({delta.x, 0.f});
@@ -86,4 +84,17 @@ void PlatformerKinematicPlayerComponent::ChangeStateTo(PlatformerKinematicState:
 {
     _state = state;
     _onStateChangedTo[_state]();
+}
+
+bool PlatformerKinematicPlayerComponent::IsColliderMoveAgainstWall(Vector2 delta)
+{
+    if (delta.x == 0)
+        return false;
+
+    if (delta.x > 0)
+        return TileType::IsWall & GetAdjacentTileType(Direction::RightTop)
+            || TileType::IsWall & GetAdjacentTileType(Direction::RightBottom);
+    else
+        return TileType::IsWall & GetAdjacentTileType(Direction::LeftTop)
+            || TileType::IsWall & GetAdjacentTileType(Direction::LeftBottom);
 }

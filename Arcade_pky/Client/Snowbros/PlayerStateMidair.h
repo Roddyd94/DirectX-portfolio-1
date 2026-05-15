@@ -8,7 +8,9 @@ public:
     ~PlayerStateMidair() override = default;
 
 private:
-    bool  _jumped  = true;
+    bool _jumped       = true;
+    bool _initialFlipX = false;
+    bool _flippedX     = false;
 
 public:
     Ptr<PlayerState> HandleInput(Ptr<class PlayerComponent> playerComponent,

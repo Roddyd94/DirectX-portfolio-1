@@ -72,6 +72,11 @@ void SpriteComponent::Render(float deltaTime)
     _mesh->Render();
 }
 
+bool SpriteComponent::GetFlipX() const
+{
+    return _animation->GetFlipX();
+}
+
 void SpriteComponent::SetShader(const std::string& name)
 {
     _shader = FIND_SHADER(name, Shader);
