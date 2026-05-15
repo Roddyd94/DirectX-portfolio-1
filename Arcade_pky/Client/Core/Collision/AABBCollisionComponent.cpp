@@ -7,6 +7,7 @@
 #include "CollisionSystem.h"
 #include "OBBCollisionComponent.h"
 #include "SphereCollisionComponent.h"
+#include "Core/Actor.h"
 
 AABBCollisionComponent::AABBCollisionComponent()
 {
@@ -36,17 +37,17 @@ void AABBCollisionComponent::Tick(float deltaTime)
 {
     CollisionComponent::Tick(deltaTime);
 
-    _box.min.x = _world.position.x - _boxSize.x * 0.5f;
-    _box.max.x = _world.position.x + _boxSize.x * 0.5f;
+    _box.left  = _world.position.x - _boxSize.x * 0.5f;
+    _box.right = _world.position.x + _boxSize.x * 0.5f;
 
-    _box.min.y = _world.position.y - _boxSize.y * 0.5f;
-    _box.max.y = _world.position.y + _boxSize.y * 0.5f;
+    _box.bottom = _world.position.y - _boxSize.y * 0.5f;
+    _box.top    = _world.position.y + _boxSize.y * 0.5f;
 
-    _min.x = _box.min.x;
-    _max.x = _box.max.x;
+    _min.x = _box.left;
+    _max.x = _box.right;
 
-    _min.y = _box.min.y;
-    _max.y = _box.max.y;
+    _min.y = _box.bottom;
+    _max.y = _box.top;
 
     SetWorldScale({_boxSize.x, _boxSize.y, 1.f});
 }

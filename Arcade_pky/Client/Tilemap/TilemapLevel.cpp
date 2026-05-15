@@ -23,7 +23,10 @@ Rect TilemapLevel::GetBoundary() const
     return _boundary;
 }
 
-void TilemapLevel::SetBoundary(Rect boundary) {}
+void TilemapLevel::SetBoundary(Rect boundary)
+{
+    _boundary = boundary;
+}
 
 Ptr<class Tilemap> TilemapLevel::GetTilemap() const
 {

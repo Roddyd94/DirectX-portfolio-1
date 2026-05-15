@@ -11,9 +11,11 @@ union Vector2
     };
 
 public:
-    Vector2()                         = default;
-    Vector2(const Vector2& other)     = default;
-    Vector2(Vector2&& other) noexcept = default;
+    Vector2()                                = default;
+    Vector2(const Vector2& other)            = default;
+    Vector2(Vector2&& other) noexcept        = default;
+    Vector2& operator=(const Vector2& other) = default;
+    Vector2& operator=(Vector2&& other)      = default;
 
     Vector2(float x, float y);
 
@@ -21,8 +23,6 @@ public:
     static const Vector2 one;
     static const Vector2 axisX;
     static const Vector2 axisY;
-
-    Vector2& operator=(Vector2 other);
 
     Vector2& operator+=(Vector2 other);
     Vector2& operator+=(int32 value);

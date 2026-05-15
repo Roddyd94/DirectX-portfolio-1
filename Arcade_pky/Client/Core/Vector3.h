@@ -22,9 +22,11 @@ union Vector3
     };
 
 public:
-    Vector3()                         = default;
-    Vector3(const Vector3& other)     = default;
-    Vector3(Vector3&& other) noexcept = default;
+    Vector3()                                = default;
+    Vector3(const Vector3& other)            = default;
+    Vector3(Vector3&& other) noexcept        = default;
+    Vector3& operator=(const Vector3& other) = default;
+    Vector3& operator=(Vector3&& other)      = default;
     Vector3(float x, float y, float z);
     Vector3(const DirectX::XMVECTOR& v);
 
@@ -35,8 +37,6 @@ public:
     static const Vector3 axisX;
     static const Vector3 axisY;
     static const Vector3 axisZ;
-
-    Vector3& operator=(Vector3 other);
 
     Vector3& operator+=(Vector3 other);
     Vector3& operator+=(int32 value);

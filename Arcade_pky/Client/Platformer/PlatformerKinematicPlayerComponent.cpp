@@ -24,35 +24,36 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
     Ptr<Actor> actor = GetOwner();
 
     Vector2 worldPos = actor->GetWorldPosition().ToVector2();
+    Vector2 delta    = _velocity * deltaTime;
 
     switch (_state)
     {
     case PlatformerKinematicState::OnGround:
     {
-        if (IsColliderTouchedBoundaryX(worldPos, _velocity.x)
-            || IsColliderTouchedWall(worldPos, _velocity.x))
+        delta.y = std::max(delta.y, 0.f);
+
+        if (IsColliderMoveAgainstBoundaryX(delta) || IsColliderTouchedWall(delta))
             return;
 
-        worldPos.x += _velocity.x * deltaTime;
+        worldPos.x += delta.x;
 
-        bool isOnFloor = IsColliderOnFloor(worldPos);
+        bool isOnFloor = IsColliderOnFloor(delta);
         if (!isOnFloor)
             ChangeStateTo(PlatformerKinematicState::OnAir);
     }
     break;
     case PlatformerKinematicState::OnAir:
     {
-        if (!IsColliderTouchedBoundaryX(worldPos, _velocity.x)
-            && !IsColliderTouchedWall(worldPos, _velocity.x))
-            worldPos.x += _velocity.x * deltaTime;
+        if (!IsColliderMoveAgainstBoundaryX(delta) && !IsColliderTouchedWall(delta))
+            worldPos.x += delta.x;
 
-        bool isOnFloorPrev = IsColliderOnFloor(worldPos);
-        worldPos.y += _velocity.y * deltaTime;
-        bool isOnFloorNext = IsColliderOnFloor(worldPos);
+        bool isOnFloorPrev = IsColliderOnFloor({delta.x, 0.f});
+        worldPos.y += delta.y;
+        bool isOnFloorNext = IsColliderOnFloor(delta);
 
-        if (_velocity.y < 0 && !isOnFloorPrev && isOnFloorNext)
+        if (delta.y < 0 && !isOnFloorPrev && isOnFloorNext)
         {
-            AdjustPositionToFloor(worldPos);
+            AdjustPositionToFloor(worldPos, delta);
             _velocity.y = 0.f;
             ChangeStateTo(PlatformerKinematicState::OnGround);
         }

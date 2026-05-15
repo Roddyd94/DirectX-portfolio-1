@@ -11,16 +11,6 @@ const Vector4 Vector4::axisW{0.f, 0.f, 0.f, 1.f};
 
 Vector4::Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
-Vector4& Vector4::operator=(Vector4 other)
-{
-    x = other.x;
-    y = other.y;
-    z = other.z;
-    w = other.w;
-
-    return *this;
-}
-
 Vector4& Vector4::operator+=(Vector4 other)
 {
     x += other.x;

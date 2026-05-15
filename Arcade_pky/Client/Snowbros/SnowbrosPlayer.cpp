@@ -53,7 +53,7 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
 
     auto collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
     collider->AttachToComponent(rootComp);
-    collider->SetBoxSize({1.f, 1.25f});
+    collider->SetBoxSize({1.f, 1.f});
     collider->SetCollisionProfile("Player");
 
     auto shootComponent = CreateActorComponent<ShootComponent>("Shoot");

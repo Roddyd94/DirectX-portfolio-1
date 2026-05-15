@@ -77,85 +77,108 @@ void PlatformerKinematicComponent::AddGravity(float deltaTime)
     _velocity.y = std::max(-terminalVelocityY, _velocity.y);
 }
 
-void PlatformerKinematicComponent::AdjustPositionToFloor(Vector2& worldPos2D)
+void PlatformerKinematicComponent::AdjustPositionToFloor(Vector2& worldPos2D, Vector2 delta)
 {
-    float colliderExtentY = _collider->GetBoxSize().y / 2.f;
+    Rect colliderBox = _collider->GetBox();
+    colliderBox.Move(delta);
 
-    Vector2 colliderBottomCenter = worldPos2D;
-    colliderBottomCenter.y -= colliderExtentY;
-    Ptr<Tile> tile = _tilemap->GetTile(colliderBottomCenter);
+    Vector2   colliderCenterBottom = {worldPos2D.x, colliderBox.bottom};
+    Ptr<Tile> tile                 = _tilemap->GetTile(colliderCenterBottom);
 
-    float tileTopPositionY = tile->GetWorldPosition().y + tile->GetSize().y / 2;
-    worldPos2D.y           = tileTopPositionY + colliderExtentY - epsilonTile;
+    float targetPositionY
+      = tile->GetWorldPosition().y + tile->GetSize().y / 2 + _collider->GetBoxSize().y / 2;
+    worldPos2D.y = targetPositionY - epsilonTile;
 }
 
-bool PlatformerKinematicComponent::IsColliderOnFloor(Vector2 worldPos2D)
+bool PlatformerKinematicComponent::IsColliderOnFloor(Vector2 delta)
 {
-    float colliderExtentX = _collider->GetBoxSize().x / 2.f;
-    float colliderExtentY = _collider->GetBoxSize().y / 2.f;
+    Rect colliderBox = _collider->GetBox();
+    colliderBox.Move(delta);
 
-    Vector2 nextBottomCenter = worldPos2D;
-    nextBottomCenter.y -= colliderExtentY;
-    Ptr<Tile> tileBottom = _tilemap->GetTile(nextBottomCenter);
+    Ptr<Tile> tileCenterBottom
+      = _tilemap->GetTile({_collider->GetWorldPosition().x, colliderBox.bottom});
+    Ptr<Tile> tileLeftBottom  = _tilemap->GetTile({colliderBox.left, colliderBox.bottom});
+    Ptr<Tile> tileRightBottom = _tilemap->GetTile({colliderBox.right, colliderBox.bottom});
 
-    Vector2 nextBottomLeft = nextBottomCenter;
-    nextBottomLeft.x -= colliderExtentX;
-    Ptr<Tile> tileBottomLeft = _tilemap->GetTile(nextBottomLeft);
-
-    Vector2 nextBottomRight = nextBottomCenter;
-    nextBottomRight.x += colliderExtentX;
-    Ptr<Tile> tileBottomRight = _tilemap->GetTile(nextBottomRight);
-
-    if (nullptr == tileBottomLeft || nullptr == tileBottomRight)
+    if (nullptr == tileLeftBottom || nullptr == tileRightBottom)
     {
-        if (tileBottom->IsFloor())
+        if (tileCenterBottom->IsFloor())
             return true;
 
         return false;
     }
 
-    if (!tileBottom->IsFloor() && tileBottom->IsCeiling()
-        && (tileBottomLeft->IsFloor() || tileBottomRight->IsFloor()))
+    if (!tileCenterBottom->IsFloor() && tileCenterBottom->IsCeiling()
+        && (tileLeftBottom->IsFloor() || tileRightBottom->IsFloor()))
         return false;
 
-    if (tileBottom->IsFloor() || tileBottomLeft->IsFloor() || tileBottomRight->IsFloor())
+    if (tileCenterBottom->IsFloor() || tileLeftBottom->IsFloor() || tileRightBottom->IsFloor())
         return true;
 
     return false;
 }
 
-bool PlatformerKinematicComponent::IsColliderTouchedWall(Vector2 worldPos2D, float deltaX)
+bool PlatformerKinematicComponent::IsColliderTouchedWall(Vector2 delta)
 {
-    float colliderExtentX = _collider->GetBoxSize().x / 2.f;
-    float colliderExtentY = _collider->GetBoxSize().y / 2.f;
+    if (std::abs(delta.x) < FLT_EPSILON)
+        return false;
 
-    Vector2 colliderBoundary = worldPos2D;
-    float   direction        = deltaX > 0 ? 1.f : -1.f;
-    colliderBoundary.x += colliderExtentX * direction;
-    colliderBoundary.y += epsilonTile - colliderExtentY;
+    Rect colliderBox = _collider->GetBox();
+    colliderBox.Move(delta);
 
-    Ptr<Tile> tile = _tilemap->GetTile(colliderBoundary);
+    Vector2 tilePositionUpper = {0.f, colliderBox.top};
+    Vector2 tilePositionLower = {0.f, colliderBox.bottom + epsilonTile};
 
-    return tile->IsWall();
+    if (delta.x > 0)
+    {
+        tilePositionUpper.x = colliderBox.right;
+        tilePositionLower.x = colliderBox.right;
+    }
+    else
+    {
+        tilePositionUpper.x = colliderBox.left;
+        tilePositionLower.x = colliderBox.left;
+    }
+
+    Ptr<Tile> tileUpper = _tilemap->GetTile(tilePositionUpper);
+    Ptr<Tile> tileLower = _tilemap->GetTile(tilePositionLower);
+
+    return (tileUpper && tileUpper->IsWall()) || (tileLower && tileLower->IsWall());
 }
 
-bool PlatformerKinematicComponent::IsColliderTouchedBoundaryX(Vector2 worldPos2D, float deltaX)
+bool PlatformerKinematicComponent::IsColliderTouchedBoundary(Vector2 delta)
 {
-    float colliderExtentX = _collider->GetBoxSize().x / 2.f;
+    Rect colliderBox = _collider->GetBox();
+    colliderBox.Move(delta);
 
-    Ptr<TilemapLevel> level = Cast<Level, TilemapLevel>(GetLevel());
+    Ptr<TilemapLevel> level    = Cast<Level, TilemapLevel>(GetLevel());
+    Rect              boundary = level->GetBoundary();
 
-    Rect boundary = level->GetBoundary();
+    return colliderBox.left < boundary.left || colliderBox.right > boundary.right
+        || colliderBox.top > boundary.top || colliderBox.bottom < boundary.bottom;
+}
 
-    Vector2 colliderBoundary = worldPos2D;
-    bool    isMovingRight    = deltaX > 0;
-    float   direction        = isMovingRight ? 1.f : -1.f;
-    colliderBoundary.x += colliderExtentX * direction;
+bool PlatformerKinematicComponent::IsColliderMoveAgainstBoundaryX(Vector2 delta)
+{
+    Rect colliderBox = _collider->GetBox();
+    colliderBox.Move(delta);
 
-    if (isMovingRight)
-        return colliderBoundary.x > boundary.right;
+    Ptr<TilemapLevel> level    = Cast<Level, TilemapLevel>(GetLevel());
+    Rect              boundary = level->GetBoundary();
+
+    if (delta.x > 0)
+        return colliderBox.right > boundary.right;
     else
-        return colliderBoundary.x < boundary.left;
+        return colliderBox.left < boundary.left;
 
     return false;
+}
+
+bool PlatformerKinematicComponent::IsPositionOutOfBoundary(Vector2 position)
+{
+    Ptr<TilemapLevel> level    = Cast<Level, TilemapLevel>(GetLevel());
+    Rect              boundary = level->GetBoundary();
+
+    return position.x < boundary.left || position.x > boundary.right || position.y > boundary.top
+        || position.y < boundary.bottom;
 }

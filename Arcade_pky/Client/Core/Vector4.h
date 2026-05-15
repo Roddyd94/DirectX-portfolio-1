@@ -22,9 +22,11 @@ union Vector4
     };
 
 public:
-    Vector4()                         = default;
-    Vector4(const Vector4& other)     = default;
-    Vector4(Vector4&& other) noexcept = default;
+    Vector4()                                    = default;
+    Vector4(const Vector4& other)                = default;
+    Vector4(Vector4&& other) noexcept            = default;
+    Vector4& operator=(const Vector4& other)     = default;
+    Vector4& operator=(Vector4&& other) noexcept = default;
     Vector4(float x, float y, float z, float w);
 
     static const Vector4 zero;
@@ -33,8 +35,6 @@ public:
     static const Vector4 axisY;
     static const Vector4 axisZ;
     static const Vector4 axisW;
-
-    Vector4& operator=(Vector4 other);
 
     Vector4& operator+=(Vector4 other);
     Vector4& operator+=(int32 value);

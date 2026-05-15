@@ -9,14 +9,6 @@ const Vector2 Vector2::axisY{0.f, 1.f};
 
 Vector2::Vector2(float x, float y) : x(x), y(y) {}
 
-Vector2& Vector2::operator=(Vector2 other)
-{
-    x = other.x;
-    y = other.y;
-
-    return *this;
-}
-
 Vector2& Vector2::operator+=(Vector2 other)
 {
     x += other.x;

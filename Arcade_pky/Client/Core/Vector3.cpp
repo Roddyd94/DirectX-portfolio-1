@@ -17,15 +17,6 @@ Vector3::Vector3(const DirectX::XMVECTOR& v)
     DirectX::XMStoreFloat3((DirectX::XMFLOAT3*)this, v);
 }
 
-Vector3& Vector3::operator=(Vector3 other)
-{
-    x = other.x;
-    y = other.y;
-    z = other.z;
-
-    return *this;
-}
-
 Vector3::operator DirectX::XMVECTOR() const
 {
     return DirectX::XMLoadFloat3((DirectX::XMFLOAT3*)this);

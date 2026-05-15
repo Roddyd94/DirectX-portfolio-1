@@ -38,8 +38,10 @@ public:
     void AddGravity(float deltaTime);
 
 protected:
-    void AdjustPositionToFloor(Vector2& worldPos2D);
-    bool IsColliderOnFloor(Vector2 worldPos2D);
-    bool IsColliderTouchedWall(Vector2 worldPos2D, float deltaX);
-    bool IsColliderTouchedBoundaryX(Vector2 worldPos2D, float deltaX);
+    void AdjustPositionToFloor(Vector2& worldPos2D, Vector2 delta);
+    bool IsColliderOnFloor(Vector2 delta);
+    bool IsColliderTouchedWall(Vector2 delta);
+    bool IsColliderTouchedBoundary(Vector2 delta);
+    bool IsColliderMoveAgainstBoundaryX(Vector2 delta);
+    bool IsPositionOutOfBoundary(Vector2 position);
 };

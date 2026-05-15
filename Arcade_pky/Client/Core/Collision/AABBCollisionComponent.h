@@ -10,12 +10,10 @@ public:
 
 protected:
     Vector2 _boxSize;
-    AABB2D  _box;
+    Rect    _box;
 
 public:
-    bool Init(int32      componentID,
-      const std::string& name,
-      Ptr<class Actor>   owner) override;
+    bool Init(int32 componentID, const std::string& name, Ptr<class Actor> owner) override;
     void Destroy() override;
 
     void Tick(float deltaTime) override;
@@ -26,7 +24,7 @@ public:
     void AttachToComponent(Ptr<SceneComponent> comp) override;
 
     Vector2 GetBoxSize() const { return _boxSize; }
-    const AABB2D&  GetBox() const { return _box; }
+    Rect    GetBox() const { return _box; }
 
     void SetBoxSize(Vector2 size) { SetBoxSize(size.x, size.y); }
     void SetBoxSize(float x, float y)

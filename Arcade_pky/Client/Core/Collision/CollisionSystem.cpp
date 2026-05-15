@@ -9,9 +9,8 @@
 bool CollisionSystem::AABBToAABB(
   Weak<AABBCollisionComponent> src, Weak<AABBCollisionComponent> dest)
 {
-    Ptr<AABBCollisionComponent> srcCollider = Lock<AABBCollisionComponent>(src);
-    Ptr<AABBCollisionComponent> destCollider
-      = Lock<AABBCollisionComponent>(dest);
+    Ptr<AABBCollisionComponent> srcCollider  = Lock<AABBCollisionComponent>(src);
+    Ptr<AABBCollisionComponent> destCollider = Lock<AABBCollisionComponent>(dest);
 
     if (!srcCollider || !destCollider)
         return false;
@@ -22,22 +21,20 @@ bool CollisionSystem::AABBToAABB(
 bool CollisionSystem::AABBToSphere(
   Weak<AABBCollisionComponent> src, Weak<SphereCollisionComponent> dest)
 {
-    Ptr<AABBCollisionComponent> srcCollider = Lock<AABBCollisionComponent>(src);
-    Ptr<SphereCollisionComponent> destCollider
-      = Lock<SphereCollisionComponent>(dest);
+    Ptr<AABBCollisionComponent>   srcCollider  = Lock<AABBCollisionComponent>(src);
+    Ptr<SphereCollisionComponent> destCollider = Lock<SphereCollisionComponent>(dest);
 
     if (!srcCollider || !destCollider)
         return false;
 
-    return AABBToSphere(srcCollider->GetBox(), destCollider->GetWorldPosition(),
-      destCollider->GetRadius());
+    return AABBToSphere(
+      srcCollider->GetBox(), destCollider->GetWorldPosition(), destCollider->GetRadius());
 }
 
-bool CollisionSystem::AABBToOBB(
-  Weak<AABBCollisionComponent> src, Weak<OBBCollisionComponent> dest)
+bool CollisionSystem::AABBToOBB(Weak<AABBCollisionComponent> src, Weak<OBBCollisionComponent> dest)
 {
-    Ptr<AABBCollisionComponent> srcCollider = Lock<AABBCollisionComponent>(src);
-    Ptr<OBBCollisionComponent> destCollider = Lock<OBBCollisionComponent>(dest);
+    Ptr<AABBCollisionComponent> srcCollider  = Lock<AABBCollisionComponent>(src);
+    Ptr<OBBCollisionComponent>  destCollider = Lock<OBBCollisionComponent>(dest);
 
     if (!srcCollider || !destCollider)
         return false;
@@ -45,8 +42,7 @@ bool CollisionSystem::AABBToOBB(
     return AABBToOBB(srcCollider->GetBox(), destCollider->GetBox());
 }
 
-bool CollisionSystem::OBBToOBB(
-  Weak<OBBCollisionComponent> src, Weak<OBBCollisionComponent> dest)
+bool CollisionSystem::OBBToOBB(Weak<OBBCollisionComponent> src, Weak<OBBCollisionComponent> dest)
 {
     Ptr<OBBCollisionComponent> srcCollider  = Lock<OBBCollisionComponent>(src);
     Ptr<OBBCollisionComponent> destCollider = Lock<OBBCollisionComponent>(dest);
@@ -60,52 +56,47 @@ bool CollisionSystem::OBBToOBB(
 bool CollisionSystem::OBBToSphere(
   Weak<OBBCollisionComponent> src, Weak<SphereCollisionComponent> dest)
 {
-    Ptr<OBBCollisionComponent> srcCollider = Lock<OBBCollisionComponent>(src);
-    Ptr<SphereCollisionComponent> destCollider
-      = Lock<SphereCollisionComponent>(dest);
+    Ptr<OBBCollisionComponent>    srcCollider  = Lock<OBBCollisionComponent>(src);
+    Ptr<SphereCollisionComponent> destCollider = Lock<SphereCollisionComponent>(dest);
 
     if (!srcCollider || !destCollider)
         return false;
 
-    return OBBToSphere(srcCollider->GetBox(), destCollider->GetWorldPosition(),
-      destCollider->GetRadius());
+    return OBBToSphere(
+      srcCollider->GetBox(), destCollider->GetWorldPosition(), destCollider->GetRadius());
 }
 
 bool CollisionSystem::SphereToSphere(
   Weak<SphereCollisionComponent> src, Weak<SphereCollisionComponent> dest)
 {
-    Ptr<SphereCollisionComponent> srcCollider
-      = Lock<SphereCollisionComponent>(src);
-    Ptr<SphereCollisionComponent> destCollider
-      = Lock<SphereCollisionComponent>(dest);
+    Ptr<SphereCollisionComponent> srcCollider  = Lock<SphereCollisionComponent>(src);
+    Ptr<SphereCollisionComponent> destCollider = Lock<SphereCollisionComponent>(dest);
 
     if (!srcCollider || !destCollider)
         return false;
 
-    return SphereToSphere(srcCollider->GetWorldPosition(),
-      srcCollider->GetRadius(), destCollider->GetWorldPosition(),
-      destCollider->GetRadius());
+    return SphereToSphere(srcCollider->GetWorldPosition(), srcCollider->GetRadius(),
+      destCollider->GetWorldPosition(), destCollider->GetRadius());
 }
 
-bool CollisionSystem::AABBToAABB(const AABB2D& src, const AABB2D& dest)
+bool CollisionSystem::AABBToAABB(Rect src, Rect dest)
 {
-    if (src.min.x > dest.max.x)
+    if (src.left > dest.right)
         return false;
-    if (src.min.y > dest.max.y)
+    if (src.bottom > dest.top)
         return false;
-    if (src.max.x < dest.min.x)
+    if (src.right < dest.left)
         return false;
-    if (src.max.y < dest.min.y)
+    if (src.top < dest.bottom)
         return false;
 
     return true;
 }
 
-bool CollisionSystem::AABBToSphere(
-  const AABB2D& src, Vector3 destCenter, float destRadius)
+bool CollisionSystem::AABBToSphere(Rect src, Vector3 destCenter, float destRadius)
 {
-    float foundX = std::clamp(destCenter.x, src.min.x, src.max.x);
-    float foundY = std::clamp(destCenter.y, src.min.y, src.max.y);
+    float foundX = std::clamp(destCenter.x, src.left, src.right);
+    float foundY = std::clamp(destCenter.y, src.bottom, src.top);
 
     float distX = destCenter.x - foundX;
     float distY = destCenter.y - foundY;
@@ -119,7 +110,7 @@ bool CollisionSystem::AABBToSphere(
     return false;
 }
 
-bool CollisionSystem::AABBToOBB(const AABB2D& src, const OBB2D& dest)
+bool CollisionSystem::AABBToOBB(Rect src, const OBB2D& dest)
 {
     OBB2D srcObb = CreateOBB(src);
     return OBBToOBB(srcObb, dest);
@@ -129,27 +120,22 @@ bool CollisionSystem::OBBToOBB(const OBB2D& src, const OBB2D& dest)
 {
     Vector2 centerLine = src.center - dest.center;
 
-    if (!ComputeAxisProjection(
-          centerLine, src.axises[AxisType::X], src.halfSize.x, dest))
+    if (!ComputeAxisProjection(centerLine, src.axises[AxisType::X], src.halfSize.x, dest))
         return false;
 
-    if (!ComputeAxisProjection(
-          centerLine, src.axises[AxisType::Y], src.halfSize.y, dest))
+    if (!ComputeAxisProjection(centerLine, src.axises[AxisType::Y], src.halfSize.y, dest))
         return false;
 
-    if (!ComputeAxisProjection(
-          centerLine, dest.axises[AxisType::X], dest.halfSize.x, src))
+    if (!ComputeAxisProjection(centerLine, dest.axises[AxisType::X], dest.halfSize.x, src))
         return false;
 
-    if (!ComputeAxisProjection(
-          centerLine, dest.axises[AxisType::Y], dest.halfSize.y, src))
+    if (!ComputeAxisProjection(centerLine, dest.axises[AxisType::Y], dest.halfSize.y, src))
         return false;
 
     return true;
 }
 
-bool CollisionSystem::OBBToSphere(
-  const OBB2D& src, Vector3 destCenter, float destRadius)
+bool CollisionSystem::OBBToSphere(const OBB2D& src, Vector3 destCenter, float destRadius)
 {
     Vector2 convertCenter;
     convertCenter.x = destCenter.x;
@@ -159,10 +145,9 @@ bool CollisionSystem::OBBToSphere(
     Vector2 axis       = centerLine;
     axis.Normalize();
 
-    float centerProj = std::abs(centerLine.Dot(axis));
-    float obbProjOnAxis
-      = std::abs(axis.Dot(src.axises[AxisType::X])) * src.halfSize.x
-      + std::abs(axis.Dot(src.axises[AxisType::Y])) * src.halfSize.y;
+    float centerProj    = std::abs(centerLine.Dot(axis));
+    float obbProjOnAxis = std::abs(axis.Dot(src.axises[AxisType::X])) * src.halfSize.x
+                        + std::abs(axis.Dot(src.axises[AxisType::Y])) * src.halfSize.y;
 
     if (centerProj > destRadius + obbProjOnAxis)
         return false;
@@ -184,10 +169,8 @@ bool CollisionSystem::SphereToSphere(
     return srcCenter.Distance(destCenter) < srcRadius + destRadius;
 }
 
-bool CollisionSystem::ComputeAxisProjection(Vector2 centerLine,
-  Vector2                                           srcAxis,
-  float                                             srcAxisHalfSize,
-  const OBB2D&                                      destOBB)
+bool CollisionSystem::ComputeAxisProjection(
+  Vector2 centerLine, Vector2 srcAxis, float srcAxisHalfSize, const OBB2D& destOBB)
 {
     float centerProjectionDist = std::abs(centerLine.Dot(srcAxis));
     float destProjectionDist
@@ -201,11 +184,11 @@ bool CollisionSystem::ComputeAxisProjection(Vector2 centerLine,
     return true;
 }
 
-OBB2D CollisionSystem::CreateOBB(const AABB2D& aabb)
+OBB2D CollisionSystem::CreateOBB(Rect aabb)
 {
     OBB2D result;
 
-    result.center = (aabb.min + aabb.max) * .5f;
+    result.center = (aabb.leftBottom + aabb.rightTop) * .5f;
 
     result.axises[AxisType::X].x = 1.f;
     result.axises[AxisType::X].y = 0.f;
@@ -213,7 +196,7 @@ OBB2D CollisionSystem::CreateOBB(const AABB2D& aabb)
     result.axises[AxisType::Y].x = 0.f;
     result.axises[AxisType::Y].y = 1.f;
 
-    result.halfSize = (aabb.max - aabb.min) * 0.5f;
+    result.halfSize = (aabb.rightTop - aabb.leftBottom) * 0.5f;
 
     return result;
 }
