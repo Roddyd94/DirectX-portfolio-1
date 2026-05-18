@@ -20,9 +20,9 @@ private:
 
 private:
     inline static float phaseTime              = 0.15f;
-    inline static float lifeTime               = 0.66666666666666666667f;
-    inline static float initialVelocityY       = 3.f;
-    inline static float velocityXPhaseNormal1  = 15.f;
+    inline static float lifeTime               = 0.8f;
+    inline static float initialVelocityY       = 5.f;
+    inline static float velocityXPhaseNormal1  = 12.f;
     inline static float velocityXPhaseRangeUp1 = 12.f;
     inline static float velocityXPhase2        = 4.f;
     inline static float airDrag                = 6.f;
