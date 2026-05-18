@@ -37,19 +37,42 @@ uint32 Tile::GetSpriteIndex() const
     return _spriteIndex;
 }
 
-bool Tile::IsWall() const
+bool Tile::IsBackground() const
 {
-    return _type & TileType::IsWall;
+    return _type & TileType::Background;
 }
 
-bool Tile::IsFloor() const
+bool Tile::IsBlock() const
 {
-    return _type & TileType::IsFloor;
+    return _type & TileType::Block;
 }
 
-bool Tile::IsCeiling() const
+bool Tile::IsTopBlock() const
 {
-    return _type & TileType::IsCeiling;
+    Ptr<TilemapComponent> tilemap = Lock(_owner);
+
+    Vector2 tileAbovePosition = tilemap->GetWorldPosition().ToVector2();
+    tileAbovePosition += _position;
+    tileAbovePosition.y += _size.y;
+    Ptr<Tile> tileAbove = tilemap->GetTile(tileAbovePosition);
+
+    bool isTileAboveBlock = tileAbove && tileAbove->_type & TileType::Block;
+
+    return _type & TileType::Block && !isTileAboveBlock;
+}
+
+bool Tile::IsBottomBlock() const
+{
+    Ptr<TilemapComponent> tilemap = Lock(_owner);
+
+    Vector2 tileBelowPosition = tilemap->GetWorldPosition().ToVector2();
+    tileBelowPosition += _position;
+    tileBelowPosition.y -= _size.y;
+    Ptr<Tile> tileBelow = tilemap->GetTile(tileBelowPosition);
+
+    bool isTileBelowBlock = tileBelow && tileBelow->_type & TileType::Block;
+
+    return _type & TileType::Block && !isTileBelowBlock;
 }
 
 void Tile::SetPosition(Vector2 position)

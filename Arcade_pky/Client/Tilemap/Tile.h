@@ -6,18 +6,11 @@ namespace TileType
     enum Type : uint16
     {
         Background,
-        IsCeiling           = 0x1,
-        IsFloor             = 0x2,
-        IsWall              = 0x4,
-        IsSlope             = 0x8,
-        IsSlopeAntiDiagonal = 0x10,
-        Ceiling             = IsCeiling,
-        PlatformEnd         = IsFloor,
-        Platform            = IsCeiling | IsFloor,
-        Wall                = IsWall,
-        Roof                = IsFloor | Wall,
-        SlopeDiagonal       = IsSlope,
-        SlopeAntiDiagonal   = IsSlope | IsSlopeAntiDiagonal,
+        Block,
+        TriangleLeftTop,
+        TriangleLeftBottom,
+        TriangleRightTop,
+        TriangleRightBottom,
         End
     };
 }
@@ -32,9 +25,9 @@ public:
 
 private:
     Weak<class TilemapComponent> _owner;
-    Vector2 _position;
-    Vector2 _size;
-    Vector2 _center;
+    Vector2                      _position;
+    Vector2                      _size;
+    Vector2                      _center;
 
     uint32         _spriteIndex = -1;
     TileType::Type _type        = TileType::Background;
@@ -50,9 +43,10 @@ public:
     TileType::Type GetType() const;
     uint32         GetSpriteIndex() const;
 
-    bool IsWall() const;
-    bool IsFloor() const;
-    bool IsCeiling() const;
+    bool IsBackground() const;
+    bool IsBlock() const;
+    bool IsTopBlock() const;
+    bool IsBottomBlock() const;
 
     void SetPosition(Vector2 position);
     void SetSize(Vector2 size);

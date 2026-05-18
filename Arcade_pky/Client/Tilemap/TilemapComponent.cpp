@@ -144,9 +144,7 @@ std::optional<Vector2> TilemapComponent::GetTileWorldPos(int32 index)
     if (!owner)
         return std::nullopt;
 
-    Vector2 ownerPos;
-    ownerPos.x = owner->GetWorldPosition().x;
-    ownerPos.y = owner->GetWorldPosition().y;
+    Vector2 ownerPos = owner->GetWorldPosition().ToVector2();
 
     return _tiles[index]->GetPosition() + ownerPos;
 }
@@ -324,17 +322,17 @@ void TilemapComponent::RenderOutline()
                 std::optional<Vector2> worldPos = GetTileWorldPos(index);
 
                 Vector4 color(0.f, 0.f, 0.f, 0.f);
-                if (tile->GetType() & TileType::IsCeiling)
-                {
-                    color.b = 1.f;
-                    color.a = 1.f;
-                }
-                if (tile->GetType() & TileType::IsFloor)
+                if (tile->IsTopBlock())
                 {
                     color.g = 1.f;
                     color.a = 1.f;
                 }
-                if (tile->GetType() & TileType::IsWall)
+                if (tile->IsBottomBlock())
+                {
+                    color.b = 1.f;
+                    color.a = 1.f;
+                }
+                if (tile->IsBlock() && !tile->IsTopBlock() && !tile->IsBottomBlock())
                 {
                     color.r = 1.f;
                     color.a = 1.f;

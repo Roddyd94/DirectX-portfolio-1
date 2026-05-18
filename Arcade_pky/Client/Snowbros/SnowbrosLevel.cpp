@@ -51,16 +51,8 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
             int32 spriteIndex = stageData[i * 16 + j];
             tile->SetSprite(spriteIndex);
 
-            if (tileMetadata.tiles[TileType::Ceiling].contains(spriteIndex))
-                tile->SetTileType(TileType::Ceiling);
-            else if (tileMetadata.tiles[TileType::PlatformEnd].contains(spriteIndex))
-                tile->SetTileType(TileType::PlatformEnd);
-            else if (tileMetadata.tiles[TileType::Platform].contains(spriteIndex))
-                tile->SetTileType(TileType::Platform);
-            else if (tileMetadata.tiles[TileType::Wall].contains(spriteIndex))
-                tile->SetTileType(TileType::Wall);
-            else if (tileMetadata.tiles[TileType::Roof].contains(spriteIndex))
-                tile->SetTileType(TileType::Roof);
+            if (tileMetadata.tiles[TileType::Block].contains(spriteIndex))
+                tile->SetTileType(TileType::Block);
         }
     }
 

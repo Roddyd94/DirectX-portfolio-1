@@ -24,6 +24,11 @@ bool SnowProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Ptr<Animation2D> animation = rootComp->CreateAnimation();
     animation->SetAnimationSequence("projectile");
     animation->ChangeAnimationClip("projectile");
+    animation->AddNotify("projectile_hit", animation->GetClipFrameCount("projectile_hit"),
+      [this]()
+      {
+          SetActive(false);
+      });
 
     auto collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
     collider->AttachToComponent(rootComp);
@@ -36,6 +41,14 @@ bool SnowProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
 
     _projectileComponent = CreateActorComponent<SnowProjectileComponent>("Projectile");
     _projectileComponent->SetKinematic(kinematic);
+    collider->RegisterCollisionCallBack(
+      CollisionState::Enter, Raw(_projectileComponent), &SnowProjectileComponent::OnCollisionWith);
+    kinematic->RegisterOnCollidedWithBlock(
+      Raw(_projectileComponent), &SnowProjectileComponent::OnCollision);
+    kinematic->RegisterOnCollidedWithFloor(
+      Raw(_projectileComponent), &SnowProjectileComponent::OnCollision);
+    kinematic->RegisterOnCollidedWithBoundary(
+      Raw(_projectileComponent), &SnowProjectileComponent::OnCollision);
 
     return true;
 }
@@ -69,6 +82,6 @@ void SnowProjectile::SetRangeUp(bool rangeUp)
 void SnowProjectile::SetDirection(float direction)
 {
     _projectileComponent->_direction = direction;
-    auto sprite = Cast<SceneComponent, SpriteComponent>(_root);
+    auto sprite                      = Cast<SceneComponent, SpriteComponent>(_root);
     sprite->SetFlipX(direction > 0);
 }

@@ -92,9 +92,9 @@ bool PlatformerKinematicPlayerComponent::IsColliderMoveAgainstWall(Vector2 delta
         return false;
 
     if (delta.x > 0)
-        return TileType::IsWall & GetAdjacentTileType(Direction::RightTop)
-            || TileType::IsWall & GetAdjacentTileType(Direction::RightBottom);
+        return IsTileBlock(Direction::RightTop)
+            || IsTileBlock(Direction::RightBottom);
     else
-        return TileType::IsWall & GetAdjacentTileType(Direction::LeftTop)
-            || TileType::IsWall & GetAdjacentTileType(Direction::LeftBottom);
+        return IsTileBlock(Direction::LeftTop)
+            || IsTileBlock(Direction::LeftBottom);
 }

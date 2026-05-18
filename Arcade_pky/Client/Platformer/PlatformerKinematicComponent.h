@@ -11,7 +11,9 @@ public:
     ~PlatformerKinematicComponent() override = default;
 
 protected:
-    std::map<TileType::Type, std::function<void()>> _onCollidedWithTileCallbacks;
+    std::function<void()> _onCollidedWithBlock;
+    std::function<void()> _onCollidedWithFloor;
+    std::function<void()> _onCollidedWithBoundary;
 
     Ptr<class AABBCollisionComponent> _collider   = nullptr;
     Ptr<class Tilemap>                _tilemap    = nullptr;
@@ -36,6 +38,7 @@ public:
 
     void SetTilemap(Ptr<class Tilemap> tilemap);
     void SetCollider(Ptr<class AABBCollisionComponent> collider);
+    void SetVelocity(Vector2 velocity);
 
     void MoveX(float speed);
     void AddForce(Vector2 force);
@@ -44,26 +47,48 @@ public:
 protected:
     void AdjustPositionToFloor(Vector2& worldPos2D, Vector2 delta);
     bool IsColliderOnFloor(Vector2 delta);
-    bool IsColliderTouchedTile(TileType::Type tileType, Vector2 delta = Vector2::zero);
-    bool IsColliderTouchedWall(Vector2 delta);
+    bool IsColliderTouchedBlock(Vector2 delta);
     bool IsColliderTouchedFloor(Vector2 delta);
-    bool IsColliderTouchedCeiling(Vector2 delta);
     bool IsColliderTouchedBoundary(Vector2 delta);
+    bool IsTileBlock(Direction::Type direction);
+
     bool IsColliderMoveAgainstBoundaryX(Vector2 delta);
     bool IsPositionOutOfBoundary(Vector2 position);
 
-    TileType::Type GetAdjacentTileType(Direction::Type direction);
-
 public:
     template <typename T>
-    void RegisterOnCollidedTile(TileType::Type tileType, T* obj, void (T::*memFunc)())
+    void RegisterOnCollidedWithBlock(T* obj, void (T::*memFunc)())
     {
-        _onCollidedWithTileCallbacks[tileType] = std::bind(memFunc, obj, std::placeholders::_1);
+        _onCollidedWithBlock = std::bind(memFunc, obj);
     }
 
     template <typename T>
-    void RegisterOnCollidedTile(TileType::Type tileType, T&& func)
+    void RegisterOnCollidedWithBlock(T&& func)
     {
-        _onCollidedWithTileCallbacks[tileType] = std::forward<T>(func);
+        _onCollidedWithBlock = std::forward<T>(func);
+    }
+
+    template <typename T>
+    void RegisterOnCollidedWithFloor(T* obj, void (T::*memFunc)())
+    {
+        _onCollidedWithFloor = std::bind(memFunc, obj);
+    }
+
+    template <typename T>
+    void RegisterOnCollidedWithFloor(T&& func)
+    {
+        _onCollidedWithFloor = std::forward<T>(func);
+    }
+
+    template <typename T>
+    void RegisterOnCollidedWithBoundary(T* obj, void (T::*memFunc)())
+    {
+        _onCollidedWithBoundary = std::bind(memFunc, obj);
+    }
+
+    template <typename T>
+    void RegisterOnCollidedWithBoundary(T&& func)
+    {
+        _onCollidedWithBoundary = std::forward<T>(func);
     }
 };
