@@ -50,13 +50,13 @@
       <Filter>Core\World\Transform</Filter>
     </ClInclude>
     <ClInclude Include="Common\LogManager.h">
-      <Filter>Common\Log</Filter>
+      <Filter>Core\Common\Log</Filter>
     </ClInclude>
     <ClInclude Include="Core\DirectoryManager.h">
       <Filter>Core\Directory</Filter>
     </ClInclude>
     <ClInclude Include="Common\Logger.h">
-      <Filter>Common\Log</Filter>
+      <Filter>Core\Common\Log</Filter>
     </ClInclude>
     <ClInclude Include="Core\Timer.h">
       <Filter>Core\Time</Filter>
@@ -71,7 +71,7 @@
       <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="Common\Random.h">
-      <Filter>Common\Random</Filter>
+      <Filter>Core\Common\Random</Filter>
     </ClInclude>
     <ClInclude Include="Core\DeviceManager.h">
       <Filter>Core\Rendering\DirectX</Filter>
@@ -456,13 +456,13 @@
       <Filter>Core\World\Transform</Filter>
     </ClCompile>
     <ClCompile Include="Common\LogManager.cpp">
-      <Filter>Common\Log</Filter>
+      <Filter>Core\Common\Log</Filter>
     </ClCompile>
     <ClCompile Include="Core\DirectoryManager.cpp">
       <Filter>Core\Directory</Filter>
     </ClCompile>
     <ClCompile Include="Common\Logger.cpp">
-      <Filter>Common\Log</Filter>
+      <Filter>Core\Common\Log</Filter>
     </ClCompile>
     <ClCompile Include="Core\Timer.cpp">
       <Filter>Core\Time</Filter>
@@ -784,9 +784,6 @@
     <Filter Include="Core">
       <UniqueIdentifier>{9d9770cc-2607-490d-bf94-596bb5e17e59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common">
-      <UniqueIdentifier>{76b244ef-d46f-4859-9be9-67dab3696fad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Math">
       <UniqueIdentifier>{7d6a0bb1-d458-4332-a29d-e72270b59091}</UniqueIdentifier>
     </Filter>
@@ -796,17 +793,11 @@
     <Filter Include="Core\Object">
       <UniqueIdentifier>{4f4671b7-c034-4663-b08b-5f79ebacb047}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\Log">
-      <UniqueIdentifier>{1347fc33-0805-4cc9-a648-00a4d1e2b7a3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Directory">
       <UniqueIdentifier>{a9491a7c-bb97-42b7-bd45-cb6b079a7ea0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Time">
       <UniqueIdentifier>{f669dae0-af90-462c-8d3a-e30fe72540a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\Random">
-      <UniqueIdentifier>{0b49908f-4b0f-469b-853b-1c58fad463ee}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Object\Memory">
       <UniqueIdentifier>{9241a477-dda1-42b4-8c07-10af922a4976}</UniqueIdentifier>
@@ -1011,6 +1002,15 @@
     </Filter>
     <Filter Include="Snowbros\World">
       <UniqueIdentifier>{573efb8a-41b7-4ae3-9e08-fc2c67eec764}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Common">
+      <UniqueIdentifier>{76b244ef-d46f-4859-9be9-67dab3696fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Common\Log">
+      <UniqueIdentifier>{1347fc33-0805-4cc9-a648-00a4d1e2b7a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Common\Random">
+      <UniqueIdentifier>{0b49908f-4b0f-469b-853b-1c58fad463ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
