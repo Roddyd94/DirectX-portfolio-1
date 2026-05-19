@@ -19,15 +19,14 @@
 CollisionComponent::CollisionComponent()
 {
 #ifdef _DEBUG
-    _shouldRender     = true;
+    _shouldRender    = true;
     _renderLayerName = "Collider";
 #endif // _DEBUG
 }
 
 CollisionComponent::~CollisionComponent() {}
 
-bool CollisionComponent::Init(
-  int32 componentID, const std::string& name, Ptr<Actor> owner)
+bool CollisionComponent::Init(int32 componentID, const std::string& name, Ptr<Actor> owner)
 {
     SceneComponent::Init(componentID, name, owner);
 
@@ -37,7 +36,7 @@ bool CollisionComponent::Init(
     if (nullptr == level)
         return false;
 
-    level->AddCollision(_colliderID, This<CollisionComponent>());
+    level->AddCollision(This<CollisionComponent>());
 
 #if _DEBUG
     _shader                  = FIND_SHADER("FrameMeshShader", Shader);
@@ -56,15 +55,18 @@ void CollisionComponent::Destroy()
     if (nullptr == level)
         return;
 
-    level->RemoveCollision(_colliderID);
+    level->RemoveCollision(This<CollisionComponent>());
 
-    for (auto& [colliderID, collisionState] : _collisionStates)
+    for (auto& [colliderType, collisionStatesOfType] : _collisionStates)
     {
-        Ptr<CollisionComponent> foundCollider = level->FindCollider(colliderID);
-        if (nullptr == foundCollider)
-            continue;
+        for (auto& [colliderID, colliderState] : collisionStatesOfType)
+        {
+            Ptr<CollisionComponent> foundCollider = level->FindCollider(colliderType, colliderID);
+            if (nullptr == foundCollider)
+                continue;
 
-        foundCollider->_collisionStates.erase(_colliderID);
+            foundCollider->RemoveCollisionState(GetColliderType(), _colliderID);
+        }
     }
 }
 
@@ -110,13 +112,26 @@ void CollisionComponent::Render(float deltaTime)
 }
 
 CollisionState::Type CollisionComponent::CheckCollisionState(
-  const ComponentIDPair& otherColliderID) const
+  Ptr<class CollisionComponent> otherCollider) const
 {
-    auto it = _collisionStates.find(otherColliderID);
-    if (it == _collisionStates.end())
+    return CheckCollisionState(otherCollider->GetColliderType(), otherCollider->_colliderID);
+}
+
+CollisionState::Type CollisionComponent::CheckCollisionState(
+  ColliderType::Type otherColliderType, ComponentIDPair otherColliderID) const
+{
+    auto itType = _collisionStates.find(otherColliderType);
+
+    if (_collisionStates.end() == itType)
         return CollisionState::Exit;
 
-    return it->second;
+    auto& collisionStatesOfType = itType->second;
+
+    auto itState = collisionStatesOfType.find(otherColliderID);
+    if (itState == collisionStatesOfType.end())
+        return CollisionState::Exit;
+
+    return itState->second;
 }
 
 Ptr<CollisionProfile> CollisionComponent::GetProfile() const
@@ -124,7 +139,15 @@ Ptr<CollisionProfile> CollisionComponent::GetProfile() const
     return _profile;
 }
 
-const ComponentIDPair& CollisionComponent::GetColliderID() const
+ColliderType::Type CollisionComponent::GetColliderType() const
+{
+    if (nullptr == _profile)
+        return ColliderType::End;
+
+    return _profile->GetColliderType();
+}
+
+ComponentIDPair CollisionComponent::GetColliderID() const
 {
     return _colliderID;
 }
@@ -133,12 +156,34 @@ void CollisionComponent::SetCollisionProfile(const std::string& name)
 {
     Ptr<Level> level = GetLevel();
 
-    Ptr<CollisionProfile> profileFound
-      = level->GetCollisionProfileManager()->FindProfile(name);
+    Ptr<CollisionProfile> profileFound = level->GetCollisionProfileManager()->FindProfile(name);
     if (nullptr == profileFound)
         return;
 
+    level->RemoveCollision(This<CollisionComponent>());
     _profile = profileFound;
+    level->AddCollision(This<CollisionComponent>());
+}
+
+void CollisionComponent::AddCollisionState(
+  ColliderType::Type colliderType, ComponentIDPair colliderID, CollisionState::Type stateType)
+{
+    _collisionStates[colliderType][colliderID] = stateType;
+}
+
+void CollisionComponent::RemoveCollisionState(
+  ColliderType::Type colliderType, ComponentIDPair colliderID)
+{
+    auto it = _collisionStates.find(colliderType);
+
+    if (_collisionStates.end() == it)
+        return;
+
+    auto& collisionStatesOfType = it->second;
+    collisionStatesOfType.erase(colliderID);
+
+    if (collisionStatesOfType.empty())
+        _collisionStates.erase(it);
 }
 
 bool CollisionComponent::Collision(Weak<CollisionComponent> other)
@@ -146,18 +191,18 @@ bool CollisionComponent::Collision(Weak<CollisionComponent> other)
     return false;
 }
 
-void CollisionComponent::Invoke(
-  CollisionState::Type state, Weak<CollisionComponent> other)
+void CollisionComponent::Invoke(CollisionState::Type state, Weak<CollisionComponent> other)
 {
     Ptr<CollisionComponent> otherCollider = Lock<CollisionComponent>(other);
     if (nullptr == otherCollider)
         return;
 
-    ComponentIDPair otherColliderID = otherCollider->GetColliderID();
+    ColliderType::Type otherColliderType = otherCollider->GetColliderType();
+    ComponentIDPair    otherColliderID   = otherCollider->GetColliderID();
     if (state == CollisionState::Enter || state == CollisionState::Stay)
-        _collisionStates.emplace(std::make_pair(otherColliderID, state));
+        AddCollisionState(otherColliderType, otherColliderID, state);
     else
-        _collisionStates.erase(otherColliderID);
+        RemoveCollisionState(otherColliderType, otherColliderID);
 
     if (_collisionCallback[state])
         _collisionCallback[state](otherCollider);

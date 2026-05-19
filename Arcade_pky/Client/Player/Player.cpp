@@ -4,6 +4,7 @@
 
 #include "Core/ResourceManager.h"
 
+#include "PlayerComponent.h"
 #include "PlayerController.h"
 #include "Core/Level.h"
 
@@ -21,6 +22,13 @@ bool Player::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
     _playerComponent = CreateActorComponent<PlayerComponent>("Player");
 
     return true;
+}
+
+void Player::Destroy()
+{
+    Pawn::Destroy();
+    DESTROY(_playerComponent);
+    DESTROY(_playerController);
 }
 
 Ptr<class PlayerController> Player::GetController() const

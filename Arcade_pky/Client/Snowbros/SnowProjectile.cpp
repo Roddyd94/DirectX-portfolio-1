@@ -53,6 +53,11 @@ bool SnowProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     return true;
 }
 
+void SnowProjectile::Destroy() {
+    Actor::Destroy();
+    DESTROY(_projectileComponent);
+}
+
 Ptr<class SnowProjectileComponent> SnowProjectile::GetProjectileComponent() const
 {
     return _projectileComponent;

@@ -17,81 +17,86 @@ void CollisionManager::Destroy()
 
 void CollisionManager::Collision(float deltaTime)
 {
-    for (auto colliderID : _collidersToRemove)
-        _colliders.erase(colliderID);
+    for (auto& [colliderType, colliderID] : _collidersToRemove)
+    {
+        auto it = _colliders.find(colliderType);
+        if (_colliders.end() == it)
+            continue;
 
+        it->second.erase(colliderID);
+    }
     _collidersToRemove.clear();
 
-    for (auto& [srcColliderID, srcCollider] : _colliders)
+    for (auto& [srcColliderType, srcColliders] : _colliders)
     {
-        if (!srcCollider->IsEnable())
-            continue;
-
-        if (!srcCollider->IsActive())
-            continue;
-
-        Ptr<CollisionProfile> srcProfile = srcCollider->GetProfile();
-        if (nullptr == srcProfile)
-            continue;
-
-        for (auto& [destColliderID, destCollider] : _colliders)
+        for (auto& [srcColliderID, srcCollider] : srcColliders)
         {
-            if (!destCollider->IsEnable())
+            if (!srcCollider->IsEnable())
                 continue;
 
-            if (!destCollider->IsActive())
+            if (!srcCollider->IsActive())
                 continue;
 
-            Ptr<CollisionProfile> destProfile = destCollider->GetProfile();
-            if (nullptr == destProfile)
+            Ptr<CollisionProfile> srcProfile = srcCollider->GetProfile();
+            if (nullptr == srcProfile)
                 continue;
 
-            if (srcProfile->GetResponseTo(destProfile->GetColliderType())
-                  == CollisionResponse::Ignore
-                || srcProfile->GetResponseTo(destProfile->GetColliderType())
-                     == CollisionResponse::End)
-                continue;
-
-            if (destProfile->GetResponseTo(srcProfile->GetColliderType())
-                  == CollisionResponse::Ignore
-                || destProfile->GetResponseTo(srcProfile->GetColliderType())
-                     == CollisionResponse::End)
-                continue;
-
-            if (srcCollider->Collision(destCollider))
+            for (auto& [destColliderType, destColliders] : _colliders)
             {
-                switch (srcCollider->CheckCollisionState(destColliderID))
+                if (srcProfile->GetResponseTo(destColliderType) == CollisionResponse::Ignore
+                    || srcProfile->GetResponseTo(destColliderType) == CollisionResponse::End)
+                    continue;
+
+                for (auto& [destColliderID, destCollider] : destColliders)
                 {
-                case CollisionState::Enter:
-                case CollisionState::Stay:
-                {
-                    srcCollider->Invoke(CollisionState::Stay, destCollider);
-                }
-                break;
-                case CollisionState::Exit:
-                case CollisionState::None:
-                {
-                    srcCollider->Invoke(CollisionState::Enter, destCollider);
-                }
-                break;
-                }
-            }
-            else
-            {
-                switch (srcCollider->CheckCollisionState(destColliderID))
-                {
-                case CollisionState::Enter:
-                case CollisionState::Stay:
-                {
-                    srcCollider->Invoke(CollisionState::Exit, destCollider);
-                }
-                break;
-                case CollisionState::Exit:
-                case CollisionState::None:
-                {
-                    srcCollider->Invoke(CollisionState::None, destCollider);
-                }
-                break;
+                    if (srcColliderID == destColliderID)
+                        continue;
+
+                    if (!destCollider->IsEnable())
+                        continue;
+
+                    if (!destCollider->IsActive())
+                        continue;
+
+                    if (!destCollider->GetProfile())
+                        continue;
+
+                    if (srcCollider->Collision(destCollider))
+                    {
+                        switch (srcCollider->CheckCollisionState(destCollider))
+                        {
+                        case CollisionState::Enter:
+                        case CollisionState::Stay:
+                        {
+                            srcCollider->Invoke(CollisionState::Stay, destCollider);
+                        }
+                        break;
+                        case CollisionState::Exit:
+                        case CollisionState::None:
+                        {
+                            srcCollider->Invoke(CollisionState::Enter, destCollider);
+                        }
+                        break;
+                        }
+                    }
+                    else
+                    {
+                        switch (srcCollider->CheckCollisionState(destCollider))
+                        {
+                        case CollisionState::Enter:
+                        case CollisionState::Stay:
+                        {
+                            srcCollider->Invoke(CollisionState::Exit, destCollider);
+                        }
+                        break;
+                        case CollisionState::Exit:
+                        case CollisionState::None:
+                        {
+                            srcCollider->Invoke(CollisionState::None, destCollider);
+                        }
+                        break;
+                        }
+                    }
                 }
             }
         }
@@ -99,21 +104,25 @@ void CollisionManager::Collision(float deltaTime)
 }
 
 Ptr<class CollisionComponent> CollisionManager::FindCollider(
-  const ComponentIDPair& colliderID)
+  ColliderType::Type colliderType, const ComponentIDPair& colliderID)
 {
-    if (auto it = _colliders.find(colliderID); _colliders.end() == it)
+    auto it = _colliders.find(colliderType);
+    if (_colliders.end() == it)
+        return nullptr;
+
+    auto& collidersOfType = it->second;
+    if (auto it = collidersOfType.find(colliderID); collidersOfType.end() != it)
         return it->second;
 
     return nullptr;
 }
 
-void CollisionManager::Insert(
-  const ComponentIDPair& colliderID, Ptr<class CollisionComponent> collider)
+void CollisionManager::Insert(Ptr<class CollisionComponent> collider)
 {
-    _colliders[colliderID] = collider;
+    _colliders[collider->GetColliderType()][collider->GetColliderID()] = collider;
 }
 
-void CollisionManager::Remove(const ComponentIDPair& colliderID)
+void CollisionManager::Remove(Ptr<class CollisionComponent> collider)
 {
-    _collidersToRemove.push_back(colliderID);
+    _collidersToRemove.push_back({collider->GetColliderType(), collider->GetColliderID()});
 }

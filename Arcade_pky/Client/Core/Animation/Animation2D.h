@@ -46,6 +46,7 @@ public:
 
     void SetAnimationSequence(Ptr<class Animation2DSequence> sequence);
     void SetAnimationSequence(const std::string& sequenceName);
+    void SetFrameIndex(int32 index);
     void SetPlayRate(float playRate);
     void SetReversed(bool reverse);
     void SetFlipX(bool flipX);

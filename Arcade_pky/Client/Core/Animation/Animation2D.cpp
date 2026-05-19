@@ -86,6 +86,11 @@ void Animation2D::SetAnimationSequence(const std::string& sequenceName)
     SetAnimationSequence(sequence);
 }
 
+void Animation2D::SetFrameIndex(int32 index)
+{
+    _frameIndex = index;
+}
+
 void Animation2D::SetPlayRate(float playRate)
 {
     _playRate = playRate;

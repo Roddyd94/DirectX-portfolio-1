@@ -18,6 +18,7 @@ bool PlayerComponent::Init(int32 componentID, const std::string& name, Ptr<class
 void PlayerComponent::Destroy()
 {
     ActorComponent::Destroy();
+    DESTROY(_stateMachine);
 }
 
 void PlayerComponent::Tick(float deltaTime)

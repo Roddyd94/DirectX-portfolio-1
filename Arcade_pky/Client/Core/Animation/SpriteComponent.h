@@ -24,6 +24,7 @@ public:
     bool GetFlipX() const;
 
     void SetShader(const std::string& name);
+    void SetFrameIndex(int32 index);
     void SetPlayRate(float playRate);
     void SetReversed(bool isReversed);
     void SetFlipX(bool flipX);

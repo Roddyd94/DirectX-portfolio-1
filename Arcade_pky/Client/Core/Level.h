@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"
 #include "Types.h"
+#include "Collision/CollisionSystem.h"
 
 class Level : public Object
 {
@@ -30,8 +31,7 @@ public:
     //  TODO //virtual void RenderUI(float deltaTime);
 
     Ptr<class Actor> FindActor(int32 actorID);
-    void             FindActors(
-                  const std::string& tag, OUT std::vector<Ptr<class Actor>>& outArray);
+    void FindActors(const std::string& tag, OUT std::vector<Ptr<class Actor>>& outArray);
 
     const Matrix& GetViewMatrix() const;
     const Matrix& GetProjMatrix() const;
@@ -40,6 +40,7 @@ public:
     Ptr<class CameraComponent> GetMainCamera() const;
     Vector3                    GetCameraWorldPosition() const;
 #ifdef _HAS_COLLISION_MODULE
+    Ptr<class CollisionManager> GetCollisionManager() const;
     Ptr<class CollisionProfileManager> GetCollisionProfileManager() const;
 #endif // _HAS_COLLISION_MODULE
 
@@ -53,10 +54,9 @@ public:
 
 #ifdef _HAS_COLLISION_MODULE
     Ptr<class CollisionComponent> FindCollider(
-      const ComponentIDPair& colliderID);
-    void AddCollision(const ComponentIDPair& colliderID,
-      Ptr<class CollisionComponent>          component);
-    void RemoveCollision(const ComponentIDPair& colliderID);
+      ColliderType::Type colliderType, const ComponentIDPair& colliderID);
+    void AddCollision(Ptr<class CollisionComponent> collider);
+    void RemoveCollision(Ptr<class CollisionComponent> collider);
 #endif // _HAS_COLLISION_MODULE
 
 public:

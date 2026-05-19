@@ -22,7 +22,7 @@ bool CollisionProfileManager::Init()
       std::make_pair(ColliderType::Snowball, CollisionResponse::Block),
       std::make_pair(ColliderType::Item, CollisionResponse::Block));
 
-    SetProfileResponse("Enemy",
+    SetProfileResponse("Enemy", std::make_pair(ColliderType::Enemy, CollisionResponse::Block),
       std::make_pair(ColliderType::PlayerProjectile, CollisionResponse::Block),
       std::make_pair(ColliderType::Snowball, CollisionResponse::Block));
 
@@ -32,8 +32,8 @@ bool CollisionProfileManager::Init()
 
     SetProfileResponse("Item", std::make_pair(ColliderType::Player, CollisionResponse::Block));
 
-    SetProfileResponse(
-      "Snowball", std::make_pair(ColliderType::PlayerProjectile, CollisionResponse::Block));
+    SetProfileResponse("Snowball", std::make_pair(ColliderType::Snowball, CollisionResponse::Block),
+      std::make_pair(ColliderType::PlayerProjectile, CollisionResponse::Block));
 
     return true;
 }

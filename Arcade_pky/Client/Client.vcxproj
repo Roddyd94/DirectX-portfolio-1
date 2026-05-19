@@ -414,6 +414,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AI\AI.h" />
     <ClInclude Include="AI\AIBoard.h" />
     <ClInclude Include="AI\AIComponent.h" />
     <ClInclude Include="AI\AICondition.h" />
@@ -535,6 +536,14 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Snowbros\PlayerStateMidair.h" />
     <ClInclude Include="Snowbros\PlayerStateSnowball.h" />
     <ClInclude Include="Snowbros\ShootComponent.h" />
+    <ClInclude Include="Snowbros\Snowball.h" />
+    <ClInclude Include="Snowbros\SnowballComponent.h" />
+    <ClInclude Include="Snowbros\SnowballState.h" />
+    <ClInclude Include="Snowbros\SnowballStateFormed.h" />
+    <ClInclude Include="Snowbros\SnowballStateForming.h" />
+    <ClInclude Include="Snowbros\SnowballStateMachine.h" />
+    <ClInclude Include="Snowbros\SnowballStateRolling.h" />
+    <ClInclude Include="Snowbros\SnowbrosEnemy.h" />
     <ClInclude Include="Snowbros\SnowbrosLevel.h" />
     <ClInclude Include="Snowbros\SnowbrosPlayer.h" />
     <ClInclude Include="Snowbros\SnowbrosTileParser.h" />
@@ -552,6 +561,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Tilemap\TileStructureBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AI\AI.cpp" />
     <ClCompile Include="AI\AIBoard.cpp" />
     <ClCompile Include="AI\AIComponent.cpp" />
     <ClCompile Include="AI\AICondition.cpp" />
@@ -670,6 +680,14 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Snowbros\PlayerStateMidair.cpp" />
     <ClCompile Include="Snowbros\PlayerStateSnowball.cpp" />
     <ClCompile Include="Snowbros\ShootComponent.cpp" />
+    <ClCompile Include="Snowbros\Snowball.cpp" />
+    <ClCompile Include="Snowbros\SnowballComponent.cpp" />
+    <ClCompile Include="Snowbros\SnowballState.cpp" />
+    <ClCompile Include="Snowbros\SnowballStateFormed.cpp" />
+    <ClCompile Include="Snowbros\SnowballStateForming.cpp" />
+    <ClCompile Include="Snowbros\SnowballStateMachine.cpp" />
+    <ClCompile Include="Snowbros\SnowballStateRolling.cpp" />
+    <ClCompile Include="Snowbros\SnowbrosEnemy.cpp" />
     <ClCompile Include="Snowbros\SnowbrosLevel.cpp" />
     <ClCompile Include="Snowbros\SnowbrosPlayer.cpp" />
     <ClCompile Include="Snowbros\SnowbrosTileParser.cpp" />

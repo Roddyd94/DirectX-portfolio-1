@@ -67,7 +67,7 @@ bool RenderStateManager::Init()
     CreateState("Opaque", false, false, opaque);
 
     AddBlendDesc("AlphaBlend", alphaBlend);
-    CreateState("AlphaBlend", true, false, alphaBlend);
+    CreateState("AlphaBlend", false, false, alphaBlend);
 
     AddBlendDesc("PMA", premultipliedAlpha);
     CreateState("PMA", false, false, premultipliedAlpha);

@@ -120,8 +120,7 @@ Ptr<Actor> Level::FindActor(int32 actorID)
     return nullptr;
 }
 
-void Level::FindActors(
-  const std::string& tag, OUT std::vector<Ptr<Actor>>& outArray)
+void Level::FindActors(const std::string& tag, OUT std::vector<Ptr<Actor>>& outArray)
 {
     std::vector<int32> actorIDs;
     _tagManager->GetActorIDs(tag, actorIDs);
@@ -154,6 +153,11 @@ Ptr<World> Level::GetWorld() const
     return Lock(_world);
 }
 #ifdef _HAS_COLLISION_MODULE
+Ptr<class CollisionManager> Level::GetCollisionManager() const
+{
+    return _collisionManager;
+}
+
 Ptr<CollisionProfileManager> Level::GetCollisionProfileManager() const
 {
     return Lock(_world)->GetCollisionProfileManager();
@@ -194,19 +198,19 @@ void Level::SetMainCamera(Ptr<CameraComponent> camera)
 }
 
 #ifdef _HAS_COLLISION_MODULE
-Ptr<CollisionComponent> Level::FindCollider(const ComponentIDPair& colliderID)
+Ptr<CollisionComponent> Level::FindCollider(
+  ColliderType::Type colliderType, const ComponentIDPair& colliderID)
 {
-    return _collisionManager->FindCollider(colliderID);
+    return _collisionManager->FindCollider(colliderType, colliderID);
 }
 
-void Level::AddCollision(
-  const ComponentIDPair& colliderID, Ptr<CollisionComponent> component)
+void Level::AddCollision(Ptr<CollisionComponent> collider)
 {
-    _collisionManager->Insert(colliderID, component);
+    _collisionManager->Insert(collider);
 }
 
-void Level::RemoveCollision(const ComponentIDPair& colliderID)
+void Level::RemoveCollision(Ptr<CollisionComponent> collider)
 {
-    _collisionManager->Remove(colliderID);
+    _collisionManager->Remove(collider);
 }
 #endif // _HAS_COLLISION_MODULE

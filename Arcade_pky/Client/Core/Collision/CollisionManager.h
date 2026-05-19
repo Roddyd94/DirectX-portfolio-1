@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/SubManager.h"
 
+#include "CollisionSystem.h"
 #include "Core/Types.h"
 
 class CollisionManager : public SubManager
@@ -10,8 +11,9 @@ public:
     virtual ~CollisionManager() = default;
 
 private:
-    std::vector<ComponentIDPair>                             _collidersToRemove;
-    std::map<ComponentIDPair, Ptr<class CollisionComponent>> _colliders;
+    std::vector<std::pair<ColliderType::Type, ComponentIDPair>> _collidersToRemove;
+    std::map<ColliderType::Type, std::map<ComponentIDPair, Ptr<class CollisionComponent>>>
+      _colliders;
 
 public:
     bool Init() override;
@@ -19,9 +21,8 @@ public:
     void Collision(float deltaTime);
 
     Ptr<class CollisionComponent> FindCollider(
-      const ComponentIDPair& colliderID);
+      ColliderType::Type colliderType, const ComponentIDPair& colliderID);
 
-    void Insert(const ComponentIDPair& colliderID,
-      Ptr<class CollisionComponent>    collider);
-    void Remove(const ComponentIDPair& colliderID);
+    void Insert(Ptr<class CollisionComponent> collider);
+    void Remove(Ptr<class CollisionComponent> collider);
 };

@@ -82,6 +82,11 @@ void SpriteComponent::SetShader(const std::string& name)
     _shader = FIND_SHADER(name, Shader);
 }
 
+void SpriteComponent::SetFrameIndex(int32 index)
+{
+    _animation->SetFrameIndex(index);
+}
+
 void SpriteComponent::SetPlayRate(float playRate)
 {
     _animation->SetPlayRate(playRate);
