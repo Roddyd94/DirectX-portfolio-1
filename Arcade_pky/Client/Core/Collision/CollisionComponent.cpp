@@ -57,16 +57,15 @@ void CollisionComponent::Destroy()
 
     level->RemoveCollision(This<CollisionComponent>());
 
-    for (auto& [colliderType, collisionStatesOfType] : _collisionStates)
+    for (auto& [colliderInfo, collisionStatesOfType] : _collisionStates)
     {
-        for (auto& [colliderID, colliderState] : collisionStatesOfType)
-        {
-            Ptr<CollisionComponent> foundCollider = level->FindCollider(colliderType, colliderID);
-            if (nullptr == foundCollider)
-                continue;
+        auto& [colliderType, colliderID] = colliderInfo;
 
-            foundCollider->RemoveCollisionState(GetColliderType(), _colliderID);
-        }
+        Ptr<CollisionComponent> foundCollider = level->FindCollider(colliderType, colliderID);
+        if (nullptr == foundCollider)
+            continue;
+
+        foundCollider->RemoveCollisionState(GetColliderType(), _colliderID);
     }
 }
 
@@ -120,18 +119,12 @@ CollisionState::Type CollisionComponent::CheckCollisionState(
 CollisionState::Type CollisionComponent::CheckCollisionState(
   ColliderType::Type otherColliderType, ComponentIDPair otherColliderID) const
 {
-    auto itType = _collisionStates.find(otherColliderType);
+    auto it = _collisionStates.find({otherColliderType, otherColliderID});
 
-    if (_collisionStates.end() == itType)
+    if (_collisionStates.end() == it)
         return CollisionState::Exit;
 
-    auto& collisionStatesOfType = itType->second;
-
-    auto itState = collisionStatesOfType.find(otherColliderID);
-    if (itState == collisionStatesOfType.end())
-        return CollisionState::Exit;
-
-    return itState->second;
+    return it->second;
 }
 
 Ptr<CollisionProfile> CollisionComponent::GetProfile() const
@@ -168,22 +161,13 @@ void CollisionComponent::SetCollisionProfile(const std::string& name)
 void CollisionComponent::AddCollisionState(
   ColliderType::Type colliderType, ComponentIDPair colliderID, CollisionState::Type stateType)
 {
-    _collisionStates[colliderType][colliderID] = stateType;
+    _collisionStates[{colliderType, colliderID}] = stateType;
 }
 
 void CollisionComponent::RemoveCollisionState(
   ColliderType::Type colliderType, ComponentIDPair colliderID)
 {
-    auto it = _collisionStates.find(colliderType);
-
-    if (_collisionStates.end() == it)
-        return;
-
-    auto& collisionStatesOfType = it->second;
-    collisionStatesOfType.erase(colliderID);
-
-    if (collisionStatesOfType.empty())
-        _collisionStates.erase(it);
+    _collisionStates.erase({colliderType, colliderID});
 }
 
 bool CollisionComponent::Collision(Weak<CollisionComponent> other)

@@ -19,7 +19,7 @@ protected:
     ComponentIDPair                               _colliderID;
     Ptr<class CollisionProfile>                   _profile;
     std::function<void(Weak<CollisionComponent>)> _collisionCallback[CollisionState::None];
-    std::map<ColliderType::Type, std::map<ComponentIDPair, CollisionState::Type>> _collisionStates;
+    std::map<std::pair<ColliderType::Type, ComponentIDPair>, CollisionState::Type> _collisionStates;
 
 #if _DEBUG
     Ptr<class Mesh>                    _mesh                    = nullptr;
@@ -38,7 +38,8 @@ public:
 
     CollisionShape::Type GetShape() const { return _shape; }
     CollisionState::Type CheckCollisionState(Ptr<class CollisionComponent> otherCollider) const;
-    CollisionState::Type CheckCollisionState(ColliderType::Type otherColliderType, ComponentIDPair otherColliderID) const;
+    CollisionState::Type CheckCollisionState(
+      ColliderType::Type otherColliderType, ComponentIDPair otherColliderID) const;
 
     Ptr<class CollisionProfile> GetProfile() const;
     ColliderType::Type          GetColliderType() const;
