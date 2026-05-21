@@ -2,9 +2,16 @@
 
 #include "AICondition.h"
 
-void AIConditionBase::SetTransitionRule(TransitionRule rule)
+void AIConditionBase::Destroy() {}
+
+void AIConditionBase::SetName(const std::string& name)
 {
-    _rule = rule;
+    _name = name;
+}
+
+void AIConditionBase::SetOperator(ConditionOperator op)
+{
+    _operator = op;
 }
 
 bool AICondition::CheckCondition(float deltaTime) const
@@ -12,7 +19,7 @@ bool AICondition::CheckCondition(float deltaTime) const
     if (_conditions.size() < 1)
         return false;
 
-    if (_rule == TransitionRule::And)
+    if (_operator == ConditionOperator::And)
     {
         for (auto& condition : _conditions)
         {
@@ -41,7 +48,7 @@ bool AICompositeCondition::CheckCondition(float deltaTime) const
     if (_conditions.size() < 1)
         return false;
 
-    if (_rule == TransitionRule::And)
+    if (_operator == ConditionOperator::And)
     {
         for (auto& condition : _conditions)
         {

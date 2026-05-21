@@ -30,7 +30,7 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
     {
     case PlatformerKinematicState::OnGround:
     {
-        if (IsColliderMoveAgainstBoundaryX(delta) || IsColliderMoveAgainstWall(delta))
+        if (IsColliderMoveAgainstBoundaryX(delta.x) || IsColliderMoveAgainstWallX(delta.x))
             return;
 
         worldPos.x += delta.x;
@@ -42,7 +42,7 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
     break;
     case PlatformerKinematicState::OnAir:
     {
-        if (!IsColliderMoveAgainstBoundaryX(delta) && !IsColliderMoveAgainstWall(delta))
+        if (!IsColliderMoveAgainstBoundaryX(delta.x) && !IsColliderMoveAgainstWallX(delta.x))
             worldPos.x += delta.x;
 
         bool isOnFloorPrev = IsColliderOnFloor({delta.x, 0.f});
@@ -51,9 +51,11 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
 
         if (delta.y < 0 && !isOnFloorPrev && isOnFloorNext)
         {
-            AdjustPositionToFloor(worldPos, delta);
+            AdjustPositionToFloor(delta);
             _velocity.y = 0.f;
             ChangeStateTo(PlatformerKinematicState::OnGround);
+
+            return;
         }
     }
     break;
@@ -84,17 +86,4 @@ void PlatformerKinematicPlayerComponent::ChangeStateTo(PlatformerKinematicState:
 {
     _state = state;
     _onStateChangedTo[_state]();
-}
-
-bool PlatformerKinematicPlayerComponent::IsColliderMoveAgainstWall(Vector2 delta)
-{
-    if (delta.x == 0)
-        return false;
-
-    if (delta.x > 0)
-        return IsTileBlock(Direction::RightTop)
-            || IsTileBlock(Direction::RightBottom);
-    else
-        return IsTileBlock(Direction::LeftTop)
-            || IsTileBlock(Direction::LeftBottom);
 }

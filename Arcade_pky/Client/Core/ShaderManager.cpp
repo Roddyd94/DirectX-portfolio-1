@@ -22,8 +22,6 @@
 
 bool ShaderManager::Init()
 {
-    // TODO Create Shaders, Buffers
-
 #pragma region SHADERS
     if (!CreateShader<StaticMeshShader>("StaticMeshShader"))
         return false;

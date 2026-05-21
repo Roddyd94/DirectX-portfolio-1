@@ -28,6 +28,7 @@ public:
 
     Ptr<class Tile> GetTile(int32 index);
     Ptr<class Tile> GetTile(Vector2 worldPosition);
+    Ptr<class Tile> GetTileLocal(Vector2 localPosition);
 
     // void ChangeTileTexture(Vector2 pos);
     // void ChangeTileType(Vector2 pos);

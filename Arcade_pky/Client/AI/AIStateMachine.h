@@ -1,5 +1,6 @@
 #pragma once
-#include "AIBoard.h"
+#include "AIBlackboard.h"
+#include "AICondition.h"
 #include "AIState.h"
 #include "AITransition.h"
 #include "Core/Object.h"
@@ -13,88 +14,86 @@ public:
     ~AIStateMachine() override = default;
 
 protected:
-    std::unordered_map<std::string, Ptr<class AIState>> _states;
+    std::unordered_map<std::string, Ptr<class AIState>>         _states;
+    std::unordered_map<std::string, Ptr<class AIConditionBase>> _conditions;
 
     Weak<class AIComponent> _owner;
-    Ptr<class AIBoard>      _board;
-    Ptr<class AIState>      _currentState;
+    Ptr<class AIBlackboard> _blackboard;
+    Ptr<class AIState>      _currentState = nullptr;
 
-    float _accTime  = 0.f;
-    float _interval = 0.5f;
+    float _accTime = 0.f;
+
+protected:
+    virtual void Init(Ptr<class AIComponent> owner);
 
 public:
-    void Init(Ptr<class AIComponent> owner);
     void Destroy() override;
 
     void Tick(float deltaTime);
+    void Transition(const std::string& stateName);
 
     Ptr<class AIComponent> GetAIComponent() const;
+    Ptr<class AIState>     FindAIState(const std::string& name) const;
 
-protected:
-    virtual void OnStateChanged() = 0;
+    Ptr<class AIState>      CreateAIState(const std::string& name);
+    Ptr<class AITransition> CreateAITransition(const std::string& stateName,
+      const std::string&                                          transitionName,
+      const std::string&                                          jumpStateName,
+      Ptr<AIConditionBase>                                        condition) const;
 
 public:
     template <typename T>
-    Ptr<T> GetAIBoard()
+    Ptr<T> GetAIBlackboard() const
     {
-        return Cast<AIBoard, T>(_board);
+        return Cast<AIBlackboard, T>(_blackboard);
     }
 
     template <typename T>
-    Ptr<T> FindAIState(const std::string& name)
+    Ptr<T> FindAICondition(const std::string& name) const
     {
-        auto it = _states.find(name);
-        if (_states.end() == it)
+        auto it = _conditions.find(name);
+        if (_conditions.end() == it)
             return nullptr;
 
-        return it->second;
+        return Cast<AIConditionBase, T>(it->second);
     }
 
     template <typename T>
-    Ptr<T> CreateAIState(const std::string& name)
+    Ptr<T> CreateBlackboard()
     {
-        auto state = FindAIState<T>(name);
-        if (nullptr != state)
-            return state;
+        if (_blackboard)
+            return Cast<AIBlackboard, T>(_blackboard);
 
-        state = New<T>();
-        if (false == state->Init(name))
-        {
-            DESTROY(state);
-            return nullptr;
-        }
+        _blackboard = New<T>();
 
-        if (!_currentState)
-            _currentState = state;
-
-        _states[name] = state;
-
-        return state;
+        return Cast<AIBlackboard, T>(_blackboard);
     }
 
-    template <typename T>
-    Ptr<T> CreateAITransition(const std::string& stateName,
-      const std::string&                         tranName,
-      const std::string&                         jumpStateName,
-      TransitionRule                            rule)
+    template <typename... Args>
+    Ptr<class AIConditionBase> CreateAICondition(
+      const std::string& conditionName, ConditionOperator op, Args&&... funcs)
     {
-        auto state = FindAIState<AIState>(stateName);
-        if (nullptr == state)
-            return nullptr;
+        Ptr<AICondition> condition = New<AICondition>();
+        condition->SetName(conditionName);
+        condition->SetOperator(op);
+        (condition->AddCondition(std::forward<Args>(funcs)), ...);
 
-        auto jumpState = FindAIState<AIState>(jumpStateName);
+        _conditions[conditionName] = condition;
 
-        return state->CreateAITransition<T>(tranName, jumpState, rule);
+        return condition;
     }
 
-    template <typename T>
-    Ptr<T> CreateAIBoard()
+    template <typename... Args>
+    Ptr<class AIConditionBase> CreateAICompositeCondition(
+      const std::string& conditionName, ConditionOperator op, Args... conditions)
     {
-        if (_board)
-            return Cast<AIBoard, T>(_board);
+        Ptr<AICompositeCondition> condition = New<AICompositeCondition>();
+        condition->SetName(conditionName);
+        condition->SetOperator(op);
+        (condition->AddCondition(conditions), ...);
 
-        _board = New<T>();
+        _conditions[conditionName] = condition;
 
-        return Cast<AIBoard, T>(_board);
+        return condition;
     }
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include "AITransition.h"
 #include "Types.h"
 #include "Core/Object.h"
 
@@ -11,92 +12,49 @@ public:
     ~AIState() override = default;
 
 protected:
-    std::function<void()> _callback[AIEventState::End];
-    std::string           _name;
+    std::function<void(float)> _callback[AIEventState::End];
+    std::string                _name;
 
-    std::vector<Ptr<class AITransition>> _transitions;
+    std::unordered_map<std::string, size_t> _transitionFinder;
+    std::vector<Ptr<class AITransition>>    _transitions;
+
+    float _interval    = 0.f;
+    bool  _hasInterval = false;
 
 public:
     virtual bool Init(const std::string& name);
     void         Destroy() override;
 
-    virtual Ptr<AIState> Tick(float deltaTime);
+    virtual void OnEnter(float deltaTime);
+    virtual void OnExit(float deltaTime);
+    virtual void OnTick(float deltaTime);
+
+    Ptr<AIState> Tick(float deltaTime);
 
     const std::string& GetName() const;
 
-    void SetName(const std::string& name);
+    float GetInterval() const;
+    bool  HasInterval() const;
 
-    virtual void OnEnter();
-    virtual void OnExit();
-    virtual void OnTick();
+    Ptr<class AITransition> FindAITransition(const std::string& name) const;
+
+    void SetName(const std::string& name);
+    void SetInterval(float interval);
+    void SetCondition(const std::string& transitionName, Ptr<class AIConditionBase> condition);
+
+    Ptr<class AITransition> CreateAITransition(
+      const std::string& name, Ptr<AIState> jumpState, Ptr<AIConditionBase> condition);
 
 public:
     template <typename T>
-    Ptr<T> CreateAITransition(const std::string& name, Ptr<AIState> jumpState, TransitionRule rule)
-    {
-        auto transition = FindAITransition<T>(name);
-        if (transition)
-            return transition;
-
-        transition = New<T>();
-        if (!transition->Init(name, jumpState, rule))
-        {
-            DESTROY(transition);
-            return nullptr;
-        }
-
-        _transitions.push_back(transition);
-
-        return transition;
-    }
-
-    template <typename T>
-    void AddCallback(AIEventState::Type stateType, T&& func)
+    void RegisterCallback(AIEventState::Type stateType, T&& func)
     {
         _callback[stateType] = std::forward<T>(func);
     }
 
     template <typename T>
-    void AddCallback(AIEventState::Type stateType, T* obj, void (T::*memFunc)())
+    void RegisterCallback(AIEventState::Type stateType, T* obj, void (T::*memFunc)())
     {
-        _callback[stateType] = std::bind(memFunc, obj);
-    }
-
-    template <typename T>
-    void AddCondition(const std::string& name, T&& func)
-    {
-        for (auto& transition : _transitions)
-        {
-            if (transition->GetName() == name)
-            {
-                transition->AddCondition(func);
-                break;
-            }
-        }
-    }
-
-    template <typename T>
-    void AddCondition(const std::string& name, T* obj, bool (T::*memFunc)())
-    {
-        for (auto& transition : _transitions)
-        {
-            if (transition->GetName() == name)
-            {
-                transition->AddCondition(obj, memFunc);
-                break;
-            }
-        }
-    }
-
-    template <typename T>
-    Ptr<T> FindAITransition(const std::string& name)
-    {
-        for (auto& transition : _transitions)
-        {
-            if (transition->GetName() == name)
-                return transition;
-        }
-
-        return nullptr;
+        _callback[stateType] = std::bind(memFunc, obj, std::placeholders::_1);
     }
 };

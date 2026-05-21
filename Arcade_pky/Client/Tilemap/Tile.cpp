@@ -51,10 +51,9 @@ bool Tile::IsTopBlock() const
 {
     Ptr<TilemapComponent> tilemap = Lock(_owner);
 
-    Vector2 tileAbovePosition = tilemap->GetWorldPosition().ToVector2();
-    tileAbovePosition += _position;
+    Vector2 tileAbovePosition = _position;
     tileAbovePosition.y += _size.y;
-    Ptr<Tile> tileAbove = tilemap->GetTile(tileAbovePosition);
+    Ptr<Tile> tileAbove = tilemap->GetTileLocal(tileAbovePosition);
 
     bool isTileAboveBlock = tileAbove && tileAbove->_type & TileType::Block;
 
@@ -65,14 +64,37 @@ bool Tile::IsBottomBlock() const
 {
     Ptr<TilemapComponent> tilemap = Lock(_owner);
 
-    Vector2 tileBelowPosition = tilemap->GetWorldPosition().ToVector2();
-    tileBelowPosition += _position;
+    Vector2 tileBelowPosition = _position;
     tileBelowPosition.y -= _size.y;
-    Ptr<Tile> tileBelow = tilemap->GetTile(tileBelowPosition);
+    Ptr<Tile> tileBelow = tilemap->GetTileLocal(tileBelowPosition);
 
     bool isTileBelowBlock = tileBelow && tileBelow->_type & TileType::Block;
 
     return _type & TileType::Block && !isTileBelowBlock;
+}
+
+bool Tile::IsLeftmostBlock() const
+{
+    Ptr<TilemapComponent> tilemap = Lock(_owner);
+
+    int32 indexX = tilemap->GetTileIndexXLocal(_position.x);
+    return 0 == indexX;
+}
+
+bool Tile::IsRightmostBlock() const
+{
+    Ptr<TilemapComponent> tilemap = Lock(_owner);
+
+    int32 indexX = tilemap->GetTileIndexXLocal(_position.x);
+    return (tilemap->GetTileCountX() - 1) == indexX;
+}
+
+bool Tile::IsFirstFloor() const
+{
+    Ptr<TilemapComponent> tilemap = Lock(_owner);
+
+    int32 indexY = tilemap->GetTileIndexYLocal(_position.y);
+    return false;
 }
 
 void Tile::SetPosition(Vector2 position)

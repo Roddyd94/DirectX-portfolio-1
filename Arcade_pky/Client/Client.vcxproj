@@ -208,6 +208,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -229,6 +230,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -250,6 +252,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -271,6 +274,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -294,6 +298,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -315,6 +320,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -336,6 +342,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -357,7 +364,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -379,6 +386,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -402,6 +410,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions> /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -415,7 +424,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AI\AI.h" />
-    <ClInclude Include="AI\AIBoard.h" />
+    <ClInclude Include="AI\AIBlackboard.h" />
     <ClInclude Include="AI\AIComponent.h" />
     <ClInclude Include="AI\AICondition.h" />
     <ClInclude Include="AI\AIController.h" />
@@ -531,6 +540,10 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Player\PlayerState.h" />
     <ClInclude Include="Player\PlayerStateMachine.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Snowbros\GoblinBlackboard.h" />
+    <ClInclude Include="Snowbros\GoblinStateMachine.h" />
+    <ClInclude Include="Snowbros\MonkeyBlackboard.h" />
+    <ClInclude Include="Snowbros\MonkeyStateMachine.h" />
     <ClInclude Include="Snowbros\PlayerStateDead.h" />
     <ClInclude Include="Snowbros\PlayerStateGround.h" />
     <ClInclude Include="Snowbros\PlayerStateMidair.h" />
@@ -549,6 +562,8 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Snowbros\SnowbrosTileParser.h" />
     <ClInclude Include="Snowbros\SnowProjectile.h" />
     <ClInclude Include="Snowbros\SnowProjectileComponent.h" />
+    <ClInclude Include="Snowbros\SpitterBlackboard.h" />
+    <ClInclude Include="Snowbros\SpitterStateMachine.h" />
     <ClInclude Include="Snowbros\Types.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Tilemap\Tile.h" />
@@ -562,7 +577,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AI\AI.cpp" />
-    <ClCompile Include="AI\AIBoard.cpp" />
+    <ClCompile Include="AI\AIBlackboard.cpp" />
     <ClCompile Include="AI\AIComponent.cpp" />
     <ClCompile Include="AI\AICondition.cpp" />
     <ClCompile Include="AI\AIController.cpp" />
@@ -675,6 +690,10 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Player\PlayerController.cpp" />
     <ClCompile Include="Player\PlayerState.cpp" />
     <ClCompile Include="Player\PlayerStateMachine.cpp" />
+    <ClCompile Include="Snowbros\GoblinBlackboard.cpp" />
+    <ClCompile Include="Snowbros\GoblinStateMachine.cpp" />
+    <ClCompile Include="Snowbros\MonkeyBlackboard.cpp" />
+    <ClCompile Include="Snowbros\MonkeyStateMachine.cpp" />
     <ClCompile Include="Snowbros\PlayerStateDead.cpp" />
     <ClCompile Include="Snowbros\PlayerStateGround.cpp" />
     <ClCompile Include="Snowbros\PlayerStateMidair.cpp" />
@@ -693,6 +712,8 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Snowbros\SnowbrosTileParser.cpp" />
     <ClCompile Include="Snowbros\SnowProjectile.cpp" />
     <ClCompile Include="Snowbros\SnowProjectileComponent.cpp" />
+    <ClCompile Include="Snowbros\SpitterBlackboard.cpp" />
+    <ClCompile Include="Snowbros\SpitterStateMachine.cpp" />
     <ClCompile Include="Tilemap\Tile.cpp" />
     <ClCompile Include="Tilemap\TileInstanceShader.cpp" />
     <ClCompile Include="Tilemap\Tilemap.cpp" />

@@ -27,4 +27,8 @@ union Rect
     void Move(Vector2 delta);
     void MoveX(float deltaX);
     void MoveY(float deltaY);
+
+    float   GetCenterX() const;
+    float   GetCenterY() const;
+    Vector2 GetCenter() const;
 };

@@ -14,7 +14,7 @@ private:
     Weak<class Level>          _level;
     Ptr<class CameraComponent> _mainCamera = nullptr;
 
-    // TODO Matrix _uiProj;
+    // TODO UI Matrix _uiProj;
 
 public:
     bool Init(Ptr<class Level> level);
@@ -31,8 +31,8 @@ public:
 
     void ChangeMainCamera(const std::string& name);
 
-    // TODO const Matrix& GetUIProjMatrix() const;
+    // TODO UI const Matrix& GetUIProjMatrix() const;
 
 private:
-    // TODO void CreateUIProj(float x, float y, float dist);
+    // TODO UI void CreateUIProj(float x, float y, float dist);
 };

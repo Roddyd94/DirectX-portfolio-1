@@ -2,6 +2,7 @@
 
 #include "SnowbrosLevel.h"
 
+#include "SnowbrosEnemy.h"
 #include "SnowbrosPlayer.h"
 #include "SnowbrosTileParser.h"
 #include "Core/Camera.h"
@@ -41,7 +42,7 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
     SnowbrosTileParser::ParseTileMetadata(tileMetadata);
 
     byte stageData[224] = {};
-    SnowbrosTileParser::ParseStageData(L"snowbros_stage_2.bin", stageData, 224);
+    SnowbrosTileParser::ParseStageData(L"snowbros_stage_1.bin", stageData, 224);
     for (size_t i = 0; i < 14; i++)
     {
         for (size_t j = 0; j < 16; j++)
@@ -59,12 +60,32 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
     SnowbrosTileParser::ParseAnimationData("snowbros_player", L"snowbros_player.png",
       "snowbros_player", L"snowbros_player_animation.bin");
 
+    SnowbrosTileParser::ParseAnimationData(
+      "snowbros_enemy", L"snowbros_enemies.png", "snowbros_enemy", L"snowbros_enemy_animation.bin");
+
     position.x = 0.f;
     position.y = 0.f;
     scale *= 2.f;
 
-    Ptr<SnowbrosPlayer> player = SpawnActor<SnowbrosPlayer>(position, scale, rotation);
-    player->SetName("Player");
+    _player = SpawnActor<SnowbrosPlayer>(position, scale, rotation);
+    _player->SetName("Player");
+
+    position.x = 2.5f;
+    position.y = 3.5f;
+    {
+        Ptr<SnowbrosEnemy> enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
+        enemy->SetName("Enemy");
+        enemy->SetEnemyType(SnowbrosEnemyType::Goblin);
+        enemy->SetDirection(1.f);
+    }
+
+    position.x = -2.5f;
+    {
+        Ptr<SnowbrosEnemy> enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
+        enemy->SetName("Enemy");
+        enemy->SetEnemyType(SnowbrosEnemyType::Goblin);
+        enemy->SetDirection(-1.f);
+    }
 
     return true;
 }
@@ -72,4 +93,9 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
 void SnowbrosLevel::Destroy()
 {
     TilemapLevel::Destroy();
+}
+
+Ptr<class Player> SnowbrosLevel::GetPlayer() const
+{
+    return _player;
 }

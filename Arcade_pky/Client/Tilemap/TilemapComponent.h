@@ -49,12 +49,17 @@ public:
     int32 GetTileCountX() const { return _countX; }
     int32 GetTileCountY() const { return _countY; }
 
-    int32 GetTileIndexX(Vector2 worldPosition) const;
-    int32 GetTileIndexY(Vector2 worldPosition) const;
+    int32 GetTileIndexX(float worldPositionX) const;
+    int32 GetTileIndexY(float worldPositionY) const;
     int32 GetTileIndex(Vector2 worldPosition) const;
 
-    Ptr<class Tile> GetTile(Vector2 worldPosition);
+    int32 GetTileIndexXLocal(float localPositionX) const;
+    int32 GetTileIndexYLocal(float localPositionY) const;
+    int32 GetTileIndexLocal(Vector2 localPosition) const;
+
     Ptr<class Tile> GetTile(int32 index);
+    Ptr<class Tile> GetTile(Vector2 worldPosition);
+    Ptr<class Tile> GetTileLocal(Vector2 localPosition);
 
     std::optional<Vector2> GetTileWorldPos(int32 index);
 

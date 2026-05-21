@@ -44,16 +44,20 @@ public:
     void AddForce(Vector2 force);
     void AddGravity(float deltaTime);
 
-protected:
-    void AdjustPositionToFloor(Vector2& worldPos2D, Vector2 delta);
-    bool IsColliderOnFloor(Vector2 delta);
-    bool IsColliderTouchedBlock(Vector2 delta);
-    bool IsColliderTouchedFloor(Vector2 delta);
-    bool IsColliderTouchedBoundary(Vector2 delta);
-    bool IsTileBlock(Direction::Type direction);
-
-    bool IsColliderMoveAgainstBoundaryX(Vector2 delta);
+    bool IsColliderOnFloor(Vector2 delta = Vector2::zero);
+    bool IsColliderBottomOnBlock(Vector2 delta = Vector2::zero);
+    bool IsColliderTouchedBlock(Vector2 delta = Vector2::zero);
+    bool IsColliderTouchedBoundary(Vector2 delta = Vector2::zero);
+    
+    bool IsColliderMoveAgainstFloor(Vector2 delta);
+    bool IsColliderMoveAgainstWallX(float deltaX);
+    bool IsColliderMoveAgainstBoundaryX(float deltaX);
     bool IsPositionOutOfBoundary(Vector2 position);
+
+    void AdjustPositionToFloor(Vector2 delta);
+
+protected:
+    bool IsTileOnColliderBoundaryBlocked(Direction::Type direction);
 
 public:
     template <typename T>

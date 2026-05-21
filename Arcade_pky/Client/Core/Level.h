@@ -28,7 +28,7 @@ public:
 
     virtual void Tick(float deltaTime);
     virtual void Collision(float deltaTime);
-    //  TODO //virtual void RenderUI(float deltaTime);
+    //  TODO UI virtual void RenderUI(float deltaTime);
 
     Ptr<class Actor> FindActor(int32 actorID);
     void FindActors(const std::string& tag, OUT std::vector<Ptr<class Actor>>& outArray);
@@ -44,7 +44,7 @@ public:
     Ptr<class CollisionProfileManager> GetCollisionProfileManager() const;
 #endif // _HAS_COLLISION_MODULE
 
-    // TODO //const Matrix& GetUIProjMatrix() const;
+    // TODO UI const Matrix& GetUIProjMatrix() const;
 
     void AddTag(const std::string& tag, int32 actorID);
     void DeleteTag(Ptr<class Actor> actor);
@@ -87,7 +87,7 @@ public:
         return actor;
     }
 
-    // TODO
+    // TODO UI
     // template <typename T>
     // Ptr<T> CreateWidget(const std::string& name)
     //{

@@ -12,7 +12,7 @@ bool CameraManager::Init(Ptr<class Level> level)
 
     Resolution rs = DeviceManager::Instance().GetResolution();
 
-    // TODO CreateUIProj(static_cast<float>(rs._width),
+    // TODO UI CreateUIProj(static_cast<float>(rs._width),
     // static_cast<float>(rs._height), 2000);
 
     return false;

@@ -8,7 +8,12 @@ public:
     ~SnowbrosLevel() override = default;
     DELETE_SPECIAL_FUNC(SnowbrosLevel)
 
+private:
+    Ptr<class Player> _player;
+
 public:
     bool Init(Ptr<class World> world, const std::string& path) override;
     void Destroy() override;
+
+    Ptr<class Player> GetPlayer() const;
 };

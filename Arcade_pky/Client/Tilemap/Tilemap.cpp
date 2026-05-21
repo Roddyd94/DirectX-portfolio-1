@@ -68,3 +68,8 @@ Ptr<class Tile> Tilemap::GetTile(Vector2 worldPosition)
 {
     return _tileComponent->GetTile(worldPosition);
 }
+
+Ptr<class Tile> Tilemap::GetTileLocal(Vector2 localPosition)
+{
+    return _tileComponent->GetTileLocal(localPosition);
+}

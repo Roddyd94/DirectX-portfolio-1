@@ -26,8 +26,8 @@ void Actor::Destroy()
 {
     DESTROY(_root)
 
-    for (auto& [_, actorComponents] : _actorComponents)
-        DESTROY(actorComponents)
+    for (auto& [_, actorComponent] : _actorComponents)
+        DESTROY(actorComponent)
 
     _actorComponents.clear();
     _componentFinder.clear();

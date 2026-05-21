@@ -9,12 +9,15 @@ public:
     ~AIConditionBase() override = default;
 
 protected:
-    TransitionRule _rule;
+    std::string       _name;
+    ConditionOperator _operator;
 
 public:
+    void         Destroy() override;
     virtual bool CheckCondition(float deltaTime) const = 0;
 
-    void SetTransitionRule(TransitionRule rule);
+    void SetName(const std::string& name);
+    void SetOperator(ConditionOperator op);
 };
 
 class AICondition : public AIConditionBase
@@ -29,6 +32,7 @@ private:
 public:
     bool CheckCondition(float deltaTime) const override;
 
+public:
     template <typename T>
     void AddCondition(T&& func)
     {

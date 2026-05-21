@@ -38,10 +38,3 @@ namespace SamplerType
         End
     };
 }
-
-enum class AnimationTextureType // TODO Animation 헤더로?
-{
-    Sprite,
-    Frame,
-    End
-};

@@ -33,6 +33,8 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         switch (buttonEvent)
         {
         case ButtonEventType::Hold:
+            //if ()
+
             movement->MoveLeft();
             if (sprite->GetCurrentClipName() != "player_shoot")
                 sprite->ChangeAnimation("player_walk");

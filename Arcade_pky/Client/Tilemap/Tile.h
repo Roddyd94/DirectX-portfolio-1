@@ -48,6 +48,10 @@ public:
     bool IsTopBlock() const;
     bool IsBottomBlock() const;
 
+    bool IsLeftmostBlock() const;
+    bool IsRightmostBlock() const;
+    bool IsFirstFloor() const;
+
     void SetPosition(Vector2 position);
     void SetSize(Vector2 size);
     void SetCenter(Vector2 center);

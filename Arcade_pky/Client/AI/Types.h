@@ -11,7 +11,7 @@ namespace AIEventState
     };
 }
 
-enum class TransitionRule
+enum class ConditionOperator
 {
     And,
     Or,

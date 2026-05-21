@@ -73,50 +73,69 @@ void TilemapComponent::Render(float deltaTime)
     RenderOutline();
 }
 
-int32 TilemapComponent::GetTileIndexX(Vector2 worldPosition) const
+int32 TilemapComponent::GetTileIndexX(float worldPositionX) const
 {
     Ptr<Actor> owner = GetOwner();
     if (nullptr == owner)
         return -1;
 
     float startX = owner->GetWorldPosition().x - (_tileSize.x * 0.5f);
+    float localX = worldPositionX - startX;
 
-    float localX = worldPosition.x - startX;
-
-    if (localX < 0.f)
-        return -1;
-
-    int32 indexX = static_cast<int32>(localX / _tileSize.x);
-    if (indexX >= _countX)
-        return -1;
-
-    return indexX;
+    return GetTileIndexXLocal(localX);
 }
 
-int32 TilemapComponent::GetTileIndexY(Vector2 worldPosition) const
+int32 TilemapComponent::GetTileIndexY(float worldPositionY) const
 {
     Ptr<Actor> owner = GetOwner();
     if (nullptr == owner)
         return -1;
 
     float startY = owner->GetWorldPosition().y - (_tileSize.y * 0.5f);
+    float localY = worldPositionY - startY;
 
-    float localY = worldPosition.y - startY;
+    return GetTileIndexYLocal(localY);
+}
 
-    if (localY < 0.f)
+int32 TilemapComponent::GetTileIndex(Vector2 worldPosition) const
+{
+    int32 indexX = GetTileIndexX(worldPosition.x);
+    int32 indexY = GetTileIndexY(worldPosition.y);
+
+    if (indexX == -1 || indexY == -1)
         return -1;
 
-    int32 indexY = static_cast<int32>(localY / _tileSize.y);
+    return indexY * _countX + indexX;
+}
+
+int32 TilemapComponent::GetTileIndexXLocal(float localPositionX) const
+{
+    if (localPositionX < 0.f)
+        return -1;
+
+    int32 indexX = static_cast<int32>(localPositionX / _tileSize.x);
+    if (indexX >= _countX)
+        return -1;
+
+    return indexX;
+}
+
+int32 TilemapComponent::GetTileIndexYLocal(float localPositionY) const
+{
+    if (localPositionY < 0.f)
+        return -1;
+
+    int32 indexY = static_cast<int32>(localPositionY / _tileSize.y);
     if (indexY >= _countY)
         return -1;
 
     return indexY;
 }
 
-int32 TilemapComponent::GetTileIndex(Vector2 worldPosition) const
+int32 TilemapComponent::GetTileIndexLocal(Vector2 localPosition) const
 {
-    int32 indexX = GetTileIndexX(worldPosition);
-    int32 indexY = GetTileIndexY(worldPosition);
+    int32 indexX = GetTileIndexXLocal(localPosition.x);
+    int32 indexY = GetTileIndexYLocal(localPosition.y);
 
     if (indexX == -1 || indexY == -1)
         return -1;
@@ -127,6 +146,12 @@ int32 TilemapComponent::GetTileIndex(Vector2 worldPosition) const
 Ptr<class Tile> TilemapComponent::GetTile(Vector2 worldPosition)
 {
     int32 index = GetTileIndex(worldPosition);
+    return GetTile(index);
+}
+
+Ptr<class Tile> TilemapComponent::GetTileLocal(Vector2 localPosition)
+{
+    int32 index = GetTileIndexLocal(localPosition);
     return GetTile(index);
 }
 

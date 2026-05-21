@@ -167,6 +167,9 @@ void CollisionComponent::AddCollisionState(
 void CollisionComponent::RemoveCollisionState(
   ColliderType::Type colliderType, ComponentIDPair colliderID)
 {
+    if (_collisionStates.empty())
+        return;
+
     _collisionStates.erase({colliderType, colliderID});
 }
 

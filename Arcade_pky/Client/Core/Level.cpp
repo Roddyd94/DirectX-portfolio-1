@@ -86,7 +86,7 @@ void Level::Tick(float deltaTime)
         actor->Tick(deltaTime);
     }
 
-    // TODO _uiManager->Tick(deltaTime);
+    // TODO UI _uiManager->Tick(deltaTime);
 }
 
 void Level::Collision(float deltaTime)
@@ -95,7 +95,7 @@ void Level::Collision(float deltaTime)
     _collisionManager->Collision(deltaTime);
 #endif // _HAS_COLLISION_MODULE
 
-    // TODO _uiManager->MouseEvent();
+    // TODO UI _uiManager->MouseEvent();
 
     for (auto& [actorID, actor] : _actors)
     {

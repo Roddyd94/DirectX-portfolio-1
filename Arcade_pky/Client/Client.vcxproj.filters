@@ -295,7 +295,7 @@
     <ClInclude Include="AI\AITransition.h">
       <Filter>AI\AIStateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="AI\AIBoard.h">
+    <ClInclude Include="AI\AIBlackboard.h">
       <Filter>AI\AIStateMachine</Filter>
     </ClInclude>
     <ClInclude Include="Core\SoundComponent.h">
@@ -412,9 +412,6 @@
     <ClInclude Include="AI\AI.h">
       <Filter>AI\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Snowbros\SnowbrosEnemy.h">
-      <Filter>Snowbros\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="Snowbros\SnowballStateMachine.h">
       <Filter>Snowbros\Snowball</Filter>
     </ClInclude>
@@ -435,6 +432,27 @@
     </ClInclude>
     <ClInclude Include="Snowbros\SnowballComponent.h">
       <Filter>Snowbros\Snowball\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosEnemy.h">
+      <Filter>Snowbros\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\MonkeyStateMachine.h">
+      <Filter>Snowbros\Enemy\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\GoblinStateMachine.h">
+      <Filter>Snowbros\Enemy\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SpitterStateMachine.h">
+      <Filter>Snowbros\Enemy\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\GoblinBlackboard.h">
+      <Filter>Snowbros\Enemy\Blackboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\MonkeyBlackboard.h">
+      <Filter>Snowbros\Enemy\Blackboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SpitterBlackboard.h">
+      <Filter>Snowbros\Enemy\Blackboard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -710,7 +728,7 @@
     <ClCompile Include="AI\AITransition.cpp">
       <Filter>AI\AIStateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="AI\AIBoard.cpp">
+    <ClCompile Include="AI\AIBlackboard.cpp">
       <Filter>AI\AIStateMachine</Filter>
     </ClCompile>
     <ClCompile Include="Core\SoundComponent.cpp">
@@ -809,9 +827,6 @@
     <ClCompile Include="AI\AI.cpp">
       <Filter>AI\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Snowbros\SnowbrosEnemy.cpp">
-      <Filter>Snowbros\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="Snowbros\SnowballStateMachine.cpp">
       <Filter>Snowbros\Snowball</Filter>
     </ClCompile>
@@ -832,6 +847,27 @@
     </ClCompile>
     <ClCompile Include="Snowbros\SnowballComponent.cpp">
       <Filter>Snowbros\Snowball\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosEnemy.cpp">
+      <Filter>Snowbros\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\MonkeyStateMachine.cpp">
+      <Filter>Snowbros\Enemy\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\GoblinStateMachine.cpp">
+      <Filter>Snowbros\Enemy\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SpitterStateMachine.cpp">
+      <Filter>Snowbros\Enemy\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\GoblinBlackboard.cpp">
+      <Filter>Snowbros\Enemy\Blackboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\MonkeyBlackboard.cpp">
+      <Filter>Snowbros\Enemy\Blackboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SpitterBlackboard.cpp">
+      <Filter>Snowbros\Enemy\Blackboard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1074,6 +1110,15 @@
     </Filter>
     <Filter Include="Snowbros\Snowball\Component">
       <UniqueIdentifier>{f100fc1a-bc1a-4fc3-9de6-8363fa8793c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\Enemy">
+      <UniqueIdentifier>{07b6f73c-8ffa-4381-bc26-44819020c699}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\Enemy\StateMachine">
+      <UniqueIdentifier>{ca319a4b-39b6-4e02-86e9-53d5858f5c6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\Enemy\Blackboard">
+      <UniqueIdentifier>{1a386621-126b-4382-bd9d-cf12a16a421b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

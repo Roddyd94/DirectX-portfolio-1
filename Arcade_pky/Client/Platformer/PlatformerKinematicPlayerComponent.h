@@ -21,9 +21,6 @@ public:
 
     void ChangeStateTo(PlatformerKinematicState::Type state);
 
-protected:
-    bool IsColliderMoveAgainstWall(Vector2 delta);
-
 public:
     template <typename T>
     void RegisterOnStateChangedCallback(
