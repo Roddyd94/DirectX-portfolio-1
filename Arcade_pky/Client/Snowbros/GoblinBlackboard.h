@@ -17,6 +17,7 @@ public:
     float accTime   = 0.f;
 
     bool isJumping = false;
+    bool isOnFloor = false;
     bool turned    = false;
 
 public:

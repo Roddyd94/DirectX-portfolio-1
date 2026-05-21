@@ -30,7 +30,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     auto sprite            = actor->FindSceneComponent<SpriteComponent>("Root");
     auto animation         = sprite->CreateAnimation();
     auto animationSequence = animation->GetSequence();
-    // todo 길 찾기 컴포넌트
 
     animation->SetAnimationSequence("goblin");
     animation->ChangeAnimationClip("goblin_walk");
@@ -66,6 +65,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
                         blackboard->snowball = Weak<Snowball>();
                         Transition("Dizzy");
                     });
+                  snowballComp->SetEnemyComponent(owner);
 
                   Transition("Struggle");
               }
@@ -126,6 +126,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateWalk->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
+          blackboard->isOnFloor = true;
           animation->ChangeAnimationClip("goblin_walk");
           kinematic->MoveX(blackboard->direction * blackboard->walkSpeedX);
       });
@@ -139,6 +140,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateJump->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
+          blackboard->isOnFloor = false;
           blackboard->isJumping = false;
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_jump");
@@ -146,12 +148,14 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateFall->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
+          blackboard->isOnFloor = false;
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_midair");
       });
     enemyStateCrouch->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
+          blackboard->isOnFloor = true;
           kinematic->AdjustPositionToFloor();
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_crouch");
@@ -188,6 +192,24 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       [=](float deltaTime)
       {
           kinematic->AddGravity(deltaTime);
+          blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
+      });
+    enemyStateStruggle->RegisterCallback(AIEventState::Tick,
+      [=](float deltaTime)
+      {
+          if (blackboard->isOnFloor)
+              return;
+
+          if (kinematic->DidColliderMoveAgainstFloor(blackboard->previousDelta))
+          {
+              blackboard->isOnFloor = true;
+              kinematic->SetVelocity(Vector2::zero);
+          }
+          else
+          {
+              kinematic->AddGravity(deltaTime);
+          }
+
           blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
       });
     enemyStateDizzy->RegisterCallback(AIEventState::Tick,

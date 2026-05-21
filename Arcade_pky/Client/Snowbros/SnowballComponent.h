@@ -10,7 +10,7 @@ public:
 private:
     std::function<void()>           _onDestroyCallback;
     Ptr<class SnowballStateMachine> _stateMachine = nullptr;
-    Weak<class AIStateMachine>      _enemyStateMachine;
+    Weak<class AIComponent>         _enemyComponent;
 
 public:
     bool Init(int32 componentID, const std::string& name, Ptr<class Actor> owner) override;
@@ -24,6 +24,10 @@ public:
     void CollideWith(Weak<class CollisionComponent> collider);
 
     void OnDestroy();
+
+    Ptr<class AIComponent> GetEnemyComponent() const;
+
+    void SetEnemyComponent(Ptr<class AIComponent> enemy);
 
 public:
     template <typename T>

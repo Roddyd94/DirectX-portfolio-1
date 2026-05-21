@@ -4,6 +4,7 @@
 
 #include "SnowballComponent.h"
 #include "SnowballStateFormed.h"
+#include "AI/AIComponent.h"
 #include "Core/Actor.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Core/Collision/CollisionComponent.h"
@@ -21,6 +22,8 @@ void SnowballStateForming::Exit(Ptr<class SnowballComponent> snowball) {}
 void SnowballStateForming::Tick(Ptr<class SnowballComponent> snowball, float deltaTime)
 {
     Ptr<Actor> actor = snowball->GetOwner();
+    Ptr<Actor> enemy = snowball->GetEnemyComponent()->GetOwner();
+    actor->SetWorldPosition(enemy->GetWorldPosition());
 
     _accValue -= decPerSecond * deltaTime;
 

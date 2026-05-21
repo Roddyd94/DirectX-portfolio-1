@@ -52,3 +52,13 @@ void SnowballComponent::OnDestroy()
     if (_onDestroyCallback)
         _onDestroyCallback();
 }
+
+Ptr<class AIComponent> SnowballComponent::GetEnemyComponent() const
+{
+    return Lock(_enemyComponent);
+}
+
+void SnowballComponent::SetEnemyComponent(Ptr<class AIComponent> enemy)
+{
+    _enemyComponent = enemy;
+}
