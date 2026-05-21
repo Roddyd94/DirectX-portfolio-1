@@ -61,6 +61,11 @@ Ptr<class AIComponent> AIStateMachine::GetAIComponent() const
     return Lock(_owner);
 }
 
+Ptr<class AIState> AIStateMachine::GetCurrentState() const
+{
+    return _currentState;
+}
+
 Ptr<class AIState> AIStateMachine::FindAIState(const std::string& name) const
 {
     auto it = _states.find(name);

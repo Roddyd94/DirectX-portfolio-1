@@ -30,7 +30,7 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
     {
     case PlatformerKinematicState::OnGround:
     {
-        if (IsColliderMoveAgainstBoundaryX(delta.x) || IsColliderMoveAgainstWallX(delta.x))
+        if (IsColliderMovingAgainstBoundaryX(delta.x) || IsColliderMovingAgainstWallX(delta.x))
             return;
 
         worldPos.x += delta.x;
@@ -42,7 +42,7 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
     break;
     case PlatformerKinematicState::OnAir:
     {
-        if (!IsColliderMoveAgainstBoundaryX(delta.x) && !IsColliderMoveAgainstWallX(delta.x))
+        if (!IsColliderMovingAgainstBoundaryX(delta.x) && !IsColliderMovingAgainstWallX(delta.x))
             worldPos.x += delta.x;
 
         bool isOnFloorPrev = IsColliderOnFloor({delta.x, 0.f});

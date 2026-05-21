@@ -33,6 +33,7 @@ public:
     void Transition(const std::string& stateName);
 
     Ptr<class AIComponent> GetAIComponent() const;
+    Ptr<class AIState>     GetCurrentState() const;
     Ptr<class AIState>     FindAIState(const std::string& name) const;
 
     Ptr<class AIState>      CreateAIState(const std::string& name);

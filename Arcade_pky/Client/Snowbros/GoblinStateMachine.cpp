@@ -43,7 +43,8 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           switch (colliderType)
           {
           case ColliderType::Enemy:
-              Transition("Turn");
+              if (_currentState->GetName() == "Walk")
+                  Transition("Turn");
               break;
           case ColliderType::Snowball:
               break;
@@ -135,8 +136,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateCrouch->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
-          kinematic->AdjustPositionToFloor(
-            kinematic->GetVelocity() * TimeManager::Instance().GetDeltaTime());
+          kinematic->AdjustPositionToFloor();
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_crouch");
       });
@@ -193,7 +193,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       = CreateAICondition("MoveAgainstBoundaryX", ConditionOperator::And,
         [=]() -> bool
         {
-            return kinematic->IsColliderMoveAgainstBoundaryX(blackboard->previousDelta.x);
+            return kinematic->IsColliderMovingAgainstBoundaryX(blackboard->previousDelta.x);
         });
     auto conditionNotOnFloor       = CreateAICondition("NotOnFloor", ConditionOperator::And,
             [=]() -> bool
@@ -203,7 +203,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     auto conditionMoveAgainstWall  = CreateAICondition("MoveAgainstWall", ConditionOperator::And,
        [=]() -> bool
        {
-          return kinematic->IsColliderMoveAgainstWallX(blackboard->previousDelta.x);
+          return kinematic->IsColliderMovingAgainstWallX(blackboard->previousDelta.x);
       });
     auto conditionMoveAgainstFloor = CreateAICondition("MoveAgainstFloor", ConditionOperator::And,
       [=]() -> bool
@@ -211,9 +211,9 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           bool isFalling = kinematic->GetVelocity().y < 0.f;
           bool wasColliderBottomOnBlock
             = kinematic->IsColliderBottomOnBlock(-blackboard->previousDelta);
-          bool isColliderOnFloor = kinematic->IsColliderOnFloor();
+          bool DidColliderMoveAgainstFloor = kinematic->DidColliderMoveAgainstFloor(blackboard->previousDelta);
 
-          return isFalling && !wasColliderBottomOnBlock && isColliderOnFloor;
+          return isFalling && !wasColliderBottomOnBlock && DidColliderMoveAgainstFloor;
       });
     auto conditionIsPlayerAbove    = CreateAICondition("IsPlayerAbove", ConditionOperator::And,
          [=]() -> bool

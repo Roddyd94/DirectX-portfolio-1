@@ -39,7 +39,7 @@ void PlatformerKinematicComponent::Tick(float deltaTime)
     if (this->IsColliderTouchedBlock(delta) && _onCollidedWithBlock)
         _onCollidedWithBlock();
 
-    if (this->IsColliderMoveAgainstFloor(delta) && _onCollidedWithFloor)
+    if (this->IsColliderMovingAgainstFloor(delta) && _onCollidedWithFloor)
         _onCollidedWithFloor();
 
     actor->SetWorldPosition(worldPos);
@@ -161,7 +161,30 @@ bool PlatformerKinematicComponent::IsColliderTouchedBoundary(Vector2 delta)
         || colliderBox.top > boundary.top || colliderBox.bottom < boundary.bottom;
 }
 
-bool PlatformerKinematicComponent::IsColliderMoveAgainstFloor(Vector2 delta)
+bool PlatformerKinematicComponent::DidColliderMoveAgainstFloor(Vector2 previousDelta)
+{
+    Rect colliderBox = _collider->GetBox();
+
+    Ptr<Tile> tileNextLB = _tilemap->GetTile({colliderBox.left, colliderBox.bottom});
+    Ptr<Tile> tileNextRB = _tilemap->GetTile({colliderBox.right, colliderBox.bottom});
+
+    colliderBox.Move(-previousDelta);
+
+    Ptr<Tile> tilePrevLB = _tilemap->GetTile({colliderBox.left, colliderBox.bottom});
+    Ptr<Tile> tilePrevRB = _tilemap->GetTile({colliderBox.right, colliderBox.bottom});
+
+    bool didLeftSideTouchedTile
+      = (tilePrevLB && tileNextLB) ? !tilePrevLB->IsTopBlock() && tileNextLB->IsTopBlock() : false;
+    bool didRightSideTouchedTile
+      = (tilePrevRB && tileNextRB) ? !tilePrevRB->IsTopBlock() && tileNextRB->IsTopBlock() : false;
+
+    if (didLeftSideTouchedTile || didRightSideTouchedTile)
+        return true;
+
+    return false;
+}
+
+bool PlatformerKinematicComponent::IsColliderMovingAgainstFloor(Vector2 delta)
 {
     Rect colliderBox = _collider->GetBox();
 
@@ -184,7 +207,7 @@ bool PlatformerKinematicComponent::IsColliderMoveAgainstFloor(Vector2 delta)
     return false;
 }
 
-bool PlatformerKinematicComponent::IsColliderMoveAgainstWallX(float deltaX)
+bool PlatformerKinematicComponent::IsColliderMovingAgainstWallX(float deltaX)
 {
     if (deltaX == 0)
         return false;
@@ -197,7 +220,7 @@ bool PlatformerKinematicComponent::IsColliderMoveAgainstWallX(float deltaX)
             || IsTileOnColliderBoundaryBlocked(Direction::LeftBottom);
 }
 
-bool PlatformerKinematicComponent::IsColliderMoveAgainstBoundaryX(float deltaX)
+bool PlatformerKinematicComponent::IsColliderMovingAgainstBoundaryX(float deltaX)
 {
     Rect colliderBox = _collider->GetBox();
     colliderBox.MoveX(deltaX);

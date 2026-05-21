@@ -49,12 +49,13 @@ public:
     bool IsColliderTouchedBlock(Vector2 delta = Vector2::zero);
     bool IsColliderTouchedBoundary(Vector2 delta = Vector2::zero);
     
-    bool IsColliderMoveAgainstFloor(Vector2 delta);
-    bool IsColliderMoveAgainstWallX(float deltaX);
-    bool IsColliderMoveAgainstBoundaryX(float deltaX);
+    bool DidColliderMoveAgainstFloor(Vector2 previousDelta);
+    bool IsColliderMovingAgainstFloor(Vector2 delta);
+    bool IsColliderMovingAgainstWallX(float deltaX);
+    bool IsColliderMovingAgainstBoundaryX(float deltaX);
     bool IsPositionOutOfBoundary(Vector2 position);
 
-    void AdjustPositionToFloor(Vector2 delta);
+    void AdjustPositionToFloor(Vector2 delta = Vector2::zero);
 
 protected:
     bool IsTileOnColliderBoundaryBlocked(Direction::Type direction);
