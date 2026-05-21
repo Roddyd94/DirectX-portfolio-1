@@ -21,10 +21,9 @@ public:
 
     virtual bool TryKick(Ptr<class SnowballComponent> snowball, float direction) { return false; }
     virtual bool TryPush(Ptr<class SnowballComponent> snowball, float direction) { return false; }
-    virtual bool CanCollideWith(
+    virtual void CollideWith(
       Ptr<class SnowballComponent> snowball, Weak<class CollisionComponent> collider)
     {
-        return false;
     }
 
     uint8 GetType() const;

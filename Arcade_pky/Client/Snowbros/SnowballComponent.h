@@ -10,7 +10,7 @@ public:
 private:
     std::function<void()>           _onDestroyCallback;
     Ptr<class SnowballStateMachine> _stateMachine = nullptr;
-    Weak<class SnowbrosEnemy>       _enemy;
+    Weak<class AIStateMachine>      _enemyStateMachine;
 
 public:
     bool Init(int32 componentID, const std::string& name, Ptr<class Actor> owner) override;
@@ -21,7 +21,7 @@ public:
 
     bool TryPush(float direction);
     bool TryKick(float direction);
-    bool CanCollideWith(Weak<class CollisionComponent> collider);
+    void CollideWith(Weak<class CollisionComponent> collider);
 
     void OnDestroy();
 

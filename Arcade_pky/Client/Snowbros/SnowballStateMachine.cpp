@@ -37,9 +37,9 @@ bool SnowballStateMachine::TryPush(float direction)
     return _currentState->TryPush(GetOwner(), direction);
 }
 
-bool SnowballStateMachine::CanCollideWith(Weak<class CollisionComponent> collider)
+void SnowballStateMachine::CollideWith(Weak<class CollisionComponent> collider)
 {
-    return _currentState->CanCollideWith(GetOwner(), collider);
+    _currentState->CollideWith(GetOwner(), collider);
 }
 
 Ptr<class SnowballComponent> SnowballStateMachine::GetOwner() const

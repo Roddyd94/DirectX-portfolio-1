@@ -31,14 +31,14 @@ void SnowballStateForming::Tick(Ptr<class SnowballComponent> snowball, float del
         return;
     }
 
-    for (int32 i = phaseCount - 1; i >= 0; i--)
+    for (int32 i = snowballStateFormingPhaseCount - 1; i >= 0; i--)
     {
         if (_accValue > phaseThreshold[i])
         {
             auto sprite = actor->FindSceneComponent<SpriteComponent>("Root");
             sprite->SetFrameIndex(i);
 
-            if (i == phaseCount - 1)
+            if (i == snowballStateFormingPhaseCount - 1)
                 snowball->Transition(New<SnowballStateFormed>(_accValue - phaseThreshold[i]));
 
             return;
@@ -46,7 +46,7 @@ void SnowballStateForming::Tick(Ptr<class SnowballComponent> snowball, float del
     }
 }
 
-bool SnowballStateForming::CanCollideWith(
+void SnowballStateForming::CollideWith(
   Ptr<class SnowballComponent> snowball, Weak<class CollisionComponent> collider)
 {
     Ptr<CollisionComponent> colliderLock = Lock(collider);
@@ -55,10 +55,11 @@ bool SnowballStateForming::CanCollideWith(
     switch (colliderType)
     {
     case ColliderType::PlayerProjectile:
+        _accValue += formingIncValue;
+        break;
     case ColliderType::EnemyProjectile:
+        break;
     case ColliderType::Snowball: // Rolling인 경우 파괴
-        return true;
+        break;
     }
-
-    return false;
 }

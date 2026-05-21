@@ -5,6 +5,8 @@
 #include "Core/TimeManager.h"
 
 #include "GoblinBlackboard.h"
+#include "Snowball.h"
+#include "SnowballComponent.h"
 #include "SnowbrosLevel.h"
 #include "AI/AIComponent.h"
 #include "Core/Actor.h"
@@ -49,7 +51,26 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           case ColliderType::Snowball:
               break;
           case ColliderType::PlayerProjectile:
-              break;
+          {
+              auto snowball = Lock(blackboard->snowball);
+              if (nullptr == snowball)
+              {
+                  snowball = level->SpawnActor<Snowball>(
+                    actor->GetWorldPosition(), actor->GetWorldScale(), Vector3::zero);
+                  blackboard->snowball = snowball;
+
+                  auto snowballComp = snowball->GetSnowballComponent();
+                  snowballComp->RegisterOnDestroyCallback(
+                    [=]()
+                    {
+                        blackboard->snowball = Weak<Snowball>();
+                        Transition("Dizzy");
+                    });
+
+                  Transition("Struggle");
+              }
+          }
+          break;
           case ColliderType::EnemyProjectile:
               break;
           case ColliderType::Item:
@@ -79,15 +100,10 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           kinematic->AddForce(blackboard->GetTargetJumpForce());
           blackboard->isJumping = true;
       });
-    animation->AddNotify("goblin_awake", animation->GetClipFrameCount("goblin_crouch"),
+    animation->AddNotify("goblin_awake", animation->GetClipFrameCount("goblin_awake"),
       [=]()
       {
-          this->Transition("Dizzy");
-      });
-    animation->AddNotify("goblin_falling", animation->GetClipFrameCount("goblin_crouch"),
-      [=]()
-      {
-          owner->GetOwner()->SetActive(false);
+          animation->ChangeAnimationClip("goblin_dizzy");
       });
 #pragma endregion AnimationNotifies
 
@@ -140,6 +156,18 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_crouch");
       });
+    enemyStateStruggle->RegisterCallback(AIEventState::Enter,
+      [=](float deltaTime)
+      {
+          kinematic->SetVelocity(Vector2::zero);
+          animation->ChangeAnimationClip("goblin_struggle");
+      });
+    enemyStateDizzy->RegisterCallback(AIEventState::Enter,
+      [=](float deltaTime)
+      {
+          kinematic->SetVelocity(Vector2::zero);
+          animation->ChangeAnimationClip("goblin_awake");
+      });
 #pragma endregion RegisterStateCallbackEnter
 
 #pragma region RegisterStateCallbackTick
@@ -161,6 +189,17 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       {
           kinematic->AddGravity(deltaTime);
           blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
+      });
+    enemyStateDizzy->RegisterCallback(AIEventState::Tick,
+      [=](float deltaTime)
+      {
+          blackboard->accTime += deltaTime;
+
+          if (blackboard->accTime > blackboard->dizzyTime)
+          {
+              Transition("Walk");
+              blackboard->accTime = 0.f;
+          }
       });
 #pragma endregion RegisterStateCallbackTick
 
@@ -211,7 +250,8 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           bool isFalling = kinematic->GetVelocity().y < 0.f;
           bool wasColliderBottomOnBlock
             = kinematic->IsColliderBottomOnBlock(-blackboard->previousDelta);
-          bool DidColliderMoveAgainstFloor = kinematic->DidColliderMoveAgainstFloor(blackboard->previousDelta);
+          bool DidColliderMoveAgainstFloor
+            = kinematic->DidColliderMoveAgainstFloor(blackboard->previousDelta);
 
           return isFalling && !wasColliderBottomOnBlock && DidColliderMoveAgainstFloor;
       });

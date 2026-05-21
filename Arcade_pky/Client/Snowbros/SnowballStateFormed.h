@@ -22,6 +22,5 @@ public:
     
     bool TryKick(Ptr<class SnowballComponent> snowball, float direction) override;
     bool TryPush(Ptr<class SnowballComponent> snowball, float direction) override;
-    bool CanCollideWith(
-      Ptr<class SnowballComponent> snowball, Weak<class CollisionComponent> collider) override;
+    void CollideWith(Ptr<class SnowballComponent> snowball, Weak<class CollisionComponent> collider) override;
 };

@@ -22,7 +22,7 @@ public:
 
     bool TryKick(float direction);
     bool TryPush(float direction);
-    bool CanCollideWith(Weak<class CollisionComponent> collider);
+    void CollideWith(Weak<class CollisionComponent> collider);
 
     Ptr<class SnowballComponent> GetOwner() const;
     uint8                        GetStateType() const;

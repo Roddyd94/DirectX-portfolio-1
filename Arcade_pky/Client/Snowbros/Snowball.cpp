@@ -37,10 +37,21 @@ bool Snowball::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 
     _snowballComponent = CreateActorComponent<SnowballComponent>("Snowball");
 
+    collider->RegisterCollisionCallBack(CollisionState::Enter,
+      [=](Weak<CollisionComponent> collider)
+      {
+          _snowballComponent->CollideWith(collider);
+      });
+
     return true;
 }
 
 void Snowball::Destroy()
 {
     Actor::Destroy();
+}
+
+Ptr<class SnowballComponent> Snowball::GetSnowballComponent() const
+{
+    return _snowballComponent;
 }

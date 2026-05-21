@@ -3,6 +3,7 @@
 #include "SnowballStateFormed.h"
 
 #include "SnowballComponent.h"
+#include "SnowballStateForming.h"
 #include "SnowballStateRolling.h"
 #include "Core/Actor.h"
 #include "Core/Collision/CollisionComponent.h"
@@ -22,6 +23,11 @@ void SnowballStateFormed::Tick(Ptr<class SnowballComponent> snowball, float delt
     Ptr<Actor> actor = snowball->GetOwner();
 
     _accValue -= decPerSecond * deltaTime;
+    if (_accValue < 0.f)
+    {
+        snowball->Transition(New<SnowballStateForming>(
+          SnowballStateForming::phaseThreshold[snowballStateFormingPhaseCount - 1] + _accValue));
+    }
 }
 
 bool SnowballStateFormed::TryKick(Ptr<class SnowballComponent> snowball, float direction)
@@ -37,7 +43,7 @@ bool SnowballStateFormed::TryPush(Ptr<class SnowballComponent> snowball, float d
     return true;
 }
 
-bool SnowballStateFormed::CanCollideWith(
+void SnowballStateFormed::CollideWith(
   Ptr<class SnowballComponent> snowball, Weak<class CollisionComponent> collider)
 {
     Ptr<CollisionComponent> colliderLock = Lock(collider);
@@ -46,11 +52,13 @@ bool SnowballStateFormed::CanCollideWith(
     switch (colliderType)
     {
     case ColliderType::Player:
+        break;
     case ColliderType::PlayerProjectile:
+        _accValue += formedIncValue;
+        break;
     case ColliderType::EnemyProjectile:
+        break;
     case ColliderType::Snowball: // rolling, formed
-        return true;
+        break;
     }
-
-    return false;
 }

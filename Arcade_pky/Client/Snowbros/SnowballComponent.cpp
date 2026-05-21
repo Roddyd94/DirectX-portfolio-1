@@ -42,9 +42,9 @@ bool SnowballComponent::TryKick(float direction)
     return _stateMachine->TryKick(direction);
 }
 
-bool SnowballComponent::CanCollideWith(Weak<class CollisionComponent> collider)
+void SnowballComponent::CollideWith(Weak<class CollisionComponent> collider)
 {
-    return _stateMachine->CanCollideWith(collider);
+    return _stateMachine->CollideWith(collider);
 }
 
 void SnowballComponent::OnDestroy()
