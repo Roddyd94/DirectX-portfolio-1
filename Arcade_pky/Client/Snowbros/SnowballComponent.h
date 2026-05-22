@@ -1,5 +1,7 @@
 #pragma once
+#include "SnowballState.h"
 #include "Core/ActorComponent.h"
+#include "Core/Collision/CollisionSystem.h"
 
 class SnowballComponent : public ActorComponent
 {
@@ -10,6 +12,7 @@ public:
 private:
     std::function<void()>           _onDestroyCallback;
     Ptr<class SnowballStateMachine> _stateMachine = nullptr;
+    Ptr<class SnowballBlackboard>   _blackboard   = nullptr;
     Weak<class AIComponent>         _enemyComponent;
 
 public:
@@ -19,15 +22,18 @@ public:
 
     void Transition(Ptr<class SnowballState> state);
 
-    bool TryPush(float direction);
-    bool TryKick(float direction);
-    void CollideWith(Weak<class CollisionComponent> collider);
-
-    void OnDestroy();
-
-    Ptr<class AIComponent> GetEnemyComponent() const;
+    SnowballStateType             GetCurrentStateType() const;
+    Ptr<class SnowballBlackboard> GetBlackboard() const;
+    Ptr<class AIComponent>        GetEnemyComponent() const;
 
     void SetEnemyComponent(Ptr<class AIComponent> enemy);
+
+    bool TryPush(float direction);
+    bool TryKick(float direction);
+    void CollideWith(CollisionState::Type collisionState, Weak<class CollisionComponent> collider);
+    void SynchronizePosition();
+
+    void OnDestroy();
 
 public:
     template <typename T>

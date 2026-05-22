@@ -40,7 +40,13 @@ bool Snowball::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
     collider->RegisterCollisionCallBack(CollisionState::Enter,
       [=](Weak<CollisionComponent> collider)
       {
-          _snowballComponent->CollideWith(collider);
+          _snowballComponent->CollideWith(CollisionState::Enter, collider);
+      });
+
+    collider->RegisterCollisionCallBack(CollisionState::Stay,
+      [=](Weak<CollisionComponent> collider)
+      {
+          _snowballComponent->CollideWith(CollisionState::Stay, collider);
       });
 
     return true;

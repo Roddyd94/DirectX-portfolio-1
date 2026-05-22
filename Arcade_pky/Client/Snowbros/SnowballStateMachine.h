@@ -1,5 +1,6 @@
 #pragma once
 #include "SnowballState.h"
+#include "Core/Collision/CollisionSystem.h"
 #include "Core/Input/Types.h"
 #include "Core/Object.h"
 
@@ -22,8 +23,8 @@ public:
 
     bool TryKick(float direction);
     bool TryPush(float direction);
-    void CollideWith(Weak<class CollisionComponent> collider);
+    void CollideWith(CollisionState::Type collisionState, Weak<class CollisionComponent> collider);
 
-    Ptr<class SnowballComponent> GetOwner() const;
-    uint8                        GetStateType() const;
+    Ptr<class SnowballComponent>  GetOwner() const;
+    SnowballStateType             GetCurrentStateType() const;
 };

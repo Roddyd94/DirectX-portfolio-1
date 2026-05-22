@@ -24,7 +24,7 @@ protected:
 public:
     inline static const float gravity           = -10.f;
     inline static const float terminalVelocityY = 5.f;
-    inline static const float epsilonTile       = 0.01f;
+    inline static const float epsilonTile       = 0.0625f;
 
 public:
     bool Init(int32 componentID, const std::string& name, Ptr<class Actor> owner) override;
@@ -49,7 +49,6 @@ public:
     bool IsColliderTouchedBlock(Vector2 delta = Vector2::zero);
     bool IsColliderTouchedBoundary(Vector2 delta = Vector2::zero);
     
-    bool DidColliderMoveAgainstFloor(Vector2 previousDelta);
     bool IsColliderMovingAgainstFloor(Vector2 delta);
     bool IsColliderMovingAgainstWallX(float deltaX);
     bool IsColliderMovingAgainstBoundaryX(float deltaX);

@@ -2,31 +2,42 @@
 
 #include "SnowballStateFormed.h"
 
+#include "SnowballBlackboard.h"
 #include "SnowballComponent.h"
 #include "SnowballStateForming.h"
 #include "SnowballStateRolling.h"
+#include "AI/AIComponent.h"
 #include "Core/Actor.h"
 #include "Core/Collision/CollisionComponent.h"
 #include "Core/Collision/CollisionProfile.h"
 
-SnowballStateFormed::SnowballStateFormed(float initialValue)
+SnowballStateFormed::SnowballStateFormed()
 {
-    _accValue = initialValue + formedBonusValue;
+    _stateType = SnowballStateType::Formed;
 }
 
-void SnowballStateFormed::Enter(Ptr<class SnowballComponent> snowball) {}
+void SnowballStateFormed::Enter(Ptr<class SnowballComponent> snowball)
+{
+    auto enemy     = snowball->GetEnemyComponent()->GetOwner();
+    auto enemyRoot = enemy->GetRoot();
+
+    enemyRoot->SetEnable(false);
+}
 
 void SnowballStateFormed::Exit(Ptr<class SnowballComponent> snowball) {}
 
 void SnowballStateFormed::Tick(Ptr<class SnowballComponent> snowball, float deltaTime)
 {
+    auto blackboard = snowball->GetBlackboard();
+    HandleGravity(snowball, deltaTime);
+
     Ptr<Actor> actor = snowball->GetOwner();
 
-    _accValue -= decPerSecond * deltaTime;
-    if (_accValue < 0.f)
+    blackboard->accValue -= decPerSecond * deltaTime;
+    if (blackboard->accValue
+        < SnowballStateForming::phaseThreshold[snowballStateFormingPhaseCount - 1])
     {
-        snowball->Transition(New<SnowballStateForming>(
-          SnowballStateForming::phaseThreshold[snowballStateFormingPhaseCount - 1] + _accValue));
+        snowball->Transition(New<SnowballStateForming>());
     }
 }
 
@@ -43,22 +54,55 @@ bool SnowballStateFormed::TryPush(Ptr<class SnowballComponent> snowball, float d
     return true;
 }
 
-void SnowballStateFormed::CollideWith(
-  Ptr<class SnowballComponent> snowball, Weak<class CollisionComponent> collider)
+void SnowballStateFormed::CollideWith(Ptr<class SnowballComponent> snowball,
+  CollisionState::Type                                             collisionState,
+  Weak<class CollisionComponent>                                   collider)
 {
-    Ptr<CollisionComponent> colliderLock = Lock(collider);
-    ColliderType::Type      colliderType = colliderLock->GetProfile()->GetColliderType();
+    auto                    blackboard = snowball->GetBlackboard();
+    Ptr<Actor>              thisActor  = snowball->GetOwner();
+    Ptr<CollisionComponent> thisCollider
+      = thisActor->FindSceneComponent<CollisionComponent>("Collider");
+    Ptr<CollisionComponent> otherCollider     = Lock(collider);
+    Ptr<Actor>              otherActor        = otherCollider->GetOwner();
+    ColliderType::Type      otherColliderType = otherCollider->GetProfile()->GetColliderType();
 
-    switch (colliderType)
+    switch (otherColliderType)
     {
     case ColliderType::Player:
         break;
     case ColliderType::PlayerProjectile:
-        _accValue += formedIncValue;
+        if (collisionState == CollisionState::Enter)
+            blackboard->accValue += formedIncValue;
         break;
     case ColliderType::EnemyProjectile:
         break;
     case ColliderType::Snowball: // rolling, formed
-        break;
+    {
+        auto otherSnowball
+          = otherCollider->GetOwner()->FindActorComponent<SnowballComponent>("Snowball");
+        auto otherState = otherSnowball->GetCurrentStateType();
+
+        switch (otherState)
+        {
+        case SnowballStateType::Formed:
+            if (collisionState == CollisionState::Stay)
+            {
+                Vector2 thisPosition  = thisActor->GetWorldPosition().ToVector2();
+                Vector2 otherPosition = otherActor->GetWorldPosition().ToVector2();
+
+                if (thisPosition.x < otherPosition.x)
+                    thisPosition.x -= moveDeltaX;
+                else
+                    thisPosition.x += moveDeltaX;
+
+                thisActor->SetWorldPosition(thisPosition);
+                snowball->SynchronizePosition();
+            }
+            break;
+        case SnowballStateType::Rolling:
+            break;
+        }
+    }
+    break;
     }
 }

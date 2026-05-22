@@ -27,7 +27,7 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
 
     auto collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
     collider->AttachToComponent(rootComp);
-    collider->SetBoxSize({0.9f, 0.9f});
+    collider->SetBoxSize({0.9f, 1.0f});
     collider->SetCollisionProfile("Enemy");
 
     auto kinematic = CreateActorComponent<PlatformerKinematicComponent>("Kinematic");

@@ -37,9 +37,10 @@ bool SnowballStateMachine::TryPush(float direction)
     return _currentState->TryPush(GetOwner(), direction);
 }
 
-void SnowballStateMachine::CollideWith(Weak<class CollisionComponent> collider)
+void SnowballStateMachine::CollideWith(
+  CollisionState::Type collisionState, Weak<class CollisionComponent> collider)
 {
-    _currentState->CollideWith(GetOwner(), collider);
+    _currentState->CollideWith(GetOwner(), collisionState, collider);
 }
 
 Ptr<class SnowballComponent> SnowballStateMachine::GetOwner() const
@@ -47,7 +48,7 @@ Ptr<class SnowballComponent> SnowballStateMachine::GetOwner() const
     return Lock(_owner);
 }
 
-uint8 SnowballStateMachine::GetStateType() const
+SnowballStateType SnowballStateMachine::GetCurrentStateType() const
 {
     return _currentState->GetType();
 }

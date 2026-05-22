@@ -102,21 +102,12 @@ bool PlatformerKinematicComponent::IsColliderOnFloor(Vector2 delta)
     Ptr<Tile> tileLeftBottom  = _tilemap->GetTile({colliderBox.left, colliderBox.bottom});
     Ptr<Tile> tileRightBottom = _tilemap->GetTile({colliderBox.right, colliderBox.bottom});
 
-    if (nullptr == tileLeftBottom || nullptr == tileRightBottom)
+    if (tileCenterBottom->IsTopBlock() || (tileLeftBottom && tileLeftBottom->IsTopBlock())
+        || (tileRightBottom && tileRightBottom->IsTopBlock()))
     {
-        if (tileCenterBottom->IsTopBlock())
-            return true;
-
-        return false;
+        Rect tileRect = tileCenterBottom->GetRect();
+        return std::abs(tileRect.top - colliderBox.bottom) < epsilonTile;
     }
-
-    if ((tileCenterBottom->IsBlock() && !tileCenterBottom->IsTopBlock())
-        && (tileLeftBottom->IsTopBlock() || tileRightBottom->IsTopBlock()))
-        return false;
-
-    if (tileCenterBottom->IsTopBlock() || tileLeftBottom->IsTopBlock()
-        || tileRightBottom->IsTopBlock())
-        return true;
 
     return false;
 }
@@ -159,29 +150,6 @@ bool PlatformerKinematicComponent::IsColliderTouchedBoundary(Vector2 delta)
 
     return colliderBox.left < boundary.left || colliderBox.right > boundary.right
         || colliderBox.top > boundary.top || colliderBox.bottom < boundary.bottom;
-}
-
-bool PlatformerKinematicComponent::DidColliderMoveAgainstFloor(Vector2 previousDelta)
-{
-    Rect colliderBox = _collider->GetBox();
-
-    Ptr<Tile> tileNextLB = _tilemap->GetTile({colliderBox.left, colliderBox.bottom});
-    Ptr<Tile> tileNextRB = _tilemap->GetTile({colliderBox.right, colliderBox.bottom});
-
-    colliderBox.Move(-previousDelta);
-
-    Ptr<Tile> tilePrevLB = _tilemap->GetTile({colliderBox.left, colliderBox.bottom});
-    Ptr<Tile> tilePrevRB = _tilemap->GetTile({colliderBox.right, colliderBox.bottom});
-
-    bool didLeftSideTouchedTile
-      = (tilePrevLB && tileNextLB) ? !tilePrevLB->IsTopBlock() && tileNextLB->IsTopBlock() : false;
-    bool didRightSideTouchedTile
-      = (tilePrevRB && tileNextRB) ? !tilePrevRB->IsTopBlock() && tileNextRB->IsTopBlock() : false;
-
-    if (didLeftSideTouchedTile || didRightSideTouchedTile)
-        return true;
-
-    return false;
 }
 
 bool PlatformerKinematicComponent::IsColliderMovingAgainstFloor(Vector2 delta)
@@ -295,8 +263,8 @@ void PlatformerKinematicComponent::AdjustPositionToFloor(Vector2 delta)
     Vector2   colliderCenterBottom = {colliderBox.GetCenterX(), colliderBox.bottom};
     Ptr<Tile> tile                 = _tilemap->GetTile(colliderCenterBottom);
 
-    float targetPositionY = tile->GetWorldPosition().y + tile->GetSize().y / 2
-                          + _collider->GetBoxSize().y / 2 - epsilonTile;
+    float targetPositionY = tile->GetWorldPosition().y + tile->GetSize().y / 2.f
+                          + _collider->GetBoxSize().y / 2.f - epsilonTile / 2.f;
 
     actor->SetWorldPosition({colliderCenterBottom.x, targetPositionY});
 }

@@ -39,6 +39,7 @@ public:
     Vector2 GetPosition() const;
     Vector2 GetSize() const;
     Vector2 GetCenter() const;
+    Rect    GetRect() const;
 
     TileType::Type GetType() const;
     uint32         GetSpriteIndex() const;

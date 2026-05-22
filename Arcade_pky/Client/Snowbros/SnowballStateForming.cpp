@@ -2,6 +2,7 @@
 
 #include "SnowballStateForming.h"
 
+#include "SnowballBlackboard.h"
 #include "SnowballComponent.h"
 #include "SnowballStateFormed.h"
 #include "AI/AIComponent.h"
@@ -10,24 +11,33 @@
 #include "Core/Collision/CollisionComponent.h"
 #include "Core/Collision/CollisionProfile.h"
 
-SnowballStateForming::SnowballStateForming(float initialValue)
+SnowballStateForming::SnowballStateForming()
 {
-    _accValue = initialValue;
+    _stateType = SnowballStateType::Forming;
 }
 
-void SnowballStateForming::Enter(Ptr<class SnowballComponent> snowball) {}
+void SnowballStateForming::Enter(Ptr<class SnowballComponent> snowball)
+{
+    auto enemy     = snowball->GetEnemyComponent()->GetOwner();
+    auto enemyRoot = enemy->GetRoot();
+
+    enemyRoot->SetEnable(true);
+}
 
 void SnowballStateForming::Exit(Ptr<class SnowballComponent> snowball) {}
 
 void SnowballStateForming::Tick(Ptr<class SnowballComponent> snowball, float deltaTime)
 {
-    Ptr<Actor> actor = snowball->GetOwner();
-    Ptr<Actor> enemy = snowball->GetEnemyComponent()->GetOwner();
+    HandleGravity(snowball, deltaTime);
+
+    auto       blackboard = snowball->GetBlackboard();
+    Ptr<Actor> actor      = snowball->GetOwner();
+    Ptr<Actor> enemy      = snowball->GetEnemyComponent()->GetOwner();
     actor->SetWorldPosition(enemy->GetWorldPosition());
 
-    _accValue -= decPerSecond * deltaTime;
+    blackboard->accValue -= decPerSecond * deltaTime;
 
-    if (_accValue <= phaseThreshold[0])
+    if (blackboard->accValue <= phaseThreshold[0])
     {
         snowball->OnDestroy();
         actor->SetActive(false);
@@ -36,29 +46,33 @@ void SnowballStateForming::Tick(Ptr<class SnowballComponent> snowball, float del
 
     for (int32 i = snowballStateFormingPhaseCount - 1; i >= 0; i--)
     {
-        if (_accValue > phaseThreshold[i])
+        if (blackboard->accValue > phaseThreshold[i])
         {
             auto sprite = actor->FindSceneComponent<SpriteComponent>("Root");
             sprite->SetFrameIndex(i);
 
             if (i == snowballStateFormingPhaseCount - 1)
-                snowball->Transition(New<SnowballStateFormed>(_accValue - phaseThreshold[i]));
+                snowball->Transition(New<SnowballStateFormed>());
 
             return;
         }
     }
 }
 
-void SnowballStateForming::CollideWith(
-  Ptr<class SnowballComponent> snowball, Weak<class CollisionComponent> collider)
+void SnowballStateForming::CollideWith(Ptr<class SnowballComponent> snowball,
+  CollisionState::Type                                              collisionState,
+  Weak<class CollisionComponent>                                    collider)
 {
+    auto blackboard = snowball->GetBlackboard();
+
     Ptr<CollisionComponent> colliderLock = Lock(collider);
     ColliderType::Type      colliderType = colliderLock->GetProfile()->GetColliderType();
 
     switch (colliderType)
     {
     case ColliderType::PlayerProjectile:
-        _accValue += formingIncValue;
+        if (CollisionState::Enter == collisionState)
+            blackboard->accValue += formingIncValue;
         break;
     case ColliderType::EnemyProjectile:
         break;

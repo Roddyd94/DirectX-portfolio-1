@@ -454,6 +454,9 @@
     <ClInclude Include="Snowbros\SpitterBlackboard.h">
       <Filter>Snowbros\Enemy\Blackboard</Filter>
     </ClInclude>
+    <ClInclude Include="Snowbros\SnowballBlackboard.h">
+      <Filter>Snowbros\Snowball</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -868,6 +871,9 @@
     </ClCompile>
     <ClCompile Include="Snowbros\SpitterBlackboard.cpp">
       <Filter>Snowbros\Enemy\Blackboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowballBlackboard.cpp">
+      <Filter>Snowbros\Snowball</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

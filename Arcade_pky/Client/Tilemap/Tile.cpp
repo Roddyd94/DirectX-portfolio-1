@@ -27,6 +27,15 @@ Vector2 Tile::GetCenter() const
     return _center;
 }
 
+Rect Tile::GetRect() const
+{
+    Vector2 worldPosition = GetWorldPosition();
+    Vector2 leftBottom    = worldPosition - _size * 0.5f;
+    Vector2 rightTop      = worldPosition + _size * 0.5f;
+
+    return {leftBottom, rightTop};
+}
+
 TileType::Type Tile::GetType() const
 {
     return _type;

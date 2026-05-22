@@ -6,6 +6,7 @@
 
 #include "GoblinBlackboard.h"
 #include "Snowball.h"
+#include "SnowballBlackboard.h"
 #include "SnowballComponent.h"
 #include "SnowbrosLevel.h"
 #include "AI/AIComponent.h"
@@ -54,8 +55,10 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               auto snowball = Lock(blackboard->snowball);
               if (nullptr == snowball)
               {
-                  snowball = level->SpawnActor<Snowball>(
-                    actor->GetWorldPosition(), actor->GetWorldScale(), Vector3::zero);
+                  Vector3 targetPosition = actor->GetWorldPosition();
+                  snowball               = level->SpawnActor<Snowball>(
+                    targetPosition, actor->GetWorldScale(), Vector3::zero);
+                  auto snowballBoard = snowball->GetSnowballComponent()->GetBlackboard();
                   blackboard->snowball = snowball;
 
                   auto snowballComp = snowball->GetSnowballComponent();
@@ -126,7 +129,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateWalk->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
-          blackboard->isOnFloor = true;
           animation->ChangeAnimationClip("goblin_walk");
           kinematic->MoveX(blackboard->direction * blackboard->walkSpeedX);
       });
@@ -140,7 +142,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateJump->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
-          blackboard->isOnFloor = false;
           blackboard->isJumping = false;
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_jump");
@@ -148,14 +149,12 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateFall->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
-          blackboard->isOnFloor = false;
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_midair");
       });
     enemyStateCrouch->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
-          blackboard->isOnFloor = true;
           kinematic->AdjustPositionToFloor();
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_crouch");
@@ -192,24 +191,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       [=](float deltaTime)
       {
           kinematic->AddGravity(deltaTime);
-          blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
-      });
-    enemyStateStruggle->RegisterCallback(AIEventState::Tick,
-      [=](float deltaTime)
-      {
-          if (blackboard->isOnFloor)
-              return;
-
-          if (kinematic->DidColliderMoveAgainstFloor(blackboard->previousDelta))
-          {
-              blackboard->isOnFloor = true;
-              kinematic->SetVelocity(Vector2::zero);
-          }
-          else
-          {
-              kinematic->AddGravity(deltaTime);
-          }
-
           blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
       });
     enemyStateDizzy->RegisterCallback(AIEventState::Tick,
@@ -272,10 +253,10 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           bool isFalling = kinematic->GetVelocity().y < 0.f;
           bool wasColliderBottomOnBlock
             = kinematic->IsColliderBottomOnBlock(-blackboard->previousDelta);
-          bool DidColliderMoveAgainstFloor
-            = kinematic->DidColliderMoveAgainstFloor(blackboard->previousDelta);
+          bool isColliderOnFloor
+            = kinematic->IsColliderOnFloor();
 
-          return isFalling && !wasColliderBottomOnBlock && DidColliderMoveAgainstFloor;
+          return isFalling && !wasColliderBottomOnBlock && isColliderOnFloor;
       });
     auto conditionIsPlayerAbove    = CreateAICondition("IsPlayerAbove", ConditionOperator::And,
          [=]() -> bool

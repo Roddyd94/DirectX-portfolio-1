@@ -24,6 +24,12 @@ public:
     void SetController(Ptr<class AIController> controller);
 
     template <typename T>
+    Ptr<T> GetAIBlackboard() const
+    {
+        return _stateMachine->GetAIBlackboard<T>();
+    }
+
+    template <typename T>
     void CreateAIStateMachine()
     {
         if (_stateMachine)

@@ -8,6 +8,7 @@
 SnowballStateRolling::SnowballStateRolling(float direction)
 {
     _direction = direction;
+    _stateType = SnowballStateType::Rolling;
 }
 
 void SnowballStateRolling::Enter(Ptr<class SnowballComponent> snowball) {}
