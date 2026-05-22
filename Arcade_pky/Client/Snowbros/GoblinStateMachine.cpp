@@ -39,26 +39,23 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     collider->RegisterCollisionCallBack(CollisionState::Enter,
       [=](Weak<CollisionComponent> collider)
       {
-          Ptr<CollisionComponent> colliderLock = Lock(collider);
-          ColliderType::Type      colliderType = colliderLock->GetColliderType();
+          Ptr<CollisionComponent> otherCollider     = Lock(collider);
+          ColliderType::Type      otherColliderType = otherCollider->GetColliderType();
 
-          switch (colliderType)
+          switch (otherColliderType)
           {
-          case ColliderType::Enemy:
-              if (_currentState->GetName() == "Walk")
-                  Transition("Turn");
-              break;
           case ColliderType::Snowball:
               break;
           case ColliderType::PlayerProjectile:
           {
+              // todo
               auto snowball = Lock(blackboard->snowball);
               if (nullptr == snowball)
               {
                   Vector3 targetPosition = actor->GetWorldPosition();
                   snowball               = level->SpawnActor<Snowball>(
                     targetPosition, actor->GetWorldScale(), Vector3::zero);
-                  auto snowballBoard = snowball->GetSnowballComponent()->GetBlackboard();
+                  auto snowballBoard   = snowball->GetSnowballComponent()->GetBlackboard();
                   blackboard->snowball = snowball;
 
                   auto snowballComp = snowball->GetSnowballComponent();
@@ -82,6 +79,32 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               break;
           default:
               break;
+          }
+      });
+    collider->RegisterCollisionCallBack(CollisionState::Stay,
+      [=](Weak<CollisionComponent> collider)
+      {
+          Ptr<CollisionComponent> otherCollider     = Lock(collider);
+          ColliderType::Type      otherColliderType = otherCollider->GetColliderType();
+
+          switch (otherColliderType)
+          {
+          case ColliderType::Enemy:
+          {
+              auto thisPosition  = GetOwner()->GetOwner()->GetWorldPosition();
+              auto otherPosition = otherCollider->GetWorldPosition();
+              if (_currentState->GetName() == "Walk")
+              {
+                  if (thisPosition.x < otherPosition.x && blackboard->direction < 0)
+                      return;
+
+                  if (thisPosition.x > otherPosition.x && blackboard->direction > 0)
+                      return;
+
+                  Transition("Turn");
+              }
+          }
+          break;
           }
       });
 #pragma endregion ColliderCallbacks
@@ -253,8 +276,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           bool isFalling = kinematic->GetVelocity().y < 0.f;
           bool wasColliderBottomOnBlock
             = kinematic->IsColliderBottomOnBlock(-blackboard->previousDelta);
-          bool isColliderOnFloor
-            = kinematic->IsColliderOnFloor();
+          bool isColliderOnFloor = kinematic->IsColliderOnFloor();
 
           return isFalling && !wasColliderBottomOnBlock && isColliderOnFloor;
       });

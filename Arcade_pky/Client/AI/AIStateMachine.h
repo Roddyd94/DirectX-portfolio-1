@@ -32,7 +32,7 @@ public:
     void Tick(float deltaTime);
     void Transition(const std::string& stateName);
 
-    Ptr<class AIComponent> GetAIComponent() const;
+    Ptr<class AIComponent> GetOwner() const;
     Ptr<class AIState>     GetCurrentState() const;
     Ptr<class AIState>     FindAIState(const std::string& name) const;
 

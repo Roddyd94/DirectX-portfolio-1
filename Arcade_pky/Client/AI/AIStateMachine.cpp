@@ -56,7 +56,7 @@ void AIStateMachine::Transition(const std::string& stateName)
     _accTime = 0.f;
 }
 
-Ptr<class AIComponent> AIStateMachine::GetAIComponent() const
+Ptr<class AIComponent> AIStateMachine::GetOwner() const
 {
     return Lock(_owner);
 }

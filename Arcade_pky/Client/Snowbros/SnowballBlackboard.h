@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Object.h"
+
 class SnowballBlackboard : public Object
 {
 public:
