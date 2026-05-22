@@ -1,5 +1,6 @@
 #pragma once
 #include "PlayerState.h"
+#include "PlayerStateMachine.h"
 #include "Core/ActorComponent.h"
 
 class PlayerComponent : public ActorComponent
@@ -20,6 +21,12 @@ public:
     void HandleInput(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
 
     Ptr<class Player> GetPlayer() const;
+    uint8             GetStateType() const;
 
-    uint8 GetStateType() const;
+public:
+    template <typename T>
+    Ptr<T> GetPlayerBlackboard() const
+    {
+        return _stateMachine->GetBlackboard<T>();
+    }
 };

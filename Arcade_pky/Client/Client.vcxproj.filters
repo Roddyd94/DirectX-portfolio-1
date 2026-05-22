@@ -457,6 +457,7 @@
     <ClInclude Include="Snowbros\SnowballBlackboard.h">
       <Filter>Snowbros\Snowball</Filter>
     </ClInclude>
+    <ClInclude Include="Player\PlayerBlackboard.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -875,6 +876,7 @@
     <ClCompile Include="Snowbros\SnowballBlackboard.cpp">
       <Filter>Snowbros\Snowball</Filter>
     </ClCompile>
+    <ClCompile Include="Player\PlayerBlackboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

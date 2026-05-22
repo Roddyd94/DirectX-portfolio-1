@@ -535,6 +535,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Platformer\PlatformerMovementComponent.h" />
     <ClInclude Include="Platformer\Types.h" />
     <ClInclude Include="Player\Player.h" />
+    <ClInclude Include="Player\PlayerBlackboard.h" />
     <ClInclude Include="Player\PlayerComponent.h" />
     <ClInclude Include="Player\PlayerController.h" />
     <ClInclude Include="Player\PlayerState.h" />
@@ -687,6 +688,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Platformer\PlatformerKinematicPlayerComponent.cpp" />
     <ClCompile Include="Platformer\PlatformerMovementComponent.cpp" />
     <ClCompile Include="Player\Player.cpp" />
+    <ClCompile Include="Player\PlayerBlackboard.cpp" />
     <ClCompile Include="Player\PlayerComponent.cpp" />
     <ClCompile Include="Player\PlayerController.cpp" />
     <ClCompile Include="Player\PlayerState.cpp" />
