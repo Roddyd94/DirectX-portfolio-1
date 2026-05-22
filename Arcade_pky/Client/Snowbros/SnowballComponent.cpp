@@ -12,7 +12,6 @@ bool SnowballComponent::Init(int32 componentID, const std::string& name, Ptr<cla
 {
     ActorComponent::Init(componentID, name, owner);
 
-    _blackboard   = New<SnowballBlackboard>();
     _stateMachine = New<SnowballStateMachine>();
     _stateMachine->Init(This<SnowballComponent>(), New<SnowballStateForming>());
 
@@ -42,7 +41,7 @@ SnowballStateType SnowballComponent::GetCurrentStateType() const
 
 Ptr<class SnowballBlackboard> SnowballComponent::GetBlackboard() const
 {
-    return _blackboard;
+    return _stateMachine->GetBlackboard();
 }
 
 Ptr<class AIComponent> SnowballComponent::GetEnemyComponent() const

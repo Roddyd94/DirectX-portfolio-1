@@ -23,9 +23,11 @@ public:
     Ptr<class Player> GetPlayer() const;
     uint8             GetStateType() const;
 
+    void SetBlackboard(Ptr<class PlayerBlackboard> blackboard);
+
 public:
     template <typename T>
-    Ptr<T> GetPlayerBlackboard() const
+    Ptr<T> GetBlackboard() const
     {
         return _stateMachine->GetBlackboard<T>();
     }

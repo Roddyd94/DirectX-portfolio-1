@@ -12,7 +12,6 @@ public:
 private:
     std::function<void()>           _onDestroyCallback;
     Ptr<class SnowballStateMachine> _stateMachine = nullptr;
-    Ptr<class SnowballBlackboard>   _blackboard   = nullptr;
     Weak<class AIComponent>         _enemyComponent;
 
 public:

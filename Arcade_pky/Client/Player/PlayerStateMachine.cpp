@@ -10,7 +10,10 @@ void PlayerStateMachine::Init(Ptr<class PlayerComponent> player, Ptr<class Playe
     _currentState = state;
 }
 
-void PlayerStateMachine::Destroy() {}
+void PlayerStateMachine::Destroy()
+{
+    DESTROY(_blackboard);
+}
 
 void PlayerStateMachine::Tick(float deltaTime)
 {

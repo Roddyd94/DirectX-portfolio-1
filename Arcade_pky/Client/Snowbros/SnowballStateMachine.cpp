@@ -9,6 +9,8 @@ void SnowballStateMachine::Init(
 {
     _owner        = snowball;
     _currentState = state;
+
+    _blackboard = New<SnowballBlackboard>();
 }
 
 void SnowballStateMachine::Destroy() {}
@@ -46,6 +48,11 @@ void SnowballStateMachine::CollideWith(
 Ptr<class SnowballComponent> SnowballStateMachine::GetOwner() const
 {
     return Lock(_owner);
+}
+
+Ptr<class SnowballBlackboard> SnowballStateMachine::GetBlackboard() const
+{
+    return _blackboard;
 }
 
 SnowballStateType SnowballStateMachine::GetCurrentStateType() const

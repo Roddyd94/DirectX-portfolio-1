@@ -2,7 +2,10 @@
 
 #include "SnowbrosPlayer.h"
 
+#include "PlayerStateGround.h"
+#include "PlayerStateMidair.h"
 #include "ShootComponent.h"
+#include "SnowbrosPlayerBlackboard.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
 #include "Core/Input/InputComponent.h"
@@ -10,14 +13,13 @@
 #include "Platformer/PlatformerMovementComponent.h"
 #include "Player/PlayerComponent.h"
 #include "Player/PlayerController.h"
-#include "Snowbros/PlayerStateGround.h"
-#include "Snowbros/PlayerStateMidair.h"
 #include "Tilemap/Tilemap.h"
 #include "Tilemap/TilemapLevel.h"
 
 bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
     Player::Init(id, position, scale, rotation);
+    _playerComponent->SetBlackboard(New<SnowbrosPlayerBlackboard>());
 
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();

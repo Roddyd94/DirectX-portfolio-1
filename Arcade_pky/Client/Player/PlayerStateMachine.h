@@ -1,4 +1,5 @@
 #pragma once
+#include "PlayerBlackboard.h"
 #include "PlayerState.h"
 #include "Core/Input/Types.h"
 #include "Core/Object.h"
@@ -15,7 +16,7 @@ private:
     Ptr<class PlayerState>      _currentState = nullptr;
 
 public:
-    void Init(Ptr<class PlayerComponent> player, Ptr<class PlayerState> state);
+    virtual void Init(Ptr<class PlayerComponent> player, Ptr<class PlayerState> state);
     void Destroy() override;
     void Tick(float deltaTime);
 

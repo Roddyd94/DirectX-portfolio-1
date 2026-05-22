@@ -2,6 +2,8 @@
 
 #include "PlayerState.h"
 
+#include "PlayerComponent.h"
+
 void PlayerState::Destroy() {}
 
 uint8 PlayerState::GetType() const

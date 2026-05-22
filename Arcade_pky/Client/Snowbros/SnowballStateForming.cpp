@@ -71,11 +71,16 @@ void SnowballStateForming::CollideWith(Ptr<class SnowballComponent> snowball,
     switch (colliderType)
     {
     case ColliderType::PlayerProjectile:
+    {
         if (CollisionState::Enter == collisionState)
             blackboard->accValue += formingIncValue;
-        break;
+    }
+    break;
     case ColliderType::EnemyProjectile:
-        break;
+    {
+        blackboard->accValue = phaseThreshold[0];
+    }
+    break;
     case ColliderType::Snowball: // Rolling인 경우 파괴
         break;
     }

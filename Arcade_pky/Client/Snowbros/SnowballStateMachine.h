@@ -12,6 +12,7 @@ public:
 
 private:
     Weak<class SnowballComponent> _owner;
+    Ptr<class SnowballBlackboard> _blackboard   = nullptr;
     Ptr<class SnowballState>      _currentState = nullptr;
 
 public:
@@ -26,5 +27,6 @@ public:
     void CollideWith(CollisionState::Type collisionState, Weak<class CollisionComponent> collider);
 
     Ptr<class SnowballComponent>  GetOwner() const;
+    Ptr<class SnowballBlackboard> GetBlackboard() const;
     SnowballStateType             GetCurrentStateType() const;
 };

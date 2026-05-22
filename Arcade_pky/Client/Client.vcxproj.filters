@@ -371,16 +371,16 @@
       <Filter>Tilemap\World</Filter>
     </ClInclude>
     <ClInclude Include="Snowbros\PlayerStateDead.h">
-      <Filter>Snowbros\PlayerState</Filter>
+      <Filter>Snowbros\Player\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="Snowbros\PlayerStateGround.h">
-      <Filter>Snowbros\PlayerState</Filter>
+      <Filter>Snowbros\Player\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="Snowbros\PlayerStateMidair.h">
-      <Filter>Snowbros\PlayerState</Filter>
+      <Filter>Snowbros\Player\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="Snowbros\PlayerStateSnowball.h">
-      <Filter>Snowbros\PlayerState</Filter>
+      <Filter>Snowbros\Player\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="Snowbros\SnowbrosTileParser.h">
       <Filter>Snowbros</Filter>
@@ -457,7 +457,12 @@
     <ClInclude Include="Snowbros\SnowballBlackboard.h">
       <Filter>Snowbros\Snowball</Filter>
     </ClInclude>
-    <ClInclude Include="Player\PlayerBlackboard.h" />
+    <ClInclude Include="Player\PlayerBlackboard.h">
+      <Filter>Player\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosPlayerBlackboard.h">
+      <Filter>Snowbros\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -793,16 +798,16 @@
       <Filter>Tilemap\World</Filter>
     </ClCompile>
     <ClCompile Include="Snowbros\PlayerStateDead.cpp">
-      <Filter>Snowbros\PlayerState</Filter>
+      <Filter>Snowbros\Player\PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="Snowbros\PlayerStateGround.cpp">
-      <Filter>Snowbros\PlayerState</Filter>
+      <Filter>Snowbros\Player\PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="Snowbros\PlayerStateMidair.cpp">
-      <Filter>Snowbros\PlayerState</Filter>
+      <Filter>Snowbros\Player\PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="Snowbros\PlayerStateSnowball.cpp">
-      <Filter>Snowbros\PlayerState</Filter>
+      <Filter>Snowbros\Player\PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="Snowbros\SnowbrosTileParser.cpp">
       <Filter>Snowbros</Filter>
@@ -876,7 +881,12 @@
     <ClCompile Include="Snowbros\SnowballBlackboard.cpp">
       <Filter>Snowbros\Snowball</Filter>
     </ClCompile>
-    <ClCompile Include="Player\PlayerBlackboard.cpp" />
+    <ClCompile Include="Player\PlayerBlackboard.cpp">
+      <Filter>Player\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosPlayerBlackboard.cpp">
+      <Filter>Snowbros\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -1086,9 +1096,6 @@
     <Filter Include="Player\StateMachine">
       <UniqueIdentifier>{ae4bd6a0-aa92-4575-802f-81061638a1f5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Snowbros\PlayerState">
-      <UniqueIdentifier>{32a1990a-a603-4381-a4af-0bdc46a37ac6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Player\Actor">
       <UniqueIdentifier>{e41cc026-e989-41b2-91bb-c8b819ded84d}</UniqueIdentifier>
     </Filter>
@@ -1127,6 +1134,12 @@
     </Filter>
     <Filter Include="Snowbros\Enemy\Blackboard">
       <UniqueIdentifier>{1a386621-126b-4382-bd9d-cf12a16a421b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\Player">
+      <UniqueIdentifier>{dc3cba26-3809-4b59-933f-3817ad1d5c36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\Player\PlayerState">
+      <UniqueIdentifier>{32a1990a-a603-4381-a4af-0bdc46a37ac6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

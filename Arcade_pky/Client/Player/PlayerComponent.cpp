@@ -46,3 +46,8 @@ uint8 PlayerComponent::GetStateType() const
 {
     return _stateMachine->GetCurrentStateType();
 }
+
+void PlayerComponent::SetBlackboard(Ptr<class PlayerBlackboard> blackboard)
+{
+    _stateMachine->SetBlackboard(blackboard);
+}

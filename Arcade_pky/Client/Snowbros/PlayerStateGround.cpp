@@ -5,6 +5,7 @@
 #include "PlayerStateMidair.h"
 #include "Types.h"
 #include "Core/Animation/SpriteComponent.h"
+#include "Core/Collision/CollisionComponent.h"
 #include "Platformer/PlatformerKinematicPlayerComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
 #include "Player/Player.h"
@@ -22,9 +23,9 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
   Ptr<class InputAction>                                                   action,
   ButtonEventType::Type                                                    buttonEvent)
 {
-    Ptr<Actor>                       player = playerComponent->GetOwner();
-    Ptr<PlatformerMovementComponent> movement
-      = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
+    Ptr<Actor> player = playerComponent->GetOwner();
+    auto movement = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
+    auto collider = player->FindSceneComponent<CollisionComponent>("Collider");
 
     Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
 
@@ -33,8 +34,6 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         switch (buttonEvent)
         {
         case ButtonEventType::Hold:
-            //if ()
-
             movement->MoveLeft();
             if (sprite->GetCurrentClipName() != "player_shoot")
                 sprite->ChangeAnimation("player_walk");
