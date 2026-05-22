@@ -42,7 +42,12 @@ Ptr<class PlayerComponent> PlayerStateMachine::GetOwner() const
     return Lock(_owner);
 }
 
-uint8 PlayerStateMachine::GetStateType() const
+uint8 PlayerStateMachine::GetCurrentStateType() const
 {
     return _currentState->GetType();
+}
+
+void PlayerStateMachine::SetBlackboard(Ptr<class PlayerBlackboard> blackboard)
+{
+    _blackboard = blackboard;
 }

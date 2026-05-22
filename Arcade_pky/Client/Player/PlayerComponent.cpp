@@ -44,5 +44,5 @@ Ptr<class Player> PlayerComponent::GetPlayer() const
 
 uint8 PlayerComponent::GetStateType() const
 {
-    return _stateMachine->GetStateType();
+    return _stateMachine->GetCurrentStateType();
 }

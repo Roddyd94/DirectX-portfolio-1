@@ -11,6 +11,7 @@ public:
 
 private:
     Weak<class PlayerComponent> _owner;
+    Ptr<class PlayerBlackboard> _blackboard   = nullptr;
     Ptr<class PlayerState>      _currentState = nullptr;
 
 public:
@@ -22,5 +23,14 @@ public:
     void HandleInput(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
 
     Ptr<class PlayerComponent> GetOwner() const;
-    uint8                      GetStateType() const;
+    uint8                      GetCurrentStateType() const;
+
+    void SetBlackboard(Ptr<class PlayerBlackboard> blackboard);
+
+public:
+    template <typename T>
+    Ptr<T> GetBlackboard() const
+    {
+        return Cast<PlayerBlackboard, T>(_blackboard);
+    }
 };
