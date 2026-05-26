@@ -2,7 +2,8 @@
 
 #include "AI.h"
 
-#include "AI/AIController.h"
+#include "AIComponent.h"
+#include "AIController.h"
 #include "Core/Level.h"
 
 bool AI::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)

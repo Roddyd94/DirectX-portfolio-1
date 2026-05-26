@@ -24,10 +24,12 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     rootComp->SetShader("SpriteShader");
     SetRoot(rootComp);
 
-    auto snowballComp = CreateSceneComponent<SpriteComponent>("Snowball");
-    snowballComp->SetRenderLayer("Snowball");
-    snowballComp->SetShader("SpriteShader");
-    snowballComp->AttachToComponent(rootComp);
+    auto snowballSprite = CreateSceneComponent<SpriteComponent>("Snowball");
+    snowballSprite->SetEnable(false);
+    snowballSprite->SetRenderLayer("Snowball");
+    snowballSprite->SetShader("SpriteShader");
+    snowballSprite->AttachToComponent(rootComp);
+    snowballSprite->SetRelativeScale(Vector3::one);
 
     auto collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
     collider->AttachToComponent(rootComp);

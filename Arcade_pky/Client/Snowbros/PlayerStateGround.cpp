@@ -26,7 +26,7 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
 {
     Ptr<Actor> player = playerComponent->GetOwner();
 
-    auto blackboard = playerComponent->GetBlackboard<SnowbrosPlayerBlackboard>();
+    auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
     auto movement   = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
 
     Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
@@ -117,8 +117,8 @@ void PlayerStateGround::Exit(Ptr<class PlayerComponent> playerComponent) {}
 
 void PlayerStateGround::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime)
 {
-    auto  blackboard = playerComponent->GetBlackboard<SnowbrosPlayerBlackboard>();
-    auto& snowballs  = blackboard->overlappedSnowballs;
+    auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
+    auto& snowballs = blackboard->overlappedSnowballs;
 
     auto it = snowballs.begin();
     while (it != snowballs.end())
@@ -137,7 +137,7 @@ void PlayerStateGround::CollideWith(Ptr<class PlayerComponent> playerComponent,
   CollisionState::Type                                         collisionType,
   Weak<class CollisionComponent>                               collider)
 {
-    auto blackboard = playerComponent->GetBlackboard<SnowbrosPlayerBlackboard>();
+    auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
 
     auto thisActor         = playerComponent->GetOwner();
     auto thisCollider      = thisActor->FindSceneComponent<CollisionComponent>("Collider");

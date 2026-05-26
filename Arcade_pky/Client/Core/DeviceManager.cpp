@@ -94,26 +94,26 @@ bool DeviceManager::Init(HWND hWnd, uint32 width, uint32 height, bool isWindowed
 
     _context->RSSetViewports(1, &vp);
 
-    if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, __uuidof(ID2D1Factory1),
-          (void**)_factory2D.GetAddressOf())))
-        return false;
+    //if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, __uuidof(ID2D1Factory1),
+    //      (void**)_factory2D.GetAddressOf())))
+    //    return false;
 
     // RENDERDOC FAILS HERE
-    if (FAILED(_factory2D->CreateDevice(dxgiDevice.Get(), _device2D.GetAddressOf())))
-        return false;
+    //if (FAILED(_factory2D->CreateDevice(dxgiDevice.Get(), _device2D.GetAddressOf())))
+    //    return false;
     
-    if (FAILED(_device2D->CreateDeviceContext(
-          D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS,
-          _context2D.GetAddressOf())))
-        return false;
+    //if (FAILED(_device2D->CreateDeviceContext(
+    //      D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS,
+    //      _context2D.GetAddressOf())))
+    //    return false;
 
-    ComPtr<IDXGISurface> dxgiSurface;
-    if (FAILED(_backBuffer->QueryInterface(IID_PPV_ARGS(&dxgiSurface))))
-        return false;
+    //ComPtr<IDXGISurface> dxgiSurface;
+    //if (FAILED(_backBuffer->QueryInterface(IID_PPV_ARGS(&dxgiSurface))))
+    //    return false;
 
-    _bitmapDefault = CreateBitmap("Default", dxgiSurface);
-    if (nullptr == _bitmapDefault)
-        return false;
+    //_bitmapDefault = CreateBitmap("Default", dxgiSurface);
+    //if (nullptr == _bitmapDefault)
+    //    return false;
 
     return true;
 }

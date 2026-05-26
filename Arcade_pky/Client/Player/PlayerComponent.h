@@ -3,6 +3,7 @@
 #include "PlayerStateMachine.h"
 #include "Core/ActorComponent.h"
 #include "Core/Collision/CollisionSystem.h"
+#include "Core/Input/Types.h"
 
 class PlayerComponent : public ActorComponent
 {
@@ -21,16 +22,10 @@ public:
     void Transition(Ptr<class PlayerState> state);
     void HandleInput(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
 
-    Ptr<class Player> GetPlayer() const;
-    uint8             GetStateType() const;
+    Ptr<class Player>             GetPlayer() const;
+    Ptr<class PlayerStateMachine> GetStateMachine() const;
+    uint8                         GetStateType() const;
 
     void SetBlackboard(Ptr<class PlayerBlackboard> blackboard);
     void CollideWith(CollisionState::Type collisionType, Weak<class CollisionComponent> collider);
-
-public:
-    template <typename T>
-    Ptr<T> GetBlackboard() const
-    {
-        return _stateMachine->GetBlackboard<T>();
-    }
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "PlayerComponent.h"
+#include "Core/Collision/CollisionSystem.h"
 #include "Core/Input/InputAction.h"
 #include "Core/Input/Types.h"
 #include "Core/Object.h"

@@ -42,6 +42,11 @@ Ptr<class Player> PlayerComponent::GetPlayer() const
     return Cast<Actor, Player>(GetOwner());
 }
 
+Ptr<class PlayerStateMachine> PlayerComponent::GetStateMachine() const
+{
+    return _stateMachine;
+}
+
 uint8 PlayerComponent::GetStateType() const
 {
     return _stateMachine->GetCurrentStateType();

@@ -1,6 +1,7 @@
 #pragma once
 #include "PlayerBlackboard.h"
 #include "PlayerState.h"
+#include "Core/Collision/CollisionSystem.h"
 #include "Core/Input/Types.h"
 #include "Core/Object.h"
 

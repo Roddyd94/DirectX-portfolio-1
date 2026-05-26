@@ -51,7 +51,15 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               break;
           case ColliderType::PlayerProjectile:
           {
-              Transition("Struggle");
+              if (_currentState->GetName() == "Snowball")
+                  blackboard->accTime += blackboard->snowballIncFormed;
+              else if (_currentState->GetName() == "Struggle")
+                  blackboard->accTime += blackboard->snowballIncForming;
+              else
+              {
+                  Transition("Struggle");
+                  blackboard->accTime = blackboard->snowballFormingInitialValue;
+              }
           }
           break;
           case ColliderType::EnemyProjectile:
@@ -76,8 +84,18 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           {
               auto thisPosition  = GetOwner()->GetOwner()->GetWorldPosition();
               auto otherPosition = otherCollider->GetWorldPosition();
+
+              auto otherEnemy = otherCollider->GetOwner();
+              auto otherAI    = otherEnemy->FindActorComponent<AIComponent>("AI");
+
+              auto otherStateMachine = otherAI->GetAIStateMachine();
+              auto otherState        = otherStateMachine->GetCurrentState();
+
               if (_currentState->GetName() == "Walk")
               {
+                  if (otherState->GetName() != "Walk" && otherState->GetName() != "Struggle")
+                      return;
+
                   if (thisPosition.x < otherPosition.x && blackboard->direction < 0)
                       return;
 
@@ -170,7 +188,19 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       [=](float deltaTime)
       {
           kinematic->SetVelocity(Vector2::zero);
+          // 중력
           animation->ChangeAnimationClip("goblin_struggle");
+          snowballSprite->SetEnable(true);
+          snowballAnimation->ChangeAnimationClip("snowball_forming", false);
+      });
+    enemyStateSnowball->RegisterCallback(AIEventState::Enter,
+      [=](float deltaTime)
+      {
+          kinematic->SetVelocity(Vector2::zero);
+          // 중력
+          blackboard->accTime += blackboard->snowballFormedBonusValue;
+          animation->ChangeAnimationClip("goblin_none");
+          snowballAnimation->ChangeAnimationClip("snowball_formed", false);
       });
     enemyStateDizzy->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
@@ -199,6 +229,33 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       {
           kinematic->AddGravity(deltaTime);
           blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
+      });
+    enemyStateStruggle->RegisterCallback(AIEventState::Tick,
+      [=](float deltaTime)
+      {
+          blackboard->accTime -= blackboard->snowballDecPerSecond * deltaTime;
+
+          if (blackboard->accTime > blackboard->phaseThreshold[3])
+              Transition("Snowball");
+          else if (blackboard->accTime > blackboard->phaseThreshold[2])
+              snowballAnimation->SetFrameIndex(2);
+          else if (blackboard->accTime > blackboard->phaseThreshold[1])
+              snowballAnimation->SetFrameIndex(1);
+          else if (blackboard->accTime > blackboard->phaseThreshold[0])
+              snowballAnimation->SetFrameIndex(0);
+          else
+          {
+              Transition("Dizzy");
+              blackboard->accTime = 0.f;
+          }
+      });
+    enemyStateSnowball->RegisterCallback(AIEventState::Tick,
+      [=](float deltaTime)
+      {
+          blackboard->accTime -= blackboard->snowballDecPerSecond * deltaTime;
+
+          if (blackboard->accTime <= blackboard->phaseThreshold[3])
+              Transition("Struggle");
       });
     enemyStateDizzy->RegisterCallback(AIEventState::Tick,
       [=](float deltaTime)
@@ -229,6 +286,11 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       [=](float deltaTime)
       {
           kinematic->SetVelocity(Vector2::zero);
+      });
+    enemyStateStruggle->RegisterCallback(AIEventState::Exit,
+      [=](float deltaTime)
+      {
+          snowballAnimation->ChangeAnimationClip("snowball_none");
       });
 #pragma endregion RegisterStateCallbackExit
 
