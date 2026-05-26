@@ -3,6 +3,7 @@
 #include "PlayerStateGround.h"
 
 #include "PlayerStateMidair.h"
+#include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Core/Collision/CollisionComponent.h"
@@ -24,8 +25,9 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
   ButtonEventType::Type                                                    buttonEvent)
 {
     Ptr<Actor> player = playerComponent->GetOwner();
-    auto movement = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
-    auto collider = player->FindSceneComponent<CollisionComponent>("Collider");
+
+    auto blackboard = playerComponent->GetBlackboard<SnowbrosPlayerBlackboard>();
+    auto movement   = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
 
     Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
 
@@ -34,11 +36,16 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         switch (buttonEvent)
         {
         case ButtonEventType::Hold:
-            movement->MoveLeft();
+        {
+            float speed = blackboard->speedX;
+
+            movement->MoveLeft(speed);
             if (sprite->GetCurrentClipName() != "player_shoot")
                 sprite->ChangeAnimation("player_walk");
+
             sprite->SetFlipX(false);
-            break;
+        }
+        break;
         case ButtonEventType::Up:
             movement->Stop();
             sprite->ChangeAnimation("player_stand");
@@ -50,11 +57,16 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         switch (buttonEvent)
         {
         case ButtonEventType::Hold:
-            movement->MoveRight();
+        {
+            float speed = blackboard->speedX;
+
+            movement->MoveRight(speed);
             if (sprite->GetCurrentClipName() != "player_shoot")
                 sprite->ChangeAnimation("player_walk");
+
             sprite->SetFlipX(true);
-            break;
+        }
+        break;
         case ButtonEventType::Up:
             movement->Stop();
             if (sprite->GetCurrentClipName() != "player_shoot")
@@ -103,4 +115,55 @@ void PlayerStateGround::Enter(Ptr<class PlayerComponent> playerComponent)
 
 void PlayerStateGround::Exit(Ptr<class PlayerComponent> playerComponent) {}
 
-void PlayerStateGround::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime) {}
+void PlayerStateGround::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime)
+{
+    auto  blackboard = playerComponent->GetBlackboard<SnowbrosPlayerBlackboard>();
+    auto& snowballs  = blackboard->overlappedSnowballs;
+
+    auto it = snowballs.begin();
+    while (it != snowballs.end())
+    {
+        if (it->second.expired())
+        {
+            it = snowballs.erase(it);
+            continue;
+        }
+
+        ++it;
+    }
+}
+
+void PlayerStateGround::CollideWith(Ptr<class PlayerComponent> playerComponent,
+  CollisionState::Type                                         collisionType,
+  Weak<class CollisionComponent>                               collider)
+{
+    auto blackboard = playerComponent->GetBlackboard<SnowbrosPlayerBlackboard>();
+
+    auto thisActor         = playerComponent->GetOwner();
+    auto thisCollider      = thisActor->FindSceneComponent<CollisionComponent>("Collider");
+    auto otherCollider     = Lock(collider);
+    auto otherColliderType = otherCollider->GetColliderType();
+    auto otherActor        = otherCollider->GetOwner();
+
+    switch (otherColliderType)
+    {
+    case ColliderType::Enemy:
+    case ColliderType::EnemyProjectile:
+        break;
+    case ColliderType::Snowball:
+    {
+        switch (collisionType)
+        {
+        case CollisionState::Enter:
+            blackboard->overlappedSnowballs[otherCollider->GetColliderID()] = collider;
+            break;
+        case CollisionState::Exit:
+            blackboard->overlappedSnowballs.erase(otherCollider->GetColliderID());
+            break;
+        }
+    }
+    break;
+    case ColliderType::Item:
+        break;
+    }
+}

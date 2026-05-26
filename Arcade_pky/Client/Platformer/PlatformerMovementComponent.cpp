@@ -32,25 +32,20 @@ void PlatformerMovementComponent::SetKinematic(Ptr<class PlatformerKinematicComp
     _kinematic = kinematic;
 }
 
-void PlatformerMovementComponent::SetSpeedX(float speed)
-{
-    _speedX = speed;
-}
-
 void PlatformerMovementComponent::SetJumpForce(float force)
 {
     _jumpForce = force;
 }
 
-void PlatformerMovementComponent::MoveLeft(float speedMultiplier)
+void PlatformerMovementComponent::MoveLeft(float speedX)
 {
-    _kinematic->MoveX(-_speedX * speedMultiplier);
+    _kinematic->MoveX(-speedX);
     _direction = -1.f;
 }
 
-void PlatformerMovementComponent::MoveRight(float speedMultiplier)
+void PlatformerMovementComponent::MoveRight(float speedX)
 {
-    _kinematic->MoveX(_speedX * speedMultiplier);
+    _kinematic->MoveX(speedX);
     _direction = 1.f;
 }
 

@@ -61,37 +61,37 @@ protected:
 
 public:
     template <typename T>
-    void RegisterOnCollidedWithBlock(T* obj, void (T::*memFunc)())
+    void RegisterOnCollideWithBlock(T* obj, void (T::*memFunc)())
     {
         _onCollidedWithBlock = std::bind(memFunc, obj);
     }
 
     template <typename T>
-    void RegisterOnCollidedWithBlock(T&& func)
+    void RegisterOnCollideWithBlock(T&& func)
     {
         _onCollidedWithBlock = std::forward<T>(func);
     }
 
     template <typename T>
-    void RegisterOnCollidedWithFloor(T* obj, void (T::*memFunc)())
+    void RegisterOnCollideWithFloor(T* obj, void (T::*memFunc)())
     {
         _onCollidedWithFloor = std::bind(memFunc, obj);
     }
 
     template <typename T>
-    void RegisterOnCollidedWithFloor(T&& func)
+    void RegisterOnCollideWithFloor(T&& func)
     {
         _onCollidedWithFloor = std::forward<T>(func);
     }
 
     template <typename T>
-    void RegisterOnCollidedWithBoundary(T* obj, void (T::*memFunc)())
+    void RegisterOnCollideWithBoundary(T* obj, void (T::*memFunc)())
     {
         _onCollidedWithBoundary = std::bind(memFunc, obj);
     }
 
     template <typename T>
-    void RegisterOnCollidedWithBoundary(T&& func)
+    void RegisterOnCollideWithBoundary(T&& func)
     {
         _onCollidedWithBoundary = std::forward<T>(func);
     }

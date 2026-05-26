@@ -17,8 +17,8 @@ private:
 
 public:
     virtual void Init(Ptr<class PlayerComponent> player, Ptr<class PlayerState> state);
-    void Destroy() override;
-    void Tick(float deltaTime);
+    void         Destroy() override;
+    void         Tick(float deltaTime);
 
     void Transition(Ptr<class PlayerState> state);
     void HandleInput(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
@@ -27,6 +27,8 @@ public:
     uint8                      GetCurrentStateType() const;
 
     void SetBlackboard(Ptr<class PlayerBlackboard> blackboard);
+
+    void CollideWith(CollisionState::Type collisionType, Weak<class CollisionComponent> collider);
 
 public:
     template <typename T>

@@ -9,5 +9,6 @@ public:
     ~SnowbrosPlayerBlackboard() override = default;
 
 public:
-    std::vector<ComponentIDPair> overlappedSnowballs;
+    std::map<ComponentIDPair, Weak<class CollisionComponent>> overlappedSnowballs;
+    float                                                     speedX = 2.f;
 };

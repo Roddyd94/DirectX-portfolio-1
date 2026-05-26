@@ -57,6 +57,16 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     collider->AttachToComponent(rootComp);
     collider->SetBoxSize({1.f, 1.f});
     collider->SetCollisionProfile("Player");
+    collider->RegisterCollisionCallBack(CollisionState::Enter,
+      [=](Weak<CollisionComponent> collider)
+      {
+          _playerComponent->CollideWith(CollisionState::Enter, collider);
+      });
+    collider->RegisterCollisionCallBack(CollisionState::Exit,
+      [=](Weak<CollisionComponent> collider)
+      {
+          _playerComponent->CollideWith(CollisionState::Exit, collider);
+      });
 
     auto shootComponent = CreateActorComponent<ShootComponent>("Shoot");
     shootComponent->SetExtentX(1.f);

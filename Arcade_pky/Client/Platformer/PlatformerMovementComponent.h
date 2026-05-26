@@ -11,7 +11,6 @@ public:
     Ptr<class PlatformerKinematicComponent> _kinematic;
 
     float _direction = -1.f;
-    float _speedX    = 2.f;
     float _jumpForce = 6.625f;
 
 public:
@@ -23,7 +22,6 @@ public:
     float GetDirection() const;
 
     void SetKinematic(Ptr<class PlatformerKinematicComponent> kinematic);
-    void SetSpeedX(float speed);
     void SetJumpForce(float force);
 
     void MoveLeft(float speedMultiplier = 1.f);

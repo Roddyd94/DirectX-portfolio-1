@@ -5,9 +5,6 @@
 #include "Core/TimeManager.h"
 
 #include "GoblinBlackboard.h"
-#include "Snowball.h"
-#include "SnowballBlackboard.h"
-#include "SnowballComponent.h"
 #include "SnowbrosLevel.h"
 #include "AI/AIComponent.h"
 #include "Core/Actor.h"
@@ -26,14 +23,20 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     auto level   = Cast<Level, SnowbrosLevel>(owner->GetLevel());
     auto tilemap = level->GetTilemap();
 
-    auto collider          = actor->FindSceneComponent<AABBCollisionComponent>("Collider");
-    auto kinematic         = actor->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+    auto collider  = actor->FindSceneComponent<AABBCollisionComponent>("Collider");
+    auto kinematic = actor->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+
     auto sprite            = actor->FindSceneComponent<SpriteComponent>("Root");
     auto animation         = sprite->CreateAnimation();
     auto animationSequence = animation->GetSequence();
-
     animation->SetAnimationSequence("goblin");
     animation->ChangeAnimationClip("goblin_walk");
+
+    auto snowballSprite            = actor->FindSceneComponent<SpriteComponent>("Snowball");
+    auto snowballAnimation         = snowballSprite->CreateAnimation();
+    auto snowballAnimationSequence = snowballAnimation->GetSequence();
+    snowballAnimation->SetAnimationSequence("snowball");
+    snowballAnimation->ChangeAnimationClip("snowball_none");
 
 #pragma region ColliderCallbacks
     collider->RegisterCollisionCallBack(CollisionState::Enter,
@@ -48,27 +51,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               break;
           case ColliderType::PlayerProjectile:
           {
-              // todo
-              auto snowball = Lock(blackboard->snowball);
-              if (nullptr == snowball)
-              {
-                  Vector3 targetPosition = actor->GetWorldPosition();
-                  snowball               = level->SpawnActor<Snowball>(
-                    targetPosition, actor->GetWorldScale(), Vector3::zero);
-                  auto snowballBoard   = snowball->GetSnowballComponent()->GetBlackboard();
-                  blackboard->snowball = snowball;
-
-                  auto snowballComp = snowball->GetSnowballComponent();
-                  snowballComp->RegisterOnDestroyCallback(
-                    [=]()
-                    {
-                        blackboard->snowball = Weak<Snowball>();
-                        Transition("Dizzy");
-                    });
-                  snowballComp->SetEnemyComponent(owner);
-
-                  Transition("Struggle");
-              }
+              Transition("Struggle");
           }
           break;
           case ColliderType::EnemyProjectile:
@@ -144,6 +127,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     auto enemyStateCrouch   = CreateAIState("Crouch");
     auto enemyStateDizzy    = CreateAIState("Dizzy");
     auto enemyStateStruggle = CreateAIState("Struggle");
+    auto enemyStateSnowball = CreateAIState("Snowball");
     auto enemyStateLaunched = CreateAIState("Launched");
     auto enemyStateDead     = CreateAIState("Dead");
 #pragma endregion AIStates

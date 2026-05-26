@@ -4,7 +4,6 @@
 
 #include "GoblinStateMachine.h"
 #include "MonkeyStateMachine.h"
-#include "Snowball.h"
 #include "SpitterStateMachine.h"
 #include "AI/AIComponent.h"
 #include "Core/Animation/SpriteComponent.h"
@@ -24,6 +23,11 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     rootComp->SetRenderLayer("Enemy");
     rootComp->SetShader("SpriteShader");
     SetRoot(rootComp);
+
+    auto snowballComp = CreateSceneComponent<SpriteComponent>("Snowball");
+    snowballComp->SetRenderLayer("Snowball");
+    snowballComp->SetShader("SpriteShader");
+    snowballComp->AttachToComponent(rootComp);
 
     auto collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
     collider->AttachToComponent(rootComp);

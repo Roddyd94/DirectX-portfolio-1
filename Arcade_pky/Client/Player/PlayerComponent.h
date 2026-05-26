@@ -2,6 +2,7 @@
 #include "PlayerState.h"
 #include "PlayerStateMachine.h"
 #include "Core/ActorComponent.h"
+#include "Core/Collision/CollisionSystem.h"
 
 class PlayerComponent : public ActorComponent
 {
@@ -24,6 +25,7 @@ public:
     uint8             GetStateType() const;
 
     void SetBlackboard(Ptr<class PlayerBlackboard> blackboard);
+    void CollideWith(CollisionState::Type collisionType, Weak<class CollisionComponent> collider);
 
 public:
     template <typename T>

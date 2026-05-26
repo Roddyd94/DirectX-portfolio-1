@@ -32,14 +32,14 @@ protected:
     bool _shouldRender = false;
 
 public:
-    bool Init(int32      componentID,
-      const std::string& name,
-      Ptr<class Actor>   owner) override;
+    bool Init(int32 componentID, const std::string& name, Ptr<class Actor> owner) override;
     void Destroy() override;
     void Tick(float deltaTime) override;
 
     virtual void Collision(float deltaTime);
     virtual void Render(float deltaTime);
+
+    void SetEnable(bool enable) override;
 
     virtual void AttachToComponent(Ptr<SceneComponent> comp);
 
@@ -70,8 +70,7 @@ public:
     void SetWorldRotation(Vector2 rotation);
 
     void SetRelativeTransform(const Transform& transform);
-    void SetRelativeTransform(
-      Vector3 position, Vector3 scale, Vector3 rotation);
+    void SetRelativeTransform(Vector3 position, Vector3 scale, Vector3 rotation);
     void SetRelativeScale(Vector3 scale);
     void SetRelativeScale(Vector2 scale);
     void SetRelativePosition(Vector3 position);

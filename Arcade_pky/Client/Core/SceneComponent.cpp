@@ -62,6 +62,14 @@ void SceneComponent::Collision(float deltaTime) {}
 
 void SceneComponent::Render(float deltaTime) {}
 
+void SceneComponent::SetEnable(bool enable)
+{
+    Object::SetEnable(enable);
+
+    for (auto& [_, child] : _children)
+        child->SetEnable(enable);
+}
+
 Ptr<SceneComponent> SceneComponent::GetParent() const
 {
     return Lock<SceneComponent>(_parent);

@@ -24,5 +24,11 @@ public:
     virtual void Exit(Ptr<class PlayerComponent> player) {}
     virtual void Tick(Ptr<class PlayerComponent> player, float deltaTime) {}
 
+    virtual void CollideWith(Ptr<class PlayerComponent> playerComponent,
+      CollisionState::Type                              collisionType,
+      Weak<class CollisionComponent>                    collider)
+    {
+    }
+
     uint8 GetType() const;
 };

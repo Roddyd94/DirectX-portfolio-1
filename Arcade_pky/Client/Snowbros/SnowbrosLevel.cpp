@@ -87,6 +87,22 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
         enemy->SetDirection(-1.f);
     }
 
+    position.x = -1.5f;
+    {
+        Ptr<SnowbrosEnemy> enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
+        enemy->SetName("Enemy");
+        enemy->SetEnemyType(SnowbrosEnemyType::Goblin);
+        enemy->SetDirection(-1.f);
+    }
+
+    position.x = 1.5f;
+    {
+        Ptr<SnowbrosEnemy> enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
+        enemy->SetName("Enemy");
+        enemy->SetEnemyType(SnowbrosEnemyType::Goblin);
+        enemy->SetDirection(1.f);
+    }
+
     return true;
 }
 

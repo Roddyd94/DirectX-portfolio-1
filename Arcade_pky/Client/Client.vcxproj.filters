@@ -385,9 +385,6 @@
     <ClInclude Include="Snowbros\SnowbrosTileParser.h">
       <Filter>Snowbros</Filter>
     </ClInclude>
-    <ClInclude Include="Snowbros\SnowbrosPlayer.h">
-      <Filter>Snowbros\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="Snowbros\SnowbrosLevel.h">
       <Filter>Snowbros\World</Filter>
     </ClInclude>
@@ -412,27 +409,6 @@
     <ClInclude Include="AI\AI.h">
       <Filter>AI\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Snowbros\SnowballStateMachine.h">
-      <Filter>Snowbros\Snowball</Filter>
-    </ClInclude>
-    <ClInclude Include="Snowbros\Snowball.h">
-      <Filter>Snowbros\Snowball</Filter>
-    </ClInclude>
-    <ClInclude Include="Snowbros\SnowballState.h">
-      <Filter>Snowbros\Snowball\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Snowbros\SnowballStateRolling.h">
-      <Filter>Snowbros\Snowball\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Snowbros\SnowballStateFormed.h">
-      <Filter>Snowbros\Snowball\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Snowbros\SnowballStateForming.h">
-      <Filter>Snowbros\Snowball\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Snowbros\SnowballComponent.h">
-      <Filter>Snowbros\Snowball\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Snowbros\SnowbrosEnemy.h">
       <Filter>Snowbros\Enemy</Filter>
     </ClInclude>
@@ -454,13 +430,13 @@
     <ClInclude Include="Snowbros\SpitterBlackboard.h">
       <Filter>Snowbros\Enemy\Blackboard</Filter>
     </ClInclude>
-    <ClInclude Include="Snowbros\SnowballBlackboard.h">
-      <Filter>Snowbros\Snowball</Filter>
-    </ClInclude>
     <ClInclude Include="Player\PlayerBlackboard.h">
       <Filter>Player\StateMachine</Filter>
     </ClInclude>
     <ClInclude Include="Snowbros\SnowbrosPlayerBlackboard.h">
+      <Filter>Snowbros\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosPlayer.h">
       <Filter>Snowbros\Player</Filter>
     </ClInclude>
   </ItemGroup>
@@ -812,9 +788,6 @@
     <ClCompile Include="Snowbros\SnowbrosTileParser.cpp">
       <Filter>Snowbros</Filter>
     </ClCompile>
-    <ClCompile Include="Snowbros\SnowbrosPlayer.cpp">
-      <Filter>Snowbros\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="Snowbros\SnowbrosLevel.cpp">
       <Filter>Snowbros\World</Filter>
     </ClCompile>
@@ -835,27 +808,6 @@
     </ClCompile>
     <ClCompile Include="AI\AI.cpp">
       <Filter>AI\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Snowbros\SnowballStateMachine.cpp">
-      <Filter>Snowbros\Snowball</Filter>
-    </ClCompile>
-    <ClCompile Include="Snowbros\Snowball.cpp">
-      <Filter>Snowbros\Snowball</Filter>
-    </ClCompile>
-    <ClCompile Include="Snowbros\SnowballState.cpp">
-      <Filter>Snowbros\Snowball\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Snowbros\SnowballStateFormed.cpp">
-      <Filter>Snowbros\Snowball\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Snowbros\SnowballStateForming.cpp">
-      <Filter>Snowbros\Snowball\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Snowbros\SnowballStateRolling.cpp">
-      <Filter>Snowbros\Snowball\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Snowbros\SnowballComponent.cpp">
-      <Filter>Snowbros\Snowball\Component</Filter>
     </ClCompile>
     <ClCompile Include="Snowbros\SnowbrosEnemy.cpp">
       <Filter>Snowbros\Enemy</Filter>
@@ -878,13 +830,13 @@
     <ClCompile Include="Snowbros\SpitterBlackboard.cpp">
       <Filter>Snowbros\Enemy\Blackboard</Filter>
     </ClCompile>
-    <ClCompile Include="Snowbros\SnowballBlackboard.cpp">
-      <Filter>Snowbros\Snowball</Filter>
-    </ClCompile>
     <ClCompile Include="Player\PlayerBlackboard.cpp">
       <Filter>Player\StateMachine</Filter>
     </ClCompile>
     <ClCompile Include="Snowbros\SnowbrosPlayerBlackboard.cpp">
+      <Filter>Snowbros\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosPlayer.cpp">
       <Filter>Snowbros\Player</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1116,15 +1068,6 @@
     </Filter>
     <Filter Include="Core\Common\Random">
       <UniqueIdentifier>{0b49908f-4b0f-469b-853b-1c58fad463ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Snowbros\Snowball">
-      <UniqueIdentifier>{2b995512-af19-4f42-97d4-498998a27760}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Snowbros\Snowball\State">
-      <UniqueIdentifier>{cb2f8c7e-676a-470a-b9a8-8ddeb880c58d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Snowbros\Snowball\Component">
-      <UniqueIdentifier>{f100fc1a-bc1a-4fc3-9de6-8363fa8793c9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Snowbros\Enemy">
       <UniqueIdentifier>{07b6f73c-8ffa-4381-bc26-44819020c699}</UniqueIdentifier>

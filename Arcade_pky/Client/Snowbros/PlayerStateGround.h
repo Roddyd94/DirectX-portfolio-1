@@ -10,6 +10,9 @@ public:
 public:
     static const Ptr<class PlayerStateGround> instance;
 
+private:
+    inline static const float speedMultiplierSnowball = 0.5f;
+
 public:
     Ptr<PlayerState> HandleInput(Ptr<class PlayerComponent> player,
       Ptr<class InputAction>                                action,
@@ -18,4 +21,8 @@ public:
     void Enter(Ptr<class PlayerComponent> playerComponent) override;
     void Exit(Ptr<class PlayerComponent> playerComponent) override;
     void Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime) override;
+
+    void CollideWith(Ptr<class PlayerComponent> playerComponent,
+      CollisionState::Type                        collisionType,
+      Weak<class CollisionComponent>              collider) override;
 };

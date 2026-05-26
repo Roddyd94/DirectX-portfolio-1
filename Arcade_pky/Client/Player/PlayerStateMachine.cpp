@@ -54,3 +54,9 @@ void PlayerStateMachine::SetBlackboard(Ptr<class PlayerBlackboard> blackboard)
 {
     _blackboard = blackboard;
 }
+
+void PlayerStateMachine::CollideWith(
+  CollisionState::Type collisionType, Weak<class CollisionComponent> collider)
+{
+    _currentState->CollideWith(GetOwner(), collisionType, collider);
+}

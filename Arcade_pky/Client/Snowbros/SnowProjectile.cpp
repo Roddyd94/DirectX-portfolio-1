@@ -43,11 +43,11 @@ bool SnowProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     _projectileComponent->SetKinematic(kinematic);
     collider->RegisterCollisionCallBack(
       CollisionState::Enter, Raw(_projectileComponent), &SnowProjectileComponent::OnCollisionWith);
-    kinematic->RegisterOnCollidedWithBlock(
+    kinematic->RegisterOnCollideWithBlock(
       Raw(_projectileComponent), &SnowProjectileComponent::OnCollision);
-    kinematic->RegisterOnCollidedWithFloor(
+    kinematic->RegisterOnCollideWithFloor(
       Raw(_projectileComponent), &SnowProjectileComponent::OnCollision);
-    kinematic->RegisterOnCollidedWithBoundary(
+    kinematic->RegisterOnCollideWithBoundary(
       Raw(_projectileComponent), &SnowProjectileComponent::OnCollision);
 
     return true;

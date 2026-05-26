@@ -95,7 +95,7 @@ public:
     bool IsActive() const { return _isActive; }
     bool IsEnable() const { return _isEnabled; }
     void SetActive(bool active) { _isActive = active; }
-    void SetEnable(bool enable) { _isEnabled = enable; }
+    virtual void SetEnable(bool enable) { _isEnabled = enable; }
 
     virtual void Destroy() = 0;
 
