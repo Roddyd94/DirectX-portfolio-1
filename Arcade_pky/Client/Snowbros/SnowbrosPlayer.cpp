@@ -62,6 +62,11 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
       {
           _playerComponent->CollideWith(CollisionState::Enter, collider);
       });
+    collider->RegisterCollisionCallBack(CollisionState::Stay,
+      [=](Weak<CollisionComponent> collider)
+      {
+          _playerComponent->CollideWith(CollisionState::Stay, collider);
+      });
     collider->RegisterCollisionCallBack(CollisionState::Exit,
       [=](Weak<CollisionComponent> collider)
       {

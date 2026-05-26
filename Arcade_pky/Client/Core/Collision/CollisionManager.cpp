@@ -117,6 +117,18 @@ Ptr<class CollisionComponent> CollisionManager::FindCollider(
     return nullptr;
 }
 
+bool CollisionManager::FindColliders(
+  ColliderType::Type colliderType, std::vector<Ptr<class CollisionComponent>>& arr)
+{
+    auto it = _colliders.find(colliderType);
+    if (_colliders.end() == it)
+        return false;
+
+    arr.clear();
+    for (auto& [_, collider] : it->second)
+        arr.push_back(collider);
+}
+
 void CollisionManager::Insert(Ptr<class CollisionComponent> collider)
 {
     _colliders[collider->GetColliderType()][collider->GetColliderID()] = collider;

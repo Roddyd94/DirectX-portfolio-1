@@ -26,7 +26,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     auto collider  = actor->FindSceneComponent<AABBCollisionComponent>("Collider");
     auto kinematic = actor->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
-    auto sprite            = actor->FindSceneComponent<SpriteComponent>("Root");
+    auto sprite            = actor->FindSceneComponent<SpriteComponent>("Sprite");
     auto animation         = sprite->CreateAnimation();
     auto animationSequence = animation->GetSequence();
     animation->SetAnimationSequence("goblin");
@@ -40,15 +40,29 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
 #pragma region ColliderCallbacks
     collider->RegisterCollisionCallBack(CollisionState::Enter,
-      [=](Weak<CollisionComponent> collider)
+      [=, thisCollider = collider](Weak<CollisionComponent> collider)
       {
           Ptr<CollisionComponent> otherCollider     = Lock(collider);
           ColliderType::Type      otherColliderType = otherCollider->GetColliderType();
 
           switch (otherColliderType)
           {
-          case ColliderType::Snowball:
-              break;
+          case ColliderType::Player:
+          {
+              if (_currentState->GetName() == "Snowball")
+              {
+                  Rect    thisColliderRect = thisCollider->GetBox();
+                  Vector2 playerPosition   = otherCollider->GetWorldPosition().ToVector2();
+                  if (playerPosition.y < thisColliderRect.bottom)
+                  {
+                      float direction
+                        = playerPosition.x < thisCollider->GetWorldPosition().x ? 1.f : -1.f;
+                      kinematic->AddForce(
+                        {direction * blackboard->snowballHeadingForceX, blackboard->jumpForceFull});
+                  }
+              }
+          }
+          break;
           case ColliderType::PlayerProjectile:
           {
               if (_currentState->GetName() == "Snowball")
@@ -188,7 +202,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       [=](float deltaTime)
       {
           kinematic->SetVelocity(Vector2::zero);
-          // 중력
           animation->ChangeAnimationClip("goblin_struggle");
           snowballSprite->SetEnable(true);
           snowballAnimation->ChangeAnimationClip("snowball_forming", false);
@@ -196,8 +209,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateSnowball->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
-          kinematic->SetVelocity(Vector2::zero);
-          // 중력
           blackboard->accTime += blackboard->snowballFormedBonusValue;
           animation->ChangeAnimationClip("goblin_none");
           snowballAnimation->ChangeAnimationClip("snowball_formed", false);
@@ -233,6 +244,18 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateStruggle->RegisterCallback(AIEventState::Tick,
       [=](float deltaTime)
       {
+          Vector2 velocity = kinematic->GetVelocity();
+
+          if (velocity.y < 0.f && kinematic->IsColliderMovingAgainstFloor(velocity * deltaTime))
+          {
+              kinematic->SetVelocity(Vector2::zero);
+              kinematic->AdjustPositionToFloor(velocity * deltaTime);
+          }
+          else if (!kinematic->IsColliderOnFloor())
+          {
+              kinematic->AddGravity(deltaTime);
+          }
+
           blackboard->accTime -= blackboard->snowballDecPerSecond * deltaTime;
 
           if (blackboard->accTime > blackboard->phaseThreshold[3])
@@ -252,6 +275,24 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateSnowball->RegisterCallback(AIEventState::Tick,
       [=](float deltaTime)
       {
+          Vector2 velocity = kinematic->GetVelocity();
+          
+          if (kinematic->IsColliderMovingAgainstWallX(velocity.x * deltaTime))
+              kinematic->MoveX(-velocity.x);
+
+          if (velocity.y < 0.f && kinematic->IsColliderMovingAgainstFloor(velocity * deltaTime))
+          {
+              kinematic->SetVelocity(Vector2::zero);
+              kinematic->AdjustPositionToFloor(velocity * deltaTime);
+          }
+          else if (!kinematic->IsColliderOnFloor())
+          {
+              kinematic->AddGravity(deltaTime);
+          }
+
+          // TODO: 플레이어가 아래에서 충돌 시
+          // TODO: 공중에서 이동 중 벽에 튕기는 로직
+
           blackboard->accTime -= blackboard->snowballDecPerSecond * deltaTime;
 
           if (blackboard->accTime <= blackboard->phaseThreshold[3])

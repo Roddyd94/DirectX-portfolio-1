@@ -20,42 +20,31 @@ void World::Init(const std::string& name)
     _collisionProfileManager->CreateChannel(
       ColliderType::PlayerProjectile, CollisionResponse::Ignore);
     _collisionProfileManager->CreateChannel(ColliderType::Item, CollisionResponse::Ignore);
-    _collisionProfileManager->CreateChannel(ColliderType::Snowball, CollisionResponse::Ignore);
 
     _collisionProfileManager->CreateProfile("Player", ColliderType::Player);
     _collisionProfileManager->CreateProfile("Enemy", ColliderType::Enemy);
     _collisionProfileManager->CreateProfile("PlayerProjectile", ColliderType::PlayerProjectile);
     _collisionProfileManager->CreateProfile("EnemyProjectile", ColliderType::EnemyProjectile);
     _collisionProfileManager->CreateProfile("Item", ColliderType::Item);
-    _collisionProfileManager->CreateProfile("Snowball", ColliderType::Snowball);
 
     _collisionProfileManager->SetProfileResponse("Player",
       std::make_pair(ColliderType::Enemy, CollisionResponse::Block),
       std::make_pair(ColliderType::EnemyProjectile, CollisionResponse::Block),
-      std::make_pair(ColliderType::Snowball, CollisionResponse::Block),
       std::make_pair(ColliderType::Item, CollisionResponse::Block));
 
     _collisionProfileManager->SetProfileResponse("Enemy",
       std::make_pair(ColliderType::Player, CollisionResponse::Block),
       std::make_pair(ColliderType::Enemy, CollisionResponse::Block),
-      std::make_pair(ColliderType::PlayerProjectile, CollisionResponse::Block),
-      std::make_pair(ColliderType::Snowball, CollisionResponse::Block));
+      std::make_pair(ColliderType::PlayerProjectile, CollisionResponse::Block));
 
-    _collisionProfileManager->SetProfileResponse("PlayerProjectile",
-      std::make_pair(ColliderType::Enemy, CollisionResponse::Block),
-      std::make_pair(ColliderType::Snowball, CollisionResponse::Block));
+    _collisionProfileManager->SetProfileResponse(
+      "PlayerProjectile", std::make_pair(ColliderType::Enemy, CollisionResponse::Block));
 
-    _collisionProfileManager->SetProfileResponse("EnemyProjectile",
-      std::make_pair(ColliderType::Player, CollisionResponse::Block));
+    _collisionProfileManager->SetProfileResponse(
+      "EnemyProjectile", std::make_pair(ColliderType::Player, CollisionResponse::Block));
 
     _collisionProfileManager->SetProfileResponse(
       "Item", std::make_pair(ColliderType::Player, CollisionResponse::Block));
-
-    _collisionProfileManager->SetProfileResponse("Snowball",
-      std::make_pair(ColliderType::Player, CollisionResponse::Block),
-      std::make_pair(ColliderType::Enemy, CollisionResponse::Block),
-      std::make_pair(ColliderType::Snowball, CollisionResponse::Block),
-      std::make_pair(ColliderType::PlayerProjectile, CollisionResponse::Block));
 #endif // _HAS_COLLISION_MODULE
 
     // TODO save & load

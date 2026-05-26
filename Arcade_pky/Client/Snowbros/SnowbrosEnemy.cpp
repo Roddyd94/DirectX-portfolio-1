@@ -19,21 +19,24 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto rootComp = CreateSceneComponent<SpriteComponent>("Root");
-    rootComp->SetRenderLayer("Enemy");
-    rootComp->SetShader("SpriteShader");
-    SetRoot(rootComp);
+    auto sprite = CreateSceneComponent<SpriteComponent>("Sprite");
+    sprite->SetRenderLayer("Enemy");
+    sprite->SetShader("SpriteShader");
+    sprite->AttachToComponent(_root);
+    sprite->SetRelativePosition({0.f, 0.0625f, 0.f});
+    sprite->SetRelativeScale(Vector3::one);
 
     auto snowballSprite = CreateSceneComponent<SpriteComponent>("Snowball");
     snowballSprite->SetEnable(false);
     snowballSprite->SetRenderLayer("Snowball");
     snowballSprite->SetShader("SpriteShader");
-    snowballSprite->AttachToComponent(rootComp);
+    snowballSprite->AttachToComponent(_root);
+    snowballSprite->SetRelativePosition({0.f, 0.0625f, 0.f});
     snowballSprite->SetRelativeScale(Vector3::one);
 
     auto collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
-    collider->AttachToComponent(rootComp);
-    collider->SetBoxSize({0.9f, 1.0f});
+    collider->AttachToComponent(_root);
+    collider->SetBoxSize({0.9f, 1.f});
     collider->SetCollisionProfile("Enemy");
 
     auto kinematic = CreateActorComponent<PlatformerKinematicComponent>("Kinematic");
@@ -68,7 +71,7 @@ void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
 
 void SnowbrosEnemy::SetDirection(float direction)
 {
-    auto sprite     = Cast<SceneComponent, SpriteComponent>(_root);
+    auto sprite     = FindComponent<SpriteComponent>("Sprite");
     auto blackboard = _aiComponent->GetAIStateMachine()->GetAIBlackboard<AIBlackboard>();
 
     sprite->SetFlipX(direction > 0);

@@ -37,6 +37,7 @@ public:
     inline static const float snowballIncFormed           = 3.f;
     inline static const float snowballFormingInitialValue = 2.f;
     inline static const float snowballFormedBonusValue    = 30.f;
+    inline static const float snowballHeadingForceX       = 3.f;
 
 public:
     void Destroy() override;

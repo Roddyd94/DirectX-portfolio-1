@@ -118,19 +118,6 @@ void PlayerStateGround::Exit(Ptr<class PlayerComponent> playerComponent) {}
 void PlayerStateGround::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime)
 {
     auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
-    auto& snowballs = blackboard->overlappedSnowballs;
-
-    auto it = snowballs.begin();
-    while (it != snowballs.end())
-    {
-        if (it->second.expired())
-        {
-            it = snowballs.erase(it);
-            continue;
-        }
-
-        ++it;
-    }
 }
 
 void PlayerStateGround::CollideWith(Ptr<class PlayerComponent> playerComponent,
@@ -148,21 +135,11 @@ void PlayerStateGround::CollideWith(Ptr<class PlayerComponent> playerComponent,
     switch (otherColliderType)
     {
     case ColliderType::Enemy:
-    case ColliderType::EnemyProjectile:
-        break;
-    case ColliderType::Snowball:
     {
-        switch (collisionType)
-        {
-        case CollisionState::Enter:
-            blackboard->overlappedSnowballs[otherCollider->GetColliderID()] = collider;
-            break;
-        case CollisionState::Exit:
-            blackboard->overlappedSnowballs.erase(otherCollider->GetColliderID());
-            break;
-        }
     }
     break;
+    case ColliderType::EnemyProjectile:
+        break;
     case ColliderType::Item:
         break;
     }

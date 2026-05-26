@@ -42,6 +42,8 @@ void PlatformerKinematicComponent::Tick(float deltaTime)
     if (this->IsColliderMovingAgainstFloor(delta) && _onCollidedWithFloor)
         _onCollidedWithFloor();
 
+    AdjustPositionX(worldPos);
+
     actor->SetWorldPosition(worldPos);
 }
 
@@ -267,4 +269,17 @@ void PlatformerKinematicComponent::AdjustPositionToFloor(Vector2 delta)
                           + _collider->GetBoxSize().y / 2.f - epsilonTile / 2.f;
 
     actor->SetWorldPosition({colliderCenterBottom.x, targetPositionY});
+}
+
+void PlatformerKinematicComponent::AdjustPositionX(Vector2& position)
+{
+    Ptr<TilemapLevel> level    = Cast<Level, TilemapLevel>(GetLevel());
+    Rect              boundary = level->GetBoundary();
+
+    auto colliderHalfSize = _collider->GetBoxSize() / 2;
+    
+    if (position.x + colliderHalfSize.x >= boundary.right)
+        position.x = boundary.right - colliderHalfSize.x;
+    if (position.x - colliderHalfSize.x <= boundary.left)
+        position.x = boundary.left + colliderHalfSize.x;
 }
