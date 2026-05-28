@@ -45,6 +45,11 @@ Ptr<class PlayerComponent> PlayerStateMachine::GetOwner() const
     return Lock(_owner);
 }
 
+Ptr<class PlayerState> PlayerStateMachine::GetCurrentState() const
+{
+    return _currentState;
+}
+
 uint8 PlayerStateMachine::GetCurrentStateType() const
 {
     return _currentState->GetType();

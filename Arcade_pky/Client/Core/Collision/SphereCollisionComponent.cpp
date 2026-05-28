@@ -7,6 +7,7 @@
 #include "AABBCollisionComponent.h"
 #include "CollisionSystem.h"
 #include "OBBCollisionComponent.h"
+#include "PointCollisionComponent.h"
 
 SphereCollisionComponent::SphereCollisionComponent()
 {
@@ -81,6 +82,12 @@ bool SphereCollisionComponent::Collision(Weak<CollisionComponent> other)
     {
         return CollisionSystem::SphereToSphere(This<SphereCollisionComponent>(),
           Cast<CollisionComponent, SphereCollisionComponent>(otherCollider));
+    }
+    break;
+    case CollisionShape::Point:
+    {
+        return CollisionSystem::SphereToPoint(This<SphereCollisionComponent>(),
+          Cast<CollisionComponent, PointCollisionComponent>(otherCollider));
     }
     break;
     default:

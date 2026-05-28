@@ -1,7 +1,7 @@
 #pragma once
-#include "Player/PlayerState.h"
+#include "SnowbrosPlayerState.h"
 
-class PlayerStateMidair : public PlayerState
+class PlayerStateMidair : public SnowbrosPlayerState
 {
 public:
     PlayerStateMidair(bool jumped = true);

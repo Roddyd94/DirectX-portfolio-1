@@ -25,6 +25,7 @@ public:
     void HandleInput(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
 
     Ptr<class PlayerComponent> GetOwner() const;
+    Ptr<class PlayerState>     GetCurrentState() const;
     uint8                      GetCurrentStateType() const;
 
     void SetBlackboard(Ptr<class PlayerBlackboard> blackboard);

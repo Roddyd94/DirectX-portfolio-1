@@ -6,6 +6,7 @@
 
 #include "AABBCollisionComponent.h"
 #include "CollisionSystem.h"
+#include "PointCollisionComponent.h"
 #include "SphereCollisionComponent.h"
 
 OBBCollisionComponent::OBBCollisionComponent()
@@ -15,8 +16,7 @@ OBBCollisionComponent::OBBCollisionComponent()
 
 OBBCollisionComponent::~OBBCollisionComponent() {}
 
-bool OBBCollisionComponent::Init(
-  int32 componentID, const std::string& name, Ptr<class Actor> owner)
+bool OBBCollisionComponent::Init(int32 componentID, const std::string& name, Ptr<class Actor> owner)
 {
     CollisionComponent::Init(componentID, name, owner);
 
@@ -109,6 +109,12 @@ bool OBBCollisionComponent::Collision(Weak<CollisionComponent> other)
     {
         return CollisionSystem::OBBToSphere(This<OBBCollisionComponent>(),
           Cast<CollisionComponent, SphereCollisionComponent>(otherCollider));
+    }
+    break;
+    case CollisionShape::Point:
+    {
+        return CollisionSystem::OBBToPoint(This<OBBCollisionComponent>(),
+          Cast<CollisionComponent, PointCollisionComponent>(otherCollider));
     }
     break;
     }

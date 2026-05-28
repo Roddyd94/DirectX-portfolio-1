@@ -7,6 +7,7 @@ namespace CollisionShape
         AABB,
         OBB,
         Sphere,
+        Point,
         End
     };
 }
@@ -43,6 +44,10 @@ namespace ColliderType
         PlayerProjectile,
         EnemyProjectile,
         Item,
+        PlayerHead,
+        PlayerHandLeft,
+        PlayerHandRight,
+        PlayerFoot,
         End,
     };
 }
@@ -63,20 +68,32 @@ public:
       Weak<class AABBCollisionComponent> src, Weak<class SphereCollisionComponent> dest);
     static bool AABBToOBB(
       Weak<class AABBCollisionComponent> src, Weak<class OBBCollisionComponent> dest);
+    static bool AABBToPoint(
+      Weak<class AABBCollisionComponent> src, Weak<class PointCollisionComponent> dest);
     static bool OBBToOBB(
       Weak<class OBBCollisionComponent> src, Weak<class OBBCollisionComponent> dest);
     static bool OBBToSphere(
       Weak<class OBBCollisionComponent> src, Weak<class SphereCollisionComponent> dest);
+    static bool OBBToPoint(
+      Weak<class OBBCollisionComponent> src, Weak<class PointCollisionComponent> dest);
     static bool SphereToSphere(
       Weak<class SphereCollisionComponent> src, Weak<class SphereCollisionComponent> dest);
+    static bool SphereToPoint(
+      Weak<class SphereCollisionComponent> src, Weak<class PointCollisionComponent> dest);
+    static bool PointToPoint(
+      Weak<class PointCollisionComponent> src, Weak<class PointCollisionComponent> dest);
 
     static bool AABBToAABB(Rect src, Rect dest);
     static bool AABBToSphere(Rect src, Vector3 destCenter, float destRadius);
     static bool AABBToOBB(Rect src, const OBB2D& dest);
+    static bool AABBToPoint(Rect src, Vector2 dest);
     static bool OBBToOBB(const OBB2D& src, const OBB2D& dest);
     static bool OBBToSphere(const OBB2D& src, Vector3 destCenter, float destRadius);
+    static bool OBBToPoint(const OBB2D& src, Vector2 dest);
     static bool SphereToSphere(
       Vector3 srcCenter, float srcRadius, Vector3 destCenter, float destRadius);
+    static bool SphereToPoint(Vector3 srcCenter, float srcRadius, Vector2 dest);
+    static bool PointToPoint(Vector2 src, Vector2 dest);
 
 private:
     static bool ComputeAxisProjection(

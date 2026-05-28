@@ -2,9 +2,12 @@
 
 #include "GoblinStateMachine.h"
 
+#include "Core/Collision/CollisionManager.h"
 #include "Core/TimeManager.h"
 
 #include "GoblinBlackboard.h"
+#include "SnowProjectile.h"
+#include "SnowProjectileComponent.h"
 #include "SnowbrosLevel.h"
 #include "AI/AIComponent.h"
 #include "Core/Actor.h"
@@ -47,24 +50,35 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
           switch (otherColliderType)
           {
-          case ColliderType::Player:
+          case ColliderType::PlayerHead:
           {
               if (_currentState->GetName() == "Snowball")
               {
                   Rect    thisColliderRect = thisCollider->GetBox();
                   Vector2 playerPosition   = otherCollider->GetWorldPosition().ToVector2();
-                  if (playerPosition.y < thisColliderRect.bottom)
-                  {
-                      float direction
-                        = playerPosition.x < thisCollider->GetWorldPosition().x ? 1.f : -1.f;
-                      kinematic->AddForce(
-                        {direction * blackboard->snowballHeadingForceX, blackboard->jumpForceFull});
-                  }
+
+                  auto player = otherCollider->GetOwner();
+                  auto playerKinematic
+                    = player->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+
+                  if (playerKinematic->GetVelocity().y <= 0.f && kinematic->GetVelocity().y >= 0.f)
+                      break;
+
+                  float direction
+                    = playerPosition.x < thisCollider->GetWorldPosition().x ? 1.f : -1.f;
+                  kinematic->AddForce(
+                    {direction * blackboard->snowballHeadingForceX, blackboard->jumpForceFull});
               }
           }
           break;
           case ColliderType::PlayerProjectile:
           {
+              auto otherActor = Cast<Actor, SnowProjectile>(otherCollider->GetOwner());
+              auto projectile = otherActor->GetProjectileComponent();
+
+              if (projectile->IsHit())
+                  break;
+
               if (_currentState->GetName() == "Snowball")
                   blackboard->accTime += blackboard->snowballIncFormed;
               else if (_currentState->GetName() == "Struggle")
@@ -118,6 +132,29 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
                   Transition("Turn");
               }
+              else if (_currentState->GetName() == "Snowball")
+              {
+                  if (otherState->GetName() != "Snowball")
+                      return;
+
+                  auto otherSnowballStateMachine
+                    = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(otherStateMachine);
+
+                  float distance = std::abs(thisPosition.x - otherPosition.x);
+                  if (distance > blackboard->snowballRepulsiveDistance)
+                      return;
+
+                  if (thisPosition.x < otherPosition.x)
+                  {
+                      otherSnowballStateMachine->TryMoveX(blackboard->snowballRepulsiveDeltaX);
+                      TryMoveX(-blackboard->snowballRepulsiveDeltaX);
+                  }
+                  else
+                  {
+                      otherSnowballStateMachine->TryMoveX(-blackboard->snowballRepulsiveDeltaX);
+                      TryMoveX(blackboard->snowballRepulsiveDeltaX);
+                  }
+              }
           }
           break;
           }
@@ -169,7 +206,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       [=](float deltaTime)
       {
           animation->ChangeAnimationClip("goblin_walk");
-          kinematic->MoveX(blackboard->direction * blackboard->walkSpeedX);
+          kinematic->SetVelocityX(blackboard->direction * blackboard->walkSpeedX);
       });
     enemyStateTurn->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
@@ -209,6 +246,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateSnowball->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
+          blackboard->previousPosition = actor->GetWorldPosition().ToVector2();
           blackboard->accTime += blackboard->snowballFormedBonusValue;
           animation->ChangeAnimationClip("goblin_none");
           snowballAnimation->ChangeAnimationClip("snowball_formed", false);
@@ -275,10 +313,17 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateSnowball->RegisterCallback(AIEventState::Tick,
       [=](float deltaTime)
       {
+          Vector2 currentPosition = actor->GetWorldPosition().ToVector2();
+          if (std::abs(currentPosition.x - blackboard->previousPosition.x)
+              > blackboard->snowballFrameDistance)
+          {
+              int32 frameIndex = snowballSprite->GetFrameIndex() + 1;
+              int32 frameCount = snowballSprite->GetFrameCount();
+              snowballSprite->SetFrameIndex(frameIndex % frameCount);
+              blackboard->previousPosition = currentPosition;
+          }
+
           Vector2 velocity = kinematic->GetVelocity();
-          
-          if (kinematic->IsColliderMovingAgainstWallX(velocity.x * deltaTime))
-              kinematic->MoveX(-velocity.x);
 
           if (velocity.y < 0.f && kinematic->IsColliderMovingAgainstFloor(velocity * deltaTime))
           {
@@ -287,11 +332,15 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           }
           else if (!kinematic->IsColliderOnFloor())
           {
+              if (kinematic->IsColliderMovingAgainstWallX(velocity.x * deltaTime))
+                  kinematic->SetVelocityX(-velocity.x);
+
               kinematic->AddGravity(deltaTime);
           }
-
-          // TODO: 플레이어가 아래에서 충돌 시
-          // TODO: 공중에서 이동 중 벽에 튕기는 로직
+          else if (kinematic->IsColliderOnFloor())
+          {
+              int a = 0;
+          }
 
           blackboard->accTime -= blackboard->snowballDecPerSecond * deltaTime;
 

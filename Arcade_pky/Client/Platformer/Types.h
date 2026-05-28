@@ -9,6 +9,7 @@ namespace PlatformerKinematicState
         OnSlope,
         OnLadder,
         Attached,
+        OnStandable,
         End
     };
 }

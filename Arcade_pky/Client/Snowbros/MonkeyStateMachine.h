@@ -1,7 +1,7 @@
 #pragma once
-#include "AI/AIStateMachine.h"
+#include "SnowballMorphableEnemyStateMachine.h"
 
-class MonkeyStateMachine : public AIStateMachine
+class MonkeyStateMachine : public SnowballMorphableEnemyStateMachine
 {
 public:
     MonkeyStateMachine()           = default;

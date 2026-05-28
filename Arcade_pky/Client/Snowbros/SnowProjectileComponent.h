@@ -37,6 +37,8 @@ public:
     void OnCollisionWith(Weak<class CollisionComponent> other);
     void OnCollision();
 
+    bool IsHit() const;
+
     void SetKinematic(Ptr<class PlatformerKinematicComponent> kinematic);
     void SetDirection(float direction);
 };

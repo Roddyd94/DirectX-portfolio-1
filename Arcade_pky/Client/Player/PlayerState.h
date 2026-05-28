@@ -27,7 +27,9 @@ public:
 
     virtual void CollideWith(Ptr<class PlayerComponent> playerComponent,
       CollisionState::Type                              collisionType,
-      Weak<class CollisionComponent>                    collider);
+      Weak<class CollisionComponent>                    collider)
+    {
+    }
 
     uint8 GetType() const;
 };

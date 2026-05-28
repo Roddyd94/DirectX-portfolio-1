@@ -70,6 +70,16 @@ int32 Animation2D::GetClipFrameCount(const std::string& name) const
     return animationClip->GetFrameCount();
 }
 
+int32 Animation2D::GetFrameCount() const
+{
+    return _currentAnimationClip->GetFrameCount();
+}
+
+int32 Animation2D::GetFrameIndex() const
+{
+    return _frameIndex;
+}
+
 bool Animation2D::GetFlipX() const
 {
     return _flipX;

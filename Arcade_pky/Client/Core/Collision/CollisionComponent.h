@@ -18,7 +18,7 @@ protected:
 
     ComponentIDPair                               _colliderID;
     Ptr<class CollisionProfile>                   _profile;
-    std::function<void(Weak<CollisionComponent>)> _collisionCallback[CollisionState::None];
+    std::function<void(Weak<CollisionComponent>)> _collisionCallback[CollisionState::None] = {};
     std::map<std::pair<ColliderType::Type, ComponentIDPair>, CollisionState::Type> _collisionStates;
 
 #if _DEBUG

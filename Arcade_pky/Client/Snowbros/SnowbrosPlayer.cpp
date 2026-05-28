@@ -8,6 +8,7 @@
 #include "SnowbrosPlayerBlackboard.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
+#include "Core/Collision/PointCollisionComponent.h"
 #include "Core/Input/InputComponent.h"
 #include "Platformer/PlatformerKinematicPlayerComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
@@ -53,21 +54,41 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
           animation->ChangeAnimationClip("player_midair");
       });
 
-    auto collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
-    collider->AttachToComponent(rootComp);
-    collider->SetBoxSize({1.f, 1.f});
-    collider->SetCollisionProfile("Player");
-    collider->RegisterCollisionCallBack(CollisionState::Enter,
+    _headCollider = CreateSceneComponent<PointCollisionComponent>("HeadCollider");
+    _headCollider->AttachToComponent(rootComp);
+    _headCollider->SetCollisionProfile("PlayerHead");
+    _headCollider->SetRelativePosition({0.f, 0.25f});
+
+    _handColliderLeft = CreateSceneComponent<PointCollisionComponent>("HandColliderLeft");
+    _handColliderLeft->AttachToComponent(rootComp);
+    _handColliderLeft->SetCollisionProfile("PlayerHandLeft");
+    _handColliderLeft->SetRelativePosition({-0.26f, -0.1875f});
+
+    _handColliderRight = CreateSceneComponent<PointCollisionComponent>("HandColliderRight");
+    _handColliderRight->AttachToComponent(rootComp);
+    _handColliderRight->SetCollisionProfile("PlayerHandRight");
+    _handColliderRight->SetRelativePosition({0.26f, -0.1875f});
+
+    _footCollider = CreateSceneComponent<PointCollisionComponent>("FootCollider");
+    _footCollider->AttachToComponent(rootComp);
+    _footCollider->SetCollisionProfile("PlayerFoot");
+    _footCollider->SetRelativePosition({0.f, -0.26f});
+
+    _collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
+    _collider->AttachToComponent(rootComp);
+    _collider->SetBoxSize({1.f, 0.9f});
+    _collider->SetCollisionProfile("Player");
+    _collider->RegisterCollisionCallBack(CollisionState::Enter,
       [=](Weak<CollisionComponent> collider)
       {
           _playerComponent->CollideWith(CollisionState::Enter, collider);
       });
-    collider->RegisterCollisionCallBack(CollisionState::Stay,
+    _collider->RegisterCollisionCallBack(CollisionState::Stay,
       [=](Weak<CollisionComponent> collider)
       {
           _playerComponent->CollideWith(CollisionState::Stay, collider);
       });
-    collider->RegisterCollisionCallBack(CollisionState::Exit,
+    _collider->RegisterCollisionCallBack(CollisionState::Exit,
       [=](Weak<CollisionComponent> collider)
       {
           _playerComponent->CollideWith(CollisionState::Exit, collider);
@@ -95,7 +116,7 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
       "Snowball", "Jump", 'T', Raw(_playerComponent), &PlayerComponent::HandleInput);
 
     auto kinematicComp = CreateActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
-    kinematicComp->SetCollider(collider);
+    kinematicComp->SetCollider(_collider);
     kinematicComp->SetTilemap(tilemap);
     kinematicComp->RegisterOnStateChangedCallback(PlatformerKinematicState::OnGround,
       [this]()
@@ -106,6 +127,11 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
       [this]()
       {
           _playerComponent->Transition(New<PlayerStateMidair>(false));
+      });
+    kinematicComp->RegisterOnStateChangedCallback(PlatformerKinematicState::OnStandable,
+      [this]()
+      {
+          _playerComponent->Transition(PlayerStateGround::instance);
       });
 
     auto movementComp = CreateActorComponent<PlatformerMovementComponent>("PlatformerMovement");

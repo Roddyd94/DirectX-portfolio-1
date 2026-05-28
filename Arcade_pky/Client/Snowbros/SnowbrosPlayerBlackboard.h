@@ -10,4 +10,7 @@ public:
 
 public:
     float speedX = 2.f;
+
+public:
+    inline static const float speedMultiplierSnowball = 0.5f;
 };

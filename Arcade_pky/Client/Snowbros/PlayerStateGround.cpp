@@ -2,11 +2,16 @@
 
 #include "PlayerStateGround.h"
 
+#include "Core/Collision/CollisionManager.h"
+#include "Core/TimeManager.h"
+
 #include "PlayerStateMidair.h"
+#include "SnowballMorphableEnemyStateMachine.h"
+#include "SnowbrosLevel.h"
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
+#include "AI/AIComponent.h"
 #include "Core/Animation/SpriteComponent.h"
-#include "Core/Collision/CollisionComponent.h"
 #include "Platformer/PlatformerKinematicPlayerComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
 #include "Player/Player.h"
@@ -26,6 +31,8 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
 {
     Ptr<Actor> player = playerComponent->GetOwner();
 
+    float deltaTime = TimeManager::Instance().GetDeltaTime();
+
     auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
     auto movement   = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
 
@@ -37,11 +44,26 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         {
         case ButtonEventType::Hold:
         {
-            float speed = blackboard->speedX;
+            float speedX         = blackboard->speedX;
+            float speedSnowballX = speedX * blackboard->speedMultiplierSnowball;
 
-            movement->MoveLeft(speed);
-            if (sprite->GetCurrentClipName() != "player_shoot")
-                sprite->ChangeAnimation("player_walk");
+            auto snowball = FindSnowballToPush(playerComponent, -speedSnowballX * deltaTime);
+            if (nullptr != snowball)
+            {
+                if (snowball->TryMoveX(-speedSnowballX * deltaTime))
+                    movement->MoveLeft(speedX * blackboard->speedMultiplierSnowball);
+                else
+                    movement->Stop();
+
+                if (sprite->GetCurrentClipName() != "player_shoot")
+                    sprite->ChangeAnimation("player_push");
+            }
+            else
+            {
+                movement->MoveLeft(speedX);
+                if (sprite->GetCurrentClipName() != "player_shoot")
+                    sprite->ChangeAnimation("player_walk");
+            }
 
             sprite->SetFlipX(false);
         }
@@ -58,11 +80,26 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         {
         case ButtonEventType::Hold:
         {
-            float speed = blackboard->speedX;
+            float speedX         = blackboard->speedX;
+            float speedSnowballX = speedX * blackboard->speedMultiplierSnowball;
 
-            movement->MoveRight(speed);
-            if (sprite->GetCurrentClipName() != "player_shoot")
-                sprite->ChangeAnimation("player_walk");
+            auto snowball = FindSnowballToPush(playerComponent, speedSnowballX * deltaTime);
+            if (nullptr != snowball)
+            {
+                if (snowball->TryMoveX(speedSnowballX * deltaTime))
+                    movement->MoveRight(speedX * blackboard->speedMultiplierSnowball);
+                else
+                    movement->Stop();
+
+                if (sprite->GetCurrentClipName() != "player_shoot")
+                    sprite->ChangeAnimation("player_push");
+            }
+            else
+            {
+                movement->MoveRight(speedX);
+                if (sprite->GetCurrentClipName() != "player_shoot")
+                    sprite->ChangeAnimation("player_walk");
+            }
 
             sprite->SetFlipX(true);
         }
@@ -117,30 +154,7 @@ void PlayerStateGround::Exit(Ptr<class PlayerComponent> playerComponent) {}
 
 void PlayerStateGround::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime)
 {
-    auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
+    // auto blackboard =
+    // playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
 }
 
-void PlayerStateGround::CollideWith(Ptr<class PlayerComponent> playerComponent,
-  CollisionState::Type                                         collisionType,
-  Weak<class CollisionComponent>                               collider)
-{
-    auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
-
-    auto thisActor         = playerComponent->GetOwner();
-    auto thisCollider      = thisActor->FindSceneComponent<CollisionComponent>("Collider");
-    auto otherCollider     = Lock(collider);
-    auto otherColliderType = otherCollider->GetColliderType();
-    auto otherActor        = otherCollider->GetOwner();
-
-    switch (otherColliderType)
-    {
-    case ColliderType::Enemy:
-    {
-    }
-    break;
-    case ColliderType::EnemyProjectile:
-        break;
-    case ColliderType::Item:
-        break;
-    }
-}

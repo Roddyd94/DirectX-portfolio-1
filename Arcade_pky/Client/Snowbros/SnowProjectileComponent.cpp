@@ -41,7 +41,7 @@ void SnowProjectileComponent::Tick(float deltaTime)
         velocityX = std::max(0.f, velocityX);
     }
 
-    _kinematic->MoveX(_direction * velocityX);
+    _kinematic->SetVelocityX(_direction * velocityX);
     _kinematic->AddGravity(gravityMultiplier * deltaTime);
 }
 
@@ -58,6 +58,11 @@ void SnowProjectileComponent::OnCollision()
     _kinematic->SetVelocity(Vector2::zero);
     Ptr<SpriteComponent> sprite = GetOwner()->FindSceneComponent<SpriteComponent>("Root");
     sprite->ChangeAnimation("projectile_hit");
+}
+
+bool SnowProjectileComponent::IsHit() const
+{
+    return _isHit;
 }
 
 void SnowProjectileComponent::SetKinematic(Ptr<class PlatformerKinematicComponent> kinematic)

@@ -2,7 +2,14 @@
 
 #include "PlatformerKinematicPlayerComponent.h"
 
+#include "Core/Collision/CollisionManager.h"
+
 #include "Core/Actor.h"
+#include "Core/Collision/AABBCollisionComponent.h"
+#include "Player/PlayerComponent.h"
+#include "Snowbros/SnowballMorphableEnemyStateMachine.h"
+#include "Snowbros/SnowbrosLevel.h"
+#include "Snowbros/SnowbrosPlayerState.h"
 
 bool PlatformerKinematicPlayerComponent::Init(
   int32 componentID, const std::string& name, Ptr<class Actor> owner)
@@ -36,7 +43,21 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
         worldPos.x += delta.x;
 
         bool isOnFloor = IsColliderOnFloor(delta);
+
         if (!isOnFloor)
+            ChangeStateTo(PlatformerKinematicState::OnAir);
+    }
+    break;
+    case PlatformerKinematicState::OnStandable:
+    {
+        if (IsColliderMovingAgainstBoundaryX(delta.x) || IsColliderMovingAgainstWallX(delta.x))
+            return;
+
+        worldPos.x += delta.x;
+
+        auto snowballCollider = FindSnowballToStand();
+
+        if (nullptr == snowballCollider)
             ChangeStateTo(PlatformerKinematicState::OnAir);
     }
     break;
@@ -45,15 +66,27 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
         if (!IsColliderMovingAgainstBoundaryX(delta.x) && !IsColliderMovingAgainstWallX(delta.x))
             worldPos.x += delta.x;
 
-        bool isOnFloorPrev = IsColliderOnFloor({delta.x, 0.f});
         worldPos.y += delta.y;
+        bool isOnFloorPrev = IsColliderOnFloor({delta.x, 0.f});
         bool isOnFloorNext = IsColliderOnFloor(delta);
 
-        if (delta.y < 0 && !isOnFloorPrev && isOnFloorNext)
+        bool movedTowardFloor = !isOnFloorPrev && isOnFloorNext;
+
+        if (delta.y < 0 && movedTowardFloor)
         {
             AdjustPositionToFloor(delta);
             _velocity.y = 0.f;
             ChangeStateTo(PlatformerKinematicState::OnGround);
+
+            return;
+        }
+
+        auto snowballCollider = FindSnowballToStand();
+        if (delta.y < 0 && nullptr != snowballCollider)
+        {
+            AdjustPositionToSnowball(snowballCollider);
+            _velocity.y = 0.f;
+            ChangeStateTo(PlatformerKinematicState::OnStandable);
 
             return;
         }
@@ -85,5 +118,34 @@ void PlatformerKinematicPlayerComponent::AttachTo(Ptr<class Actor> actor)
 void PlatformerKinematicPlayerComponent::ChangeStateTo(PlatformerKinematicState::Type state)
 {
     _state = state;
-    _onStateChangedTo[_state]();
+    if (_onStateChangedTo[_state])
+        _onStateChangedTo[_state]();
+}
+
+Ptr<class AABBCollisionComponent> PlatformerKinematicPlayerComponent::FindSnowballToStand()
+{
+    auto actor  = GetOwner();
+    auto player = actor->FindActorComponent<PlayerComponent>("Player");
+
+    auto playerStateMachine = player->GetStateMachine();
+    auto playerState
+      = Cast<PlayerState, SnowbrosPlayerState>(playerStateMachine->GetCurrentState());
+
+    return playerState->FindSnowballToStand(player);
+}
+
+void PlatformerKinematicPlayerComponent::AdjustPositionToSnowball(
+  Ptr<class AABBCollisionComponent> snowballCollider)
+{
+    Ptr<Actor> actor = GetOwner();
+
+    Rect playerColliderBox   = _collider->GetBox();
+    Rect snowballColliderBox = snowballCollider->GetBox();
+
+    Vector2 colliderCenterBottom = {playerColliderBox.GetCenterX(), playerColliderBox.bottom};
+
+    float targetPositionY
+      = snowballColliderBox.top + _collider->GetBoxSize().y / 2.f - epsilonTile / 2.f;
+
+    actor->SetWorldPosition({colliderCenterBottom.x, targetPositionY});
 }

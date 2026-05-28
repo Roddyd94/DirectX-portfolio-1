@@ -21,6 +21,8 @@ public:
     void Collision(float deltaTime) override;
     void Render(float deltaTime) override;
 
+    int32 GetFrameCount() const;
+    int32 GetFrameIndex() const;
     bool GetFlipX() const;
 
     void SetShader(const std::string& name);

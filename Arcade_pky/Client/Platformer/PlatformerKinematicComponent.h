@@ -39,8 +39,9 @@ public:
     void SetTilemap(Ptr<class Tilemap> tilemap);
     void SetCollider(Ptr<class AABBCollisionComponent> collider);
     void SetVelocity(Vector2 velocity);
+    void SetVelocityX(float velocityX);
+    void MoveX(float deltaX);
 
-    void MoveX(float speed);
     void AddForce(Vector2 force);
     void AddGravity(float deltaTime);
 
