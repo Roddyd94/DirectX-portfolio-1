@@ -72,6 +72,16 @@ void SpriteComponent::Render(float deltaTime)
     _mesh->Render();
 }
 
+int32 SpriteComponent::GetFrameCount() const
+{
+    return _animation->GetFrameCount();
+}
+
+int32 SpriteComponent::GetFrameIndex() const
+{
+    return _animation->GetFrameIndex();
+}
+
 bool SpriteComponent::GetFlipX() const
 {
     return _animation->GetFlipX();

@@ -2,6 +2,10 @@
 
 #include "PlayerStateMidair.h"
 
+#include "Core/TimeManager.h"
+
+#include "SnowballMorphableEnemyStateMachine.h"
+#include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
@@ -18,7 +22,11 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
   Ptr<class InputAction>                                                   action,
   ButtonEventType::Type                                                    buttonEvent)
 {
-    Ptr<Actor>                       player = playerComponent->GetOwner();
+    Ptr<Actor> player = playerComponent->GetOwner();
+
+    float deltaTime = TimeManager::Instance().GetDeltaTime();
+
+    auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
     Ptr<PlatformerMovementComponent> movement
       = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
 
@@ -32,9 +40,25 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
         switch (buttonEvent)
         {
         case ButtonEventType::Hold:
-            movement->MoveLeft(_flippedX ? 0.5f : 1.f);
+        {
+            float speedX = _flippedX ? (blackboard->speedX * 0.5f) : blackboard->speedX;
+
+            auto snowball = FindSnowballToPush(playerComponent, -speedX * deltaTime);
+            if (nullptr != snowball)
+            {
+                if (snowball->TryMoveX(-speedX * deltaTime))
+                    movement->MoveLeft(speedX * blackboard->speedMultiplierSnowball);
+                else
+                    movement->Stop();
+            }
+            else
+            {
+                movement->MoveLeft(speedX);
+            }
+
             sprite->SetFlipX(false);
-            break;
+        }
+        break;
         case ButtonEventType::Up:
             movement->Stop();
             break;
@@ -45,9 +69,25 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
         switch (buttonEvent)
         {
         case ButtonEventType::Hold:
-            movement->MoveRight(_flippedX ? 0.5f : 1.f);
+        {
+            float speedX = _flippedX ? (blackboard->speedX * 0.5f) : blackboard->speedX;
+
+            auto snowball = FindSnowballToPush(playerComponent, speedX * deltaTime);
+            if (nullptr != snowball)
+            {
+                if (snowball->TryMoveX(speedX * deltaTime))
+                    movement->MoveRight(speedX * blackboard->speedMultiplierSnowball);
+                else
+                    movement->Stop();
+            }
+            else
+            {
+                movement->MoveRight(speedX);
+            }
+
             sprite->SetFlipX(true);
-            break;
+        }
+        break;
         case ButtonEventType::Up:
             movement->Stop();
             break;

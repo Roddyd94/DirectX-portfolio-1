@@ -21,6 +21,9 @@ public:
 
     void ChangeStateTo(PlatformerKinematicState::Type state);
 
+    Ptr<class AABBCollisionComponent> FindSnowballToStand();
+    void AdjustPositionToSnowball(Ptr<class AABBCollisionComponent> snowballCollider);
+
 public:
     template <typename T>
     void RegisterOnStateChangedCallback(

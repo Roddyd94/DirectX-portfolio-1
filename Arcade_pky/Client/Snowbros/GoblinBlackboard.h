@@ -10,8 +10,7 @@ public:
     ~GoblinBlackboard() override = default;
 
 public:
-    Weak<class Snowball> snowball;
-
+    Vector2 previousPosition    = Vector2::zero;
     Vector2 previousDelta       = Vector2::zero;
     Vector2 jumpTargetDirection = Vector2::zero;
 
@@ -32,12 +31,16 @@ public:
     inline static const float jumpForceHalf = 6.625f;
     inline static const float jumpEpsilon   = 0.2f;
 
+    inline static const float snowballDragFloor           = 0.9f;
+    inline static const float snowballFrameDistance       = 0.125f;
     inline static const float snowballDecPerSecond        = 5.f;
     inline static const float snowballIncForming          = 5.f;
     inline static const float snowballIncFormed           = 3.f;
     inline static const float snowballFormingInitialValue = 2.f;
-    inline static const float snowballFormedBonusValue    = 30.f;
+    inline static const float snowballFormedBonusValue    = 300.f;
     inline static const float snowballHeadingForceX       = 3.f;
+    inline static const float snowballRepulsiveDeltaX     = 0.1f;
+    inline static const float snowballRepulsiveDistance   = 0.88f;
 
 public:
     void Destroy() override;

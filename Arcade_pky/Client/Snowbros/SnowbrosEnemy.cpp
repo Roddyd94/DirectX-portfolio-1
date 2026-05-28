@@ -23,7 +23,6 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     sprite->SetRenderLayer("Enemy");
     sprite->SetShader("SpriteShader");
     sprite->AttachToComponent(_root);
-    sprite->SetRelativePosition({0.f, 0.0625f, 0.f});
     sprite->SetRelativeScale(Vector3::one);
 
     auto snowballSprite = CreateSceneComponent<SpriteComponent>("Snowball");
@@ -31,12 +30,11 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     snowballSprite->SetRenderLayer("Snowball");
     snowballSprite->SetShader("SpriteShader");
     snowballSprite->AttachToComponent(_root);
-    snowballSprite->SetRelativePosition({0.f, 0.0625f, 0.f});
     snowballSprite->SetRelativeScale(Vector3::one);
 
     auto collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
     collider->AttachToComponent(_root);
-    collider->SetBoxSize({0.9f, 1.f});
+    collider->SetBoxSize({0.9f, 1.2f});
     collider->SetCollisionProfile("Enemy");
 
     auto kinematic = CreateActorComponent<PlatformerKinematicComponent>("Kinematic");

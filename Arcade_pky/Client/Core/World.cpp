@@ -16,12 +16,14 @@ void World::Init(const std::string& name)
     _collisionProfileManager->Init();
 
     _collisionProfileManager->CreateChannel(ColliderType::Player, CollisionResponse::Ignore);
+    _collisionProfileManager->CreateChannel(ColliderType::PlayerHead, CollisionResponse::Ignore);
     _collisionProfileManager->CreateChannel(ColliderType::Enemy, CollisionResponse::Ignore);
     _collisionProfileManager->CreateChannel(
       ColliderType::PlayerProjectile, CollisionResponse::Ignore);
     _collisionProfileManager->CreateChannel(ColliderType::Item, CollisionResponse::Ignore);
 
     _collisionProfileManager->CreateProfile("Player", ColliderType::Player);
+    _collisionProfileManager->CreateProfile("PlayerHead", ColliderType::PlayerHead);
     _collisionProfileManager->CreateProfile("Enemy", ColliderType::Enemy);
     _collisionProfileManager->CreateProfile("PlayerProjectile", ColliderType::PlayerProjectile);
     _collisionProfileManager->CreateProfile("EnemyProjectile", ColliderType::EnemyProjectile);
@@ -32,8 +34,12 @@ void World::Init(const std::string& name)
       std::make_pair(ColliderType::EnemyProjectile, CollisionResponse::Block),
       std::make_pair(ColliderType::Item, CollisionResponse::Block));
 
+    _collisionProfileManager->SetProfileResponse(
+      "PlayerHead", std::make_pair(ColliderType::Enemy, CollisionResponse::Block));
+
     _collisionProfileManager->SetProfileResponse("Enemy",
       std::make_pair(ColliderType::Player, CollisionResponse::Block),
+      std::make_pair(ColliderType::PlayerHead, CollisionResponse::Block),
       std::make_pair(ColliderType::Enemy, CollisionResponse::Block),
       std::make_pair(ColliderType::PlayerProjectile, CollisionResponse::Block));
 

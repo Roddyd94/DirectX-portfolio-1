@@ -343,9 +343,6 @@
     <ClInclude Include="Platformer\PlatformerKinematicComponent.h">
       <Filter>Platformer\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Platformer\PlatformerMovementComponent.h">
-      <Filter>Platformer\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Animation\Animation2DStateMachine.h">
       <Filter>Animation</Filter>
     </ClInclude>
@@ -403,9 +400,6 @@
     <ClInclude Include="Snowbros\SnowProjectileComponent.h">
       <Filter>Snowbros\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Platformer\PlatformerKinematicPlayerComponent.h">
-      <Filter>Platformer\Component</Filter>
-    </ClInclude>
     <ClInclude Include="AI\AI.h">
       <Filter>AI\Actor</Filter>
     </ClInclude>
@@ -438,6 +432,21 @@
     </ClInclude>
     <ClInclude Include="Snowbros\SnowbrosPlayer.h">
       <Filter>Snowbros\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Platformer\PlatformerKinematicPlayerComponent.h">
+      <Filter>Platformer\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Platformer\PlatformerMovementComponent.h">
+      <Filter>Platformer\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Collision\PointCollisionComponent.h">
+      <Filter>Collision\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowballMorphableEnemyStateMachine.h">
+      <Filter>Snowbros\Enemy\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosPlayerState.h">
+      <Filter>Snowbros\Player\PlayerState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -749,9 +758,6 @@
     <ClCompile Include="Platformer\PlatformerKinematicComponent.cpp">
       <Filter>Platformer\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Platformer\PlatformerMovementComponent.cpp">
-      <Filter>Platformer\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Animation\Animation2DStateMachine.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
@@ -800,9 +806,6 @@
     <ClCompile Include="Snowbros\ShootComponent.cpp">
       <Filter>Snowbros\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Platformer\PlatformerKinematicPlayerComponent.cpp">
-      <Filter>Platformer\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Snowbros\SnowProjectileComponent.cpp">
       <Filter>Snowbros\Component</Filter>
     </ClCompile>
@@ -838,6 +841,21 @@
     </ClCompile>
     <ClCompile Include="Snowbros\SnowbrosPlayer.cpp">
       <Filter>Snowbros\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Platformer\PlatformerKinematicPlayerComponent.cpp">
+      <Filter>Platformer\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Platformer\PlatformerMovementComponent.cpp">
+      <Filter>Platformer\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Collision\PointCollisionComponent.cpp">
+      <Filter>Collision\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowballMorphableEnemyStateMachine.cpp">
+      <Filter>Snowbros\Enemy\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosPlayerState.cpp">
+      <Filter>Snowbros\Player\PlayerState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -89,12 +89,6 @@ void CollisionManager::Collision(float deltaTime)
                             srcCollider->Invoke(CollisionState::Exit, destCollider);
                         }
                         break;
-                        case CollisionState::Exit:
-                        case CollisionState::None:
-                        {
-                            srcCollider->Invoke(CollisionState::None, destCollider);
-                        }
-                        break;
                         }
                     }
                 }

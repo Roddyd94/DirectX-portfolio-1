@@ -78,9 +78,19 @@ void PlatformerKinematicComponent::AttachTo(Ptr<class Actor> actor)
     _attachedTo = actor;
 }
 
-void PlatformerKinematicComponent::MoveX(float speed)
+void PlatformerKinematicComponent::SetVelocityX(float velocityX)
 {
-    _velocity.x = speed;
+    _velocity.x = velocityX;
+}
+
+void PlatformerKinematicComponent::MoveX(float deltaX)
+{
+    Ptr<Actor> actor    = GetOwner();
+    Vector2    worldPos = actor->GetWorldPosition().ToVector2();
+    worldPos.x += deltaX;
+
+    AdjustPositionX(worldPos);
+    actor->SetWorldPosition(worldPos);
 }
 
 void PlatformerKinematicComponent::AddForce(Vector2 force)
@@ -277,7 +287,7 @@ void PlatformerKinematicComponent::AdjustPositionX(Vector2& position)
     Rect              boundary = level->GetBoundary();
 
     auto colliderHalfSize = _collider->GetBoxSize() / 2;
-    
+
     if (position.x + colliderHalfSize.x >= boundary.right)
         position.x = boundary.right - colliderHalfSize.x;
     if (position.x - colliderHalfSize.x <= boundary.left)
