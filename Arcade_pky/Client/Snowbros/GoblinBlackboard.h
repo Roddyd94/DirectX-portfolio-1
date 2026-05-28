@@ -40,7 +40,7 @@ public:
     inline static const float snowballFormedBonusValue    = 300.f;
     inline static const float snowballHeadingForceX       = 3.f;
     inline static const float snowballRepulsiveDeltaX     = 0.1f;
-    inline static const float snowballRepulsiveDistance   = 0.9f;
+    inline static const float snowballRepulsiveDistance   = 0.9f; //
 
 public:
     void Destroy() override;
