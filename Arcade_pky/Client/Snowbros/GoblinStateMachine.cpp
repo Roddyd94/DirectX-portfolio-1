@@ -29,17 +29,22 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     auto collider  = actor->FindSceneComponent<AABBCollisionComponent>("Collider");
     auto kinematic = actor->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
-    auto sprite            = actor->FindSceneComponent<SpriteComponent>("Sprite");
-    auto animation         = sprite->CreateAnimation();
-    auto animationSequence = animation->GetSequence();
+    auto sprite    = actor->FindSceneComponent<SpriteComponent>("Sprite");
+    auto animation = sprite->CreateAnimation();
     animation->SetAnimationSequence("goblin");
     animation->ChangeAnimationClip("goblin_walk");
 
-    auto snowballSprite            = actor->FindSceneComponent<SpriteComponent>("Snowball");
-    auto snowballAnimation         = snowballSprite->CreateAnimation();
-    auto snowballAnimationSequence = snowballAnimation->GetSequence();
-    snowballAnimation->SetAnimationSequence("snowball");
-    snowballAnimation->ChangeAnimationClip("snowball_none");
+    auto spriteBehind    = actor->FindSceneComponent<SpriteComponent>("SpriteBehind");
+    auto animationBehind = spriteBehind->CreateAnimation();
+    animationBehind->SetAnimationSequence("goblin");
+    animationBehind->ChangeAnimationClip("goblin_none");
+    spriteBehind->SetEnable(false);
+
+    auto spriteSnowball    = actor->FindSceneComponent<SpriteComponent>("SpriteSnowball");
+    auto animationSnowball = spriteSnowball->CreateAnimation();
+    animationSnowball->SetAnimationSequence("snowball");
+    animationSnowball->ChangeAnimationClip("snowball_none");
+    spriteSnowball->SetEnable(false);
 
 #pragma region ColliderCallbacks
     collider->RegisterCollisionCallBack(CollisionState::Enter,
@@ -247,23 +252,28 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       {
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_struggle");
-          snowballSprite->SetEnable(true);
-          snowballAnimation->ChangeAnimationClip("snowball_forming", false);
+          sprite->SetEnable(false);
+          spriteBehind->SetEnable(true);
+          spriteSnowball->SetEnable(true);
+          animationSnowball->ChangeAnimationClip("snowball_forming", false);
+          animationBehind->ChangeAnimationClip("goblin_struggle");
       });
     enemyStateSnowball->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
           blackboard->previousPosition = actor->GetWorldPosition().ToVector2();
           blackboard->accTime += blackboard->snowballFormedBonusValue;
-          animation->ChangeAnimationClip("goblin_none");
-          snowballAnimation->ChangeAnimationClip("snowball_formed", false);
+          sprite->SetEnable(false);
+          spriteSnowball->SetEnable(true);
+          animationSnowball->ChangeAnimationClip("snowball_formed", false);
       });
     enemyStateRolling->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
           blackboard->hitCount = 0;
-          animation->ChangeAnimationClip("goblin_none");
-          snowballAnimation->ChangeAnimationClip("snowball_rolling");
+          sprite->SetEnable(false);
+          spriteSnowball->SetEnable(true);
+          animationSnowball->ChangeAnimationClip("snowball_rolling");
       });
     enemyStateDizzy->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
@@ -313,11 +323,11 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           if (blackboard->accTime > blackboard->phaseThreshold[3])
               Transition("Snowball");
           else if (blackboard->accTime > blackboard->phaseThreshold[2])
-              snowballAnimation->SetFrameIndex(2);
+              animationSnowball->SetFrameIndex(2);
           else if (blackboard->accTime > blackboard->phaseThreshold[1])
-              snowballAnimation->SetFrameIndex(1);
+              animationSnowball->SetFrameIndex(1);
           else if (blackboard->accTime > blackboard->phaseThreshold[0])
-              snowballAnimation->SetFrameIndex(0);
+              animationSnowball->SetFrameIndex(0);
           else
           {
               Transition("Dizzy");
@@ -331,9 +341,9 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           if (std::abs(currentPosition.x - blackboard->previousPosition.x)
               > blackboard->snowballFrameDistance)
           {
-              int32 frameIndex = snowballSprite->GetFrameIndex() + 1;
-              int32 frameCount = snowballSprite->GetFrameCount();
-              snowballSprite->SetFrameIndex(frameIndex % frameCount);
+              int32 frameIndex = spriteSnowball->GetFrameIndex() + 1;
+              int32 frameCount = spriteSnowball->GetFrameCount();
+              spriteSnowball->SetFrameIndex(frameIndex % frameCount);
               blackboard->previousPosition = currentPosition;
           }
 
@@ -414,7 +424,16 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateStruggle->RegisterCallback(AIEventState::Exit,
       [=](float deltaTime)
       {
-          snowballAnimation->ChangeAnimationClip("snowball_none");
+          animationSnowball->ChangeAnimationClip("snowball_none");
+          sprite->SetEnable(true);
+          spriteSnowball->SetEnable(false);
+          spriteBehind->SetEnable(false);
+      });
+    enemyStateSnowball->RegisterCallback(AIEventState::Exit,
+      [=](float deltaTime)
+      {
+          sprite->SetEnable(true);
+          spriteSnowball->SetEnable(false);
       });
 #pragma endregion RegisterStateCallbackExit
 

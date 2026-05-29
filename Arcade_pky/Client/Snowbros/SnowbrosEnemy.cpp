@@ -26,7 +26,13 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     sprite->AttachToComponent(_root);
     sprite->SetRelativeScale(Vector3::one);
 
-    auto snowballSprite = CreateSceneComponent<SpriteComponent>("Snowball");
+    auto spriteBehind = CreateSceneComponent<SpriteComponent>("SpriteBehind");
+    spriteBehind->SetRenderLayer("EnemyBehind");
+    spriteBehind->SetShader("SpriteShader");
+    spriteBehind->AttachToComponent(_root);
+    spriteBehind->SetRelativeScale(Vector3::one);
+
+    auto snowballSprite = CreateSceneComponent<SpriteComponent>("SpriteSnowball");
     snowballSprite->SetEnable(false);
     snowballSprite->SetRenderLayer("Snowball");
     snowballSprite->SetShader("SpriteShader");
