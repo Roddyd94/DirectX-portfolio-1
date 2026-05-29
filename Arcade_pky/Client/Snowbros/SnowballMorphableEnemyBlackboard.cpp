@@ -12,5 +12,5 @@ Vector2 SnowballMorphableEnemyBlackboard::GetTargetJumpForce() const
     float c = std::sqrt(std::abs(2 * a * y));
     float t = c / a;
 
-    return {jumpTargetDirection.x * 0.83333333333333333333f / t, c};
+    return {jumpTargetDirection.x * 0.75f / t, c};
 }

@@ -32,7 +32,7 @@ public:
     inline static const float jumpTime      = 0.2f;
     inline static const float jumpForceFull = 6.625f;
     inline static const float jumpForceHalf = 6.625f;
-    inline static const float jumpEpsilon   = 0.2f;
+    inline static const float jumpEpsilon   = 0.0625f;
 
     inline static const float snowballDragFloor           = 0.9f;
     inline static const float snowballFrameDistance       = 0.125f;

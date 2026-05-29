@@ -221,9 +221,10 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           }
       });
     collider->RegisterCollisionCallBack(CollisionState::Stay,
-      [this, weakCollider = Weak(collider), weakKinematic = Weak(kinematic),
+      [this, weakPawn = Weak(pawn), weakCollider = Weak(collider), weakKinematic = Weak(kinematic),
         weakBlackboard = Weak(blackboard)](Weak<CollisionComponent> collider)
       {
+          auto pawn         = Lock(weakPawn);
           auto thisCollider = Lock(weakCollider);
           auto kinematic    = Lock(weakKinematic);
           auto blackboard   = Lock(weakBlackboard);
@@ -235,7 +236,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           {
           case ColliderType::Enemy:
           {
-              auto thisPosition  = GetOwner()->GetOwner()->GetWorldPosition();
+              auto thisPosition  = pawn->GetWorldPosition();
               auto otherPosition = otherCollider->GetWorldPosition();
 
               auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());

@@ -42,7 +42,7 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
     SnowbrosTileParser::ParseTileMetadata(tileMetadata);
 
     byte stageData[224] = {};
-    SnowbrosTileParser::ParseStageData(L"snowbros_stage_1.bin", stageData, 224);
+    SnowbrosTileParser::ParseStageData(L"snowbros_stage_2.bin", stageData, 224);
     for (size_t i = 0; i < 14; i++)
     {
         for (size_t j = 0; j < 16; j++)
