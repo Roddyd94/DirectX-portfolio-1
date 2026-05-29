@@ -10,7 +10,7 @@ public:
 
 private:
     std::vector<SpriteData> _sprites;
-    Ptr<class Texture>      _texture;
+    Weak<class Texture>     _texture;
 
 public:
     bool Init(Ptr<class Texture> texture);

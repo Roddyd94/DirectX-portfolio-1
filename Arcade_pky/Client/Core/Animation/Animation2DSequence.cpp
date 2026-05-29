@@ -11,7 +11,7 @@ void Animation2DSequence::Destroy() {}
 Ptr<class Animation2DClip> Animation2DSequence::FindAnimationClip(const std::string& name)
 {
     if (auto it = _animationClips.find(name); _animationClips.end() != it)
-        return it->second;
+        return Lock(it->second);
 
     return nullptr;
 }

@@ -9,7 +9,7 @@ public:
     ~Animation2DSequence() override = default;
 
 private:
-    std::unordered_map<std::string, Ptr<class Animation2DClip>> _animationClips;
+    std::unordered_map<std::string, Weak<class Animation2DClip>> _animationClips;
 
 public:
     void Destroy() override;

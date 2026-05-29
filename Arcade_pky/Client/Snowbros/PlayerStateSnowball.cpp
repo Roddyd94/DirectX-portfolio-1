@@ -2,12 +2,18 @@
 
 #include "PlayerStateSnowball.h"
 
+#include "Core/TimeManager.h"
+
 #include "PlayerStateMidair.h"
+#include "SnowbrosEnemy.h"
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
+#include "AI/AIComponent.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Core/Collision/CollisionComponent.h"
 #include "Platformer/PlatformerKinematicComponent.h"
+#include "Platformer/PlatformerKinematicPlayerComponent.h"
+#include "Platformer/PlatformerMovementComponent.h"
 #include "Player/Player.h"
 #include "Player/PlayerComponent.h"
 #include "Player/PlayerController.h"
@@ -23,7 +29,29 @@ Ptr<PlayerState> PlayerStateSnowball::HandleInput(Ptr<class PlayerComponent> pla
   Ptr<class InputAction>                                                     action,
   ButtonEventType::Type                                                      buttonEvent)
 {
-    // if (action)
+    Ptr<Actor> player = playerComponent->GetOwner();
+
+    auto blackboard = GetBlackboard(playerComponent);
+    auto movement   = player->FindActorComponent<PlatformerMovementComponent>("Movement");
+
+    if (action->GetName() == "Jump")
+    {
+        switch (buttonEvent)
+        {
+        case ButtonEventType::Down:
+        {
+            Ptr<PlatformerKinematicPlayerComponent> kinematic
+              = player->FindActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
+
+            movement->Jump();
+            kinematic->ChangeStateTo(PlatformerKinematicState::OnAir);
+            blackboard->jumpedFromSnowball = true;
+
+            return New<PlayerStateMidair>(true);
+        }
+        break;
+        }
+    }
 
     return nullptr;
 }
@@ -55,12 +83,37 @@ void PlayerStateSnowball::Tick(Ptr<class PlayerComponent> playerComponent, float
     auto snowballCollider = Lock(blackboard->bindTargetSnowball);
 
     if (nullptr == snowballCollider)
-    {
-        blackboard->bindTargetSnowball.reset();
-        playerComponent->Transition(New<PlayerStateMidair>(true));
         return;
-    }
 
     Vector2 otherPosition = snowballCollider->GetWorldPosition().ToVector2();
     player->SetWorldPosition(otherPosition);
+
+    auto pawn = Cast<Actor, SnowbrosEnemy>(snowballCollider->GetOwner());
+    if (nullptr == pawn)
+        return;
+
+    auto ai = pawn->GetAIComponent();
+    if (nullptr == ai)
+        return;
+
+    auto snowballStateMachine = ai->GetAIStateMachine();
+    if (nullptr == snowballStateMachine)
+        return;
+
+    auto snowballState = snowballStateMachine->GetCurrentState();
+    if (nullptr == snowballState)
+        return;
+
+    if (snowballState->GetName() == "SnowballCrashing")
+    {
+        blackboard->bindTargetSnowball.reset();
+
+        auto movement = player->FindActorComponent<PlatformerMovementComponent>("Movement");
+        auto kinematic
+          = player->FindActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
+
+        movement->Jump();
+        kinematic->ChangeStateTo(PlatformerKinematicState::OnAir);
+        playerComponent->Transition(New<PlayerStateMidair>(true));
+    }
 }

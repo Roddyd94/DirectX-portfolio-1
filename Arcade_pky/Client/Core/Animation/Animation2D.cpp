@@ -25,24 +25,28 @@ void Animation2D::Tick(float deltaTime)
     if (!_isPlaying)
         return;
 
-    _accTime += deltaTime * _playRate;
-
-    if (_accTime < _currentAnimationClip->GetFrameTime())
+    auto clip = Lock(_currentAnimationClip);
+    if (nullptr == clip)
         return;
 
-    _accTime -= _currentAnimationClip->GetFrameTime();
+    _accTime += deltaTime * _playRate;
+
+    if (_accTime < clip->GetFrameTime())
+        return;
+
+    _accTime -= clip->GetFrameTime();
     ++_frameIndex;
 
-    if (_frameIndex >= _currentAnimationClip->GetFrameCount())
+    if (_frameIndex >= clip->GetFrameCount())
     {
-        if (_currentAnimationClip->IsLoop())
+        if (clip->IsLoop())
             _frameIndex = 0;
         else
         {
             _isPlaying = false;
             InvokeNotify();
             if (_frameIndex != 0)
-                _frameIndex = _currentAnimationClip->GetFrameCount() - 1;
+                _frameIndex = clip->GetFrameCount() - 1;
         }
     }
 
@@ -52,18 +56,21 @@ void Animation2D::Tick(float deltaTime)
 
 Ptr<class Animation2DSequence> Animation2D::GetSequence() const
 {
-    return _animationSequence;
+    return Lock(_animationSequence);
 }
 
 Ptr<class Animation2DClip> Animation2D::GetCurrentClip() const
 {
-    return _currentAnimationClip;
+    return Lock(_currentAnimationClip);
 }
 
 int32 Animation2D::GetClipFrameCount(const std::string& name) const
 {
-    auto animationClip = _animationSequence->FindAnimationClip(name);
+    auto sequence = Lock(_animationSequence);
+    if (nullptr == sequence)
+        return 0;
 
+    auto animationClip = sequence->FindAnimationClip(name);
     if (nullptr == animationClip)
         return 0;
 
@@ -72,7 +79,11 @@ int32 Animation2D::GetClipFrameCount(const std::string& name) const
 
 int32 Animation2D::GetFrameCount() const
 {
-    return _currentAnimationClip->GetFrameCount();
+    auto clip = Lock(_currentAnimationClip);
+    if (nullptr == clip)
+        return 0;
+
+    return clip->GetFrameCount();
 }
 
 int32 Animation2D::GetFrameIndex() const
@@ -118,10 +129,14 @@ void Animation2D::SetFlipX(bool flipX)
 
 void Animation2D::SetShader()
 {
-    int32 frameIndex
-      = _isReversed ? _currentAnimationClip->GetFrameCount() - 1 - _frameIndex : _frameIndex;
-    frameIndex = std::clamp(frameIndex, 0, _currentAnimationClip->GetFrameCount() - 1);
-    Animation2DSprite sprite = _currentAnimationClip->GetFrame(frameIndex);
+    auto clip = Lock(_currentAnimationClip);
+
+    if (nullptr == clip)
+        return;
+
+    int32 frameIndex         = _isReversed ? clip->GetFrameCount() - 1 - _frameIndex : _frameIndex;
+    frameIndex               = std::clamp(frameIndex, 0, clip->GetFrameCount() - 1);
+    Animation2DSprite sprite = clip->GetFrame(frameIndex);
     SpriteData        data   = sprite.spriteSheet->GetSpriteData(sprite.spriteIndex);
 
     Ptr<Texture> texture = sprite.spriteSheet->GetTexture();
@@ -165,7 +180,11 @@ void Animation2D::Stop()
 
 void Animation2D::ChangeAnimationClip(const std::string& name, bool play)
 {
-    Ptr<Animation2DClip> clip = _animationSequence->FindAnimationClip(name);
+    auto sequence = Lock(_animationSequence);
+    if (nullptr == sequence)
+        return;
+
+    Ptr<Animation2DClip> clip = sequence->FindAnimationClip(name);
     if (nullptr == clip)
         return;
 
@@ -176,7 +195,11 @@ void Animation2D::ChangeAnimationClip(const std::string& name, bool play)
 
 void Animation2D::InvokeNotify()
 {
-    std::pair<int32, int32> key = {_currentAnimationClip->GetID(), _frameIndex};
+    auto clip = Lock(_currentAnimationClip);
+    if (nullptr == clip)
+        return;
+
+    std::pair<int32, int32> key = {clip->GetID(), _frameIndex};
 
     auto it = _notifies.find(key);
     if (_notifies.end() == it)

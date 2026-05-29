@@ -21,7 +21,7 @@ const std::string& AITransition::GetName() const
 
 Ptr<class AIState> AITransition::GetJumpState() const
 {
-    return _jumpState;
+    return Lock(_jumpState);
 }
 
 void AITransition::SetName(const std::string& name)

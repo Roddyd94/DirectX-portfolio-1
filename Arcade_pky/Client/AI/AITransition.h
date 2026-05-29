@@ -15,7 +15,7 @@ public:
 protected:
     std::string                _name;
     Ptr<class AIConditionBase> _condition;
-    Ptr<class AIState>         _jumpState;
+    Weak<class AIState>         _jumpState;
 
 public:
     bool Init(const std::string& name, Ptr<class AIState> jumpState);

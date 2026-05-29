@@ -28,6 +28,7 @@ public:
     Vector3 GetCameraWorldPosition() const;
 
     void SetMainCamera(Ptr<class CameraComponent> camera);
+    void RemoveCamera(Ptr<class CameraComponent> camera);
 
     void ChangeMainCamera(const std::string& name);
 

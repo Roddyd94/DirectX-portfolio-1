@@ -17,8 +17,7 @@ CameraComponent::CameraComponent()
 
 CameraComponent::~CameraComponent() {}
 
-bool CameraComponent::Init(
-  int32 componentID, const std::string& name, Ptr<class Actor> owner)
+bool CameraComponent::Init(int32 componentID, const std::string& name, Ptr<class Actor> owner)
 {
     SceneComponent::Init(componentID, name, owner);
 
@@ -33,7 +32,11 @@ bool CameraComponent::Init(
     return true;
 }
 
-void CameraComponent::Destroy() {}
+void CameraComponent::Destroy()
+{
+    Ptr<Level> level = GetOwner()->GetLevel();
+    level->RemoveCamera(This<CameraComponent>());
+}
 
 void CameraComponent::Tick(float deltaTime)
 {
@@ -79,13 +82,12 @@ void CameraComponent::SetProjectionType(CameraType type)
     case CameraType::Perspective:
     {
         float fovRadian = DirectX::XMConvertToRadians(_viewAngle);
-        _matProj        = DirectX::XMMatrixPerspectiveFovLH(
-          fovRadian, _width / _height, 0.1f, 1000.f);
+        _matProj = DirectX::XMMatrixPerspectiveFovLH(fovRadian, _width / _height, 0.1f, 1000.f);
     }
     break;
     case CameraType::Orthographic:
-        _matProj = DirectX::XMMatrixOrthographicOffCenterLH(_width / -2,
-          _width / 2, _height / -2, _height / 2, 0.f, _viewDistance);
+        _matProj = DirectX::XMMatrixOrthographicOffCenterLH(
+          _width / -2, _width / 2, _height / -2, _height / 2, 0.f, _viewDistance);
         break;
     default:
         break;

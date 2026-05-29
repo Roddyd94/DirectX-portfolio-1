@@ -15,7 +15,7 @@
 
 bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
 {
-    auto pawn     = GetOwner()->GetPawn();
+    auto pawn      = GetOwner()->GetPawn();
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
     if (kinematic->IsColliderMovingAgainstBoundaryX(deltaX))
@@ -99,7 +99,7 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
 
 void SnowballMorphableEnemyStateMachine::Throw(float direction)
 {
-    auto pawn     = GetOwner()->GetPawn();
+    auto pawn      = GetOwner()->GetPawn();
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
     auto blackboard = Cast<AIBlackboard, SnowballMorphableEnemyBlackboard>(_blackboard);
@@ -120,7 +120,10 @@ void SnowballMorphableEnemyStateMachine::FindSnowballs(Ptr<class CollisionManage
         if (nullptr == otherCollider)
             continue;
 
-        auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
+        auto otherPawn = Cast<Actor, Pawn>(otherCollider->GetOwner());
+        if (nullptr == otherPawn)
+            continue;
+
         auto otherActor = otherPawn->GetController();
         if (nullptr == otherActor)
             continue;

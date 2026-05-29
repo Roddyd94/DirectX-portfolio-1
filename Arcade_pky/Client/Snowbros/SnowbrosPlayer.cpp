@@ -39,37 +39,37 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     animation->SetAnimationSequence("player");
     animation->ChangeAnimationClip("player_stand");
     animation->AddNotify("player_jump", animation->GetClipFrameCount("player_jump"),
-      [animation]()
+      [animation = Weak(animation)]()
       {
-          animation->ChangeAnimationClip("player_tumble");
+          Lock(animation)->ChangeAnimationClip("player_tumble");
       });
     animation->AddNotify("player_tumble", animation->GetClipFrameCount("player_tumble"),
-      [animation]()
+      [animation = Weak(animation)]()
       {
-          animation->ChangeAnimationClip("player_midair");
+          Lock(animation)->ChangeAnimationClip("player_midair");
       });
     animation->AddNotify("player_shoot", animation->GetClipFrameCount("player_shoot"),
-      [animation]()
+      [animation = Weak(animation)]()
       {
-          animation->ChangeAnimationClip("player_stand");
+          Lock(animation)->ChangeAnimationClip("player_stand");
       });
     animation->AddNotify("player_shoot_midair", animation->GetClipFrameCount("player_shoot_midair"),
-      [animation]()
+      [animation = Weak(animation)]()
       {
-          animation->ChangeAnimationClip("player_midair");
+          Lock(animation)->ChangeAnimationClip("player_midair");
       });
     animation->AddNotify("player_kick", animation->GetClipFrameCount("player_kick"),
-      [=]()
+      [animation = Weak(animation), playerComponent = Weak(_playerComponent)]()
       {
-          if (SnowbrosPlayerStateType::Midair == _playerComponent->GetStateType())
-              animation->ChangeAnimationClip("player_midair");
+          if (SnowbrosPlayerStateType::Midair == Lock(playerComponent)->GetStateType())
+              Lock(animation)->ChangeAnimationClip("player_midair");
           else
-              animation->ChangeAnimationClip("player_stand");
+              Lock(animation)->ChangeAnimationClip("player_stand");
       });
     animation->AddNotify("player_kick_midair", animation->GetClipFrameCount("player_kick_midair"),
-      [animation]()
+      [animation = Weak(animation)]()
       {
-          animation->ChangeAnimationClip("player_midair");
+          Lock(animation)->ChangeAnimationClip("player_midair");
       });
 
     _headCollider = CreateSceneComponent<PointCollisionComponent>("HeadCollider");
@@ -97,19 +97,19 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     _collider->SetBoxSize({1.f, 0.9f});
     _collider->SetCollisionProfile("Player");
     _collider->RegisterCollisionCallBack(CollisionState::Enter,
-      [=](Weak<CollisionComponent> collider)
+      [playerComponent = Weak(_playerComponent)](Weak<CollisionComponent> collider)
       {
-          _playerComponent->CollideWith(CollisionState::Enter, collider);
+          Lock(playerComponent)->CollideWith(CollisionState::Enter, collider);
       });
     _collider->RegisterCollisionCallBack(CollisionState::Stay,
-      [=](Weak<CollisionComponent> collider)
+      [playerComponent = Weak(_playerComponent)](Weak<CollisionComponent> collider)
       {
-          _playerComponent->CollideWith(CollisionState::Stay, collider);
+          Lock(playerComponent)->CollideWith(CollisionState::Stay, collider);
       });
     _collider->RegisterCollisionCallBack(CollisionState::Exit,
-      [=](Weak<CollisionComponent> collider)
+      [playerComponent = Weak(_playerComponent)](Weak<CollisionComponent> collider)
       {
-          _playerComponent->CollideWith(CollisionState::Exit, collider);
+          Lock(playerComponent)->CollideWith(CollisionState::Exit, collider);
       });
 
     auto shootComponent = CreateActorComponent<ShootComponent>("Shoot");
@@ -134,19 +134,19 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     kinematic->SetCollider(_collider);
     kinematic->SetTilemap(tilemap);
     kinematic->RegisterOnStateChangedCallback(PlatformerKinematicState::OnGround,
-      [this]()
+      [playerComponent = Weak(_playerComponent)]()
       {
-          _playerComponent->Transition(PlayerStateGround::instance);
+          Lock(playerComponent)->Transition(PlayerStateGround::instance);
       });
     kinematic->RegisterOnStateChangedCallback(PlatformerKinematicState::OnAir,
-      [this]()
+      [playerComponent = Weak(_playerComponent)]()
       {
-          _playerComponent->Transition(New<PlayerStateMidair>(false));
+          Lock(playerComponent)->Transition(New<PlayerStateMidair>(false));
       });
     kinematic->RegisterOnStateChangedCallback(PlatformerKinematicState::OnStandable,
-      [this]()
+      [playerComponent = Weak(_playerComponent)]()
       {
-          _playerComponent->Transition(PlayerStateGround::instance);
+          Lock(playerComponent)->Transition(PlayerStateGround::instance);
       });
 
     auto movement = CreateActorComponent<PlatformerMovementComponent>("Movement");

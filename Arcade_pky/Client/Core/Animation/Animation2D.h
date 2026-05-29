@@ -20,8 +20,8 @@ public:
 private:
     std::map<std::pair<int32, int32>, Animation2DNotify> _notifies;
     Weak<class SpriteComponent>                          _owner;
-    Ptr<class Animation2DSequence>                       _animationSequence;
-    Ptr<class Animation2DClip>                           _currentAnimationClip;
+    Weak<class Animation2DSequence>                      _animationSequence;
+    Weak<class Animation2DClip>                          _currentAnimationClip;
     Ptr<class Animation2DConstantBuffer>                 _buffer;
 
     int32 _frameIndex = 0;
@@ -68,7 +68,11 @@ public:
     template <typename T>
     void AddNotify(const std::string& clipName, int32 frameIndex, T* obj, void (T::*memFunc)())
     {
-        Ptr<Animation2DClip> clip = _animationSequence->FindAnimationClip(clipName);
+        auto sequence = Lock(_animationSequence);
+        if (nullptr == sequence)
+            return;
+
+        Ptr<Animation2DClip> clip = sequence->FindAnimationClip(clipName);
         if (nullptr == clip)
             return;
 
@@ -80,7 +84,11 @@ public:
     template <typename T>
     void AddNotify(const std::string& clipName, int32 frameIndex, T&& func)
     {
-        Ptr<Animation2DClip> clip = _animationSequence->FindAnimationClip(clipName);
+        auto sequence = Lock(_animationSequence);
+        if (nullptr == sequence)
+            return;
+
+        Ptr<Animation2DClip> clip = sequence->FindAnimationClip(clipName);
         if (nullptr == clip)
             return;
 

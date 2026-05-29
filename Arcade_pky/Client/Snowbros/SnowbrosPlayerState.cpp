@@ -76,6 +76,9 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
             case SnowbrosPlayerStateType::Ground:
             case SnowbrosPlayerStateType::Midair:
             {
+                if (blackboard->jumpedFromSnowball)
+                    break;
+
                 blackboard->bindTargetSnowball = collider;
                 playerComponent->Transition(PlayerStateSnowball::instance);
             }

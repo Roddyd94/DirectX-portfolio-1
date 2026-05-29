@@ -17,7 +17,7 @@ void Animation2DSpriteSheet::Destroy() {}
 
 Ptr<class Texture> Animation2DSpriteSheet::GetTexture() const
 {
-    return _texture;
+    return Lock(_texture);
 }
 
 const SpriteData& Animation2DSpriteSheet::GetSpriteData(int32 index) const

@@ -138,7 +138,10 @@ void PlayerStateGround::Enter(Ptr<class PlayerComponent> playerComponent)
 {
     Ptr<Player> player = playerComponent->GetPlayer();
 
+    auto blackboard = GetBlackboard(playerComponent);
     auto controller = player->GetController();
+
+    blackboard->jumpedFromSnowball = false;
     controller->SetActiveContext("Ground");
 
     Ptr<PlatformerKinematicComponent> kinematic

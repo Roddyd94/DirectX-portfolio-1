@@ -51,6 +51,7 @@ public:
 
     void RemoveActor(int32 actorID);
     void SetMainCamera(Ptr<class CameraComponent> camera);
+    void RemoveCamera(Ptr<class CameraComponent> camera);
 
 #ifdef _HAS_COLLISION_MODULE
     Ptr<class CollisionComponent> FindCollider(

@@ -197,6 +197,11 @@ void Level::SetMainCamera(Ptr<CameraComponent> camera)
     _cameraManager->SetMainCamera(camera);
 }
 
+void Level::RemoveCamera(Ptr<class CameraComponent> camera)
+{
+    _cameraManager->RemoveCamera(camera);
+}
+
 #ifdef _HAS_COLLISION_MODULE
 Ptr<CollisionComponent> Level::FindCollider(
   ColliderType::Type colliderType, const ComponentIDPair& colliderID)

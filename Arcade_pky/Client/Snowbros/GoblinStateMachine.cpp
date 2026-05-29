@@ -75,8 +75,13 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
 #pragma region ColliderCallbacks
     collider->RegisterCollisionCallBack(CollisionState::Enter,
-      [=, thisCollider = collider](Weak<CollisionComponent> collider)
+      [this, weakCollider = Weak(collider), weakKinematic = Weak(kinematic),
+        weakBlackboard = Weak(blackboard)](Weak<CollisionComponent> collider)
       {
+          auto thisCollider = Lock(weakCollider);
+          auto kinematic    = Lock(weakKinematic);
+          auto blackboard   = Lock(weakBlackboard);
+
           Ptr<CollisionComponent> otherCollider     = Lock(collider);
           ColliderType::Type      otherColliderType = otherCollider->GetColliderType();
 
@@ -169,7 +174,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
                       {
                           auto otherKinematic
-                            = otherActor->FindActorComponent<PlatformerKinematicComponent>(
+                            = otherPawn->FindActorComponent<PlatformerKinematicComponent>(
                               "Kinematic");
 
                           Vector2 otherVelocity = otherKinematic->GetVelocity();
@@ -216,8 +221,13 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           }
       });
     collider->RegisterCollisionCallBack(CollisionState::Stay,
-      [=](Weak<CollisionComponent> collider)
+      [this, weakCollider = Weak(collider), weakKinematic = Weak(kinematic),
+        weakBlackboard = Weak(blackboard)](Weak<CollisionComponent> collider)
       {
+          auto thisCollider = Lock(weakCollider);
+          auto kinematic    = Lock(weakKinematic);
+          auto blackboard   = Lock(weakBlackboard);
+
           Ptr<CollisionComponent> otherCollider     = Lock(collider);
           ColliderType::Type      otherColliderType = otherCollider->GetColliderType();
 
@@ -227,7 +237,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           {
               auto thisPosition  = GetOwner()->GetOwner()->GetWorldPosition();
               auto otherPosition = otherCollider->GetWorldPosition();
-              
+
               auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
               auto otherActor = otherPawn->GetController();
               auto otherAI    = otherActor->FindActorComponent<AIComponent>("AI");
@@ -315,137 +325,203 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
 #pragma region AnimationNotifies
     animation->AddNotify("goblin_turn", animation->GetClipFrameCount("goblin_turn"),
-      [=]()
+      [weakBlackboard = Weak(blackboard)]()
       {
+          auto blackboard    = Lock(weakBlackboard);
           blackboard->turned = true;
       });
     animation->AddNotify("goblin_crouch", animation->GetClipFrameCount("goblin_crouch"),
-      [=]()
+      [this]()
       {
-          this->Transition("Walk");
+          Transition("Walk");
       });
     animation->AddNotify("goblin_jump", animation->GetClipFrameCount("goblin_jump"),
-      [=]()
+      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)]()
       {
+          auto kinematic  = Lock(weakKinematic);
+          auto blackboard = Lock(weakBlackboard);
+
           kinematic->AddForce(blackboard->GetTargetJumpForce());
           blackboard->isJumping = true;
       });
     animation->AddNotify("goblin_awake", animation->GetClipFrameCount("goblin_awake"),
-      [=]()
+      [weakAnimation = Weak(animation)]()
       {
+          auto animation = Lock(weakAnimation);
           animation->ChangeAnimationClip("goblin_dizzy");
       });
     animationSnowball->AddNotify("snowball_crash",
       animationSnowball->GetClipFrameCount("snowball_crash"),
-      [=]()
+      [weakPawn = Weak(pawn), weakSpriteSnowball = Weak(spriteSnowball)]()
       {
-          spriteSnowball->SetEnable(false);
+          auto pawn           = Lock(weakPawn);
+          auto spriteSnowball = Lock(weakSpriteSnowball);
+
           pawn->SetActive(false);
+          spriteSnowball->SetEnable(false);
       });
 #pragma endregion AnimationNotifies
 
 #pragma region RegisterStateCallbackEnter
     enemyStateWalk->RegisterCallback(AIEventState::Enter,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard),
+        weakAnimation = Weak(animation)](float deltaTime)
       {
+          auto kinematic  = Lock(weakKinematic);
+          auto animation  = Lock(weakAnimation);
+          auto blackboard = Lock(weakBlackboard);
+
           animation->ChangeAnimationClip("goblin_walk");
           kinematic->SetVelocityX(blackboard->direction * blackboard->walkSpeedX);
       });
     enemyStateTurn->RegisterCallback(AIEventState::Enter,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard),
+        weakAnimation = Weak(animation)](float deltaTime)
       {
+          auto kinematic  = Lock(weakKinematic);
+          auto animation  = Lock(weakAnimation);
+          auto blackboard = Lock(weakBlackboard);
+
           blackboard->turned = false;
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_turn");
       });
     enemyStateJump->RegisterCallback(AIEventState::Enter,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard),
+        weakAnimation = Weak(animation)](float deltaTime)
       {
+          auto kinematic  = Lock(weakKinematic);
+          auto animation  = Lock(weakAnimation);
+          auto blackboard = Lock(weakBlackboard);
+
           blackboard->isJumping = false;
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_jump");
       });
     enemyStateFall->RegisterCallback(AIEventState::Enter,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic), weakAnimation = Weak(animation)](float deltaTime)
       {
+          auto kinematic = Lock(weakKinematic);
+          auto animation = Lock(weakAnimation);
+
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_midair");
       });
     enemyStateCrouch->RegisterCallback(AIEventState::Enter,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic), weakAnimation = Weak(animation)](float deltaTime)
       {
+          auto kinematic = Lock(weakKinematic);
+          auto animation = Lock(weakAnimation);
+
           kinematic->AdjustPositionToFloor();
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_crouch");
       });
     enemyStateStruggle->RegisterCallback(AIEventState::Enter,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic), weakSprite = Weak(sprite),
+        weakSpriteSnowball = Weak(spriteSnowball),
+        weakSpriteBehind   = Weak(spriteBehind)](float deltaTime)
       {
+          auto kinematic      = Lock(weakKinematic);
+          auto sprite         = Lock(weakSprite);
+          auto spriteSnowball = Lock(weakSpriteSnowball);
+          auto spriteBehind   = Lock(weakSpriteBehind);
+
           kinematic->SetVelocity(Vector2::zero);
-          animation->ChangeAnimationClip("goblin_struggle");
           sprite->SetEnable(false);
-          spriteBehind->SetEnable(true);
+          sprite->ChangeAnimation("goblin_struggle");
           spriteSnowball->SetEnable(true);
-          animationSnowball->ChangeAnimationClip("snowball_forming", false);
-          animationBehind->ChangeAnimationClip("goblin_struggle");
+          spriteSnowball->ChangeAnimation("snowball_forming", false);
+          spriteBehind->SetEnable(true);
+          spriteBehind->ChangeAnimation("goblin_struggle");
       });
     enemyStateSnowball->RegisterCallback(AIEventState::Enter,
-      [=](float deltaTime)
+      [weakBlackboard = Weak(blackboard), weakPawn = Weak(pawn), weakSprite = Weak(sprite),
+        weakSpriteSnowball = Weak(spriteSnowball)](float deltaTime)
       {
+          auto blackboard     = Lock(weakBlackboard);
+          auto pawn           = Lock(weakPawn);
+          auto sprite         = Lock(weakSprite);
+          auto spriteSnowball = Lock(weakSpriteSnowball);
+
           blackboard->previousPosition = pawn->GetWorldPosition().ToVector2();
           blackboard->accTime += blackboard->snowballFormedBonusValue;
           sprite->SetEnable(false);
           spriteSnowball->SetEnable(true);
-          animationSnowball->ChangeAnimationClip("snowball_formed", false);
+          spriteSnowball->ChangeAnimation("snowball_formed", false);
       });
     enemyStateRolling->RegisterCallback(AIEventState::Enter,
-      [=](float deltaTime)
+      [weakBlackboard = Weak(blackboard), weakSprite = Weak(sprite),
+        weakSpriteSnowball = Weak(spriteSnowball)](float deltaTime)
       {
+          auto blackboard     = Lock(weakBlackboard);
+          auto sprite         = Lock(weakSprite);
+          auto spriteSnowball = Lock(weakSpriteSnowball);
+
           blackboard->hitCount = 0;
           sprite->SetEnable(false);
           spriteSnowball->SetEnable(true);
           if (blackboard->isSnowballReinforced)
-              animationSnowball->ChangeAnimationClip("snowball_reinforced");
+              spriteSnowball->ChangeAnimation("snowball_reinforced");
           else
-              animationSnowball->ChangeAnimationClip("snowball_rolling");
+              spriteSnowball->ChangeAnimation("snowball_rolling");
       });
     enemyStateDizzy->RegisterCallback(AIEventState::Enter,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic), weakAnimation = Weak(animation)](float deltaTime)
       {
+          auto kinematic = Lock(weakKinematic);
+          auto animation = Lock(weakAnimation);
+
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_awake");
       });
     enemyStateCrashing->RegisterCallback(AIEventState::Enter,
-      [=](float deltaTime)
+      [weakAnimationSnowball = Weak(animationSnowball)](float deltaTime)
       {
-          // todo particle
+          // todo particle,
+
+          auto animationSnowball = Lock(weakAnimationSnowball);
           animationSnowball->ChangeAnimationClip("snowball_crash");
       });
 #pragma endregion RegisterStateCallbackEnter
 
 #pragma region RegisterStateCallbackTick
     enemyStateWalk->RegisterCallback(AIEventState::Tick,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime)
       {
+          auto kinematic  = Lock(weakKinematic);
+          auto blackboard = Lock(weakBlackboard);
+
           kinematic->SetVelocity({blackboard->direction * blackboard->walkSpeedX, 0.f});
           blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
       });
     enemyStateJump->RegisterCallback(AIEventState::Tick,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime)
       {
+          auto kinematic  = Lock(weakKinematic);
+          auto blackboard = Lock(weakBlackboard);
+
           if (blackboard->isJumping)
               kinematic->AddGravity(deltaTime);
           blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
       });
     enemyStateFall->RegisterCallback(AIEventState::Tick,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime)
       {
+          auto kinematic  = Lock(weakKinematic);
+          auto blackboard = Lock(weakBlackboard);
+
           kinematic->AddGravity(deltaTime);
           blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
       });
     enemyStateStruggle->RegisterCallback(AIEventState::Tick,
-      [=](float deltaTime)
+      [this, weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard),
+        weakAnimationSnowball = Weak(animationSnowball)](float deltaTime)
       {
+          auto kinematic         = Lock(weakKinematic);
+          auto blackboard        = Lock(weakBlackboard);
+          auto animationSnowball = Lock(weakAnimationSnowball);
+
           Vector2 velocity = kinematic->GetVelocity();
 
           if (velocity.y < 0.f && kinematic->IsColliderMovingAgainstFloor(velocity * deltaTime))
@@ -475,8 +551,15 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           }
       });
     enemyStateSnowball->RegisterCallback(AIEventState::Tick,
-      [=](float deltaTime)
+      [this, weakPawn = Weak(pawn), weakKinematic = Weak(kinematic),
+        weakBlackboard     = Weak(blackboard),
+        weakSpriteSnowball = Weak(spriteSnowball)](float deltaTime)
       {
+          auto pawn           = Lock(weakPawn);
+          auto kinematic      = Lock(weakKinematic);
+          auto blackboard     = Lock(weakBlackboard);
+          auto spriteSnowball = Lock(weakSpriteSnowball);
+
           Vector2 currentPosition = pawn->GetWorldPosition().ToVector2();
           if (std::abs(currentPosition.x - blackboard->previousPosition.x)
               > blackboard->snowballFrameDistance)
@@ -508,8 +591,11 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               Transition("Struggle");
       });
     enemyStateRolling->RegisterCallback(AIEventState::Tick,
-      [=](float deltaTime)
+      [this, weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime)
       {
+          auto kinematic  = Lock(weakKinematic);
+          auto blackboard = Lock(weakBlackboard);
+
           Vector2 velocity = kinematic->GetVelocity();
 
           if (velocity.y < 0.f && kinematic->IsColliderMovingAgainstFloor(velocity * deltaTime))
@@ -541,8 +627,10 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           }
       });
     enemyStateDizzy->RegisterCallback(AIEventState::Tick,
-      [=](float deltaTime)
+      [this, weakBlackboard = Weak(blackboard)](float deltaTime)
       {
+          auto blackboard = Lock(weakBlackboard);
+
           blackboard->accTime += deltaTime;
 
           if (blackboard->accTime > blackboard->dizzyTime)
@@ -555,32 +643,45 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
 #pragma region RegisterStateCallbackExit
     enemyStateTurn->RegisterCallback(AIEventState::Exit,
-      [=](float deltaTime)
+      [weakAnimation = Weak(animation), weakBlackboard = Weak(blackboard)](float deltaTime)
       {
+          auto animation  = Lock(weakAnimation);
+          auto blackboard = Lock(weakBlackboard);
+
           animation->SetFlipX(!animation->GetFlipX());
           blackboard->direction = -blackboard->direction;
       });
     enemyStateJump->RegisterCallback(AIEventState::Exit,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic)](float deltaTime)
       {
+          auto kinematic = Lock(weakKinematic);
           kinematic->SetVelocity(Vector2::zero);
       });
     enemyStateFall->RegisterCallback(AIEventState::Exit,
-      [=](float deltaTime)
+      [weakKinematic = Weak(kinematic)](float deltaTime)
       {
+          auto kinematic = Lock(weakKinematic);
           kinematic->SetVelocity(Vector2::zero);
       });
     enemyStateStruggle->RegisterCallback(AIEventState::Exit,
-      [=](float deltaTime)
+      [weakSprite = Weak(sprite), weakSpriteBehind = Weak(spriteBehind),
+        weakSpriteSnowball = Weak(spriteSnowball)](float deltaTime)
       {
-          animationSnowball->ChangeAnimationClip("snowball_none");
-          sprite->SetEnable(true);
+          auto sprite         = Lock(weakSprite);
+          auto spriteBehind   = Lock(weakSpriteBehind);
+          auto spriteSnowball = Lock(weakSpriteSnowball);
+
           spriteSnowball->SetEnable(false);
+          spriteSnowball->ChangeAnimation("snowball_none");
+          sprite->SetEnable(true);
           spriteBehind->SetEnable(false);
       });
     enemyStateSnowball->RegisterCallback(AIEventState::Exit,
-      [=](float deltaTime)
+      [weakSprite = Weak(sprite), weakSpriteSnowball = Weak(spriteSnowball)](float deltaTime)
       {
+          auto sprite         = Lock(weakSprite);
+          auto spriteSnowball = Lock(weakSpriteSnowball);
+
           sprite->SetEnable(true);
           spriteSnowball->SetEnable(false);
       });
@@ -588,29 +689,40 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
 #pragma region AIConditions
     auto conditionTurned = CreateAICondition("Turned", ConditionOperator::And,
-      [=]() -> bool
+      [weakBlackboard = Weak(blackboard)]() -> bool
       {
+          auto blackboard = Lock(weakBlackboard);
           return blackboard->turned;
       });
     auto conditionMoveAgainstBoundaryX
       = CreateAICondition("MoveAgainstBoundaryX", ConditionOperator::And,
-        [=]() -> bool
+        [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)]() -> bool
         {
+            auto kinematic  = Lock(weakKinematic);
+            auto blackboard = Lock(weakBlackboard);
+
             return kinematic->IsColliderMovingAgainstBoundaryX(blackboard->previousDelta.x);
         });
     auto conditionNotOnFloor       = CreateAICondition("NotOnFloor", ConditionOperator::And,
-            [=]() -> bool
+            [weakKinematic = Weak(kinematic)]() -> bool
             {
+          auto kinematic = Lock(weakKinematic);
           return !kinematic->IsColliderOnFloor();
       });
     auto conditionMoveAgainstWall  = CreateAICondition("MoveAgainstWall", ConditionOperator::And,
-       [=]() -> bool
+       [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)]() -> bool
        {
+          auto kinematic  = Lock(weakKinematic);
+          auto blackboard = Lock(weakBlackboard);
+
           return kinematic->IsColliderMovingAgainstWallX(blackboard->previousDelta.x);
       });
     auto conditionMoveAgainstFloor = CreateAICondition("MoveAgainstFloor", ConditionOperator::And,
-      [=]() -> bool
+      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)]() -> bool
       {
+          auto kinematic  = Lock(weakKinematic);
+          auto blackboard = Lock(weakBlackboard);
+
           bool isFalling = kinematic->GetVelocity().y < 0.f;
           bool wasColliderBottomOnBlock
             = kinematic->IsColliderBottomOnBlock(-blackboard->previousDelta);
@@ -619,8 +731,11 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           return isFalling && !wasColliderBottomOnBlock && isColliderOnFloor;
       });
     auto conditionIsPlayerAbove    = CreateAICondition("IsPlayerAbove", ConditionOperator::And,
-         [=]() -> bool
+         [weakLevel = Weak(level), weakPawn = Weak(pawn)]() -> bool
          {
+          auto level = Lock(weakLevel);
+          auto pawn  = Lock(weakPawn);
+
           Ptr<Player> player          = level->GetPlayer();
           float       playerPositionY = player->GetWorldPosition().y;
           float       thisPositionY   = pawn->GetWorldPosition().y;
@@ -629,8 +744,13 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       });
     auto conditionHasLandingTileForward
       = CreateAICondition("HasLandingTileForward", ConditionOperator::And,
-        [=]() -> bool
+        [weakTilemap = Weak(tilemap), weakBlackboard = Weak(blackboard),
+          weakPawn = Weak(pawn)]() -> bool
         {
+            auto tilemap    = Lock(weakTilemap);
+            auto pawn       = Lock(weakPawn);
+            auto blackboard = Lock(weakBlackboard);
+
             Ptr<Tile> tile           = tilemap->GetTile(pawn->GetWorldPosition().ToVector2());
             Vector2   targetPosition = tile->GetPosition();
 
@@ -659,8 +779,13 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
         });
     auto conditionHasLandingTileAbove
       = CreateAICondition("HasLandingTileAbove", ConditionOperator::And,
-        [=]() -> bool
+        [weakTilemap = Weak(tilemap), weakBlackboard = Weak(blackboard),
+          weakPawn = Weak(pawn)]() -> bool
         {
+            auto tilemap    = Lock(weakTilemap);
+            auto pawn       = Lock(weakPawn);
+            auto blackboard = Lock(weakBlackboard);
+
             Ptr<Tile> tile           = tilemap->GetTile(pawn->GetWorldPosition().ToVector2());
             Vector2   targetPosition = tile->GetPosition();
 

@@ -14,8 +14,7 @@ public:
     ~AIStateMachine() override = default;
 
 protected:
-    std::unordered_map<std::string, Ptr<class AIState>>         _states;
-    std::unordered_map<std::string, Ptr<class AIConditionBase>> _conditions;
+    std::unordered_map<std::string, Ptr<class AIState>> _states;
 
     Weak<class AIComponent> _owner;
     Ptr<class AIBlackboard> _blackboard;
@@ -61,16 +60,6 @@ public:
         return Cast<AIState, T>(FindAIState(name));
     }
 
-    template <typename T>
-    Ptr<T> FindAICondition(const std::string& name) const
-    {
-        auto it = _conditions.find(name);
-        if (_conditions.end() == it)
-            return nullptr;
-
-        return Cast<AIConditionBase, T>(it->second);
-    }
-
     template <typename T, typename... Args>
     Ptr<T> CreateAIState(const std::string& name, Args&&... args)
     {
@@ -113,8 +102,6 @@ public:
         condition->SetOperator(op);
         (condition->AddCondition(std::forward<Args>(funcs)), ...);
 
-        _conditions[conditionName] = condition;
-
         return condition;
     }
 
@@ -126,8 +113,6 @@ public:
         condition->SetName(conditionName);
         condition->SetOperator(op);
         (condition->AddCondition(conditions), ...);
-
-        _conditions[conditionName] = condition;
 
         return condition;
     }

@@ -25,8 +25,7 @@ Ptr<class CameraComponent> CameraManager::GetMainCamera() const
     return _mainCamera;
 }
 
-Ptr<class CameraComponent> CameraManager::FindCamera(
-  const std::string& name) const
+Ptr<class CameraComponent> CameraManager::FindCamera(const std::string& name) const
 {
     if (auto it = _cameras.find(name); it != _cameras.end())
         return it->second;
@@ -53,6 +52,11 @@ void CameraManager::SetMainCamera(Ptr<CameraComponent> camera)
 {
     _mainCamera                      = camera;
     _cameras[_mainCamera->GetName()] = _mainCamera;
+}
+
+void CameraManager::RemoveCamera(Ptr<class CameraComponent> camera)
+{
+    _cameras.erase(camera->GetName());
 }
 
 void CameraManager::ChangeMainCamera(const std::string& name)
