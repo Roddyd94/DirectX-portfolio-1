@@ -18,10 +18,18 @@ public:
 
     void Tick(float deltaTime) override;
 
+    Ptr<class Pawn>         GetPawn() const;
     Ptr<class AIController> GetController() const;
     Ptr<AIStateMachine>     GetAIStateMachine();
 
     void SetController(Ptr<class AIController> controller);
+
+public:
+    template <typename T>
+    Ptr<T> GetPawn() const
+    {
+        return Cast<Pawn, T>(GetPawn());
+    }
 
     template <typename T>
     Ptr<T> GetAIBlackboard() const

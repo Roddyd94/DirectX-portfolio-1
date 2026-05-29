@@ -9,6 +9,8 @@ public:
     ~SnowbrosPlayerBlackboard() override = default;
 
 public:
+    Weak<class CollisionComponent> bindTargetSnowball;
+
     float speedX = 2.f;
 
 public:

@@ -15,8 +15,8 @@
 
 bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
 {
-    auto actor     = GetOwner()->GetOwner();
-    auto kinematic = actor->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+    auto pawn     = GetOwner()->GetPawn();
+    auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
     if (kinematic->IsColliderMovingAgainstBoundaryX(deltaX))
         return false;
@@ -24,12 +24,12 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
     if (kinematic->IsColliderMovingAgainstWallX(deltaX))
         return false;
 
-    auto thisCollider = actor->FindSceneComponent<AABBCollisionComponent>("Collider");
+    auto thisCollider = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
 
     Rect    thisRect     = thisCollider->GetBox();
     Vector2 thisPosition = thisCollider->GetWorldPosition().ToVector2();
 
-    auto level          = Cast<Level, SnowbrosLevel>(actor->GetLevel());
+    auto level          = Cast<Level, SnowbrosLevel>(pawn->GetLevel());
     auto player         = level->GetPlayer();
     auto playerCollider = player->FindSceneComponent<AABBCollisionComponent>("Collider");
     Rect playerRect     = playerCollider->GetBox();
@@ -74,8 +74,10 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
         if (!canMoveLeft && !canMoveRight)
             continue;
 
-        auto otherActor = otherCollider->GetOwner();
-        auto otherAI    = otherActor->FindActorComponent<AIComponent>("AI");
+        auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
+        auto otherActor = otherPawn->GetController();
+
+        auto otherAI = otherActor->FindActorComponent<AIComponent>("AI");
         auto otherStateMachine
           = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(otherAI->GetAIStateMachine());
 
@@ -97,8 +99,8 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
 
 void SnowballMorphableEnemyStateMachine::Throw(float direction)
 {
-    auto actor     = GetOwner()->GetOwner();
-    auto kinematic = actor->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+    auto pawn     = GetOwner()->GetPawn();
+    auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
     auto blackboard = Cast<AIBlackboard, SnowballMorphableEnemyBlackboard>(_blackboard);
 
@@ -118,7 +120,8 @@ void SnowballMorphableEnemyStateMachine::FindSnowballs(Ptr<class CollisionManage
         if (nullptr == otherCollider)
             continue;
 
-        auto otherActor = otherCollider->GetOwner();
+        auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
+        auto otherActor = otherPawn->GetController();
         if (nullptr == otherActor)
             continue;
 

@@ -2,6 +2,8 @@
 
 #include "AIComponent.h"
 
+#include "AIController.h"
+
 bool AIComponent::Init(int32 componentID, const std::string& name, Ptr<Actor> owner)
 {
     return ActorComponent::Init(componentID, name, owner);
@@ -20,6 +22,11 @@ void AIComponent::Tick(float deltaTime)
         return;
 
     _stateMachine->Tick(deltaTime);
+}
+
+Ptr<class Pawn> AIComponent::GetPawn() const
+{
+    return GetController()->GetPawn();
 }
 
 Ptr<AIController> AIComponent::GetController() const

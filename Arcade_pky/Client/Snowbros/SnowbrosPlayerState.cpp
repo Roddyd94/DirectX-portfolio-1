@@ -5,9 +5,11 @@
 #include "Core/Collision/CollisionManager.h"
 #include "Core/TimeManager.h"
 
+#include "PlayerStateSnowball.h"
 #include "SnowballMorphableEnemyStateMachine.h"
 #include "SnowbrosEnemyState.h"
 #include "SnowbrosLevel.h"
+#include "Types.h"
 #include "AI/AIComponent.h"
 #include "Core/Actor.h"
 #include "Core/Collision/AABBCollisionComponent.h"
@@ -28,7 +30,6 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
     auto thisCollider      = thisActor->FindSceneComponent<CollisionComponent>("Collider");
     auto otherCollider     = Lock(collider);
     auto otherColliderType = otherCollider->GetColliderType();
-    auto otherActor        = otherCollider->GetOwner();
 
     auto kinematic = thisActor->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
@@ -36,6 +37,9 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
     {
     case ColliderType::Enemy:
     {
+        auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
+        auto otherActor = otherPawn->GetController();
+
         auto otherAI = otherActor->FindActorComponent<AIComponent>("AI");
         if (nullptr == otherAI)
             return;
@@ -66,8 +70,19 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
             }
             break;
         case SnowbrosEnemyState::SnowballRolling:
-            // todo: shoved
+        {
+            switch (_stateType)
+            {
+            case SnowbrosPlayerStateType::Ground:
+            case SnowbrosPlayerStateType::Midair:
+            {
+                blackboard->bindTargetSnowball = collider;
+                playerComponent->Transition(PlayerStateSnowball::instance);
+            }
             break;
+            }
+        }
+        break;
         case SnowbrosEnemyState::SnowballCrashing:
             break;
         case SnowbrosEnemyState::Launched:
@@ -115,8 +130,10 @@ Ptr<class SnowballMorphableEnemyStateMachine> SnowbrosPlayerState::FindSnowballT
         if (!CollisionSystem::AABBToPoint(snowball, handCollider))
             continue;
 
-        auto otherActor = otherCollider->GetOwner();
-        auto otherAI    = otherActor->FindActorComponent<AIComponent>("AI");
+        auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
+        auto otherActor = otherPawn->GetController();
+
+        auto otherAI = otherActor->FindActorComponent<AIComponent>("AI");
         auto otherStateMachine
           = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(otherAI->GetAIStateMachine());
 

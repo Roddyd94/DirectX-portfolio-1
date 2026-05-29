@@ -33,9 +33,14 @@ void Pawn::Collision(float deltaTime)
     Actor::Collision(deltaTime);
 }
 
+Ptr<class Controller> Pawn::GetController() const
+{
+    return _controller;
+}
+
 void Pawn::SetController(Ptr<Controller> controller)
 {
-    if (_controller)
+    if (nullptr != _controller && _controller->GetActorID() != controller->GetActorID())
         DESTROY(_controller);
 
     _controller = controller;

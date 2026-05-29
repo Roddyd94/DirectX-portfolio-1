@@ -7,6 +7,7 @@ public:
     AIController()           = default;
     ~AIController() override = default;
     DELETE_SPECIAL_FUNC(AIController)
+
 private:
     Ptr<class AIComponent> _aiComponent;
 

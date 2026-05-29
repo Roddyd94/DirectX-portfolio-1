@@ -19,6 +19,7 @@ public:
     void Collision(float deltaTime) override;
 
 public:
+    Ptr<class Controller> GetController() const;
     void SetController(Ptr<Controller> controller);
 
     template <typename T>

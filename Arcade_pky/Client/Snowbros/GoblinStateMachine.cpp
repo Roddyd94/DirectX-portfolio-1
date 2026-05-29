@@ -8,6 +8,7 @@
 #include "GoblinBlackboard.h"
 #include "SnowProjectile.h"
 #include "SnowProjectileComponent.h"
+#include "SnowbrosEnemy.h"
 #include "SnowbrosEnemyState.h"
 #include "SnowbrosLevel.h"
 #include "AI/AIComponent.h"
@@ -23,25 +24,25 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     AIStateMachine::Init(owner);
     auto blackboard = CreateBlackboard<GoblinBlackboard>();
 
-    auto actor   = owner->GetOwner();
+    auto pawn    = owner->GetPawn<SnowbrosEnemy>();
     auto level   = Cast<Level, SnowbrosLevel>(owner->GetLevel());
     auto tilemap = level->GetTilemap();
 
-    auto collider  = actor->FindSceneComponent<AABBCollisionComponent>("Collider");
-    auto kinematic = actor->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+    auto collider  = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
+    auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
-    auto sprite    = actor->FindSceneComponent<SpriteComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<SpriteComponent>("Sprite");
     auto animation = sprite->CreateAnimation();
     animation->SetAnimationSequence("goblin");
     animation->ChangeAnimationClip("goblin_walk");
 
-    auto spriteBehind    = actor->FindSceneComponent<SpriteComponent>("SpriteBehind");
+    auto spriteBehind    = pawn->FindSceneComponent<SpriteComponent>("SpriteBehind");
     auto animationBehind = spriteBehind->CreateAnimation();
     animationBehind->SetAnimationSequence("goblin");
     animationBehind->ChangeAnimationClip("goblin_none");
     spriteBehind->SetEnable(false);
 
-    auto spriteSnowball    = actor->FindSceneComponent<SpriteComponent>("SpriteSnowball");
+    auto spriteSnowball    = pawn->FindSceneComponent<SpriteComponent>("SpriteSnowball");
     auto animationSnowball = spriteSnowball->CreateAnimation();
     animationSnowball->SetAnimationSequence("snowball");
     animationSnowball->ChangeAnimationClip("snowball_none");
@@ -136,7 +137,9 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           break;
           case ColliderType::Enemy:
           {
-              auto otherActor        = otherCollider->GetOwner();
+              auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
+              auto otherActor = otherPawn->GetController();
+
               auto otherAI           = otherActor->FindActorComponent<AIComponent>("AI");
               auto otherStateMachine = otherAI->GetAIStateMachine();
               auto otherState        = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
@@ -224,9 +227,10 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           {
               auto thisPosition  = GetOwner()->GetOwner()->GetWorldPosition();
               auto otherPosition = otherCollider->GetWorldPosition();
-
-              auto otherEnemy = otherCollider->GetOwner();
-              auto otherAI    = otherEnemy->FindActorComponent<AIComponent>("AI");
+              
+              auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
+              auto otherActor = otherPawn->GetController();
+              auto otherAI    = otherActor->FindActorComponent<AIComponent>("AI");
 
               auto otherStateMachine = otherAI->GetAIStateMachine();
               auto otherState        = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
@@ -336,7 +340,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       [=]()
       {
           spriteSnowball->SetEnable(false);
-          actor->SetActive(false);
+          pawn->SetActive(false);
       });
 #pragma endregion AnimationNotifies
 
@@ -388,7 +392,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateSnowball->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
-          blackboard->previousPosition = actor->GetWorldPosition().ToVector2();
+          blackboard->previousPosition = pawn->GetWorldPosition().ToVector2();
           blackboard->accTime += blackboard->snowballFormedBonusValue;
           sprite->SetEnable(false);
           spriteSnowball->SetEnable(true);
@@ -473,7 +477,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateSnowball->RegisterCallback(AIEventState::Tick,
       [=](float deltaTime)
       {
-          Vector2 currentPosition = actor->GetWorldPosition().ToVector2();
+          Vector2 currentPosition = pawn->GetWorldPosition().ToVector2();
           if (std::abs(currentPosition.x - blackboard->previousPosition.x)
               > blackboard->snowballFrameDistance)
           {
@@ -619,7 +623,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
          {
           Ptr<Player> player          = level->GetPlayer();
           float       playerPositionY = player->GetWorldPosition().y;
-          float       thisPositionY   = actor->GetWorldPosition().y;
+          float       thisPositionY   = pawn->GetWorldPosition().y;
 
           return playerPositionY > thisPositionY && playerPositionY - thisPositionY > 0.9f;
       });
@@ -627,7 +631,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       = CreateAICondition("HasLandingTileForward", ConditionOperator::And,
         [=]() -> bool
         {
-            Ptr<Tile> tile           = tilemap->GetTile(actor->GetWorldPosition().ToVector2());
+            Ptr<Tile> tile           = tilemap->GetTile(pawn->GetWorldPosition().ToVector2());
             Vector2   targetPosition = tile->GetPosition();
 
             targetPosition.x += blackboard->direction * tile->GetSize().x;
@@ -657,7 +661,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       = CreateAICondition("HasLandingTileAbove", ConditionOperator::And,
         [=]() -> bool
         {
-            Ptr<Tile> tile           = tilemap->GetTile(actor->GetWorldPosition().ToVector2());
+            Ptr<Tile> tile           = tilemap->GetTile(pawn->GetWorldPosition().ToVector2());
             Vector2   targetPosition = tile->GetPosition();
 
             targetPosition.y += tile->GetSize().y;

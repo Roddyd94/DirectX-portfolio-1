@@ -98,8 +98,9 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
         break;
     case PlatformerKinematicState::Attached:
     {
-        if (_attachedTo)
-            worldPos = _attachedTo->GetWorldPosition().ToVector2();
+        auto attachedTo = Lock(_attachedTo);
+        if (attachedTo)
+            worldPos = attachedTo->GetWorldPosition().ToVector2();
     }
     break;
     }
@@ -139,13 +140,15 @@ void PlatformerKinematicPlayerComponent::AdjustPositionToSnowball(
 {
     Ptr<Actor> actor = GetOwner();
 
-    Rect playerColliderBox   = _collider->GetBox();
+    auto collider = Lock(_collider);
+
+    Rect playerColliderBox   = collider->GetBox();
     Rect snowballColliderBox = snowballCollider->GetBox();
 
     Vector2 colliderCenterBottom = {playerColliderBox.GetCenterX(), playerColliderBox.bottom};
 
     float targetPositionY
-      = snowballColliderBox.top + _collider->GetBoxSize().y / 2.f - epsilonTile / 2.f;
+      = snowballColliderBox.top + collider->GetBoxSize().y / 2.f - epsilonTile / 2.f;
 
     actor->SetWorldPosition({colliderCenterBottom.x, targetPositionY});
 }

@@ -179,7 +179,9 @@ void SnowbrosPlayer::OnShootButtonEvent(
         if (canThrowSnowballBelow)
         {
             auto otherCollider = Lock(snowball);
-            auto otherActor    = otherCollider->GetOwner();
+
+            auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
+            auto otherActor = otherPawn->GetController();
 
             auto otherAI              = otherActor->FindActorComponent<AIComponent>("AI");
             auto snowballStateMachine = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(
@@ -202,7 +204,9 @@ void SnowbrosPlayer::OnShootButtonEvent(
         if (canThrowSnowballRightside || canThrowSnowballLeftside)
         {
             auto otherCollider = Lock(snowball);
-            auto otherActor    = otherCollider->GetOwner();
+
+            auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
+            auto otherActor = otherPawn->GetController();
 
             auto otherAI              = otherActor->FindActorComponent<AIComponent>("AI");
             auto snowballStateMachine = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(

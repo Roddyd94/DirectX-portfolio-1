@@ -22,7 +22,6 @@ void AIController::Destroy()
 void AIController::Tick(float deltaTime)
 {
     Controller::Tick(deltaTime);
-    _aiComponent->Tick(deltaTime);
 }
 
 void AIController::Collision(float deltaTime) {}

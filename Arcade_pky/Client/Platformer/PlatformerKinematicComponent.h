@@ -15,9 +15,9 @@ protected:
     std::function<void()> _onCollidedWithFloor;
     std::function<void()> _onCollidedWithBoundary;
 
-    Ptr<class AABBCollisionComponent> _collider   = nullptr;
-    Ptr<class Tilemap>                _tilemap    = nullptr;
-    Ptr<class Actor>                  _attachedTo = nullptr;
+    Weak<class AABBCollisionComponent> _collider;
+    Weak<class Tilemap>                _tilemap;
+    Weak<class Actor>                  _attachedTo;
 
     Vector2 _velocity;
 

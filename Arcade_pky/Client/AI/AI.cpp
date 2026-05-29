@@ -12,16 +12,19 @@ bool AI::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 
     Ptr<Level> level = GetLevel();
 
-    _aiController = level->SpawnActor<AIController>(Vector3::zero, Vector3::zero, Vector3::zero);
-    _aiController->SetName("Controller");
-    _aiController->SetPawn(This<Pawn>());
-
-    _aiComponent = CreateActorComponent<AIComponent>("AI");
+    _controller = level->SpawnActor<AIController>(Vector3::zero, Vector3::zero, Vector3::zero);
+    _controller->SetName("Controller");
+    _controller->SetPawn(This<Pawn>());
 
     return true;
 }
 
 Ptr<class AIController> AI::GetController() const
 {
-    return _aiController;
+    return Cast<Controller, AIController>(_controller);
+}
+
+Ptr<class AIComponent> AI::GetAIComponent() const
+{
+    return GetController()->GetAIComponent();
 }

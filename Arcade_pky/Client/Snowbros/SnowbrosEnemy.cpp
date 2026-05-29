@@ -53,18 +53,19 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
 
 void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
 {
-    _enemyType = enemyType;
+    auto aiComponent = GetAIComponent();
+    _enemyType       = enemyType;
 
     switch (_enemyType)
     {
     case SnowbrosEnemyType::Goblin:
-        _aiComponent->CreateAIStateMachine<GoblinStateMachine>();
+        aiComponent->CreateAIStateMachine<GoblinStateMachine>();
         break;
     case SnowbrosEnemyType::Monkey:
-        _aiComponent->CreateAIStateMachine<MonkeyStateMachine>();
+        aiComponent->CreateAIStateMachine<MonkeyStateMachine>();
         break;
     case SnowbrosEnemyType::Spitter:
-        _aiComponent->CreateAIStateMachine<SpitterStateMachine>();
+        aiComponent->CreateAIStateMachine<SpitterStateMachine>();
         break;
     case SnowbrosEnemyType::Pumpkin:
     case SnowbrosEnemyType::Ghost:
@@ -76,8 +77,10 @@ void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
 
 void SnowbrosEnemy::SetDirection(float direction)
 {
+    auto aiComponent  = GetAIComponent();
+
     auto sprite       = FindComponent<SpriteComponent>("Sprite");
-    auto stateMachine = _aiComponent->GetAIStateMachine();
+    auto stateMachine = aiComponent->GetAIStateMachine();
     auto blackboard   = stateMachine->GetAIBlackboard<SnowballMorphableEnemyBlackboard>();
 
     sprite->SetFlipX(direction > 0);
