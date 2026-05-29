@@ -19,8 +19,9 @@ public:
     float direction = -1.f;
     float accTime   = 0.f;
 
-    bool isJumping = false;
-    bool turned    = false;
+    bool isJumping            = false;
+    bool turned               = false;
+    bool isSnowballReinforced = false;
 
 public:
     inline static const float phaseThreshold[snowballStateFormingPhaseCount]

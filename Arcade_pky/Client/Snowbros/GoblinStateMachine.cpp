@@ -152,8 +152,28 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
                   switch (thisStateType)
                   {
                   case SnowbrosEnemyState::Snowball:
+                  {
+                      auto thisPosition  = thisCollider->GetWorldPosition().ToVector2();
+                      auto otherPosition = otherCollider->GetWorldPosition().ToVector2();
+
+                      if (thisPosition.x < otherPosition.x)
+                          kinematic->SetVelocity({-blackboard->snowballRollingSpeedX, 0.f});
+                      else
+                          kinematic->SetVelocity({blackboard->snowballRollingSpeedX, 0.f});
+
+                      blackboard->isSnowballReinforced = true;
                       Transition("SnowballRolling");
-                      break;
+
+                      {
+                          auto otherKinematic
+                            = otherActor->FindActorComponent<PlatformerKinematicComponent>(
+                              "Kinematic");
+
+                          Vector2 otherVelocity = otherKinematic->GetVelocity();
+                          otherKinematic->SetVelocityX(-otherVelocity.x);
+                      }
+                  }
+                  break;
                   case SnowbrosEnemyState::Stand:
                   case SnowbrosEnemyState::Patrol:
                   case SnowbrosEnemyState::Walk:
@@ -183,7 +203,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               case SnowbrosEnemyState::Crouch:
               case SnowbrosEnemyState::Dizzy:
               case SnowbrosEnemyState::Struggle:
-              case SnowbrosEnemyState::Snowball:
               case SnowbrosEnemyState::SnowballCrashing:
               case SnowbrosEnemyState::Launched:
               case SnowbrosEnemyState::Dead:
@@ -312,7 +331,8 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       {
           animation->ChangeAnimationClip("goblin_dizzy");
       });
-    animationSnowball->AddNotify("snowball_crash", animationSnowball->GetClipFrameCount("snowball_crash"),
+    animationSnowball->AddNotify("snowball_crash",
+      animationSnowball->GetClipFrameCount("snowball_crash"),
       [=]()
       {
           spriteSnowball->SetEnable(false);
@@ -380,7 +400,10 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           blackboard->hitCount = 0;
           sprite->SetEnable(false);
           spriteSnowball->SetEnable(true);
-          animationSnowball->ChangeAnimationClip("snowball_rolling");
+          if (blackboard->isSnowballReinforced)
+              animationSnowball->ChangeAnimationClip("snowball_reinforced");
+          else
+              animationSnowball->ChangeAnimationClip("snowball_rolling");
       });
     enemyStateDizzy->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
@@ -391,7 +414,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateCrashing->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
       {
-            // todo particle
+          // todo particle
           animationSnowball->ChangeAnimationClip("snowball_crash");
       });
 #pragma endregion RegisterStateCallbackEnter

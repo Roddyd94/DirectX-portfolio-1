@@ -22,7 +22,7 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
   CollisionState::Type                                           collisionType,
   Weak<class CollisionComponent>                                 collider)
 {
-    auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
+    auto blackboard = GetBlackboard(playerComponent);
 
     auto thisActor         = playerComponent->GetOwner();
     auto thisCollider      = thisActor->FindSceneComponent<CollisionComponent>("Collider");
@@ -65,11 +65,8 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
                 break;
             }
             break;
-        case SnowbrosEnemyState::Struggle:
-            break;
-        case SnowbrosEnemyState::Snowball:
-            break;
         case SnowbrosEnemyState::SnowballRolling:
+            // todo: shoved
             break;
         case SnowbrosEnemyState::SnowballCrashing:
             break;
@@ -165,4 +162,14 @@ Ptr<class AABBCollisionComponent> SnowbrosPlayerState::FindSnowballToStand(
     }
 
     return nullptr;
+}
+
+Ptr<class SnowbrosPlayerBlackboard> SnowbrosPlayerState::GetBlackboard(
+  Ptr<class PlayerComponent> playerComponent)
+{
+    auto stateMachine = playerComponent->GetStateMachine();
+    if (nullptr == stateMachine)
+        return nullptr;
+
+    return stateMachine->GetBlackboard<SnowbrosPlayerBlackboard>();
 }

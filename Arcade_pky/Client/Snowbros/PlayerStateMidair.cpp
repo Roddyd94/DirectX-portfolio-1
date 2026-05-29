@@ -26,7 +26,8 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
 
     float deltaTime = TimeManager::Instance().GetDeltaTime();
 
-    auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
+    auto blackboard = GetBlackboard(playerComponent);
+
     Ptr<PlatformerMovementComponent> movement
       = player->FindActorComponent<PlatformerMovementComponent>("Movement");
 
@@ -108,7 +109,7 @@ void PlayerStateMidair::Enter(Ptr<class PlayerComponent> playerComponent)
 
     if (_jumped)
         sprite->ChangeAnimation("player_jump");
-    else
+    else if (sprite->GetCurrentClipName() != "player_kick")
         sprite->ChangeAnimation("player_midair");
     _initialFlipX = sprite->GetFlipX();
 }

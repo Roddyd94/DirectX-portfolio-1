@@ -33,7 +33,7 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
 
     float deltaTime = TimeManager::Instance().GetDeltaTime();
 
-    auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
+    auto blackboard = GetBlackboard(playerComponent);
     auto movement   = player->FindActorComponent<PlatformerMovementComponent>("Movement");
 
     Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
@@ -55,13 +55,15 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
                 else
                     movement->Stop();
 
-                if (sprite->GetCurrentClipName() != "player_shoot")
+                if (sprite->GetCurrentClipName() != "player_shoot"
+                    && sprite->GetCurrentClipName() != "player_kick")
                     sprite->ChangeAnimation("player_push");
             }
             else
             {
                 movement->MoveLeft(speedX);
-                if (sprite->GetCurrentClipName() != "player_shoot")
+                if (sprite->GetCurrentClipName() != "player_shoot"
+                    && sprite->GetCurrentClipName() != "player_kick")
                     sprite->ChangeAnimation("player_walk");
             }
 
@@ -157,4 +159,3 @@ void PlayerStateGround::Tick(Ptr<class PlayerComponent> playerComponent, float d
     // auto blackboard =
     // playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
 }
-

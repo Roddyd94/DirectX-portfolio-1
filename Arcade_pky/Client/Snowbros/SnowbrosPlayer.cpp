@@ -9,6 +9,7 @@
 #include "ShootComponent.h"
 #include "SnowballMorphableEnemyStateMachine.h"
 #include "SnowbrosPlayerBlackboard.h"
+#include "Types.h"
 #include "AI/AIComponent.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
@@ -53,6 +54,19 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
           animation->ChangeAnimationClip("player_stand");
       });
     animation->AddNotify("player_shoot_midair", animation->GetClipFrameCount("player_shoot_midair"),
+      [animation]()
+      {
+          animation->ChangeAnimationClip("player_midair");
+      });
+    animation->AddNotify("player_kick", animation->GetClipFrameCount("player_kick"),
+      [=]()
+      {
+          if (SnowbrosPlayerStateType::Midair == _playerComponent->GetStateType())
+              animation->ChangeAnimationClip("player_midair");
+          else
+              animation->ChangeAnimationClip("player_stand");
+      });
+    animation->AddNotify("player_kick_midair", animation->GetClipFrameCount("player_kick_midair"),
       [animation]()
       {
           animation->ChangeAnimationClip("player_midair");
@@ -152,10 +166,13 @@ void SnowbrosPlayer::OnShootButtonEvent(
     auto movement  = FindActorComponent<PlatformerMovementComponent>("Movement");
     auto kinematic = FindActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
 
+    auto sprite    = Cast<SceneComponent, SpriteComponent>(_root);
+    auto animation = sprite->GetAnimation();
+
     std::vector<Weak<AABBCollisionComponent>> snowballs;
     SnowballMorphableEnemyStateMachine::FindSnowballs(collisionManager, snowballs);
 
-    float deltaX = kinematic->GetVelocity().x;
+    float direction = movement->GetDirection();
     for (auto& snowball : snowballs)
     {
         bool canThrowSnowballBelow = CollisionSystem::AABBToPoint(snowball, _footCollider);
@@ -168,15 +185,19 @@ void SnowbrosPlayer::OnShootButtonEvent(
             auto snowballStateMachine = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(
               otherAI->GetAIStateMachine());
 
-            snowballStateMachine->Throw(movement->GetDirection());
+            if (action->GetName() == "ShootGround")
+                animation->ChangeAnimationClip("player_kick");
+            else if (action->GetName() == "ShootMidair")
+                animation->ChangeAnimationClip("player_kick_midair");
 
+            snowballStateMachine->Throw(movement->GetDirection());
             return;
         }
 
         bool canThrowSnowballRightside
-          = deltaX > 0.f && CollisionSystem::AABBToPoint(snowball, _handColliderRight);
+          = direction > 0.f && CollisionSystem::AABBToPoint(snowball, _handColliderRight);
         bool canThrowSnowballLeftside
-          = deltaX < 0.f && CollisionSystem::AABBToPoint(snowball, _handColliderLeft);
+          = direction < 0.f && CollisionSystem::AABBToPoint(snowball, _handColliderLeft);
 
         if (canThrowSnowballRightside || canThrowSnowballLeftside)
         {
@@ -187,8 +208,12 @@ void SnowbrosPlayer::OnShootButtonEvent(
             auto snowballStateMachine = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(
               otherAI->GetAIStateMachine());
 
-            snowballStateMachine->Throw(deltaX > 0.f ? 1.f : -1.f);
+            if (action->GetName() == "ShootGround")
+                animation->ChangeAnimationClip("player_kick");
+            else if (action->GetName() == "ShootMidair")
+                animation->ChangeAnimationClip("player_kick_midair");
 
+            snowballStateMachine->Throw(direction > 0.f ? 1.f : -1.f);
             return;
         }
     }

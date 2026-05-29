@@ -18,4 +18,8 @@ public:
       Ptr<class PlayerComponent> playerComponent, float deltaX);
     Ptr<class AABBCollisionComponent> FindSnowballToStand(
       Ptr<class PlayerComponent> playerComponent);
+
+protected:
+    static Ptr<class SnowbrosPlayerBlackboard> GetBlackboard(
+      Ptr<class PlayerComponent> playerComponent);
 };
