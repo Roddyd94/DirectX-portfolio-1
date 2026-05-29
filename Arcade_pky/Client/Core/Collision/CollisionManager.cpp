@@ -112,7 +112,7 @@ Ptr<class CollisionComponent> CollisionManager::FindCollider(
 }
 
 bool CollisionManager::FindColliders(
-  ColliderType::Type colliderType, std::vector<Ptr<class CollisionComponent>>& arr)
+  ColliderType::Type colliderType, std::vector<Weak<class CollisionComponent>>& arr)
 {
     auto it = _colliders.find(colliderType);
     if (_colliders.end() == it)

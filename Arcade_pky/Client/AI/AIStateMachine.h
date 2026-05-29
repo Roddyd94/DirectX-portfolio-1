@@ -50,6 +50,18 @@ public:
     }
 
     template <typename T>
+    Ptr<T> GetCurrentState() const
+    {
+        return Cast<AIState, T>(_currentState);
+    }
+
+    template <typename T>
+    Ptr<T> FindAIState(const std::string& name) const
+    {
+        return Cast<AIState, T>(FindAIState(name));
+    }
+
+    template <typename T>
     Ptr<T> FindAICondition(const std::string& name) const
     {
         auto it = _conditions.find(name);
@@ -57,6 +69,28 @@ public:
             return nullptr;
 
         return Cast<AIConditionBase, T>(it->second);
+    }
+
+    template <typename T, typename... Args>
+    Ptr<T> CreateAIState(const std::string& name, Args&&... args)
+    {
+        auto state = FindAIState<T>(name);
+        if (nullptr != state)
+            return Cast<AIState, T>(state);
+
+        state = New<T>(std::forward<Args>(args)...);
+        if (false == state->Init(name))
+        {
+            DESTROY(state);
+            return nullptr;
+        }
+
+        if (!_currentState)
+            _currentState = state;
+
+        _states[name] = state;
+
+        return state;
     }
 
     template <typename T>

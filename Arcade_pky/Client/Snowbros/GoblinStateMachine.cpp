@@ -8,6 +8,7 @@
 #include "GoblinBlackboard.h"
 #include "SnowProjectile.h"
 #include "SnowProjectileComponent.h"
+#include "SnowbrosEnemyState.h"
 #include "SnowbrosLevel.h"
 #include "AI/AIComponent.h"
 #include "Core/Actor.h"
@@ -46,6 +47,31 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     animationSnowball->ChangeAnimationClip("snowball_none");
     spriteSnowball->SetEnable(false);
 
+#pragma region AIStates
+    auto enemyStateStand  = CreateAIState<SnowbrosEnemyState>("Stand", SnowbrosEnemyState::Stand);
+    auto enemyStatePatrol = CreateAIState<SnowbrosEnemyState>("Patrol", SnowbrosEnemyState::Patrol);
+    auto enemyStateWalk   = CreateAIState<SnowbrosEnemyState>("Walk", SnowbrosEnemyState::Walk);
+    enemyStateWalk->SetInterval(0.1f);
+    auto enemyStateTurn   = CreateAIState<SnowbrosEnemyState>("Turn", SnowbrosEnemyState::Turn);
+    auto enemyStateJump   = CreateAIState<SnowbrosEnemyState>("Jump", SnowbrosEnemyState::Jump);
+    auto enemyStateFall   = CreateAIState<SnowbrosEnemyState>("Fall", SnowbrosEnemyState::Fall);
+    auto enemyStateCrouch = CreateAIState<SnowbrosEnemyState>("Crouch", SnowbrosEnemyState::Crouch);
+    auto enemyStateDizzy  = CreateAIState<SnowbrosEnemyState>("Dizzy", SnowbrosEnemyState::Dizzy);
+    auto enemyStateStruggle
+      = CreateAIState<SnowbrosEnemyState>("Struggle", SnowbrosEnemyState::Struggle);
+    auto enemyStateSnowball
+      = CreateAIState<SnowbrosEnemyState>("Snowball", SnowbrosEnemyState::Snowball);
+    auto enemyStateRolling
+      = CreateAIState<SnowbrosEnemyState>("SnowballRolling", SnowbrosEnemyState::SnowballRolling);
+    auto enemyStateCrashing
+      = CreateAIState<SnowbrosEnemyState>("SnowballCrashing", SnowbrosEnemyState::SnowballCrashing);
+    auto enemyStateLaunched
+      = CreateAIState<SnowbrosEnemyState>("Launched", SnowbrosEnemyState::Launched);
+    auto enemyStateDead = CreateAIState<SnowbrosEnemyState>("Dead", SnowbrosEnemyState::Dead);
+#pragma endregion AIStates
+
+    _currentState = enemyStateWalk;
+
 #pragma region ColliderCallbacks
     collider->RegisterCollisionCallBack(CollisionState::Enter,
       [=, thisCollider = collider](Weak<CollisionComponent> collider)
@@ -57,7 +83,9 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           {
           case ColliderType::PlayerHead:
           {
-              if (_currentState->GetName() == "Snowball")
+              auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
+              auto thisStateType = thisState->GetStateType();
+              if (thisStateType == SnowbrosEnemyState::Snowball)
               {
                   Rect    thisColliderRect = thisCollider->GetBox();
                   Vector2 playerPosition   = otherCollider->GetWorldPosition().ToVector2();
@@ -84,31 +112,85 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               if (projectile->IsHit())
                   break;
 
-              if (_currentState->GetName() == "Snowball")
-                  blackboard->accTime += blackboard->snowballIncFormed;
-              else if (_currentState->GetName() == "Struggle")
-                  blackboard->accTime += blackboard->snowballIncForming;
-              else
+              auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
+              auto thisStateType = thisState->GetStateType();
+              switch (thisStateType)
               {
+              case SnowbrosEnemyState::Struggle:
+                  blackboard->accTime += blackboard->snowballIncForming;
+                  break;
+              case SnowbrosEnemyState::Snowball:
+                  blackboard->accTime += blackboard->snowballIncFormed;
+                  break;
+              case SnowbrosEnemyState::SnowballRolling:
+              case SnowbrosEnemyState::SnowballCrashing:
+              case SnowbrosEnemyState::Launched:
+              case SnowbrosEnemyState::Dead:
+                  break;
+              default:
                   Transition("Struggle");
                   blackboard->accTime = blackboard->snowballFormingInitialValue;
+                  break;
               }
           }
           break;
           case ColliderType::Enemy:
           {
-              if (_currentState->GetName() == "Snowball")
-                  ;
+              auto otherActor        = otherCollider->GetOwner();
+              auto otherAI           = otherActor->FindActorComponent<AIComponent>("AI");
+              auto otherStateMachine = otherAI->GetAIStateMachine();
+              auto otherState        = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
+              auto otherStateType    = otherState->GetStateType();
+
+              auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
+              auto thisStateType = thisState->GetStateType();
+
+              switch (otherStateType)
+              {
+              case SnowbrosEnemyState::SnowballRolling:
+              {
+                  switch (thisStateType)
+                  {
+                  case SnowbrosEnemyState::Snowball:
+                      Transition("SnowballRolling");
+                      break;
+                  case SnowbrosEnemyState::Stand:
+                  case SnowbrosEnemyState::Patrol:
+                  case SnowbrosEnemyState::Walk:
+                  case SnowbrosEnemyState::Turn:
+                  case SnowbrosEnemyState::Jump:
+                  case SnowbrosEnemyState::Fall:
+                  case SnowbrosEnemyState::Crouch:
+                  case SnowbrosEnemyState::Dizzy:
+                  case SnowbrosEnemyState::Struggle:
+                      // todo: transition to Launched
+                      break;
+                  case SnowbrosEnemyState::SnowballRolling:
+                  case SnowbrosEnemyState::SnowballCrashing:
+                  case SnowbrosEnemyState::Launched:
+                  case SnowbrosEnemyState::Dead:
+                      // do nothing
+                      break;
+                  }
+              }
+              break;
+              case SnowbrosEnemyState::Stand:
+              case SnowbrosEnemyState::Patrol:
+              case SnowbrosEnemyState::Walk:
+              case SnowbrosEnemyState::Turn:
+              case SnowbrosEnemyState::Jump:
+              case SnowbrosEnemyState::Fall:
+              case SnowbrosEnemyState::Crouch:
+              case SnowbrosEnemyState::Dizzy:
+              case SnowbrosEnemyState::Struggle:
+              case SnowbrosEnemyState::Snowball:
+              case SnowbrosEnemyState::SnowballCrashing:
+              case SnowbrosEnemyState::Launched:
+              case SnowbrosEnemyState::Dead:
+                  break;
+              }
           }
           break;
-          case ColliderType::EnemyProjectile:
-              break;
-          case ColliderType::Item:
-              break;
-          case ColliderType::End:
-              break;
-          default:
-              break;
           }
       });
     collider->RegisterCollisionCallBack(CollisionState::Stay,
@@ -128,24 +210,40 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               auto otherAI    = otherEnemy->FindActorComponent<AIComponent>("AI");
 
               auto otherStateMachine = otherAI->GetAIStateMachine();
-              auto otherState        = otherStateMachine->GetCurrentState();
+              auto otherState        = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
+              auto otherStateType    = otherState->GetStateType();
 
-              if (_currentState->GetName() == "Walk")
+              auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
+              auto thisStateType = thisState->GetStateType();
+              switch (thisStateType)
               {
-                  if (otherState->GetName() != "Walk" && otherState->GetName() != "Struggle")
-                      return;
+              case SnowbrosEnemyState::Walk:
+              {
+                  switch (otherStateType)
+                  {
+                  case SnowbrosEnemyState::Stand:
+                  case SnowbrosEnemyState::Patrol:
+                  case SnowbrosEnemyState::Walk:
+                  case SnowbrosEnemyState::Turn:
+                  case SnowbrosEnemyState::Crouch:
+                  case SnowbrosEnemyState::Struggle:
+                  case SnowbrosEnemyState::Dizzy:
+                  {
+                      if (thisPosition.x < otherPosition.x && blackboard->direction < 0)
+                          return;
 
-                  if (thisPosition.x < otherPosition.x && blackboard->direction < 0)
-                      return;
+                      if (thisPosition.x > otherPosition.x && blackboard->direction > 0)
+                          return;
 
-                  if (thisPosition.x > otherPosition.x && blackboard->direction > 0)
-                      return;
-
-                  Transition("Turn");
+                      Transition("Turn");
+                  }
+                  break;
+                  }
               }
-              else if (_currentState->GetName() == "Snowball")
+              break;
+              case SnowbrosEnemyState::Snowball:
               {
-                  if (otherState->GetName() != "Snowball")
+                  if (otherStateType != SnowbrosEnemyState::Snowball)
                       return;
 
                   auto otherSnowballStateMachine
@@ -165,6 +263,26 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
                       otherSnowballStateMachine->TryMoveX(-blackboard->snowballRepulsiveDeltaX);
                       TryMoveX(blackboard->snowballRepulsiveDeltaX);
                   }
+              }
+              break;
+              }
+          }
+          break;
+          case ColliderType::EnemyProjectile:
+          {
+              float deltaTime = TimeManager::Instance().GetDeltaTime();
+
+              auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
+              auto thisStateType = thisState->GetStateType();
+
+              switch (thisStateType)
+              {
+              case SnowbrosEnemyState::Struggle:
+              case SnowbrosEnemyState::Snowball:
+              {
+                  // todo melt
+              }
+              break;
               }
           }
           break;
@@ -194,24 +312,13 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       {
           animation->ChangeAnimationClip("goblin_dizzy");
       });
+    animationSnowball->AddNotify("snowball_crash", animationSnowball->GetClipFrameCount("snowball_crash"),
+      [=]()
+      {
+          spriteSnowball->SetEnable(false);
+          actor->SetActive(false);
+      });
 #pragma endregion AnimationNotifies
-
-#pragma region AIStates
-    auto enemyStateStand  = CreateAIState("Stand");
-    auto enemyStatePatrol = CreateAIState("Patrol");
-    auto enemyStateWalk   = CreateAIState("Walk");
-    enemyStateWalk->SetInterval(0.1f);
-    auto enemyStateTurn     = CreateAIState("Turn");
-    auto enemyStateJump     = CreateAIState("Jump");
-    auto enemyStateFall     = CreateAIState("Fall");
-    auto enemyStateCrouch   = CreateAIState("Crouch");
-    auto enemyStateDizzy    = CreateAIState("Dizzy");
-    auto enemyStateStruggle = CreateAIState("Struggle");
-    auto enemyStateSnowball = CreateAIState("Snowball");
-    auto enemyStateRolling  = CreateAIState("Rolling");
-    auto enemyStateLaunched = CreateAIState("Launched");
-    auto enemyStateDead     = CreateAIState("Dead");
-#pragma endregion AIStates
 
 #pragma region RegisterStateCallbackEnter
     enemyStateWalk->RegisterCallback(AIEventState::Enter,
@@ -280,6 +387,12 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       {
           kinematic->SetVelocity(Vector2::zero);
           animation->ChangeAnimationClip("goblin_awake");
+      });
+    enemyStateCrashing->RegisterCallback(AIEventState::Enter,
+      [=](float deltaTime)
+      {
+            // todo particle
+          animationSnowball->ChangeAnimationClip("snowball_crash");
       });
 #pragma endregion RegisterStateCallbackEnter
 
@@ -387,8 +500,17 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           if (kinematic->IsColliderMovingAgainstWallX(deltaX)
               || kinematic->IsColliderMovingAgainstBoundaryX(deltaX))
           {
+              if (kinematic->IsColliderOnFirstFloor())
+              {
+                  Transition("SnowballCrashing");
+                  kinematic->SetVelocity(Vector2::zero);
+                  return;
+              }
+
               kinematic->SetVelocityX(-velocity.x);
               ++blackboard->hitCount;
+              if (blackboard->hitCount >= 10)
+                  Transition("SnowballCrashing");
           }
       });
     enemyStateDizzy->RegisterCallback(AIEventState::Tick,
@@ -545,8 +667,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateFall->CreateAITransition("Fall_Crouch", enemyStateCrouch, conditionMoveAgainstFloor);
     enemyStateTurn->CreateAITransition("Turn_Walk", enemyStateWalk, conditionTurned);
 #pragma endregion AITransitions
-
-    _currentState = enemyStateWalk;
 }
 
 void GoblinStateMachine::Destroy()

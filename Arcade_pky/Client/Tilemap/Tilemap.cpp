@@ -73,3 +73,18 @@ Ptr<class Tile> Tilemap::GetTileLocal(Vector2 localPosition)
 {
     return _tileComponent->GetTileLocal(localPosition);
 }
+
+int32 Tilemap::GetTileIndexX(float worldPositionX) const
+{
+    return _tileComponent->GetTileIndexX(worldPositionX);
+}
+
+int32 Tilemap::GetTileIndexY(float worldPositionY) const
+{
+    return _tileComponent->GetTileIndexY(worldPositionY);
+}
+
+int32 Tilemap::GetTileIndex(Vector2 worldPosition) const
+{
+    return _tileComponent->GetTileIndex(worldPosition);
+}

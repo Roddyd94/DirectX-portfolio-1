@@ -24,7 +24,7 @@ public:
       ColliderType::Type colliderType, const ComponentIDPair& colliderID);
 
     bool FindColliders(
-      ColliderType::Type colliderType, std::vector<Ptr<class CollisionComponent>>& arr);
+      ColliderType::Type colliderType, std::vector<Weak<class CollisionComponent>>& arr);
 
     void Insert(Ptr<class CollisionComponent> collider);
     void Remove(Ptr<class CollisionComponent> collider);

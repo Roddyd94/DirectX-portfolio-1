@@ -6,6 +6,7 @@
 #include "Core/TimeManager.h"
 
 #include "SnowballMorphableEnemyStateMachine.h"
+#include "SnowbrosEnemyState.h"
 #include "SnowbrosLevel.h"
 #include "AI/AIComponent.h"
 #include "Core/Actor.h"
@@ -40,20 +41,44 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
             return;
 
         auto otherStateMachine = otherAI->GetAIStateMachine();
-        auto otherState        = otherStateMachine->GetCurrentState();
+        auto otherState        = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
 
         if (nullptr == otherState)
             return;
 
-        if (otherState->GetName() != "Snowball" && otherState->GetName() != "Struggle"
-            && otherState->GetName() != "Launched" && otherState->GetName() != "Dead")
+        auto otherStateType = otherState->GetStateType();
+
+        switch (otherStateType)
         {
+        case SnowbrosEnemyState::Stand:
+        case SnowbrosEnemyState::Patrol:
+        case SnowbrosEnemyState::Walk:
+        case SnowbrosEnemyState::Turn:
+        case SnowbrosEnemyState::Jump:
+        case SnowbrosEnemyState::Fall:
+        case SnowbrosEnemyState::Crouch:
+        case SnowbrosEnemyState::Dizzy:
             switch (collisionType)
             {
             case CollisionState::Enter:
                 // todo: kill player
                 break;
             }
+            break;
+        case SnowbrosEnemyState::Struggle:
+            break;
+        case SnowbrosEnemyState::Snowball:
+            break;
+        case SnowbrosEnemyState::SnowballRolling:
+            break;
+        case SnowbrosEnemyState::SnowballCrashing:
+            break;
+        case SnowbrosEnemyState::Launched:
+            break;
+        case SnowbrosEnemyState::Dead:
+            break;
+        default:
+            break;
         }
     }
     break;

@@ -5,6 +5,7 @@
 #include "Core/Collision/CollisionManager.h"
 
 #include "SnowballMorphableEnemyBlackboard.h"
+#include "SnowbrosEnemyState.h"
 #include "SnowbrosLevel.h"
 #include "AI/AIComponent.h"
 #include "Core/Actor.h"
@@ -102,19 +103,26 @@ void SnowballMorphableEnemyStateMachine::Throw(float direction)
     auto blackboard = Cast<AIBlackboard, SnowballMorphableEnemyBlackboard>(_blackboard);
 
     kinematic->SetVelocityX(direction * blackboard->snowballRollingSpeedX);
-    Transition("Rolling");
+    Transition("SnowballRolling");
 }
 
 void SnowballMorphableEnemyStateMachine::FindSnowballs(Ptr<class CollisionManager> collisionManager,
   std::vector<Weak<class AABBCollisionComponent>>&                                 snowballs)
 {
-    std::vector<Ptr<CollisionComponent>> enemyColliders;
+    std::vector<Weak<CollisionComponent>> enemyColliders;
     collisionManager->FindColliders(ColliderType::Enemy, enemyColliders);
 
-    for (auto& otherCollider : enemyColliders)
+    for (auto& enemyCollider : enemyColliders)
     {
+        auto otherCollider = Lock(enemyCollider);
+        if (nullptr == otherCollider)
+            continue;
+
         auto otherActor = otherCollider->GetOwner();
-        auto otherAI    = otherActor->FindActorComponent<AIComponent>("AI");
+        if (nullptr == otherActor)
+            continue;
+
+        auto otherAI = otherActor->FindActorComponent<AIComponent>("AI");
         if (nullptr == otherAI)
             continue;
 
@@ -122,11 +130,11 @@ void SnowballMorphableEnemyStateMachine::FindSnowballs(Ptr<class CollisionManage
         if (nullptr == Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(otherStateMachine))
             continue;
 
-        auto otherState = otherStateMachine->GetCurrentState();
+        auto otherState = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
         if (nullptr == otherState)
             continue;
 
-        if (otherState->GetName() != "Snowball")
+        if (otherState->GetStateType() != SnowbrosEnemyState::Snowball)
             continue;
 
         auto aabb = Cast<CollisionComponent, AABBCollisionComponent>(otherCollider);

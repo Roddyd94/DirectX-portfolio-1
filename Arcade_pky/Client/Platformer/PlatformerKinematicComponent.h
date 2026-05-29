@@ -47,6 +47,7 @@ public:
     void AddGravity(float deltaTime);
 
     bool IsColliderOnFloor(Vector2 delta = Vector2::zero);
+    bool IsColliderOnFirstFloor();
     bool IsColliderBottomOnBlock(Vector2 delta = Vector2::zero);
     bool IsColliderTouchedBlock(Vector2 delta = Vector2::zero);
     bool IsColliderTouchedBoundary(Vector2 delta = Vector2::zero);

@@ -129,6 +129,13 @@ bool PlatformerKinematicComponent::IsColliderOnFloor(Vector2 delta)
     return false;
 }
 
+bool PlatformerKinematicComponent::IsColliderOnFirstFloor()
+{
+    int32 tileIndexY = _tilemap->GetTileIndexY(_collider->GetWorldPosition().y);
+
+    return tileIndexY <= 1;
+}
+
 bool PlatformerKinematicComponent::IsColliderBottomOnBlock(Vector2 delta)
 {
     Rect colliderBox = _collider->GetBox();
