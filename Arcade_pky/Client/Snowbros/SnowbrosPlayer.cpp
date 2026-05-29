@@ -2,10 +2,14 @@
 
 #include "SnowbrosPlayer.h"
 
+#include "Core/Collision/CollisionManager.h"
+
 #include "PlayerStateGround.h"
 #include "PlayerStateMidair.h"
 #include "ShootComponent.h"
+#include "SnowballMorphableEnemyStateMachine.h"
 #include "SnowbrosPlayerBlackboard.h"
+#include "AI/AIComponent.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
 #include "Core/Collision/PointCollisionComponent.h"
@@ -97,47 +101,98 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     auto shootComponent = CreateActorComponent<ShootComponent>("Shoot");
     shootComponent->SetExtentX(1.f);
 
-    auto inputComp = _playerController->GetInputComponent();
-    inputComp->BindAction(
+    auto input = _playerController->GetInputComponent();
+    input->BindAction(
       "Ground", "MoveLeft", 'A', Raw(_playerComponent), &PlayerComponent::HandleInput);
-    inputComp->BindAction(
+    input->BindAction(
       "Ground", "MoveRight", 'D', Raw(_playerComponent), &PlayerComponent::HandleInput);
-    inputComp->BindAction(
-      "Ground", "Jump", 'T', Raw(_playerComponent), &PlayerComponent::HandleInput);
-    inputComp->BindAction(
-      "Ground", "ShootGround", 'R', Raw(shootComponent), &ShootComponent::HandleInput);
-    inputComp->BindAction(
+    input->BindAction("Ground", "Jump", 'T', Raw(_playerComponent), &PlayerComponent::HandleInput);
+    input->BindAction("Ground", "ShootGround", 'R', this, &SnowbrosPlayer::OnShootButtonEvent);
+    input->BindAction(
       "Midair", "MoveLeft", 'A', Raw(_playerComponent), &PlayerComponent::HandleInput);
-    inputComp->BindAction(
+    input->BindAction(
       "Midair", "MoveRight", 'D', Raw(_playerComponent), &PlayerComponent::HandleInput);
-    inputComp->BindAction(
-      "Midair", "ShootMidair", 'R', Raw(shootComponent), &ShootComponent::HandleInput);
-    inputComp->BindAction(
+    input->BindAction("Midair", "ShootMidair", 'R', this, &SnowbrosPlayer::OnShootButtonEvent);
+    input->BindAction(
       "Snowball", "Jump", 'T', Raw(_playerComponent), &PlayerComponent::HandleInput);
 
-    auto kinematicComp = CreateActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
-    kinematicComp->SetCollider(_collider);
-    kinematicComp->SetTilemap(tilemap);
-    kinematicComp->RegisterOnStateChangedCallback(PlatformerKinematicState::OnGround,
+    auto kinematic = CreateActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
+    kinematic->SetCollider(_collider);
+    kinematic->SetTilemap(tilemap);
+    kinematic->RegisterOnStateChangedCallback(PlatformerKinematicState::OnGround,
       [this]()
       {
           _playerComponent->Transition(PlayerStateGround::instance);
       });
-    kinematicComp->RegisterOnStateChangedCallback(PlatformerKinematicState::OnAir,
+    kinematic->RegisterOnStateChangedCallback(PlatformerKinematicState::OnAir,
       [this]()
       {
           _playerComponent->Transition(New<PlayerStateMidair>(false));
       });
-    kinematicComp->RegisterOnStateChangedCallback(PlatformerKinematicState::OnStandable,
+    kinematic->RegisterOnStateChangedCallback(PlatformerKinematicState::OnStandable,
       [this]()
       {
           _playerComponent->Transition(PlayerStateGround::instance);
       });
 
-    auto movementComp = CreateActorComponent<PlatformerMovementComponent>("PlatformerMovement");
-    movementComp->SetKinematic(kinematicComp);
+    auto movement = CreateActorComponent<PlatformerMovementComponent>("Movement");
+    movement->SetKinematic(kinematic);
 
     _playerComponent->Transition(PlayerStateGround::instance);
 
     return true;
+}
+
+void SnowbrosPlayer::OnShootButtonEvent(
+  Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)
+{
+    auto level            = GetLevel();
+    auto collisionManager = level->GetCollisionManager();
+
+    auto movement  = FindActorComponent<PlatformerMovementComponent>("Movement");
+    auto kinematic = FindActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
+
+    std::vector<Weak<AABBCollisionComponent>> snowballs;
+    SnowballMorphableEnemyStateMachine::FindSnowballs(collisionManager, snowballs);
+
+    float deltaX = kinematic->GetVelocity().x;
+    for (auto& snowball : snowballs)
+    {
+        bool canThrowSnowballBelow = CollisionSystem::AABBToPoint(snowball, _footCollider);
+        if (canThrowSnowballBelow)
+        {
+            auto otherCollider = Lock(snowball);
+            auto otherActor    = otherCollider->GetOwner();
+
+            auto otherAI              = otherActor->FindActorComponent<AIComponent>("AI");
+            auto snowballStateMachine = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(
+              otherAI->GetAIStateMachine());
+
+            snowballStateMachine->Throw(movement->GetDirection());
+
+            return;
+        }
+
+        bool canThrowSnowballRightside
+          = deltaX > 0.f && CollisionSystem::AABBToPoint(snowball, _handColliderRight);
+        bool canThrowSnowballLeftside
+          = deltaX < 0.f && CollisionSystem::AABBToPoint(snowball, _handColliderLeft);
+
+        if (canThrowSnowballRightside || canThrowSnowballLeftside)
+        {
+            auto otherCollider = Lock(snowball);
+            auto otherActor    = otherCollider->GetOwner();
+
+            auto otherAI              = otherActor->FindActorComponent<AIComponent>("AI");
+            auto snowballStateMachine = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(
+              otherAI->GetAIStateMachine());
+
+            snowballStateMachine->Throw(deltaX > 0.f ? 1.f : -1.f);
+
+            return;
+        }
+    }
+
+    auto shootComponent = FindActorComponent<ShootComponent>("Shoot");
+    shootComponent->HandleInput(action, buttonEvent);
 }

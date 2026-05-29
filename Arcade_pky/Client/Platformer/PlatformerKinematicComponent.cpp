@@ -83,6 +83,11 @@ void PlatformerKinematicComponent::SetVelocityX(float velocityX)
     _velocity.x = velocityX;
 }
 
+void PlatformerKinematicComponent::SetVelocityY(float velocityY)
+{
+    _velocity.y = velocityY;
+}
+
 void PlatformerKinematicComponent::MoveX(float deltaX)
 {
     Ptr<Actor> actor    = GetOwner();
@@ -167,11 +172,12 @@ bool PlatformerKinematicComponent::IsColliderTouchedBoundary(Vector2 delta)
 bool PlatformerKinematicComponent::IsColliderMovingAgainstFloor(Vector2 delta)
 {
     Rect colliderBox = _collider->GetBox();
+    colliderBox.Move({delta.x, 0.f});
 
     Ptr<Tile> tilePrevLB = _tilemap->GetTile({colliderBox.left, colliderBox.bottom});
     Ptr<Tile> tilePrevRB = _tilemap->GetTile({colliderBox.right, colliderBox.bottom});
 
-    colliderBox.Move(delta);
+    colliderBox.Move({0.f, delta.y});
 
     Ptr<Tile> tileNextLB = _tilemap->GetTile({colliderBox.left, colliderBox.bottom});
     Ptr<Tile> tileNextRB = _tilemap->GetTile({colliderBox.right, colliderBox.bottom});

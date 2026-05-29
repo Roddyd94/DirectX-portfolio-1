@@ -90,13 +90,7 @@ Ptr<class SnowballMorphableEnemyStateMachine> SnowbrosPlayerState::FindSnowballT
     {
         auto otherCollider = Lock(snowball);
 
-        if (thisCollider->GetColliderID() == otherCollider->GetColliderID())
-            continue;
-
-        Rect    otherRect    = otherCollider->GetBox();
-        Vector2 handPosition = handCollider->GetWorldPosition().ToVector2();
-
-        if (!CollisionSystem::AABBToPoint(otherRect, handPosition))
+        if (!CollisionSystem::AABBToPoint(snowball, handCollider))
             continue;
 
         auto otherActor = otherCollider->GetOwner();

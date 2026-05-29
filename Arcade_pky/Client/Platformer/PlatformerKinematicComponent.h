@@ -40,6 +40,7 @@ public:
     void SetCollider(Ptr<class AABBCollisionComponent> collider);
     void SetVelocity(Vector2 velocity);
     void SetVelocityX(float velocityX);
+    void SetVelocityY(float velocityY);
     void MoveX(float deltaX);
 
     void AddForce(Vector2 force);

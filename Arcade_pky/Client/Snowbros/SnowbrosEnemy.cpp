@@ -4,6 +4,7 @@
 
 #include "GoblinStateMachine.h"
 #include "MonkeyStateMachine.h"
+#include "SnowballMorphableEnemyBlackboard.h"
 #include "SpitterStateMachine.h"
 #include "AI/AIComponent.h"
 #include "Core/Animation/SpriteComponent.h"
@@ -69,9 +70,10 @@ void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
 
 void SnowbrosEnemy::SetDirection(float direction)
 {
-    auto sprite     = FindComponent<SpriteComponent>("Sprite");
-    auto blackboard = _aiComponent->GetAIStateMachine()->GetAIBlackboard<AIBlackboard>();
+    auto sprite       = FindComponent<SpriteComponent>("Sprite");
+    auto stateMachine = _aiComponent->GetAIStateMachine();
+    auto blackboard   = stateMachine->GetAIBlackboard<SnowballMorphableEnemyBlackboard>();
 
     sprite->SetFlipX(direction > 0);
-    blackboard->SetDirection(direction);
+    blackboard->direction = direction;
 }

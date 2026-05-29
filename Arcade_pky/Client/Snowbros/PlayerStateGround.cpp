@@ -34,7 +34,7 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
     float deltaTime = TimeManager::Instance().GetDeltaTime();
 
     auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
-    auto movement   = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
+    auto movement   = player->FindActorComponent<PlatformerMovementComponent>("Movement");
 
     Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
 

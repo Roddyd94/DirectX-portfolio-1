@@ -28,7 +28,7 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
 
     auto blackboard = playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
     Ptr<PlatformerMovementComponent> movement
-      = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
+      = player->FindActorComponent<PlatformerMovementComponent>("Movement");
 
     Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
 
@@ -119,7 +119,7 @@ void PlayerStateMidair::Tick(Ptr<class PlayerComponent> playerComponent, float d
 {
     Ptr<Actor>                       player = playerComponent->GetOwner();
     Ptr<PlatformerMovementComponent> movement
-      = player->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
+      = player->FindActorComponent<PlatformerMovementComponent>("Movement");
 
     movement->AccelerateGravity(deltaTime);
 }

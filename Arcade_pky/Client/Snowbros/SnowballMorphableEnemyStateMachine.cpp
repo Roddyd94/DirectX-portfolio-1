@@ -4,6 +4,7 @@
 
 #include "Core/Collision/CollisionManager.h"
 
+#include "SnowballMorphableEnemyBlackboard.h"
 #include "SnowbrosLevel.h"
 #include "AI/AIComponent.h"
 #include "Core/Actor.h"
@@ -91,6 +92,17 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
 
     kinematic->MoveX(deltaX);
     return true;
+}
+
+void SnowballMorphableEnemyStateMachine::Throw(float direction)
+{
+    auto actor     = GetOwner()->GetOwner();
+    auto kinematic = actor->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+
+    auto blackboard = Cast<AIBlackboard, SnowballMorphableEnemyBlackboard>(_blackboard);
+
+    kinematic->SetVelocityX(direction * blackboard->snowballRollingSpeedX);
+    Transition("Rolling");
 }
 
 void SnowballMorphableEnemyStateMachine::FindSnowballs(Ptr<class CollisionManager> collisionManager,

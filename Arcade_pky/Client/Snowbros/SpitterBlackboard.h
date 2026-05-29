@@ -1,8 +1,6 @@
 #pragma once
-#include "AI/AIBlackboard.h"
+#include "SnowballMorphableEnemyBlackboard.h"
 
-class SpitterBlackboard : public AIBlackboard
+class SpitterBlackboard : public SnowballMorphableEnemyBlackboard
 {
-    // AIBlackboard을(를) 통해 상속됨
-    void SetDirection(float direction) override;
 };

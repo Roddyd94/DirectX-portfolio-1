@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Input/Types.h"
 #include "Player/Player.h"
 
 class SnowbrosPlayer : public Player
@@ -8,12 +9,15 @@ public:
     ~SnowbrosPlayer() override = default;
 
 private:
-    Ptr<class AABBCollisionComponent> _collider;
-    Ptr<class CollisionComponent> _headCollider;
-    Ptr<class CollisionComponent> _handColliderLeft;
-    Ptr<class CollisionComponent> _handColliderRight;
-    Ptr<class CollisionComponent> _footCollider;
+    Ptr<class AABBCollisionComponent>  _collider;
+    Ptr<class PointCollisionComponent> _headCollider;
+    Ptr<class PointCollisionComponent> _handColliderLeft;
+    Ptr<class PointCollisionComponent> _handColliderRight;
+    Ptr<class PointCollisionComponent> _footCollider;
 
 public:
     bool Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation) override;
+
+private:
+    void OnShootButtonEvent(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
 };

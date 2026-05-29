@@ -9,6 +9,4 @@ public:
 
 public:
     void Destroy() override;
-
-    virtual void SetDirection(float direction) = 0;
 };

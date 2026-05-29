@@ -448,6 +448,7 @@
     <ClInclude Include="Snowbros\SnowbrosPlayerState.h">
       <Filter>Snowbros\Player\PlayerState</Filter>
     </ClInclude>
+    <ClInclude Include="Snowbros\SnowballMorphableEnemyBlackboard.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -857,6 +858,7 @@
     <ClCompile Include="Snowbros\SnowbrosPlayerState.cpp">
       <Filter>Snowbros\Player\PlayerState</Filter>
     </ClCompile>
+    <ClCompile Include="Snowbros\SnowballMorphableEnemyBlackboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

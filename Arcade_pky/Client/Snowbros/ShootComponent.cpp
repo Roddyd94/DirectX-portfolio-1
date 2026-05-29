@@ -54,7 +54,7 @@ void ShootComponent::Shoot()
     Vector3    position = GetOwner()->GetWorldPosition();
 
     Ptr<PlatformerMovementComponent> movement
-      = GetOwner()->FindActorComponent<PlatformerMovementComponent>("PlatformerMovement");
+      = GetOwner()->FindActorComponent<PlatformerMovementComponent>("Movement");
     float direction = movement->GetDirection();
 
     position.x += _extentX * direction;

@@ -90,6 +90,12 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               }
           }
           break;
+          case ColliderType::Enemy:
+          {
+              if (_currentState->GetName() == "Snowball")
+                  ;
+          }
+          break;
           case ColliderType::EnemyProjectile:
               break;
           case ColliderType::Item:
@@ -197,6 +203,7 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     auto enemyStateDizzy    = CreateAIState("Dizzy");
     auto enemyStateStruggle = CreateAIState("Struggle");
     auto enemyStateSnowball = CreateAIState("Snowball");
+    auto enemyStateRolling  = CreateAIState("Rolling");
     auto enemyStateLaunched = CreateAIState("Launched");
     auto enemyStateDead     = CreateAIState("Dead");
 #pragma endregion AIStates
@@ -250,6 +257,13 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           blackboard->accTime += blackboard->snowballFormedBonusValue;
           animation->ChangeAnimationClip("goblin_none");
           snowballAnimation->ChangeAnimationClip("snowball_formed", false);
+      });
+    enemyStateRolling->RegisterCallback(AIEventState::Enter,
+      [=](float deltaTime)
+      {
+          blackboard->hitCount = 0;
+          animation->ChangeAnimationClip("goblin_none");
+          snowballAnimation->ChangeAnimationClip("snowball_rolling");
       });
     enemyStateDizzy->RegisterCallback(AIEventState::Enter,
       [=](float deltaTime)
@@ -337,15 +351,35 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
               kinematic->AddGravity(deltaTime);
           }
-          else if (kinematic->IsColliderOnFloor())
-          {
-              int a = 0;
-          }
 
           blackboard->accTime -= blackboard->snowballDecPerSecond * deltaTime;
 
           if (blackboard->accTime <= blackboard->phaseThreshold[3])
               Transition("Struggle");
+      });
+    enemyStateRolling->RegisterCallback(AIEventState::Tick,
+      [=](float deltaTime)
+      {
+          Vector2 velocity = kinematic->GetVelocity();
+
+          if (velocity.y < 0.f && kinematic->IsColliderMovingAgainstFloor(velocity * deltaTime))
+          {
+              kinematic->SetVelocityY(0.f);
+              kinematic->AdjustPositionToFloor(velocity * deltaTime);
+          }
+          else if (!kinematic->IsColliderOnFloor())
+          {
+              kinematic->SetVelocityY(-blackboard->snowballRollingSpeedX);
+          }
+
+          float deltaX = velocity.x * deltaTime;
+
+          if (kinematic->IsColliderMovingAgainstWallX(deltaX)
+              || kinematic->IsColliderMovingAgainstBoundaryX(deltaX))
+          {
+              kinematic->SetVelocityX(-velocity.x);
+              ++blackboard->hitCount;
+          }
       });
     enemyStateDizzy->RegisterCallback(AIEventState::Tick,
       [=](float deltaTime)
