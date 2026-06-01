@@ -159,29 +159,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               {
                   switch (thisStateType)
                   {
-                  case SnowbrosEnemyState::Snowball:
-                  {
-                      auto thisPosition  = thisCollider->GetWorldPosition().ToVector2();
-                      auto otherPosition = otherCollider->GetWorldPosition().ToVector2();
-
-                      if (thisPosition.x < otherPosition.x)
-                          kinematic->SetVelocity({-blackboard->snowballRollingSpeedX, 0.f});
-                      else
-                          kinematic->SetVelocity({blackboard->snowballRollingSpeedX, 0.f});
-
-                      blackboard->isSnowballReinforced = true;
-                      Transition("SnowballRolling");
-
-                      {
-                          auto otherKinematic
-                            = otherPawn->FindActorComponent<PlatformerKinematicComponent>(
-                              "Kinematic");
-
-                          Vector2 otherVelocity = otherKinematic->GetVelocity();
-                          otherKinematic->SetVelocityX(-otherVelocity.x);
-                      }
-                  }
-                  break;
                   case SnowbrosEnemyState::Stand:
                   case SnowbrosEnemyState::Patrol:
                   case SnowbrosEnemyState::Walk:
@@ -193,28 +170,9 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
                   case SnowbrosEnemyState::Struggle:
                       // todo: transition to Launched
                       break;
-                  case SnowbrosEnemyState::SnowballRolling:
-                  case SnowbrosEnemyState::SnowballCrashing:
-                  case SnowbrosEnemyState::Launched:
-                  case SnowbrosEnemyState::Dead:
-                      // do nothing
-                      break;
                   }
               }
               break;
-              case SnowbrosEnemyState::Stand:
-              case SnowbrosEnemyState::Patrol:
-              case SnowbrosEnemyState::Walk:
-              case SnowbrosEnemyState::Turn:
-              case SnowbrosEnemyState::Jump:
-              case SnowbrosEnemyState::Fall:
-              case SnowbrosEnemyState::Crouch:
-              case SnowbrosEnemyState::Dizzy:
-              case SnowbrosEnemyState::Struggle:
-              case SnowbrosEnemyState::SnowballCrashing:
-              case SnowbrosEnemyState::Launched:
-              case SnowbrosEnemyState::Dead:
-                  break;
               }
           }
           break;
@@ -241,14 +199,15 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
               auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
               auto otherActor = otherPawn->GetController();
-              auto otherAI    = otherActor->FindActorComponent<AIComponent>("AI");
 
+              auto otherAI           = otherActor->FindActorComponent<AIComponent>("AI");
               auto otherStateMachine = otherAI->GetAIStateMachine();
               auto otherState        = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
               auto otherStateType    = otherState->GetStateType();
 
               auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
               auto thisStateType = thisState->GetStateType();
+
               switch (thisStateType)
               {
               case SnowbrosEnemyState::Walk:
@@ -277,25 +236,53 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               break;
               case SnowbrosEnemyState::Snowball:
               {
-                  if (otherStateType != SnowbrosEnemyState::Snowball)
-                      return;
-
-                  auto otherSnowballStateMachine
-                    = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(otherStateMachine);
-
-                  float distance = std::abs(thisPosition.x - otherPosition.x);
-                  if (distance > blackboard->snowballRepulsiveDistance)
-                      return;
-
-                  if (thisPosition.x < otherPosition.x)
+                  switch (otherStateType)
                   {
-                      otherSnowballStateMachine->TryMoveX(blackboard->snowballRepulsiveDeltaX);
-                      TryMoveX(-blackboard->snowballRepulsiveDeltaX);
+                  case SnowbrosEnemyState::Snowball:
+                  {
+                      auto otherSnowballStateMachine
+                        = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(
+                          otherStateMachine);
+
+                      float distance = std::abs(thisPosition.x - otherPosition.x);
+                      if (distance > blackboard->snowballRepulsiveDistance)
+                          return;
+
+                      if (thisPosition.x < otherPosition.x)
+                      {
+                          otherSnowballStateMachine->TryMoveX(blackboard->snowballRepulsiveDeltaX);
+                          TryMoveX(-blackboard->snowballRepulsiveDeltaX);
+                      }
+                      else
+                      {
+                          otherSnowballStateMachine->TryMoveX(-blackboard->snowballRepulsiveDeltaX);
+                          TryMoveX(blackboard->snowballRepulsiveDeltaX);
+                      }
                   }
-                  else
+                  break;
+                  case SnowbrosEnemyState::SnowballRolling:
                   {
-                      otherSnowballStateMachine->TryMoveX(-blackboard->snowballRepulsiveDeltaX);
-                      TryMoveX(blackboard->snowballRepulsiveDeltaX);
+                      auto thisPosition  = thisCollider->GetWorldPosition().ToVector2();
+                      auto otherPosition = otherCollider->GetWorldPosition().ToVector2();
+
+                      if (thisPosition.x < otherPosition.x)
+                          kinematic->SetVelocity({-blackboard->snowballRollingSpeedX, 0.f});
+                      else
+                          kinematic->SetVelocity({blackboard->snowballRollingSpeedX, 0.f});
+
+                      blackboard->isSnowballReinforced = true;
+                      Transition("SnowballRolling");
+
+                      {
+                          auto otherKinematic
+                            = otherPawn->FindActorComponent<PlatformerKinematicComponent>(
+                              "Kinematic");
+
+                          Vector2 otherVelocity = otherKinematic->GetVelocity();
+                          otherKinematic->SetVelocityX(-otherVelocity.x);
+                      }
+                  }
+                  break;
                   }
               }
               break;
