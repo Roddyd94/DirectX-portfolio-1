@@ -36,12 +36,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     animation->SetAnimationSequence("goblin");
     animation->ChangeAnimationClip("goblin_walk");
 
-    auto spriteBehind    = pawn->FindSceneComponent<SpriteComponent>("SpriteBehind");
-    auto animationBehind = spriteBehind->CreateAnimation();
-    animationBehind->SetAnimationSequence("goblin");
-    animationBehind->ChangeAnimationClip("goblin_none");
-    spriteBehind->SetEnable(false);
-
     auto spriteSnowball    = pawn->FindSceneComponent<SpriteComponent>("SpriteSnowball");
     auto animationSnowball = spriteSnowball->CreateAnimation();
     animationSnowball->SetAnimationSequence("snowball");
@@ -142,38 +136,16 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           break;
           case ColliderType::Enemy:
           {
-              auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
-              auto otherActor = otherPawn->GetController();
+              // auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
+              // auto otherActor = otherPawn->GetController();
 
-              auto otherAI           = otherActor->FindActorComponent<AIComponent>("AI");
-              auto otherStateMachine = otherAI->GetAIStateMachine();
-              auto otherState        = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
-              auto otherStateType    = otherState->GetStateType();
+              // auto otherAI           = otherActor->FindActorComponent<AIComponent>("AI");
+              // auto otherStateMachine = otherAI->GetAIStateMachine();
+              // auto otherState        = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
+              // auto otherStateType    = otherState->GetStateType();
 
-              auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
-              auto thisStateType = thisState->GetStateType();
-
-              switch (otherStateType)
-              {
-              case SnowbrosEnemyState::SnowballRolling:
-              {
-                  switch (thisStateType)
-                  {
-                  case SnowbrosEnemyState::Stand:
-                  case SnowbrosEnemyState::Patrol:
-                  case SnowbrosEnemyState::Walk:
-                  case SnowbrosEnemyState::Turn:
-                  case SnowbrosEnemyState::Jump:
-                  case SnowbrosEnemyState::Fall:
-                  case SnowbrosEnemyState::Crouch:
-                  case SnowbrosEnemyState::Dizzy:
-                  case SnowbrosEnemyState::Struggle:
-                      // todo: transition to Launched
-                      break;
-                  }
-              }
-              break;
-              }
+              // auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
+              // auto thisStateType = thisState->GetStateType();
           }
           break;
           }
@@ -207,6 +179,8 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
               auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
               auto thisStateType = thisState->GetStateType();
+
+              auto transitionToLaunched = []() {};
 
               switch (thisStateType)
               {
@@ -283,6 +257,23 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
                       }
                   }
                   break;
+                  }
+              }
+              break;
+              case SnowbrosEnemyState::SnowballRolling:
+              {
+                  switch (otherStateType)
+                  {
+                  case SnowbrosEnemyState::Stand:
+                  case SnowbrosEnemyState::Patrol:
+                  case SnowbrosEnemyState::Walk:
+                  case SnowbrosEnemyState::Turn:
+                  case SnowbrosEnemyState::Jump:
+                  case SnowbrosEnemyState::Fall:
+                  case SnowbrosEnemyState::Crouch:
+                  case SnowbrosEnemyState::Dizzy:
+                  case SnowbrosEnemyState::Struggle:
+                      break;
                   }
               }
               break;
@@ -407,21 +398,17 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
       });
     enemyStateStruggle->RegisterCallback(AIEventState::Enter,
       [weakKinematic = Weak(kinematic), weakSprite = Weak(sprite),
-        weakSpriteSnowball = Weak(spriteSnowball),
-        weakSpriteBehind   = Weak(spriteBehind)](float deltaTime)
+        weakSpriteSnowball = Weak(spriteSnowball)](float deltaTime)
       {
           auto kinematic      = Lock(weakKinematic);
           auto sprite         = Lock(weakSprite);
           auto spriteSnowball = Lock(weakSpriteSnowball);
-          auto spriteBehind   = Lock(weakSpriteBehind);
 
           kinematic->SetVelocity(Vector2::zero);
-          sprite->SetEnable(false);
+          sprite->SetRenderLayer("EnemyBehind");
           sprite->ChangeAnimation("goblin_struggle");
           spriteSnowball->SetEnable(true);
           spriteSnowball->ChangeAnimation("snowball_forming", false);
-          spriteBehind->SetEnable(true);
-          spriteBehind->ChangeAnimation("goblin_struggle");
       });
     enemyStateSnowball->RegisterCallback(AIEventState::Enter,
       [weakBlackboard = Weak(blackboard), weakPawn = Weak(pawn), weakSprite = Weak(sprite),
@@ -652,17 +639,14 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           kinematic->SetVelocity(Vector2::zero);
       });
     enemyStateStruggle->RegisterCallback(AIEventState::Exit,
-      [weakSprite = Weak(sprite), weakSpriteBehind = Weak(spriteBehind),
-        weakSpriteSnowball = Weak(spriteSnowball)](float deltaTime)
+      [weakSprite = Weak(sprite), weakSpriteSnowball = Weak(spriteSnowball)](float deltaTime)
       {
           auto sprite         = Lock(weakSprite);
-          auto spriteBehind   = Lock(weakSpriteBehind);
           auto spriteSnowball = Lock(weakSpriteSnowball);
 
           spriteSnowball->SetEnable(false);
           spriteSnowball->ChangeAnimation("snowball_none");
-          sprite->SetEnable(true);
-          spriteBehind->SetEnable(false);
+          sprite->SetRenderLayer("Enemy");
       });
     enemyStateSnowball->RegisterCallback(AIEventState::Exit,
       [weakSprite = Weak(sprite), weakSpriteSnowball = Weak(spriteSnowball)](float deltaTime)
