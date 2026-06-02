@@ -14,6 +14,8 @@ private:
 public:
     bool Init(Ptr<class World> world, const std::string& path) override;
     void Destroy() override;
+    
+    void Tick(float deltaTime) override;
 
     Ptr<class Player> GetPlayer() const;
 };

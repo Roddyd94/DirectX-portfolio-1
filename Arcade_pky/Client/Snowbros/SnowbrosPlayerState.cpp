@@ -5,7 +5,9 @@
 #include "Core/Collision/CollisionManager.h"
 #include "Core/TimeManager.h"
 
+#include "Item.h"
 #include "PlayerStateSnowball.h"
+#include "ShootComponent.h"
 #include "SnowballMorphableEnemyStateMachine.h"
 #include "SnowbrosEnemyState.h"
 #include "SnowbrosLevel.h"
@@ -16,6 +18,7 @@
 #include "Core/Collision/PointCollisionComponent.h"
 #include "Platformer/PlatformerKinematicComponent.h"
 #include "Platformer/PlatformerKinematicPlayerComponent.h"
+#include "Platformer/PlatformerMovementComponent.h"
 #include "Player/Player.h"
 #include "Player/PlayerComponent.h"
 #include "Snowbros/SnowbrosPlayerBlackboard.h"
@@ -100,7 +103,70 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
     case ColliderType::EnemyProjectile:
         break;
     case ColliderType::Item:
+    {
+        auto item = Cast<Actor, Item>(otherCollider->GetOwner());
+        if (nullptr == item)
+            return;
+
+        Item::Type itemType = item->GetItemType();
+
+        switch (itemType)
+        {
+        case Item::Speed:
+        {
+            if (blackboard->speedUpgraded)
+            {
+                // TODO 1000 점
+                return;
+            }
+
+            blackboard->speedMultiplier = 2.f;
+            blackboard->speedUpgraded   = true;
+        }
         break;
+        case Item::Power:
+        {
+            if (blackboard->powerUpgraded)
+            {
+                // TODO 1000 점
+                return;
+            }
+
+            auto shoot = thisActor->FindActorComponent<ShootComponent>("Shoot");
+            shoot->PowerUp();
+
+            blackboard->powerUpgraded = true;
+        }
+        break;
+        case Item::Range:
+        {
+            if (blackboard->rangeUpgraded)
+            {
+                // TODO 1000 점
+                return;
+            }
+
+            auto shoot = thisActor->FindActorComponent<ShootComponent>("Shoot");
+            shoot->RangeUp();
+
+            blackboard->rangeUpgraded = true;
+        }
+        break;
+        case Item::Invincibility:
+            break;
+        case Item::Sushi:
+            break;
+        case Item::Envelope:
+            break;
+        case Item::Special:
+            break;
+        case Item::End:
+            break;
+        default:
+            break;
+        }
+    }
+    break;
     }
 }
 

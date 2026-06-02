@@ -6,12 +6,14 @@
 #include "Core/TimeManager.h"
 
 #include "GoblinBlackboard.h"
+#include "Item.h"
 #include "SnowProjectile.h"
 #include "SnowProjectileComponent.h"
 #include "SnowbrosEnemy.h"
 #include "SnowbrosEnemyState.h"
 #include "SnowbrosLevel.h"
 #include "AI/AIComponent.h"
+#include "Common/Random.h"
 #include "Core/Actor.h"
 #include "Core/Animation/SpriteComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
@@ -112,15 +114,17 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               if (projectile->IsHit())
                   break;
 
+              float formingMultiplier = projectile->IsPoweredUp() ? 2.f : 1.f;
+
               auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
               auto thisStateType = thisState->GetStateType();
               switch (thisStateType)
               {
               case SnowbrosEnemyState::Struggle:
-                  blackboard->accTime += blackboard->snowballIncForming;
+                  blackboard->accTime += blackboard->snowballIncForming * formingMultiplier;
                   break;
               case SnowbrosEnemyState::Snowball:
-                  blackboard->accTime += blackboard->snowballIncFormed;
+                  blackboard->accTime += blackboard->snowballIncFormed * formingMultiplier;
                   break;
               case SnowbrosEnemyState::SnowballRolling:
               case SnowbrosEnemyState::SnowballCrashing:
@@ -132,20 +136,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
                   blackboard->accTime = blackboard->snowballFormingInitialValue;
                   break;
               }
-          }
-          break;
-          case ColliderType::Enemy:
-          {
-              // auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
-              // auto otherActor = otherPawn->GetController();
-
-              // auto otherAI           = otherActor->FindActorComponent<AIComponent>("AI");
-              // auto otherStateMachine = otherAI->GetAIStateMachine();
-              // auto otherState        = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
-              // auto otherStateType    = otherState->GetStateType();
-
-              // auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
-              // auto thisStateType = thisState->GetStateType();
           }
           break;
           }
@@ -179,8 +169,6 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
               auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
               auto thisStateType = thisState->GetStateType();
-
-              auto transitionToLaunched = []() {};
 
               switch (thisStateType)
               {
@@ -273,7 +261,16 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
                   case SnowbrosEnemyState::Crouch:
                   case SnowbrosEnemyState::Dizzy:
                   case SnowbrosEnemyState::Struggle:
-                      break;
+                  {
+                      auto otherBlackboard
+                        = otherStateMachine->GetAIBlackboard<SnowballMorphableEnemyBlackboard>();
+
+                      otherBlackboard->direction = thisPosition.x < otherPosition.x ? 1.f : -1.f;
+                      otherBlackboard->hitByReinforced = blackboard->isSnowballReinforced;
+
+                      otherStateMachine->Transition("Launched");
+                  }
+                  break;
                   }
               }
               break;
@@ -338,6 +335,51 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
           pawn->SetActive(false);
           spriteSnowball->SetEnable(false);
+      });
+    animation->AddNotify("goblin_dead", animation->GetClipFrameCount("goblin_dead"),
+      [weakLevel = Weak(level), weakBlackboard = Weak(blackboard), weakPawn = Weak(pawn)]()
+      {
+          auto pawn       = Lock(weakPawn);
+          auto level      = Lock(weakLevel);
+          auto blackboard = Lock(weakBlackboard);
+
+          auto item
+            = level->SpawnActor<Item>(pawn->GetWorldPosition(), Vector3::one, Vector3::zero);
+          int32 randomValue = Utility::RandomInt(0, 100);
+          if (blackboard->hitByReinforced)
+          {
+              if (randomValue >= 80)
+                  item->SetItemType(Item::Speed);
+              else if (randomValue >= 60)
+                  item->SetItemType(Item::Power);
+              else if (randomValue >= 40)
+                  item->SetItemType(Item::Range);
+              else
+              {
+                  item->SetItemType(Item::Sushi);
+
+                  int32 itemNumber = randomValue % 5;
+                  item->SetItemNumber(itemNumber + 6);
+              }
+          }
+          else
+          {
+              if (randomValue >= 80)
+                  item->SetItemType(Item::Speed);
+              else if (randomValue >= 60)
+                  item->SetItemType(Item::Power);
+              else if (randomValue >= 40)
+                  item->SetItemType(Item::Range);
+              else
+              {
+                  item->SetItemType(Item::Sushi);
+
+                  int32 itemNumber = randomValue % 5;
+                  item->SetItemNumber(itemNumber + 1);
+              }
+          }
+
+          pawn->SetActive(false);
       });
 #pragma endregion AnimationNotifies
 
@@ -457,6 +499,35 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
           auto animationSnowball = Lock(weakAnimationSnowball);
           animationSnowball->ChangeAnimationClip("snowball_crash");
+      });
+    enemyStateLaunched->RegisterCallback(AIEventState::Enter,
+      [weakBlackboard = Weak(blackboard), weakKinematic = Weak(kinematic),
+        weakSprite = Weak(sprite), levelBoundaryTop = level->GetBoundary().top](float deltaTime)
+      {
+          auto blackboard = Lock(weakBlackboard);
+          auto sprite     = Lock(weakSprite);
+          auto kinematic  = Lock(weakKinematic);
+          kinematic->SetVelocity(Vector2::zero);
+
+          blackboard->accTime = 0;
+
+          float   repulsionY = std::min(levelBoundaryTop - sprite->GetWorldPosition().y, 5.f);
+          Vector2 repulsion
+            = SnowballMorphableEnemyBlackboard::CalculateForceToTarget({8.f, repulsionY});
+          kinematic->AddForce(repulsion); // todo
+
+          sprite->ChangeAnimation("goblin_launched");
+          TimeManager::Instance().SetTimer(0.3f, false,
+            [sprite]()
+            {
+                sprite->ChangeAnimation("goblin_airborne");
+            });
+      });
+    enemyStateDead->RegisterCallback(AIEventState::Enter,
+      [weakSprite = Weak(sprite)](float deltaTime)
+      {
+          auto sprite = Lock(weakSprite);
+          sprite->ChangeAnimation("goblin_dead");
       });
 #pragma endregion RegisterStateCallbackEnter
 
@@ -613,6 +684,32 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
               Transition("Walk");
               blackboard->accTime = 0.f;
           }
+      });
+    enemyStateLaunched->RegisterCallback(AIEventState::Tick,
+      [this, weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime)
+      {
+          auto kinematic  = Lock(weakKinematic);
+          auto blackboard = Lock(weakBlackboard);
+
+          blackboard->accTime += deltaTime;
+          Vector2 velocity = kinematic->GetVelocity();
+          float   deltaX   = velocity.x * deltaTime;
+
+          kinematic->AddGravity(deltaTime);
+
+          if (velocity.y < 0.f && kinematic->IsColliderMovingAgainstFloor(velocity * deltaTime))
+          {
+              if (blackboard->accTime > blackboard->airborneTime
+                  || kinematic->IsColliderOnFirstFloor())
+              {
+                  kinematic->SetVelocity(Vector2::zero);
+                  Transition("Dead");
+              }
+          }
+
+          if (kinematic->IsColliderMovingAgainstWallX(deltaX)
+              || kinematic->IsColliderMovingAgainstBoundaryX(deltaX))
+              kinematic->SetVelocityX(-velocity.x);
       });
 #pragma endregion RegisterStateCallbackTick
 

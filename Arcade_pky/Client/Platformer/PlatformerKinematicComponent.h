@@ -23,8 +23,9 @@ protected:
 
 public:
     inline static const float gravity           = -10.f;
-    inline static const float terminalVelocityY = 5.f;
-    inline static const float epsilonTile       = 0.0625f;
+    inline static const float terminalVelocityY = 10.f;
+    inline static const float epsilonTile       = 0.2f;
+    inline static const float correctionToTile       = 0.0625f;
 
 public:
     bool Init(int32 componentID, const std::string& name, Ptr<class Actor> owner) override;

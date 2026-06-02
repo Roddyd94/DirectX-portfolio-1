@@ -115,11 +115,10 @@ bool PlatformerKinematicComponent::IsColliderOnFloor(Vector2 delta)
     Rect colliderBox = collider->GetBox();
     colliderBox.Move(delta);
 
-    auto      tilemap = Lock(_tilemap);
-    Ptr<Tile> tileCenterBottom
-      = tilemap->GetTile({collider->GetWorldPosition().x, colliderBox.bottom});
-    Ptr<Tile> tileLeftBottom  = tilemap->GetTile({colliderBox.left, colliderBox.bottom});
-    Ptr<Tile> tileRightBottom = tilemap->GetTile({colliderBox.right, colliderBox.bottom});
+    auto      tilemap          = Lock(_tilemap);
+    Ptr<Tile> tileCenterBottom = tilemap->GetTile({colliderBox.GetCenterX(), colliderBox.bottom});
+    Ptr<Tile> tileLeftBottom   = tilemap->GetTile({colliderBox.left, colliderBox.bottom});
+    Ptr<Tile> tileRightBottom  = tilemap->GetTile({colliderBox.right, colliderBox.bottom});
 
     if (tileCenterBottom->IsTopBlock() || (tileLeftBottom && tileLeftBottom->IsTopBlock())
         || (tileRightBottom && tileRightBottom->IsTopBlock()))
@@ -314,7 +313,7 @@ void PlatformerKinematicComponent::AdjustPositionToFloor(Vector2 delta)
     Ptr<Tile> tile                 = tilemap->GetTile(colliderCenterBottom);
 
     float targetPositionY = tile->GetWorldPosition().y + tile->GetSize().y / 2.f
-                          + collider->GetBoxSize().y / 2.f - epsilonTile / 2.f;
+                          + collider->GetBoxSize().y / 2.f - correctionToTile / 2.f;
 
     actor->SetWorldPosition({colliderCenterBottom.x, targetPositionY});
 }

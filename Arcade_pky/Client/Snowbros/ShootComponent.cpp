@@ -60,7 +60,8 @@ void ShootComponent::Shoot()
     position.x += _extentX * direction;
     Ptr<SnowProjectile> projectile
       = level->SpawnActor<SnowProjectile>(position, Vector3::one, Vector3::zero);
-    projectile->SetPowerUp(_rangeUp);
+    projectile->SetPowerUp(_powerUp);
+    projectile->SetRangeUp(_rangeUp);
     projectile->SetDirection(direction);
 
     _accTime = 0.f;

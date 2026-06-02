@@ -1,0 +1,127 @@
+#include "pch.h"
+
+#include "Item.h"
+
+#include "Core/TimeManager.h"
+
+#include "Core/Animation/SpriteComponent.h"
+#include "Core/Collision/AABBCollisionComponent.h"
+
+std::vector<int> itemValues = {
+  10'000, // envelope
+  2'000,  // sushi 1
+  1'500,  // sushi 2
+  1'200,  // sushi 3
+  1'000,  // sushi 4
+  800,    // sushi 5
+  600,    // sushi 6
+  400,    // sushi 7
+  300,    // sushi 8
+  200,    // sushi 9
+  100     // sushi 10
+};
+
+bool Item::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
+{
+    Actor::Init(id, position, scale, rotation);
+
+    auto sprite = CreateSceneComponent<SpriteComponent>("Root");
+    sprite->SetRenderLayer("Item");
+    sprite->SetShader("SpriteShader");
+    SetRoot(sprite);
+
+    auto animation = sprite->CreateAnimation();
+    animation->SetAnimationSequence("item");
+    animation->ChangeAnimationClip("item_none");
+
+    auto collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
+    collider->AttachToComponent(_root);
+    collider->SetBoxSize({0.6f, 0.6f});
+    collider->SetCollisionProfile("Item");
+    collider->RegisterCollisionCallBack(CollisionState::Enter,
+      [this](Weak<CollisionComponent> collider)
+      {
+          auto otherCollider = Lock(collider);
+
+          if (ColliderType::Player == otherCollider->GetColliderType())
+              this->SetActive(false);
+      });
+
+    TimeManager::Instance().SetTimer(7.f, false,
+      [this]()
+      {
+          this->SetActive(false);
+      });
+
+    return true;
+}
+
+void Item::Destroy()
+{
+    Actor::Destroy();
+}
+
+void Item::Tick(float deltaTime)
+{
+    Actor::Tick(deltaTime);
+}
+
+void Item::Collision(float deltaTime)
+{
+    Actor::Collision(deltaTime);
+}
+
+Item::Type Item::GetItemType() const
+{
+    return _itemType;
+}
+
+int32 Item::GetItemValue() const
+{
+    return itemValues[_itemNumber];
+}
+
+void Item::SetItemType(Type itemType)
+{
+    _itemType = itemType;
+
+    auto sprite = FindSceneComponent<SpriteComponent>("Root");
+
+    switch (_itemType)
+    {
+    case Item::Speed:
+        sprite->ChangeAnimation("item_speed");
+        break;
+    case Item::Power:
+        sprite->ChangeAnimation("item_power");
+        break;
+    case Item::Range:
+        sprite->ChangeAnimation("item_range");
+        break;
+    case Item::Invincibility:
+        sprite->ChangeAnimation("item_invincibility");
+        break;
+    case Item::Sushi:
+        sprite->ChangeAnimation("item_sushi");
+        sprite->Pause();
+        break;
+    case Item::Envelope:
+        sprite->SetWorldScale(2 * Vector2::one);
+        sprite->ChangeAnimation("item_envelope");
+        break;
+    case Item::Special:
+        sprite->ChangeAnimation("item_special");
+        break;
+    }
+}
+
+void Item::SetItemNumber(int32 itemNumber)
+{
+    _itemNumber = std::clamp(itemNumber, 0, 10);
+
+    auto sprite = FindSceneComponent<SpriteComponent>("Root");
+    sprite->Pause();
+
+    if (Item::Sushi == _itemType)
+        sprite->SetFrameIndex(itemNumber - 1);
+}

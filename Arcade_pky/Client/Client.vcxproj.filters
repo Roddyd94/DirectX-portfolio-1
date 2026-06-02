@@ -50,13 +50,13 @@
       <Filter>Core\World\Transform</Filter>
     </ClInclude>
     <ClInclude Include="Common\LogManager.h">
-      <Filter>Core\Common\Log</Filter>
+      <Filter>Common\Log</Filter>
     </ClInclude>
     <ClInclude Include="Core\DirectoryManager.h">
       <Filter>Core\Directory</Filter>
     </ClInclude>
     <ClInclude Include="Common\Logger.h">
-      <Filter>Core\Common\Log</Filter>
+      <Filter>Common\Log</Filter>
     </ClInclude>
     <ClInclude Include="Core\Timer.h">
       <Filter>Core\Time</Filter>
@@ -71,7 +71,7 @@
       <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="Common\Random.h">
-      <Filter>Core\Common\Random</Filter>
+      <Filter>Common\Random</Filter>
     </ClInclude>
     <ClInclude Include="Core\DeviceManager.h">
       <Filter>Core\Rendering\DirectX</Filter>
@@ -454,6 +454,7 @@
     <ClInclude Include="Snowbros\SnowballMorphableEnemyBlackboard.h">
       <Filter>Snowbros\Enemy\Blackboard</Filter>
     </ClInclude>
+    <ClInclude Include="Item.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -501,13 +502,13 @@
       <Filter>Core\World\Transform</Filter>
     </ClCompile>
     <ClCompile Include="Common\LogManager.cpp">
-      <Filter>Core\Common\Log</Filter>
+      <Filter>Common\Log</Filter>
     </ClCompile>
     <ClCompile Include="Core\DirectoryManager.cpp">
       <Filter>Core\Directory</Filter>
     </ClCompile>
     <ClCompile Include="Common\Logger.cpp">
-      <Filter>Core\Common\Log</Filter>
+      <Filter>Common\Log</Filter>
     </ClCompile>
     <ClCompile Include="Core\Timer.cpp">
       <Filter>Core\Time</Filter>
@@ -869,6 +870,7 @@
     <ClCompile Include="Snowbros\SnowballMorphableEnemyBlackboard.cpp">
       <Filter>Snowbros\Enemy\Blackboard</Filter>
     </ClCompile>
+    <ClCompile Include="Item.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -1090,15 +1092,6 @@
     <Filter Include="Snowbros\World">
       <UniqueIdentifier>{573efb8a-41b7-4ae3-9e08-fc2c67eec764}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Common">
-      <UniqueIdentifier>{76b244ef-d46f-4859-9be9-67dab3696fad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Common\Log">
-      <UniqueIdentifier>{1347fc33-0805-4cc9-a648-00a4d1e2b7a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Common\Random">
-      <UniqueIdentifier>{0b49908f-4b0f-469b-853b-1c58fad463ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Snowbros\Enemy">
       <UniqueIdentifier>{07b6f73c-8ffa-4381-bc26-44819020c699}</UniqueIdentifier>
     </Filter>
@@ -1113,6 +1106,15 @@
     </Filter>
     <Filter Include="Snowbros\Player\PlayerState">
       <UniqueIdentifier>{32a1990a-a603-4381-a4af-0bdc46a37ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{76b244ef-d46f-4859-9be9-67dab3696fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Log">
+      <UniqueIdentifier>{1347fc33-0805-4cc9-a648-00a4d1e2b7a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Random">
+      <UniqueIdentifier>{0b49908f-4b0f-469b-853b-1c58fad463ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

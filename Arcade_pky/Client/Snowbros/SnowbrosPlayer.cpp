@@ -25,7 +25,9 @@
 bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
     Player::Init(id, position, scale, rotation);
-    _playerComponent->SetBlackboard(New<SnowbrosPlayerBlackboard>());
+
+    auto blackboard = New<SnowbrosPlayerBlackboard>();
+    _playerComponent->SetBlackboard(blackboard);
 
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
@@ -49,9 +51,12 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
           Lock(animation)->ChangeAnimationClip("player_midair");
       });
     animation->AddNotify("player_shoot", animation->GetClipFrameCount("player_shoot"),
-      [animation = Weak(animation)]()
+      [blackboard = Weak(blackboard), animation = Weak(animation)]()
       {
-          Lock(animation)->ChangeAnimationClip("player_stand");
+          if (Lock(blackboard)->speedUpgraded)
+              Lock(animation)->ChangeAnimationClip("player_run");
+          else
+              Lock(animation)->ChangeAnimationClip("player_stand");
       });
     animation->AddNotify("player_shoot_midair", animation->GetClipFrameCount("player_shoot_midair"),
       [animation = Weak(animation)]()
@@ -59,10 +64,13 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
           Lock(animation)->ChangeAnimationClip("player_midair");
       });
     animation->AddNotify("player_kick", animation->GetClipFrameCount("player_kick"),
-      [animation = Weak(animation), playerComponent = Weak(_playerComponent)]()
+      [blackboard = Weak(blackboard), animation = Weak(animation),
+        playerComponent = Weak(_playerComponent)]()
       {
           if (SnowbrosPlayerStateType::Midair == Lock(playerComponent)->GetStateType())
               Lock(animation)->ChangeAnimationClip("player_midair");
+          else if (Lock(blackboard)->speedUpgraded)
+              Lock(animation)->ChangeAnimationClip("player_run");
           else
               Lock(animation)->ChangeAnimationClip("player_stand");
       });

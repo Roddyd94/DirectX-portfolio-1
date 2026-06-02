@@ -12,7 +12,7 @@ protected:
     Ptr<class Tilemap> _tilemap;
 
 public:
-    Rect _boundary{-8.f, 7.f, 8.f, -7.f};
+    Rect _boundary{-8.f, 6.f, 8.f, -7.f};
 
 public:
     bool Init(Ptr<class World> world, const std::string& path) override;

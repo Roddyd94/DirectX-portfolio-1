@@ -51,29 +51,48 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
             if (nullptr != snowball)
             {
                 if (snowball->TryMoveX(-speedSnowballX * deltaTime))
-                    movement->MoveLeft(speedX * blackboard->speedMultiplierSnowball);
+                    movement->MoveLeft(
+                      speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else
                     movement->Stop();
 
                 if (sprite->GetCurrentClipName() != "player_shoot"
                     && sprite->GetCurrentClipName() != "player_kick")
-                    sprite->ChangeAnimation("player_push");
+                {
+                    if (blackboard->speedUpgraded)
+                        sprite->ChangeAnimation("player_push_run");
+                    else
+                        sprite->ChangeAnimation("player_push");
+                }
             }
             else
             {
-                movement->MoveLeft(speedX);
+                movement->MoveLeft(speedX * blackboard->speedMultiplier);
                 if (sprite->GetCurrentClipName() != "player_shoot"
                     && sprite->GetCurrentClipName() != "player_kick")
-                    sprite->ChangeAnimation("player_walk");
+                {
+                    if (blackboard->speedUpgraded)
+                        sprite->ChangeAnimation("player_run");
+                    else
+                        sprite->ChangeAnimation("player_walk");
+                }
             }
 
             sprite->SetFlipX(false);
         }
         break;
         case ButtonEventType::Up:
+        {
             movement->Stop();
-            sprite->ChangeAnimation("player_stand");
-            break;
+            if (sprite->GetCurrentClipName() != "player_shoot")
+            {
+                if (blackboard->speedUpgraded)
+                    sprite->ChangeAnimation("player_run");
+                else
+                    sprite->ChangeAnimation("player_stand");
+            }
+        }
+        break;
         }
     }
     else if (action->GetName() == "MoveRight")
@@ -89,28 +108,47 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
             if (nullptr != snowball)
             {
                 if (snowball->TryMoveX(speedSnowballX * deltaTime))
-                    movement->MoveRight(speedX * blackboard->speedMultiplierSnowball);
+                    movement->MoveRight(
+                      speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else
                     movement->Stop();
 
                 if (sprite->GetCurrentClipName() != "player_shoot")
-                    sprite->ChangeAnimation("player_push");
+                {
+                    if (blackboard->speedUpgraded)
+                        sprite->ChangeAnimation("player_push_run");
+                    else
+                        sprite->ChangeAnimation("player_push");
+                }
             }
             else
             {
-                movement->MoveRight(speedX);
-                if (sprite->GetCurrentClipName() != "player_shoot")
-                    sprite->ChangeAnimation("player_walk");
+                movement->MoveRight(speedX * blackboard->speedMultiplier);
+                if (sprite->GetCurrentClipName() != "player_shoot"
+                    && sprite->GetCurrentClipName() != "player_kick")
+                {
+                    if (blackboard->speedUpgraded)
+                        sprite->ChangeAnimation("player_run");
+                    else
+                        sprite->ChangeAnimation("player_walk");
+                }
             }
 
             sprite->SetFlipX(true);
         }
         break;
         case ButtonEventType::Up:
+        {
             movement->Stop();
             if (sprite->GetCurrentClipName() != "player_shoot")
-                sprite->ChangeAnimation("player_stand");
-            break;
+            {
+                if (blackboard->speedUpgraded)
+                    sprite->ChangeAnimation("player_run");
+                else
+                    sprite->ChangeAnimation("player_stand");
+            }
+        }
+        break;
         }
     }
     else if (action->GetName() == "Jump")
@@ -149,6 +187,13 @@ void PlayerStateGround::Enter(Ptr<class PlayerComponent> playerComponent)
     float deltaX = kinematic->GetVelocity().x;
 
     Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
+
+    if (blackboard->speedUpgraded)
+    {
+        sprite->ChangeAnimation("player_run");
+        return;
+    }
+
     if (std::abs(deltaX) < FLT_EPSILON)
         sprite->ChangeAnimation("player_stand");
     else

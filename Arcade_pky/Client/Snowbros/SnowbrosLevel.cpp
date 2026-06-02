@@ -42,7 +42,7 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
     SnowbrosTileParser::ParseTileMetadata(tileMetadata);
 
     byte stageData[224] = {};
-    SnowbrosTileParser::ParseStageData(L"snowbros_stage_2.bin", stageData, 224);
+    SnowbrosTileParser::ParseStageData(L"snowbros_stage_1.bin", stageData, 224);
     for (size_t i = 0; i < 14; i++)
     {
         for (size_t j = 0; j < 16; j++)
@@ -109,6 +109,27 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
 void SnowbrosLevel::Destroy()
 {
     TilemapLevel::Destroy();
+}
+
+void SnowbrosLevel::Tick(float deltaTime)
+{
+    TilemapLevel::Tick(deltaTime);
+
+    std::vector<Ptr<Actor>> enemies;
+    FindActors("Enemy", enemies);
+
+    if (!enemies.size())
+    {
+        for (int i = 0; i < 11; ++i)
+        {
+            Ptr<SnowbrosEnemy> enemy = SpawnActor<SnowbrosEnemy>(
+              {-2.f + 0.5f * i, 3.5f, 0.f}, 2 * Vector3::one, Vector3::zero);
+
+            enemy->SetName("Enemy");
+            enemy->SetEnemyType(SnowbrosEnemyType::Goblin);
+            enemy->SetDirection(1.f);
+        }
+    }
 }
 
 Ptr<class Player> SnowbrosLevel::GetPlayer() const

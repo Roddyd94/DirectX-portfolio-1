@@ -33,7 +33,7 @@ void SnowProjectileComponent::Tick(float deltaTime)
 
     float velocityX = 0.f;
     if (_accTime < phaseTime)
-        velocityX = _rangeUp ? velocityXPhaseRangeUp1 : velocityXPhaseNormal1;
+        velocityX = _rangeUp ? velocityXPhase1RangeUp : velocityXPhase1Normal;
     else
     {
         velocityX = velocityXPhase2;
@@ -63,6 +63,11 @@ void SnowProjectileComponent::OnCollision()
 bool SnowProjectileComponent::IsHit() const
 {
     return _isHit;
+}
+
+bool SnowProjectileComponent::IsPoweredUp() const
+{
+    return _powerUp;
 }
 
 void SnowProjectileComponent::SetKinematic(Ptr<class PlatformerKinematicComponent> kinematic)

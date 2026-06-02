@@ -19,9 +19,11 @@ public:
     float direction = -1.f;
     float accTime   = 0.f;
 
-    bool isJumping            = false;
     bool turned               = false;
+    bool hitByReinforced      = false;
+    bool isJumping            = false;
     bool isSnowballReinforced = false;
+    bool isSnowballFalling    = false;
 
 public:
     inline static const float phaseThreshold[snowballStateFormingPhaseCount]
@@ -33,6 +35,7 @@ public:
     inline static const float jumpForceFull = 6.625f;
     inline static const float jumpForceHalf = 6.625f;
     inline static const float jumpEpsilon   = 0.0625f;
+    inline static const float airborneTime  = 2.f;
 
     inline static const float snowballDragFloor           = 0.9f;
     inline static const float snowballFrameDistance       = 0.125f;
@@ -48,4 +51,7 @@ public:
 
 public:
     Vector2 GetTargetJumpForce() const;
+
+public:
+    static Vector2 CalculateForceToTarget(Vector2 targetDelta);
 };

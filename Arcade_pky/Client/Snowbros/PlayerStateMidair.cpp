@@ -43,18 +43,20 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
         case ButtonEventType::Hold:
         {
             float speedX = _flippedX ? (blackboard->speedX * 0.5f) : blackboard->speedX;
+            float deltaX = -speedX * deltaTime * blackboard->speedMultiplier;
 
-            auto snowball = FindSnowballToPush(playerComponent, -speedX * deltaTime);
+            auto snowball = FindSnowballToPush(playerComponent, deltaX);
             if (nullptr != snowball)
             {
-                if (snowball->TryMoveX(-speedX * deltaTime))
-                    movement->MoveLeft(speedX * blackboard->speedMultiplierSnowball);
+                if (snowball->TryMoveX(deltaX))
+                    movement->MoveLeft(
+                      speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else
                     movement->Stop();
             }
             else
             {
-                movement->MoveLeft(speedX);
+                movement->MoveLeft(speedX * blackboard->speedMultiplier);
             }
 
             sprite->SetFlipX(false);
@@ -72,18 +74,20 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
         case ButtonEventType::Hold:
         {
             float speedX = _flippedX ? (blackboard->speedX * 0.5f) : blackboard->speedX;
+            float deltaX = speedX * deltaTime * blackboard->speedMultiplier;
 
-            auto snowball = FindSnowballToPush(playerComponent, speedX * deltaTime);
+            auto snowball = FindSnowballToPush(playerComponent, deltaX);
             if (nullptr != snowball)
             {
-                if (snowball->TryMoveX(speedX * deltaTime))
-                    movement->MoveRight(speedX * blackboard->speedMultiplierSnowball);
+                if (snowball->TryMoveX(deltaX))
+                    movement->MoveRight(
+                      speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else
                     movement->Stop();
             }
             else
             {
-                movement->MoveRight(speedX);
+                movement->MoveRight(speedX * blackboard->speedMultiplier);
             }
 
             sprite->SetFlipX(true);
@@ -111,6 +115,7 @@ void PlayerStateMidair::Enter(Ptr<class PlayerComponent> playerComponent)
         sprite->ChangeAnimation("player_jump");
     else if (sprite->GetCurrentClipName() != "player_kick")
         sprite->ChangeAnimation("player_midair");
+
     _initialFlipX = sprite->GetFlipX();
 }
 

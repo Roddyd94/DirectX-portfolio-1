@@ -530,6 +530,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Editor\EditorEngine.h" />
     <ClInclude Include="Editor\EditorUI.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Platformer\PlatformerKinematicComponent.h" />
     <ClInclude Include="Platformer\PlatformerKinematicPlayerComponent.h" />
@@ -671,6 +672,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Core\World.cpp" />
     <ClCompile Include="Editor\EditorEngine.cpp" />
     <ClCompile Include="Editor\EditorUI.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">Create</PrecompiledHeader>
