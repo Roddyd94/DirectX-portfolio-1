@@ -11,8 +11,10 @@ public:
     DELETE_SPECIAL_FUNC(Level)
 
 private:
-    std::vector<int32>                _actorsToRemove;
+    std::unordered_map<std::string, Ptr<class InstanceRenderer>> _instanceRenderers;
+
     std::map<int32, Ptr<class Actor>> _actors;
+    std::vector<int32>                _actorsToRemove;
     Weak<class World>                 _world;
     Ptr<class CameraManager>          _cameraManager;
 #ifdef _HAS_COLLISION_MODULE
@@ -40,9 +42,11 @@ public:
     Ptr<class CameraComponent> GetMainCamera() const;
     Vector3                    GetCameraWorldPosition() const;
 #ifdef _HAS_COLLISION_MODULE
-    Ptr<class CollisionManager> GetCollisionManager() const;
+    Ptr<class CollisionManager>        GetCollisionManager() const;
     Ptr<class CollisionProfileManager> GetCollisionProfileManager() const;
 #endif // _HAS_COLLISION_MODULE
+
+    Ptr<class InstanceRenderer> FindInstanceRenderer(const std::string& name) const;
 
     // TODO UI const Matrix& GetUIProjMatrix() const;
 
@@ -84,6 +88,18 @@ public:
         }
 
         _actors[actorID] = actor;
+
+        return actor;
+    }
+
+    template <typename T>
+    Ptr<T> SpawnInstanceRenderer(
+      const std::string& layerName, Vector3 position, Vector3 scale, Vector3 rotation)
+    {
+        Ptr<T> actor = SpawnActor<T>(position, scale, rotation);
+        actor->SetRenderLayer(layerName);
+
+        _instanceRenderers[layerName] = actor;
 
         return actor;
     }

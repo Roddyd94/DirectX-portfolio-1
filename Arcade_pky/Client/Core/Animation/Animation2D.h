@@ -19,7 +19,6 @@ public:
 
 private:
     std::map<std::pair<int32, int32>, Animation2DNotify> _notifies;
-    Weak<class SpriteComponent>                          _owner;
     Weak<class Animation2DSequence>                      _animationSequence;
     Weak<class Animation2DClip>                          _currentAnimationClip;
     Ptr<class Animation2DConstantBuffer>                 _buffer;
@@ -45,6 +44,7 @@ public:
     int32 GetFrameCount() const;
     int32 GetFrameIndex() const;
     bool  GetFlipX() const;
+    bool  IsReversed() const;
 
     void SetAnimationSequence(Ptr<class Animation2DSequence> sequence);
     void SetAnimationSequence(const std::string& sequenceName);

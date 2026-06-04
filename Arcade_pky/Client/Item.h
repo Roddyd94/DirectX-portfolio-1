@@ -3,6 +3,7 @@
 
 class Item : public Actor
 {
+public:
     enum Type;
 
 public:
@@ -20,7 +21,7 @@ public:
     void Tick(float deltaTime) override;
     void Collision(float deltaTime) override;
 
-    Type GetItemType() const;
+    Type  GetItemType() const;
     int32 GetItemValue() const;
 
     void SetItemType(Type itemType);

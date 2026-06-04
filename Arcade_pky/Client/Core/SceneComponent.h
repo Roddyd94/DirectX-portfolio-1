@@ -37,6 +37,7 @@ public:
     void Tick(float deltaTime) override;
 
     virtual void Collision(float deltaTime);
+    virtual void PreRender(float deltaTime);
     virtual void Render(float deltaTime);
 
     void SetEnable(bool enable) override;
@@ -58,7 +59,7 @@ public:
     Vector3          GetRelativeRotation() const;
 
     void AddChild(Ptr<SceneComponent> comp);
-    void SetRenderLayer(const std::string& name);
+    virtual void SetRenderLayer(const std::string& name);
 
     void SetWorldTransform(const Transform& transform);
     void SetWorldTransform(Vector3 position, Vector3 scale, Vector3 rotation);

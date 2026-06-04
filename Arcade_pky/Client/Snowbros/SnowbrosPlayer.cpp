@@ -11,7 +11,8 @@
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
 #include "AI/AIComponent.h"
-#include "Core/Animation/SpriteComponent.h"
+#include "Core/Animation/Animation2D.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
 #include "Core/Collision/PointCollisionComponent.h"
 #include "Core/Input/InputComponent.h"
@@ -32,9 +33,9 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto rootComp = CreateSceneComponent<SpriteComponent>("Root");
+    auto rootComp = CreateSceneComponent<SpriteInstanceComponent>("Root");
     rootComp->SetRenderLayer("Player");
-    rootComp->SetShader("SpriteShader");
+    // rootComp->SetShader("SpriteShader");
     SetRoot(rootComp);
 
     Ptr<Animation2D> animation = rootComp->CreateAnimation();
@@ -174,7 +175,7 @@ void SnowbrosPlayer::OnShootButtonEvent(
     auto movement  = FindActorComponent<PlatformerMovementComponent>("Movement");
     auto kinematic = FindActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
 
-    auto sprite    = Cast<SceneComponent, SpriteComponent>(_root);
+    auto sprite    = Cast<SceneComponent, SpriteInstanceComponent>(_root);
     auto animation = sprite->GetAnimation();
 
     std::vector<Weak<AABBCollisionComponent>> snowballs;

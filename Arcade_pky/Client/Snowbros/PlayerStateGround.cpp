@@ -11,7 +11,7 @@
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
 #include "AI/AIComponent.h"
-#include "Core/Animation/SpriteComponent.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Platformer/PlatformerKinematicPlayerComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
 #include "Player/Player.h"
@@ -36,7 +36,7 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
     auto blackboard = GetBlackboard(playerComponent);
     auto movement   = player->FindActorComponent<PlatformerMovementComponent>("Movement");
 
-    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Root");
 
     if (action->GetName() == "MoveLeft")
     {
@@ -186,7 +186,7 @@ void PlayerStateGround::Enter(Ptr<class PlayerComponent> playerComponent)
       = player->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
     float deltaX = kinematic->GetVelocity().x;
 
-    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Root");
 
     if (blackboard->speedUpgraded)
     {

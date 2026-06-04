@@ -4,7 +4,8 @@
 
 #include "Core/TimeManager.h"
 
-#include "Core/Animation/SpriteComponent.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
+#include "Core/Animation/Animation2D.h"
 #include "Core/Collision/AABBCollisionComponent.h"
 
 std::vector<int> itemValues = {
@@ -25,9 +26,9 @@ bool Item::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
     Actor::Init(id, position, scale, rotation);
 
-    auto sprite = CreateSceneComponent<SpriteComponent>("Root");
+    auto sprite = CreateSceneComponent<SpriteInstanceComponent>("Root");
     sprite->SetRenderLayer("Item");
-    sprite->SetShader("SpriteShader");
+    //sprite->SetShader("SpriteShader");
     SetRoot(sprite);
 
     auto animation = sprite->CreateAnimation();
@@ -85,7 +86,7 @@ void Item::SetItemType(Type itemType)
 {
     _itemType = itemType;
 
-    auto sprite = FindSceneComponent<SpriteComponent>("Root");
+    auto sprite = FindSceneComponent<SpriteInstanceComponent>("Root");
 
     switch (_itemType)
     {
@@ -119,7 +120,7 @@ void Item::SetItemNumber(int32 itemNumber)
 {
     _itemNumber = std::clamp(itemNumber, 0, 10);
 
-    auto sprite = FindSceneComponent<SpriteComponent>("Root");
+    auto sprite = FindSceneComponent<SpriteInstanceComponent>("Root");
     sprite->Pause();
 
     if (Item::Sushi == _itemType)

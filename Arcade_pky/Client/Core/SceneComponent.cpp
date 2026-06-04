@@ -60,6 +60,8 @@ void SceneComponent::Tick(float deltaTime)
 
 void SceneComponent::Collision(float deltaTime) {}
 
+void SceneComponent::PreRender(float deltaTime) {}
+
 void SceneComponent::Render(float deltaTime) {}
 
 void SceneComponent::SetEnable(bool enable)

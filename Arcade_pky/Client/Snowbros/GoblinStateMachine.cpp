@@ -15,7 +15,8 @@
 #include "AI/AIComponent.h"
 #include "Common/Random.h"
 #include "Core/Actor.h"
-#include "Core/Animation/SpriteComponent.h"
+#include "Core/Animation/Animation2D.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
 #include "Platformer/PlatformerKinematicComponent.h"
 #include "Player/Player.h"
@@ -33,12 +34,12 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     auto collider  = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
-    auto sprite    = pawn->FindSceneComponent<SpriteComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<SpriteInstanceComponent>("Sprite");
     auto animation = sprite->CreateAnimation();
     animation->SetAnimationSequence("goblin");
     animation->ChangeAnimationClip("goblin_walk");
 
-    auto spriteSnowball    = pawn->FindSceneComponent<SpriteComponent>("SpriteSnowball");
+    auto spriteSnowball    = pawn->FindSceneComponent<SpriteInstanceComponent>("SpriteSnowball");
     auto animationSnowball = spriteSnowball->CreateAnimation();
     animationSnowball->SetAnimationSequence("snowball");
     animationSnowball->ChangeAnimationClip("snowball_none");

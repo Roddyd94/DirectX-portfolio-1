@@ -4,7 +4,7 @@
 
 #include "SnowProjectile.h"
 #include "Core/Actor.h"
-#include "Core/Animation/SpriteComponent.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Core/Input/InputAction.h"
 #include "Core/Level.h"
 #include "Platformer/PlatformerMovementComponent.h"
@@ -29,8 +29,8 @@ void ShootComponent::HandleInput(Ptr<class InputAction> action, ButtonEventType:
 {
     if (buttonEvent == ButtonEventType::Down)
     {
-        Ptr<Actor>           Actor  = GetOwner();
-        Ptr<SpriteComponent> sprite = Actor->FindSceneComponent<SpriteComponent>("Root");
+        Ptr<Actor> Actor  = GetOwner();
+        auto       sprite = Actor->FindSceneComponent<SpriteInstanceComponent>("Root");
 
         if (action->GetName() == "ShootGround")
         {

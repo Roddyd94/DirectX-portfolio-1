@@ -454,7 +454,30 @@
     <ClInclude Include="Snowbros\SnowballMorphableEnemyBlackboard.h">
       <Filter>Snowbros\Enemy\Blackboard</Filter>
     </ClInclude>
-    <ClInclude Include="Item.h" />
+    <ClInclude Include="Core\Animation\SpriteInstanceShader.h">
+      <Filter>Animation\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Snowbros\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Animation\Animation2DStructureBuffer.h">
+      <Filter>Animation\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\InstanceRenderer.h">
+      <Filter>Core\Rendering\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\InstanceRendererComponent.h">
+      <Filter>Core\Rendering\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderInstanceComponent.h">
+      <Filter>Core\Rendering\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Animation\SpriteInstanceComponent.h">
+      <Filter>Animation\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Animation\SpriteInstanceRenderer.h">
+      <Filter>Animation\Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -870,7 +893,30 @@
     <ClCompile Include="Snowbros\SnowballMorphableEnemyBlackboard.cpp">
       <Filter>Snowbros\Enemy\Blackboard</Filter>
     </ClCompile>
-    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Core\Animation\SpriteInstanceShader.cpp">
+      <Filter>Animation\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Snowbros\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Animation\Animation2DStructureBuffer.cpp">
+      <Filter>Animation\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\InstanceRenderer.cpp">
+      <Filter>Core\Rendering\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\InstanceRendererComponent.cpp">
+      <Filter>Core\Rendering\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderInstanceComponent.cpp">
+      <Filter>Core\Rendering\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Animation\SpriteInstanceComponent.cpp">
+      <Filter>Animation\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Animation\SpriteInstanceRenderer.cpp">
+      <Filter>Animation\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -1116,6 +1162,15 @@
     <Filter Include="Common\Random">
       <UniqueIdentifier>{0b49908f-4b0f-469b-853b-1c58fad463ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Rendering\Actor">
+      <UniqueIdentifier>{b00bed52-1800-40d8-a57f-39bc2f70c69a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Rendering\Component">
+      <UniqueIdentifier>{aef1df85-06a6-45a7-a82e-2cefa15f8b1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation\Actor">
+      <UniqueIdentifier>{13d229de-ac5e-45b0-b98e-a4020d7cd93b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -1139,6 +1194,9 @@
       <Filter>Tilemap\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\HLSL\Sprite.fx">
+      <Filter>Animation\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\SpriteInstance.fx">
       <Filter>Animation\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

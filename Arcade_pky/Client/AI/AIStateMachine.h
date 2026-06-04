@@ -107,12 +107,12 @@ public:
 
     template <typename... Args>
     Ptr<class AIConditionBase> CreateAICompositeCondition(
-      const std::string& conditionName, ConditionOperator op, Args... conditions)
+      const std::string& conditionName, ConditionOperator op, Args&&... conditions)
     {
         Ptr<AICompositeCondition> condition = New<AICompositeCondition>();
         condition->SetName(conditionName);
         condition->SetOperator(op);
-        (condition->AddCondition(conditions), ...);
+        (condition->AddCondition(std::forward<Args>(conditions)), ...);
 
         return condition;
     }

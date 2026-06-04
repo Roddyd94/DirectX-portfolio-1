@@ -135,8 +135,7 @@ void SpriteComponent::ChangeAnimation(const std::string& name, bool play)
 
 Ptr<class Animation2D> SpriteComponent::CreateAnimation()
 {
-    _animation         = New<Animation2D>();
-    _animation->_owner = This<SpriteComponent>();
+    _animation = New<Animation2D>();
 
     if (!_animation->Init())
     {

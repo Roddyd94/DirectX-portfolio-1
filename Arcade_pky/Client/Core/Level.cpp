@@ -7,6 +7,7 @@
 
 #include "Actor.h"
 #include "Camera.h"
+#include "InstanceRenderer.h"
 #include "World.h"
 
 #ifdef _HAS_COLLISION_MODULE
@@ -43,9 +44,10 @@ bool Level::Init(Ptr<World> world, const std::string& path)
 void Level::Destroy()
 {
     for (auto& [_, actor] : _actors)
-        DESTROY(actor)
+        DESTROY(actor);
 
     _actors.clear();
+    _instanceRenderers.clear();
 
     DESTROY(_tagManager);
     // DESTROY(_uiManager);
@@ -162,6 +164,16 @@ Ptr<CollisionProfileManager> Level::GetCollisionProfileManager() const
 {
     return Lock(_world)->GetCollisionProfileManager();
 }
+
+Ptr<class InstanceRenderer> Level::FindInstanceRenderer(const std::string& name) const
+{
+    auto it = _instanceRenderers.find(name);
+    if (_instanceRenderers.end() == it)
+        return nullptr;
+
+    return it->second;
+}
+
 #endif // _HAS_COLLISION_MODULE
 Ptr<CameraComponent> Level::GetMainCamera() const
 {

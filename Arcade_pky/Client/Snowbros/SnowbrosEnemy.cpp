@@ -7,7 +7,7 @@
 #include "SnowballMorphableEnemyBlackboard.h"
 #include "SpitterStateMachine.h"
 #include "AI/AIComponent.h"
-#include "Core/Animation/SpriteComponent.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
 #include "Platformer/PlatformerKinematicComponent.h"
 #include "Tilemap/Tilemap.h"
@@ -20,16 +20,14 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto sprite = CreateSceneComponent<SpriteComponent>("Sprite");
+    auto sprite = CreateSceneComponent<SpriteInstanceComponent>("Sprite");
     sprite->SetRenderLayer("Enemy");
-    sprite->SetShader("SpriteShader");
     sprite->AttachToComponent(_root);
     sprite->SetRelativeScale(Vector3::one);
 
-    auto snowballSprite = CreateSceneComponent<SpriteComponent>("SpriteSnowball");
+    auto snowballSprite = CreateSceneComponent<SpriteInstanceComponent>("SpriteSnowball");
     snowballSprite->SetEnable(false);
     snowballSprite->SetRenderLayer("Snowball");
-    snowballSprite->SetShader("SpriteShader");
     snowballSprite->AttachToComponent(_root);
     snowballSprite->SetRelativeScale(Vector3::one);
 
@@ -73,7 +71,7 @@ void SnowbrosEnemy::SetDirection(float direction)
 {
     auto aiComponent  = GetAIComponent();
 
-    auto sprite       = FindComponent<SpriteComponent>("Sprite");
+    auto sprite       = FindComponent<SpriteInstanceComponent>("Sprite");
     auto stateMachine = aiComponent->GetAIStateMachine();
     auto blackboard   = stateMachine->GetAIBlackboard<SnowballMorphableEnemyBlackboard>();
 

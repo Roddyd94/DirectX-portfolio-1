@@ -153,6 +153,21 @@ void RenderManager::Render(float deltaTime)
             if (!renderer->IsActive())
                 continue;
 
+            renderer->PreRender(deltaTime);
+        }
+
+        for (auto& weak : layer.renderers)
+        {
+            Ptr<SceneComponent> renderer = Lock<SceneComponent>(weak);
+            if (nullptr == renderer)
+                continue;
+
+            if (!renderer->IsEnable())
+                continue;
+
+            if (!renderer->IsActive())
+                continue;
+
             renderer->Render(deltaTime);
         }
     }

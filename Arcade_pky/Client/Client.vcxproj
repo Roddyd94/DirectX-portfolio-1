@@ -445,7 +445,11 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Core\Animation\Animation2DSequence.h" />
     <ClInclude Include="Core\Animation\Animation2DSprite.h" />
     <ClInclude Include="Core\Animation\Animation2DStateMachine.h" />
+    <ClInclude Include="Core\Animation\Animation2DStructureBuffer.h" />
     <ClInclude Include="Core\Animation\SpriteComponent.h" />
+    <ClInclude Include="Core\Animation\SpriteInstanceComponent.h" />
+    <ClInclude Include="Core\Animation\SpriteInstanceRenderer.h" />
+    <ClInclude Include="Core\Animation\SpriteInstanceShader.h" />
     <ClInclude Include="Core\Animation\SpriteShader.h" />
     <ClInclude Include="Core\BlendState.h" />
     <ClInclude Include="Core\Camera.h" />
@@ -480,6 +484,8 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Core\Input\InputContext.h" />
     <ClInclude Include="Core\Input\InputSystem.h" />
     <ClInclude Include="Core\Input\Types.h" />
+    <ClInclude Include="Core\InstanceRenderer.h" />
+    <ClInclude Include="Core\InstanceRendererComponent.h" />
     <ClInclude Include="Core\Level.h" />
     <ClInclude Include="Core\Material.h" />
     <ClInclude Include="Core\MaterialConstantBuffer.h" />
@@ -495,6 +501,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Core\Ptr.h" />
     <ClInclude Include="Core\Rect.h" />
     <ClInclude Include="Core\Rendering.h" />
+    <ClInclude Include="Core\RenderInstanceComponent.h" />
     <ClInclude Include="Core\RenderManager.h" />
     <ClInclude Include="Core\RenderState.h" />
     <ClInclude Include="Core\RenderStateManager.h" />
@@ -597,7 +604,11 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Core\Animation\Animation2DSequence.cpp" />
     <ClCompile Include="Core\Animation\Animation2DSprite.cpp" />
     <ClCompile Include="Core\Animation\Animation2DStateMachine.cpp" />
+    <ClCompile Include="Core\Animation\Animation2DStructureBuffer.cpp" />
     <ClCompile Include="Core\Animation\SpriteComponent.cpp" />
+    <ClCompile Include="Core\Animation\SpriteInstanceComponent.cpp" />
+    <ClCompile Include="Core\Animation\SpriteInstanceRenderer.cpp" />
+    <ClCompile Include="Core\Animation\SpriteInstanceShader.cpp" />
     <ClCompile Include="Core\Animation\SpriteShader.cpp" />
     <ClCompile Include="Core\BlendState.cpp" />
     <ClCompile Include="Core\Camera.cpp" />
@@ -628,6 +639,8 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Core\Input\InputComponent.cpp" />
     <ClCompile Include="Core\Input\InputContext.cpp" />
     <ClCompile Include="Core\Input\InputSystem.cpp" />
+    <ClCompile Include="Core\InstanceRenderer.cpp" />
+    <ClCompile Include="Core\InstanceRendererComponent.cpp" />
     <ClCompile Include="Core\Level.cpp" />
     <ClCompile Include="Core\Material.cpp" />
     <ClCompile Include="Core\MaterialConstantBuffer.cpp" />
@@ -641,6 +654,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Core\ObjectPool.cpp" />
     <ClCompile Include="Core\Pawn.cpp" />
     <ClCompile Include="Core\Rect.cpp" />
+    <ClCompile Include="Core\RenderInstanceComponent.cpp" />
     <ClCompile Include="Core\RenderManager.cpp" />
     <ClCompile Include="Core\RenderState.cpp" />
     <ClCompile Include="Core\RenderStateManager.cpp" />
@@ -796,6 +810,38 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">SpriteVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\SpriteInstance.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">SpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">SpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">SpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">SpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">SpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">SpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">Effect</ShaderType>
     </FxCompile>
     <FxCompile Include="..\HLSL\StaticMesh.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">StaticMeshVS</EntryPointName>

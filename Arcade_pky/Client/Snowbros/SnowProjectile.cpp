@@ -3,7 +3,8 @@
 #include "SnowProjectile.h"
 
 #include "SnowProjectileComponent.h"
-#include "Core/Animation/SpriteComponent.h"
+#include "Core/Animation/Animation2D.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
 #include "Platformer/PlatformerKinematicComponent.h"
 #include "Tilemap/Tilemap.h"
@@ -16,9 +17,9 @@ bool SnowProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto rootComp = CreateSceneComponent<SpriteComponent>("Root");
+    auto rootComp = CreateSceneComponent<SpriteInstanceComponent>("Root");
     rootComp->SetRenderLayer("PlayerProjectile");
-    rootComp->SetShader("SpriteShader");
+    // rootComp->SetShader("SpriteShader");
     SetRoot(rootComp);
 
     Ptr<Animation2D> animation = rootComp->CreateAnimation();
@@ -53,7 +54,8 @@ bool SnowProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     return true;
 }
 
-void SnowProjectile::Destroy() {
+void SnowProjectile::Destroy()
+{
     Actor::Destroy();
     DESTROY(_projectileComponent);
 }
@@ -71,7 +73,8 @@ bool SnowProjectile::IsPoweredUp() const
 void SnowProjectile::SetPowerUp(bool powerUp)
 {
     _projectileComponent->_powerUp = powerUp;
-    Ptr<Animation2D> animation     = Cast<SceneComponent, SpriteComponent>(_root)->GetAnimation();
+    Ptr<Animation2D> animation
+      = Cast<SceneComponent, SpriteInstanceComponent>(_root)->GetAnimation();
 
     if (powerUp)
         animation->ChangeAnimationClip("projectile_power");
@@ -87,6 +90,7 @@ void SnowProjectile::SetRangeUp(bool rangeUp)
 void SnowProjectile::SetDirection(float direction)
 {
     _projectileComponent->_direction = direction;
-    auto sprite                      = Cast<SceneComponent, SpriteComponent>(_root);
+
+    auto sprite = Cast<SceneComponent, SpriteInstanceComponent>(_root);
     sprite->SetFlipX(direction > 0);
 }

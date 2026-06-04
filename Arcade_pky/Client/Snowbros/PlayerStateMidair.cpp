@@ -7,7 +7,7 @@
 #include "SnowballMorphableEnemyStateMachine.h"
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
-#include "Core/Animation/SpriteComponent.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
 #include "Player/Player.h"
 #include "Player/PlayerComponent.h"
@@ -31,7 +31,7 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
     Ptr<PlatformerMovementComponent> movement
       = player->FindActorComponent<PlatformerMovementComponent>("Movement");
 
-    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Root");
 
     if (sprite->GetFlipX() != _initialFlipX)
         _flippedX = true;
@@ -109,7 +109,7 @@ void PlayerStateMidair::Enter(Ptr<class PlayerComponent> playerComponent)
     auto controller = player->GetController();
     controller->SetActiveContext("Midair");
 
-    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Root");
 
     if (_jumped)
         sprite->ChangeAnimation("player_jump");

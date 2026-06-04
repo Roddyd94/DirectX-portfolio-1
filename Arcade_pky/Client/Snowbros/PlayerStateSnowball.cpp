@@ -9,7 +9,7 @@
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
 #include "AI/AIComponent.h"
-#include "Core/Animation/SpriteComponent.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Core/Collision/CollisionComponent.h"
 #include "Platformer/PlatformerKinematicComponent.h"
 #include "Platformer/PlatformerKinematicPlayerComponent.h"
@@ -67,7 +67,7 @@ void PlayerStateSnowball::Enter(Ptr<class PlayerComponent> playerComponent)
     auto controller = player->GetController();
     controller->SetActiveContext("Snowball");
 
-    Ptr<SpriteComponent> sprite = player->FindSceneComponent<SpriteComponent>("Root");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Root");
     sprite->ChangeAnimation("player_shoved");
 }
 

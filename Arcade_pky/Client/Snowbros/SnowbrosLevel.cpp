@@ -5,6 +5,7 @@
 #include "SnowbrosEnemy.h"
 #include "SnowbrosPlayer.h"
 #include "SnowbrosTileParser.h"
+#include "Core/Animation/SpriteInstanceRenderer.h"
 #include "Core/Camera.h"
 #include "Tilemap/Tile.h"
 #include "Tilemap/Tilemap.h"
@@ -62,6 +63,28 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
 
     SnowbrosTileParser::ParseAnimationData(
       "snowbros_enemy", L"snowbros_enemies.png", "snowbros_enemy", L"snowbros_enemy_animation.bin");
+
+    auto renderer
+      = SpawnInstanceRenderer<SpriteInstanceRenderer>("Item", position, scale, rotation);
+    renderer->SetTexture("snowbros_player");
+    renderer
+      = SpawnInstanceRenderer<SpriteInstanceRenderer>("EnemyBehind", position, scale, rotation);
+    renderer->SetTexture("snowbros_enemy");
+    renderer = SpawnInstanceRenderer<SpriteInstanceRenderer>("Snowball", position, scale, rotation);
+    renderer->SetTexture("snowbros_player");
+    renderer = SpawnInstanceRenderer<SpriteInstanceRenderer>("Enemy", position, scale, rotation);
+    renderer->SetTexture("snowbros_enemy");
+    renderer
+      = SpawnInstanceRenderer<SpriteInstanceRenderer>("EnemyLaunched", position, scale, rotation);
+    renderer->SetTexture("snowbros_enemy");
+    renderer
+      = SpawnInstanceRenderer<SpriteInstanceRenderer>("EnemyProjectile", position, scale, rotation);
+    renderer->SetTexture("snowbros_enemy");
+    renderer = SpawnInstanceRenderer<SpriteInstanceRenderer>(
+      "PlayerProjectile", position, scale, rotation);
+    renderer->SetTexture("snowbros_player");
+    renderer = SpawnInstanceRenderer<SpriteInstanceRenderer>("Player", position, scale, rotation);
+    renderer->SetTexture("snowbros_player");
 
     position.x = 0.f;
     position.y = 0.f;

@@ -96,6 +96,11 @@ bool Animation2D::GetFlipX() const
     return _flipX;
 }
 
+bool Animation2D::IsReversed() const
+{
+    return _isReversed;
+}
+
 void Animation2D::SetAnimationSequence(Ptr<class Animation2DSequence> sequence)
 {
     _animationSequence = sequence;
@@ -130,7 +135,6 @@ void Animation2D::SetFlipX(bool flipX)
 void Animation2D::SetShader()
 {
     auto clip = Lock(_currentAnimationClip);
-
     if (nullptr == clip)
         return;
 

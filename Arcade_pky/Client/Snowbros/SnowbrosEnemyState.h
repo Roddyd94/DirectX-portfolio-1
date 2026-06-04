@@ -3,10 +3,11 @@
 
 class SnowbrosEnemyState : public AIState
 {
+public:
     enum EnemyStateType;
 
 public:
-    SnowbrosEnemyState()           = default;
+    SnowbrosEnemyState() = default;
     SnowbrosEnemyState(EnemyStateType stateType);
     ~SnowbrosEnemyState() override = default;
 

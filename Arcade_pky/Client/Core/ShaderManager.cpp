@@ -18,6 +18,8 @@
 #endif // _HAS_TILEMAP_MODULE
 
 #include "Core/Animation/Animation2DConstantBuffer.h"
+#include "Core/Animation/Animation2DStructureBuffer.h"
+#include "Core/Animation/SpriteInstanceShader.h"
 #include "Core/Animation/SpriteShader.h"
 
 bool ShaderManager::Init()
@@ -35,10 +37,13 @@ bool ShaderManager::Init()
 
     if (!CreateShader<TileOutlineInstanceShader>("TileOutlineInstanceShader"))
         return false;
+#endif // _HAS_TILEMAP_MODULE
 
     if (!CreateShader<SpriteShader>("SpriteShader"))
         return false;
-#endif // _HAS_TILEMAP_MODULE
+
+    if (!CreateShader<SpriteInstanceShader>("SpriteInstanceShader"))
+        return false;
 #pragma endregion SHADERS
 
 #pragma region VERTEX_CONSTANT_BUFFERS
@@ -71,6 +76,11 @@ bool ShaderManager::Init()
           "TileOutline", sizeof(TileOutlineInstanceData), 128, 1, ShaderType::Vertex))
         return false;
 #endif // _HAS_TILEMAP_MODULE
+
+    if (!CreateStructureBuffer<Animation2DStructureBuffer>(
+          "Animation2DInstance", sizeof(Animation2DInstanceData), 128, 1, ShaderType::Vertex))
+        return false;
+
 #pragma endregion STRUCTURE_BUFFERS
 
     CreateSamplers();

@@ -3,7 +3,8 @@
 #include "SnowProjectileComponent.h"
 
 #include "Core/Actor.h"
-#include "Core/Animation/SpriteComponent.h"
+#include "Core/Animation/Animation2D.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Platformer/PlatformerKinematicComponent.h"
 
 bool SnowProjectileComponent::Init(
@@ -56,7 +57,7 @@ void SnowProjectileComponent::OnCollision()
     _accTime = 0.f;
 
     _kinematic->SetVelocity(Vector2::zero);
-    Ptr<SpriteComponent> sprite = GetOwner()->FindSceneComponent<SpriteComponent>("Root");
+    auto sprite = GetOwner()->FindSceneComponent<SpriteInstanceComponent>("Root");
     sprite->ChangeAnimation("projectile_hit");
 }
 
