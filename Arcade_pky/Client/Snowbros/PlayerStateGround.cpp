@@ -44,8 +44,9 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         {
         case ButtonEventType::Hold:
         {
-            float speedX         = blackboard->speedX;
-            float speedSnowballX = speedX * blackboard->speedMultiplierSnowball;
+            float speedX = blackboard->speedX;
+            float speedSnowballX
+              = speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball;
 
             auto snowball = FindSnowballToPush(playerComponent, -speedSnowballX * deltaTime);
             if (nullptr != snowball)
@@ -101,8 +102,9 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
         {
         case ButtonEventType::Hold:
         {
-            float speedX         = blackboard->speedX;
-            float speedSnowballX = speedX * blackboard->speedMultiplierSnowball;
+            float speedX = blackboard->speedX;
+            float speedSnowballX
+              = speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball;
 
             auto snowball = FindSnowballToPush(playerComponent, speedSnowballX * deltaTime);
             if (nullptr != snowball)
