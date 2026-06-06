@@ -138,12 +138,14 @@ void Animation2D::SetShader()
     if (nullptr == clip)
         return;
 
-    int32 frameIndex         = _isReversed ? clip->GetFrameCount() - 1 - _frameIndex : _frameIndex;
-    frameIndex               = std::clamp(frameIndex, 0, clip->GetFrameCount() - 1);
-    Animation2DSprite sprite = clip->GetFrame(frameIndex);
-    SpriteData        data   = sprite.spriteSheet->GetSpriteData(sprite.spriteIndex);
+    int32 frameIndex = _isReversed ? clip->GetFrameCount() - 1 - _frameIndex : _frameIndex;
+    frameIndex       = std::clamp(frameIndex, 0, clip->GetFrameCount() - 1);
+    Animation2DSprite                  sprite = clip->GetFrame(frameIndex);
+    Ptr<TextureAnimation2DSpriteSheet> spriteSheet
+      = Cast<Animation2DSpriteSheet, TextureAnimation2DSpriteSheet>(sprite.spriteSheet);
 
-    Ptr<Texture> texture = sprite.spriteSheet->GetTexture();
+    SpriteData   data    = spriteSheet->GetSpriteData(sprite.spriteIndex);
+    Ptr<Texture> texture = spriteSheet->GetTexture();
     texture->SetShaderResource(0, ShaderType::Pixel, 0);
 
     Vector2 uvLT;

@@ -4,7 +4,9 @@
 
 #include "DeviceManager.h"
 #include "DirectoryManager.h"
+#include "ResourceManager.h"
 
+#include "IndexedTextureBuffer.h"
 #include "Rendering.h"
 #include "Shader.h"
 
@@ -16,7 +18,7 @@
 
 void Texture::Destroy() {}
 
-bool Texture::LoadTexture(const std::wstring& fileName)
+bool Texture::LoadTexture(const std::wstring& fileName, uint32_t flags)
 {
     std::filesystem::path                filePath;
     std::optional<std::filesystem::path> resPath
@@ -31,7 +33,7 @@ bool Texture::LoadTexture(const std::wstring& fileName)
     if (DirectoryManager::Instance().CheckExtension(filePath, ".DDS"))
     {
         if (FAILED(DirectX::LoadFromDDSFile(
-              filePath.wstring().c_str(), DirectX::DDS_FLAGS_NONE, nullptr, _image)))
+              filePath.wstring().c_str(), static_cast<DirectX::DDS_FLAGS>(flags), nullptr, _image)))
             return false;
     }
     else if (DirectoryManager::Instance().CheckExtension(filePath, ".TGA"))
@@ -42,7 +44,7 @@ bool Texture::LoadTexture(const std::wstring& fileName)
     else
     {
         if (FAILED(DirectX::LoadFromWICFile(
-              filePath.wstring().c_str(), DirectX::WIC_FLAGS_NONE, nullptr, _image)))
+              filePath.wstring().c_str(), static_cast<DirectX::WIC_FLAGS>(flags), nullptr, _image)))
             return false;
     }
 
@@ -81,4 +83,33 @@ bool Texture::CreateShaderResourceView()
         return false;
 
     return true;
+}
+
+void IndexedTexture::Destroy() {}
+
+bool IndexedTexture::LoadTexture(
+  const char* data, size_t dataLength, int32 width, int32 height, int32 bitsPerPixel)
+{
+    _data.resize(dataLength);
+    memcpy_s(_data.data(), dataLength, data, dataLength);
+
+    _width  = width;
+    _height = height;
+
+    _bitsPerPixel = bitsPerPixel;
+
+    return true;
+}
+
+void IndexedTexture::SetShaderResource()
+{
+    auto buffer = FIND_STRUCTURE_BUFFER("IndexedTexture", IndexedTextureBuffer);
+
+    buffer->Clear();
+    buffer->AddData(reinterpret_cast<char*>(_data.data()), _data.size());
+    buffer->SetSize(_width, _height);
+    buffer->SetStride(_bitsPerPixel);
+
+    buffer->Update();
+    buffer->Bind();
 }

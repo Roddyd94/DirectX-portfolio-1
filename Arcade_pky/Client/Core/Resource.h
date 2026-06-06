@@ -10,6 +10,7 @@ enum class ResourceType : uint8
     Animation,
     Sound,
     Font,
+    Palette,
     End
 };
 

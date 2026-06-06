@@ -2,11 +2,14 @@
 
 #include "SnowbrosLevel.h"
 
+#include "Core/ResourceManager.h"
+
+#include "SnowbrosDataParser.h"
 #include "SnowbrosEnemy.h"
 #include "SnowbrosPlayer.h"
-#include "SnowbrosTileParser.h"
-#include "Core/Animation/SpriteInstanceRenderer.h"
 #include "Core/Camera.h"
+#include "Core/Texture.h"
+#include "Snowbros/IndexedSpriteInstanceRenderer.h"
 #include "Tilemap/Tile.h"
 #include "Tilemap/Tilemap.h"
 
@@ -37,13 +40,15 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
         }
     }
 
+    SnowbrosDataParser::ReadPalettes(L"snowbros_palettes.bin");
+
     int32 tileCount = 12 * 13;
 
     TileMetadata tileMetadata;
-    SnowbrosTileParser::ParseTileMetadata(tileMetadata);
+    SnowbrosDataParser::ParseTileMetadata(tileMetadata);
 
     byte stageData[224] = {};
-    SnowbrosTileParser::ParseStageData(L"snowbros_stage_1.bin", stageData, 224);
+    SnowbrosDataParser::ParseStageData(L"snowbros_stage_1.bin", stageData, 224);
     for (size_t i = 0; i < 14; i++)
     {
         for (size_t j = 0; j < 16; j++)
@@ -58,33 +63,41 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
         }
     }
 
-    SnowbrosTileParser::ParseAnimationData("snowbros_player", L"snowbros_player.png",
+    SnowbrosDataParser::ParseAnimationData("snowbros_player", L"snowbros_player.bmp",
       "snowbros_player", L"snowbros_player_animation.bin");
-
-    SnowbrosTileParser::ParseAnimationData(
-      "snowbros_enemy", L"snowbros_enemies.png", "snowbros_enemy", L"snowbros_enemy_animation.bin");
+    SnowbrosDataParser::ParseAnimationData(
+      "snowbros_enemy", L"snowbros_enemies.bmp", "snowbros_enemy", L"snowbros_enemy_animation.bin");
+    auto playerSpriteSheet
+      = ANIMATION_MANAGER->FindSpriteSheet<IndexedTextureAnimation2DSpriteSheet>("snowbros_player");
+    auto enemySpriteSheet
+      = ANIMATION_MANAGER->FindSpriteSheet<IndexedTextureAnimation2DSpriteSheet>("snowbros_enemy");
+    auto playerTexture = playerSpriteSheet->GetTexture();
+    auto enemyTexture  = enemySpriteSheet->GetTexture();
 
     auto renderer
-      = SpawnInstanceRenderer<SpriteInstanceRenderer>("Item", position, scale, rotation);
-    renderer->SetTexture("snowbros_player");
+      = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>("Item", position, scale, rotation);
+    renderer->SetTexture(playerTexture);
+    renderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
+      "EnemyBehind", position, scale, rotation);
+    renderer->SetTexture(enemyTexture);
     renderer
-      = SpawnInstanceRenderer<SpriteInstanceRenderer>("EnemyBehind", position, scale, rotation);
-    renderer->SetTexture("snowbros_enemy");
-    renderer = SpawnInstanceRenderer<SpriteInstanceRenderer>("Snowball", position, scale, rotation);
-    renderer->SetTexture("snowbros_player");
-    renderer = SpawnInstanceRenderer<SpriteInstanceRenderer>("Enemy", position, scale, rotation);
-    renderer->SetTexture("snowbros_enemy");
+      = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>("Snowball", position, scale, rotation);
+    renderer->SetTexture(playerTexture);
     renderer
-      = SpawnInstanceRenderer<SpriteInstanceRenderer>("EnemyLaunched", position, scale, rotation);
-    renderer->SetTexture("snowbros_enemy");
-    renderer
-      = SpawnInstanceRenderer<SpriteInstanceRenderer>("EnemyProjectile", position, scale, rotation);
-    renderer->SetTexture("snowbros_enemy");
-    renderer = SpawnInstanceRenderer<SpriteInstanceRenderer>(
+      = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>("Enemy", position, scale, rotation);
+    renderer->SetTexture(enemyTexture);
+    renderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
+      "EnemyLaunched", position, scale, rotation);
+    renderer->SetTexture(enemyTexture);
+    renderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
+      "EnemyProjectile", position, scale, rotation);
+    renderer->SetTexture(enemyTexture);
+    renderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
       "PlayerProjectile", position, scale, rotation);
-    renderer->SetTexture("snowbros_player");
-    renderer = SpawnInstanceRenderer<SpriteInstanceRenderer>("Player", position, scale, rotation);
-    renderer->SetTexture("snowbros_player");
+    renderer->SetTexture(playerTexture);
+    renderer
+      = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>("Player", position, scale, rotation);
+    renderer->SetTexture(playerTexture);
 
     position.x = 0.f;
     position.y = 0.f;

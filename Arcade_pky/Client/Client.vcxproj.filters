@@ -343,9 +343,6 @@
     <ClInclude Include="Platformer\PlatformerKinematicComponent.h">
       <Filter>Platformer\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Animation\Animation2DStateMachine.h">
-      <Filter>Animation</Filter>
-    </ClInclude>
     <ClInclude Include="Player\PlayerComponent.h">
       <Filter>Player\Component</Filter>
     </ClInclude>
@@ -378,9 +375,6 @@
     </ClInclude>
     <ClInclude Include="Snowbros\PlayerStateSnowball.h">
       <Filter>Snowbros\Player\PlayerState</Filter>
-    </ClInclude>
-    <ClInclude Include="Snowbros\SnowbrosTileParser.h">
-      <Filter>Snowbros</Filter>
     </ClInclude>
     <ClInclude Include="Snowbros\SnowbrosLevel.h">
       <Filter>Snowbros\World</Filter>
@@ -478,6 +472,40 @@
     <ClInclude Include="Core\Animation\SpriteInstanceRenderer.h">
       <Filter>Animation\Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Animation\SpriteInstanceRendererComponent.h">
+      <Filter>Animation\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IndexedTextureInfoConstantBuffer.h">
+      <Filter>Core\Rendering\Buffer\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IndexedTextureBuffer.h">
+      <Filter>Core\Rendering\Buffer\StructureBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Palette.h">
+      <Filter>Core\Resource\Palette</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\PaletteManager.h">
+      <Filter>Core\Resource\Palette</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\PaletteStructureBuffer.h">
+      <Filter>Core\Rendering\Buffer\StructureBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosDataParser.h">
+      <Filter>Snowbros</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\IndexedAnimation2DStructureBuffer.h">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\IndexedSpriteInstanceRendererComponent.h">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\IndexedSpriteInstanceComponent.h">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\IndexedSpriteInstanceRenderer.h">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\IndexedSpriteInstanceShader.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -788,9 +816,6 @@
     <ClCompile Include="Platformer\PlatformerKinematicComponent.cpp">
       <Filter>Platformer\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Animation\Animation2DStateMachine.cpp">
-      <Filter>Animation</Filter>
-    </ClCompile>
     <ClCompile Include="Player\PlayerComponent.cpp">
       <Filter>Player\Component</Filter>
     </ClCompile>
@@ -820,9 +845,6 @@
     </ClCompile>
     <ClCompile Include="Snowbros\PlayerStateSnowball.cpp">
       <Filter>Snowbros\Player\PlayerState</Filter>
-    </ClCompile>
-    <ClCompile Include="Snowbros\SnowbrosTileParser.cpp">
-      <Filter>Snowbros</Filter>
     </ClCompile>
     <ClCompile Include="Snowbros\SnowbrosLevel.cpp">
       <Filter>Snowbros\World</Filter>
@@ -917,6 +939,40 @@
     <ClCompile Include="Core\Animation\SpriteInstanceRenderer.cpp">
       <Filter>Animation\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Animation\SpriteInstanceRendererComponent.cpp">
+      <Filter>Animation\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IndexedTextureInfoConstantBuffer.cpp">
+      <Filter>Core\Rendering\Buffer\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IndexedTextureBuffer.cpp">
+      <Filter>Core\Rendering\Buffer\StructureBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Palette.cpp">
+      <Filter>Core\Resource\Palette</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\PaletteManager.cpp">
+      <Filter>Core\Resource\Palette</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\PaletteStructureBuffer.cpp">
+      <Filter>Core\Rendering\Buffer\StructureBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosDataParser.cpp">
+      <Filter>Snowbros</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\IndexedAnimation2DStructureBuffer.cpp">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\IndexedSpriteInstanceRendererComponent.cpp">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\IndexedSpriteInstanceComponent.cpp">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\IndexedSpriteInstanceRenderer.cpp">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\IndexedSpriteInstanceShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -1171,6 +1227,15 @@
     <Filter Include="Animation\Actor">
       <UniqueIdentifier>{13d229de-ac5e-45b0-b98e-a4020d7cd93b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Resource\Palette">
+      <UniqueIdentifier>{56552b48-6cb9-4a01-afdb-e8d15c2838ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\HLSL">
+      <UniqueIdentifier>{95d9277f-5168-442d-a803-6f1918c65cb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\Rendering">
+      <UniqueIdentifier>{1f0c7481-8d86-47a4-bd1a-2f772ee22c77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -1198,6 +1263,9 @@
     </FxCompile>
     <FxCompile Include="..\HLSL\SpriteInstance.fx">
       <Filter>Animation\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\IndexedSpriteInstance.fx">
+      <Filter>Snowbros\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

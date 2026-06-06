@@ -2,14 +2,17 @@
 
 #include "SnowbrosEnemy.h"
 
+#include "Core/ResourceManager.h"
+
 #include "GoblinStateMachine.h"
 #include "MonkeyStateMachine.h"
 #include "SnowballMorphableEnemyBlackboard.h"
 #include "SpitterStateMachine.h"
 #include "AI/AIComponent.h"
-#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
+#include "Core/Palette.h"
 #include "Platformer/PlatformerKinematicComponent.h"
+#include "Snowbros/IndexedSpriteInstanceComponent.h"
 #include "Tilemap/Tilemap.h"
 #include "Tilemap/TilemapLevel.h"
 
@@ -20,14 +23,18 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto sprite = CreateSceneComponent<SpriteInstanceComponent>("Sprite");
+    auto sprite = CreateSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
     sprite->SetRenderLayer("Enemy");
+    auto palette = FIND_PALETTE("enemy_goblin");
+    sprite->SetPaletteNumber(palette->GetID());
     sprite->AttachToComponent(_root);
     sprite->SetRelativeScale(Vector3::one);
 
-    auto snowballSprite = CreateSceneComponent<SpriteInstanceComponent>("SpriteSnowball");
+    auto snowballSprite = CreateSceneComponent<IndexedSpriteInstanceComponent>("SpriteSnowball");
     snowballSprite->SetEnable(false);
     snowballSprite->SetRenderLayer("Snowball");
+    palette = FIND_PALETTE("snowball");
+    snowballSprite->SetPaletteNumber(palette->GetID());
     snowballSprite->AttachToComponent(_root);
     snowballSprite->SetRelativeScale(Vector3::one);
 
@@ -69,7 +76,7 @@ void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
 
 void SnowbrosEnemy::SetDirection(float direction)
 {
-    auto aiComponent  = GetAIComponent();
+    auto aiComponent = GetAIComponent();
 
     auto sprite       = FindComponent<SpriteInstanceComponent>("Sprite");
     auto stateMachine = aiComponent->GetAIStateMachine();

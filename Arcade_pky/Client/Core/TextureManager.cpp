@@ -36,14 +36,15 @@ Ptr<Texture> TextureManager::FindTexture(const std::string& name)
     return itTexture->second;
 }
 
-Ptr<Texture> TextureManager::LoadTexture(const std::string& name, const std::wstring& fileName)
+Ptr<Texture> TextureManager::LoadTexture(
+  const std::string& name, const std::wstring& fileName, uint32 flags)
 {
     Ptr<Texture> texture = FindTexture(name);
     if (texture)
         return texture;
 
     texture = New<Texture>();
-    if (!texture->LoadTexture(fileName))
+    if (!texture->LoadTexture(fileName, flags))
     {
         DESTROY(texture)
         return nullptr;

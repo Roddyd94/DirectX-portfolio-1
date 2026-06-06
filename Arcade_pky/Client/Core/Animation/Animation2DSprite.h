@@ -8,25 +8,54 @@ public:
     Animation2DSpriteSheet()           = default;
     ~Animation2DSpriteSheet() override = default;
 
-private:
+protected:
     std::vector<SpriteData> _sprites;
-    Weak<class Texture>     _texture;
+
+public:
+    void Destroy() override;
+
+    const SpriteData& GetSpriteData(int32 index) const;
+
+    int32 GetSpriteCount() const;
+
+    void AddSpriteData(Vector2 start, Vector2 size);
+    void AddSpriteData(float startX, float startY, float sizeX, float sizeY);
+};
+
+class TextureAnimation2DSpriteSheet : public Animation2DSpriteSheet
+{
+public:
+    TextureAnimation2DSpriteSheet()           = default;
+    ~TextureAnimation2DSpriteSheet() override = default;
+
+protected:
+    Weak<class Texture> _texture;
 
 public:
     bool Init(Ptr<class Texture> texture);
-    void Destroy() override;
 
     Ptr<class Texture> GetTexture() const;
-    const SpriteData&  GetSpriteData(int32 index) const;
-
-    int32 GetSpriteCount() const;
 
     void SetTexture(Ptr<class Texture> texture);
     void SetTexture(const std::string& name);
     void SetTexture(const std::string& name, const std::wstring& fileName);
+};
 
-    void AddSpriteData(Vector2 start, Vector2 size);
-    void AddSpriteData(float startX, float startY, float sizeX, float sizeY);
+class IndexedTextureAnimation2DSpriteSheet : public Animation2DSpriteSheet
+{
+public:
+    IndexedTextureAnimation2DSpriteSheet()           = default;
+    ~IndexedTextureAnimation2DSpriteSheet() override = default;
+
+protected:
+    Ptr<class IndexedTexture> _texture;
+
+public:
+    bool Init(Ptr<class IndexedTexture> texture);
+
+    Ptr<class IndexedTexture> GetTexture() const;
+
+    void SetTexture(Ptr<class IndexedTexture> texture);
 };
 
 struct Animation2DSprite

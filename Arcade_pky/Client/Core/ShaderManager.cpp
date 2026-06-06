@@ -7,6 +7,7 @@
 #include "ColorConstantBuffer.h"
 #include "FrameMeshShader.h"
 #include "MaterialConstantBuffer.h"
+#include "PaletteStructureBuffer.h"
 #include "StaticMeshShader.h"
 #include "TransformConstantBuffer.h"
 
@@ -17,10 +18,14 @@
 #include "Tilemap/TileStructureBuffer.h"
 #endif // _HAS_TILEMAP_MODULE
 
-#include "Core/Animation/Animation2DConstantBuffer.h"
-#include "Core/Animation/Animation2DStructureBuffer.h"
-#include "Core/Animation/SpriteInstanceShader.h"
-#include "Core/Animation/SpriteShader.h"
+#include "IndexedTextureBuffer.h"
+#include "IndexedTextureInfoConstantBuffer.h"
+#include "Animation/Animation2DConstantBuffer.h"
+#include "Animation/Animation2DStructureBuffer.h"
+#include "Animation/SpriteInstanceShader.h"
+#include "Animation/SpriteShader.h"
+#include "Snowbros/IndexedAnimation2DStructureBuffer.h"
+#include "Snowbros/IndexedSpriteInstanceShader.h"
 
 bool ShaderManager::Init()
 {
@@ -44,6 +49,9 @@ bool ShaderManager::Init()
 
     if (!CreateShader<SpriteInstanceShader>("SpriteInstanceShader"))
         return false;
+
+    if (!CreateShader<IndexedSpriteInstanceShader>("IndexedSpriteInstanceShader"))
+        return false;
 #pragma endregion SHADERS
 
 #pragma region VERTEX_CONSTANT_BUFFERS
@@ -64,6 +72,10 @@ bool ShaderManager::Init()
     if (!CreateConstantBuffer<MaterialConstantBuffer>(
           "Material", sizeof(MaterialConstantBufferData), 0, ShaderType::Pixel))
         return false;
+
+    if (!CreateConstantBuffer<IndexedTextureInfoConstantBuffer>(
+          "IndexedTextureInfo", sizeof(IndexedTextureInfoConstantBufferData), 0, ShaderType::Pixel))
+        return false;
 #pragma endregion PIXEL_CONSTANT_BUFFERS
 
 #pragma region STRUCTURE_BUFFERS
@@ -79,6 +91,18 @@ bool ShaderManager::Init()
 
     if (!CreateStructureBuffer<Animation2DStructureBuffer>(
           "Animation2DInstance", sizeof(Animation2DInstanceData), 128, 1, ShaderType::Vertex))
+        return false;
+
+    if (!CreateStructureBuffer<IndexedAnimation2DStructureBuffer>("IndexedAnimation2DInstance",
+          sizeof(IndexedAnimation2DInstanceData), 128, 1, ShaderType::Vertex))
+        return false;
+
+    if (!CreateStructureBuffer<IndexedTextureBuffer>(
+          "IndexedTexture", sizeof(int32), 128, 0, ShaderType::Pixel))
+        return false;
+
+    if (!CreateStructureBuffer<PaletteStructureBuffer>(
+          "Palette", sizeof(Vector4), 128, 1, ShaderType::Pixel))
         return false;
 
 #pragma endregion STRUCTURE_BUFFERS

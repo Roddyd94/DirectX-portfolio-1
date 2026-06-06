@@ -25,20 +25,6 @@ void Animation2DManager::Destroy()
     _animationClips.clear();
 }
 
-Ptr<Animation2DSpriteSheet> Animation2DManager::FindSpriteSheet(const std::string& name)
-{
-    auto itFinder = _spriteSheetFinder.find(name);
-    if (_spriteSheetFinder.end() == itFinder)
-        return nullptr;
-
-    int32 id      = itFinder->second;
-    auto  itSheet = _spriteSheets.find(id);
-    if (_spriteSheets.end() == itSheet)
-        return nullptr;
-
-    return itSheet->second;
-}
-
 std::optional<Animation2DSprite> Animation2DManager::FindSprite(
   Ptr<Animation2DSpriteSheet> spriteSheet, int32 spriteIndex)
 {
@@ -54,7 +40,7 @@ std::optional<Animation2DSprite> Animation2DManager::FindSprite(
 std::optional<Animation2DSprite> Animation2DManager::FindSprite(
   const std::string& spriteSheetName, int32 spriteIndex)
 {
-    Ptr<Animation2DSpriteSheet> sheet = FindSpriteSheet(spriteSheetName);
+    Ptr<Animation2DSpriteSheet> sheet = FindSpriteSheet<Animation2DSpriteSheet>(spriteSheetName);
     return FindSprite(sheet, spriteIndex);
 }
 
@@ -87,17 +73,17 @@ Ptr<Animation2DSequence> Animation2DManager::FindAnimationSequence(const std::st
 }
 
 Ptr<class Animation2DSpriteSheet> Animation2DManager::CreateSpriteSheet(
-  const std::string& name, Ptr<Texture> texture)
+  const std::string& name, Ptr<class Texture> texture)
 {
     if (nullptr == texture)
         return nullptr;
 
-    Ptr<Animation2DSpriteSheet> sheet = FindSpriteSheet(name);
+    Ptr<TextureAnimation2DSpriteSheet> sheet = FindSpriteSheet<TextureAnimation2DSpriteSheet>(name);
 
     if (nullptr != sheet && sheet->GetTexture() == texture)
         return sheet;
 
-    sheet = New<Animation2DSpriteSheet>();
+    sheet = New<TextureAnimation2DSpriteSheet>();
     if (!sheet->Init(texture))
     {
         DESTROY(sheet)
@@ -125,6 +111,34 @@ Ptr<class Animation2DSpriteSheet> Animation2DManager::CreateSpriteSheet(
 {
     Ptr<Texture> texture = TEXTURE_MANAGER->LoadTexture(textureName, fileName);
     return CreateSpriteSheet(spriteSheetName, texture);
+}
+
+Ptr<class Animation2DSpriteSheet> Animation2DManager::CreateIndexedSpriteSheet(
+  const std::string& name, Ptr<class IndexedTexture> texture)
+{
+    if (nullptr == texture)
+        return nullptr;
+
+    Ptr<IndexedTextureAnimation2DSpriteSheet> sheet
+      = FindSpriteSheet<IndexedTextureAnimation2DSpriteSheet>(name);
+
+    if (nullptr != sheet && sheet->GetTexture() == texture)
+        return sheet;
+
+    sheet = New<IndexedTextureAnimation2DSpriteSheet>();
+    if (!sheet->Init(texture))
+    {
+        DESTROY(sheet)
+        return nullptr;
+    }
+
+    sheet->SetName(name);
+    sheet->SetID(_spriteSheetIDCounter);
+    _spriteSheets[_spriteSheetIDCounter] = sheet;
+    _spriteSheetFinder[name]             = _spriteSheetIDCounter;
+    _spriteSheetIDCounter++;
+
+    return sheet;
 }
 
 Ptr<class Animation2DClip> Animation2DManager::CreateAnimationClip(const std::string& name)
@@ -165,7 +179,7 @@ Ptr<class Animation2DSequence> Animation2DManager::CreateAnimationSequence(const
 
 void Animation2DManager::AddSprite(const std::string& spriteSheetName, Vector2 start, Vector2 size)
 {
-    Ptr<Animation2DSpriteSheet> sheet = FindSpriteSheet(spriteSheetName);
+    Ptr<Animation2DSpriteSheet> sheet = FindSpriteSheet<Animation2DSpriteSheet>(spriteSheetName);
     if (nullptr == sheet)
         return;
 
@@ -175,7 +189,7 @@ void Animation2DManager::AddSprite(const std::string& spriteSheetName, Vector2 s
 void Animation2DManager::AddSprite(
   const std::string& spriteSheetName, float startX, float startY, float sizeX, float sizeY)
 {
-    Ptr<Animation2DSpriteSheet> sheet = FindSpriteSheet(spriteSheetName);
+    Ptr<Animation2DSpriteSheet> sheet = FindSpriteSheet<Animation2DSpriteSheet>(spriteSheetName);
     if (nullptr == sheet)
         return;
 
@@ -195,7 +209,7 @@ void Animation2DManager::AddFrame(
 void Animation2DManager::AddFrame(
   const std::string& clipName, const std::string& spriteSheetName, int32 spriteIndex)
 {
-    Ptr<Animation2DSpriteSheet> sheet = FindSpriteSheet(spriteSheetName);
+    Ptr<Animation2DSpriteSheet> sheet = FindSpriteSheet<Animation2DSpriteSheet>(spriteSheetName);
     AddFrame(clipName, sheet, spriteIndex);
 }
 

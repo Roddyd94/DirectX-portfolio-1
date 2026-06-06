@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "SnowbrosTileParser.h"
+#include "SnowbrosDataParser.h"
 
 #include "Core/Animation/Animation2DManager.h"
 #include "Core/DirectoryManager.h"
@@ -8,11 +8,13 @@
 #include "Core/TextureManager.h"
 
 #include "Core/Animation/Animation2DClip.h"
+#include "Core/Palette.h"
+#include "Core/PaletteStructureBuffer.h"
 #include "Core/Texture.h"
 
 #include <fstream>
 
-bool SnowbrosTileParser::ParseStageData(
+bool SnowbrosDataParser::ParseStageData(
   const std::wstring& filename, byte* pData, size_t dataLength)
 {
     auto path = DirectoryManager::Instance().GetCachePath("Resources/Stage");
@@ -28,7 +30,7 @@ bool SnowbrosTileParser::ParseStageData(
     fs.read(reinterpret_cast<char*>(pData), dataLength);
 }
 
-bool SnowbrosTileParser::ParseTileMetadata(TileMetadata& data)
+bool SnowbrosDataParser::ParseTileMetadata(TileMetadata& data)
 {
     auto path = DirectoryManager::Instance().GetCachePath("Resources/Stage");
 
@@ -80,24 +82,67 @@ bool SnowbrosTileParser::ParseTileMetadata(TileMetadata& data)
     }
 }
 
-bool SnowbrosTileParser::ParseAnimationData(const std::string& textureName,
+bool SnowbrosDataParser::ParseAnimationData(const std::string& textureName,
   const std::wstring&                                          textureFilename,
   const std::string&                                           spriteSheetName,
   const std::wstring&                                          animationDataFilename)
 {
-    auto path = DirectoryManager::Instance().GetCachePath("Resources/Stage");
+    auto dataPath    = DirectoryManager::Instance().GetCachePath("Resources/Stage");
+    auto texturePath = DirectoryManager::Instance().GetCachePath("Resources/Texture");
 
-    if (path == std::nullopt)
+    if (dataPath == std::nullopt)
         return false;
 
-    Ptr<Texture> texture = TEXTURE_MANAGER->LoadTexture(textureName, textureFilename);
+    if (texturePath == std::nullopt)
+        return false;
 
-    auto filePath = path.value();
+    auto textureFilePath = texturePath.value();
+    DirectoryManager::Instance().GetFile(textureFilePath, textureFilename, textureFilePath);
+
+    std::fstream tfs{textureFilePath.native(), tfs.binary | tfs.in};
+
+    std::vector<char> buf;
+    buf.resize(14);
+    tfs.read(buf.data(), 14);
+
+    uint32 headerSizeV5;
+    tfs.read(reinterpret_cast<char*>(&headerSizeV5), sizeof(uint32));
+
+    headerSizeV5 -= sizeof(uint32);
+    buf.resize(headerSizeV5);
+    tfs.read(buf.data(), headerSizeV5);
+
+    int32 textureWidth;
+    int32 textureHeight;
+    int16 bitsPerPixel;
+    int32 imageSize;
+    int32 colorsInTable;
+    memcpy_s(&textureWidth, sizeof(int32), reinterpret_cast<char*>(&buf[0]), sizeof(int32));
+    memcpy_s(&textureHeight, sizeof(int32), reinterpret_cast<char*>(&buf[4]), sizeof(int32));
+    memcpy_s(&bitsPerPixel, sizeof(int16), reinterpret_cast<char*>(&buf[10]), sizeof(int16));
+    memcpy_s(&imageSize, sizeof(int32), reinterpret_cast<char*>(&buf[16]), sizeof(int32));
+    memcpy_s(&colorsInTable, sizeof(int32), reinterpret_cast<char*>(&buf[28]), sizeof(int32));
+
+    if (0 == colorsInTable)
+        colorsInTable = 1 << bitsPerPixel;
+
+    buf.resize(colorsInTable * sizeof(int32));
+    tfs.read(buf.data(), colorsInTable * sizeof(int32));
+
+    buf.resize(imageSize);
+    int32 byteWidth = imageSize / textureHeight;
+    for (int32 i = 0; i < textureHeight; ++i)
+        tfs.read(&buf[byteWidth * (textureHeight - 1 - i)], byteWidth);
+
+    Ptr<IndexedTexture> texture = New<IndexedTexture>();
+    texture->SetName(textureName);
+    texture->LoadTexture(buf.data(), imageSize, 512, 512, 4);
+
+    ANIMATION_MANAGER->CreateIndexedSpriteSheet(spriteSheetName, texture);
+
+    auto filePath = dataPath.value();
     DirectoryManager::Instance().GetFile(filePath, animationDataFilename, filePath);
-
     std::fstream fs{filePath.native(), fs.binary | fs.in};
-
-    ANIMATION_MANAGER->CreateSpriteSheet(spriteSheetName, texture);
 
     uint16 spriteCount;
     fs.read(reinterpret_cast<char*>(&spriteCount), sizeof(uint16));
@@ -175,4 +220,47 @@ bool SnowbrosTileParser::ParseAnimationData(const std::string& textureName,
             ANIMATION_MANAGER->AddFrame(clipName, spriteSheetName, frameIndex);
         }
     }
+}
+
+bool SnowbrosDataParser::ReadPalettes(const std::wstring& filename)
+{
+    auto path = DirectoryManager::Instance().GetCachePath("Resources/Stage");
+
+    if (path == std::nullopt)
+        return false;
+
+    auto filePath = path.value();
+    DirectoryManager::Instance().GetFile(filePath, filename, filePath);
+    std::fstream fs{filePath.native(), fs.binary | fs.in};
+
+    uint16 paletteCount;
+    fs.read(reinterpret_cast<char*>(&paletteCount), sizeof(uint16));
+
+    auto paletteBuffer = FIND_STRUCTURE_BUFFER("Palette", PaletteStructureBuffer);
+    paletteBuffer->SetPaletteLength(16);
+    for (int i = 0; i < paletteCount; ++i)
+    {
+        uint16 colorNameLength;
+        fs.read(reinterpret_cast<char*>(&colorNameLength), sizeof(uint16));
+
+        std::string colorName;
+        colorName.resize(colorNameLength);
+        fs.read(colorName.data(), colorNameLength);
+
+        auto palette = PALETTE_MANAGER->AddPalette(colorName);
+
+        uint16 colorCount;
+        fs.read(reinterpret_cast<char*>(&colorCount), sizeof(uint16));
+
+        for (int j = 0; j < colorCount; ++j)
+        {
+            Color color;
+            fs.read(reinterpret_cast<char*>(&color), sizeof(Color));
+            palette->AddColor(color);
+        }
+
+        paletteBuffer->AddData(palette);
+    }
+
+    return true;
 }

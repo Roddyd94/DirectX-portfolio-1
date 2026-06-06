@@ -2,11 +2,14 @@
 
 #include "SnowProjectile.h"
 
+#include "Core/ResourceManager.h"
+
 #include "SnowProjectileComponent.h"
 #include "Core/Animation/Animation2D.h"
-#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
+#include "Core/Palette.h"
 #include "Platformer/PlatformerKinematicComponent.h"
+#include "Snowbros/IndexedSpriteInstanceComponent.h"
 #include "Tilemap/Tilemap.h"
 #include "Tilemap/TilemapLevel.h"
 
@@ -17,7 +20,9 @@ bool SnowProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto rootComp = CreateSceneComponent<SpriteInstanceComponent>("Root");
+    auto rootComp = CreateSceneComponent<IndexedSpriteInstanceComponent>("Root");
+    auto palette  = FIND_PALETTE("player_1");
+    rootComp->SetPaletteNumber(palette->GetID());
     rootComp->SetRenderLayer("PlayerProjectile");
     // rootComp->SetShader("SpriteShader");
     SetRoot(rootComp);

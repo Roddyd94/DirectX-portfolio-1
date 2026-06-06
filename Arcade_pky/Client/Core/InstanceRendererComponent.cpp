@@ -6,13 +6,7 @@
 
 #include "Level.h"
 #include "Mesh.h"
-#include "Texture.h"
 #include "TransformConstantBuffer.h"
-
-InstanceRendererComponent::InstanceRendererComponent()
-{
-    _shouldRender = true;
-}
 
 bool InstanceRendererComponent::Init(
   int32 componentID, const std::string& name, Ptr<class Actor> owner)
@@ -43,18 +37,12 @@ void InstanceRendererComponent::Render(float deltaTime)
 {
     SceneComponent::Render(deltaTime);
 
-    if (!_texture)
-        return;
-
     if (0 == _structureBuffer->GetElementCount())
         return;
 
     _structureBuffer->Update();
 
-    _texture->SetShaderResource(0, ShaderType::Pixel, 0);
-    SHADER_MANAGER->SetSampler(SamplerType::Point);
-
-    auto level = GetLevel();
+    auto level           = GetLevel();
     auto transformBuffer = Lock(_transformConstantBuffer);
 
     transformBuffer->SetWorldMatrix(Matrix());
@@ -69,17 +57,6 @@ void InstanceRendererComponent::Render(float deltaTime)
 
     _structureBuffer->Clear();
 }
-
-void InstanceRendererComponent::SetTexture(Ptr<class Texture> texture)
-{
-    _texture = texture;
-}
-
-void InstanceRendererComponent::SetTexture(const std::string& name)
-{
-    SetTexture(FIND_TEXTURE(name));
-}
-
 void InstanceRendererComponent::SetBuffer(Ptr<class StructureBuffer> buffer)
 {
     buffer->Clear();

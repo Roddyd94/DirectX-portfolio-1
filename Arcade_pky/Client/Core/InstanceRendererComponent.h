@@ -7,14 +7,13 @@
 class InstanceRendererComponent : public SceneComponent
 {
 public:
-    InstanceRendererComponent()           ;
+    InstanceRendererComponent()           = default;
     ~InstanceRendererComponent() override = default;
 
 protected:
-    Ptr<class Mesh>                    _mesh                    = nullptr;
-    Ptr<class StructureBuffer>         _structureBuffer         = nullptr;
-    Ptr<class Texture>                 _texture                 = nullptr;
-    Ptr<class Shader>                  _shader                  = nullptr;
+    Ptr<class Mesh>            _mesh            = nullptr;
+    Ptr<class StructureBuffer> _structureBuffer = nullptr;
+    Ptr<class Shader>          _shader          = nullptr;
 
 public:
     bool Init(int32 componentID, const std::string& name, Ptr<class Actor> owner) override;
@@ -23,9 +22,6 @@ public:
 
     void Collision(float deltaTime) override;
     void Render(float deltaTime) override;
-
-    void SetTexture(Ptr<class Texture> texture);
-    void SetTexture(const std::string& name);
 
     void SetBuffer(Ptr<class StructureBuffer> buffer);
     void SetBuffer(const std::string& name);

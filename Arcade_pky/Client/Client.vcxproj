@@ -444,11 +444,11 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Core\Animation\Animation2DManager.h" />
     <ClInclude Include="Core\Animation\Animation2DSequence.h" />
     <ClInclude Include="Core\Animation\Animation2DSprite.h" />
-    <ClInclude Include="Core\Animation\Animation2DStateMachine.h" />
     <ClInclude Include="Core\Animation\Animation2DStructureBuffer.h" />
     <ClInclude Include="Core\Animation\SpriteComponent.h" />
     <ClInclude Include="Core\Animation\SpriteInstanceComponent.h" />
     <ClInclude Include="Core\Animation\SpriteInstanceRenderer.h" />
+    <ClInclude Include="Core\Animation\SpriteInstanceRendererComponent.h" />
     <ClInclude Include="Core\Animation\SpriteInstanceShader.h" />
     <ClInclude Include="Core\Animation\SpriteShader.h" />
     <ClInclude Include="Core\BlendState.h" />
@@ -477,6 +477,8 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Core\FrameMeshShader.h" />
     <ClInclude Include="Core\GameEngine.h" />
     <ClInclude Include="Core\GraphicShader.h" />
+    <ClInclude Include="Core\IndexedTextureBuffer.h" />
+    <ClInclude Include="Core\IndexedTextureInfoConstantBuffer.h" />
     <ClInclude Include="Core\Info.h" />
     <ClInclude Include="Core\Input\Input.h" />
     <ClInclude Include="Core\Input\InputAction.h" />
@@ -497,6 +499,9 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Core\MeshManager.h" />
     <ClInclude Include="Core\Object.h" />
     <ClInclude Include="Core\ObjectPool.h" />
+    <ClInclude Include="Core\Palette.h" />
+    <ClInclude Include="Core\PaletteManager.h" />
+    <ClInclude Include="Core\PaletteStructureBuffer.h" />
     <ClInclude Include="Core\Pawn.h" />
     <ClInclude Include="Core\Ptr.h" />
     <ClInclude Include="Core\Rect.h" />
@@ -552,6 +557,11 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Snowbros\GoblinBlackboard.h" />
     <ClInclude Include="Snowbros\GoblinStateMachine.h" />
+    <ClInclude Include="Snowbros\IndexedAnimation2DStructureBuffer.h" />
+    <ClInclude Include="Snowbros\IndexedSpriteInstanceComponent.h" />
+    <ClInclude Include="Snowbros\IndexedSpriteInstanceRenderer.h" />
+    <ClInclude Include="Snowbros\IndexedSpriteInstanceRendererComponent.h" />
+    <ClInclude Include="Snowbros\IndexedSpriteInstanceShader.h" />
     <ClInclude Include="Snowbros\MonkeyBlackboard.h" />
     <ClInclude Include="Snowbros\MonkeyStateMachine.h" />
     <ClInclude Include="Snowbros\PlayerStateDead.h" />
@@ -561,13 +571,13 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Snowbros\ShootComponent.h" />
     <ClInclude Include="Snowbros\SnowballMorphableEnemyBlackboard.h" />
     <ClInclude Include="Snowbros\SnowballMorphableEnemyStateMachine.h" />
+    <ClInclude Include="Snowbros\SnowbrosDataParser.h" />
     <ClInclude Include="Snowbros\SnowbrosEnemy.h" />
     <ClInclude Include="Snowbros\SnowbrosEnemyState.h" />
     <ClInclude Include="Snowbros\SnowbrosLevel.h" />
     <ClInclude Include="Snowbros\SnowbrosPlayer.h" />
     <ClInclude Include="Snowbros\SnowbrosPlayerBlackboard.h" />
     <ClInclude Include="Snowbros\SnowbrosPlayerState.h" />
-    <ClInclude Include="Snowbros\SnowbrosTileParser.h" />
     <ClInclude Include="Snowbros\SnowProjectile.h" />
     <ClInclude Include="Snowbros\SnowProjectileComponent.h" />
     <ClInclude Include="Snowbros\SpitterBlackboard.h" />
@@ -603,11 +613,11 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Core\Animation\Animation2DManager.cpp" />
     <ClCompile Include="Core\Animation\Animation2DSequence.cpp" />
     <ClCompile Include="Core\Animation\Animation2DSprite.cpp" />
-    <ClCompile Include="Core\Animation\Animation2DStateMachine.cpp" />
     <ClCompile Include="Core\Animation\Animation2DStructureBuffer.cpp" />
     <ClCompile Include="Core\Animation\SpriteComponent.cpp" />
     <ClCompile Include="Core\Animation\SpriteInstanceComponent.cpp" />
     <ClCompile Include="Core\Animation\SpriteInstanceRenderer.cpp" />
+    <ClCompile Include="Core\Animation\SpriteInstanceRendererComponent.cpp" />
     <ClCompile Include="Core\Animation\SpriteInstanceShader.cpp" />
     <ClCompile Include="Core\Animation\SpriteShader.cpp" />
     <ClCompile Include="Core\BlendState.cpp" />
@@ -634,6 +644,8 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Core\FrameMeshShader.cpp" />
     <ClCompile Include="Core\GameEngine.cpp" />
     <ClCompile Include="Core\GraphicShader.cpp" />
+    <ClCompile Include="Core\IndexedTextureBuffer.cpp" />
+    <ClCompile Include="Core\IndexedTextureInfoConstantBuffer.cpp" />
     <ClCompile Include="Core\Input\Input.cpp" />
     <ClCompile Include="Core\Input\InputAction.cpp" />
     <ClCompile Include="Core\Input\InputComponent.cpp" />
@@ -652,6 +664,9 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Core\MeshManager.cpp" />
     <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="Core\ObjectPool.cpp" />
+    <ClCompile Include="Core\Palette.cpp" />
+    <ClCompile Include="Core\PaletteManager.cpp" />
+    <ClCompile Include="Core\PaletteStructureBuffer.cpp" />
     <ClCompile Include="Core\Pawn.cpp" />
     <ClCompile Include="Core\Rect.cpp" />
     <ClCompile Include="Core\RenderInstanceComponent.cpp" />
@@ -710,6 +725,11 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Player\PlayerStateMachine.cpp" />
     <ClCompile Include="Snowbros\GoblinBlackboard.cpp" />
     <ClCompile Include="Snowbros\GoblinStateMachine.cpp" />
+    <ClCompile Include="Snowbros\IndexedAnimation2DStructureBuffer.cpp" />
+    <ClCompile Include="Snowbros\IndexedSpriteInstanceComponent.cpp" />
+    <ClCompile Include="Snowbros\IndexedSpriteInstanceRenderer.cpp" />
+    <ClCompile Include="Snowbros\IndexedSpriteInstanceRendererComponent.cpp" />
+    <ClCompile Include="Snowbros\IndexedSpriteInstanceShader.cpp" />
     <ClCompile Include="Snowbros\MonkeyBlackboard.cpp" />
     <ClCompile Include="Snowbros\MonkeyStateMachine.cpp" />
     <ClCompile Include="Snowbros\PlayerStateDead.cpp" />
@@ -719,13 +739,13 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Snowbros\ShootComponent.cpp" />
     <ClCompile Include="Snowbros\SnowballMorphableEnemyBlackboard.cpp" />
     <ClCompile Include="Snowbros\SnowballMorphableEnemyStateMachine.cpp" />
+    <ClCompile Include="Snowbros\SnowbrosDataParser.cpp" />
     <ClCompile Include="Snowbros\SnowbrosEnemy.cpp" />
     <ClCompile Include="Snowbros\SnowbrosEnemyState.cpp" />
     <ClCompile Include="Snowbros\SnowbrosLevel.cpp" />
     <ClCompile Include="Snowbros\SnowbrosPlayer.cpp" />
     <ClCompile Include="Snowbros\SnowbrosPlayerBlackboard.cpp" />
     <ClCompile Include="Snowbros\SnowbrosPlayerState.cpp" />
-    <ClCompile Include="Snowbros\SnowbrosTileParser.cpp" />
     <ClCompile Include="Snowbros\SnowProjectile.cpp" />
     <ClCompile Include="Snowbros\SnowProjectileComponent.cpp" />
     <ClCompile Include="Snowbros\SpitterBlackboard.cpp" />
@@ -778,6 +798,38 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">FrameMeshVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\IndexedSpriteInstance.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">IndexedSpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">IndexedSpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">IndexedSpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">IndexedSpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">IndexedSpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">IndexedSpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">IndexedSpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">IndexedSpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">IndexedSpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">IndexedSpriteInstanceVS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">Effect</ShaderType>
     </FxCompile>
     <FxCompile Include="..\HLSL\Sprite.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SpriteVS</EntryPointName>

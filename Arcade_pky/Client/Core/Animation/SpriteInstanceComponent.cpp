@@ -60,11 +60,14 @@ void SpriteInstanceComponent::AddBufferData()
 
     int32 frameIndex
       = _animation->IsReversed() ? GetFrameCount() - 1 - GetFrameIndex() : GetFrameIndex();
-    frameIndex               = std::clamp(frameIndex, 0, clip->GetFrameCount() - 1);
-    Animation2DSprite sprite = clip->GetFrame(frameIndex);
-    SpriteData        data   = sprite.spriteSheet->GetSpriteData(sprite.spriteIndex);
+    frameIndex = std::clamp(frameIndex, 0, clip->GetFrameCount() - 1);
 
-    Ptr<Texture> texture = sprite.spriteSheet->GetTexture();
+    Animation2DSprite                  sprite = clip->GetFrame(frameIndex);
+    Ptr<TextureAnimation2DSpriteSheet> spriteSheet
+      = Cast<Animation2DSpriteSheet, TextureAnimation2DSpriteSheet>(sprite.spriteSheet);
+
+    SpriteData   data    = spriteSheet->GetSpriteData(sprite.spriteIndex);
+    Ptr<Texture> texture = spriteSheet->GetTexture();
     texture->SetShaderResource(0, ShaderType::Pixel, 0);
 
     Vector2 uvLT;

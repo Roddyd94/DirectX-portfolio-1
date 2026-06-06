@@ -7,11 +7,6 @@
 bool InstanceRenderer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
     Actor::Init(id, position, scale, rotation);
-
-    _renderer = CreateSceneComponent<InstanceRendererComponent>("Renderer");
-    _renderer->SetRenderLayer("Default");
-
-    SetRoot(_renderer);
     SetName("InstanceRenderer");
 
     return true;
@@ -31,16 +26,6 @@ Ptr<class InstanceRendererComponent> InstanceRenderer::GetRendererComponent() co
 void InstanceRenderer::SetRendererComponent(Ptr<class InstanceRendererComponent> renderer)
 {
     _renderer = renderer;
-}
-
-void InstanceRenderer::SetTexture(Ptr<class Texture> texture)
-{
-    _renderer->SetTexture(texture);
-}
-
-void InstanceRenderer::SetTexture(const std::string& name)
-{
-    _renderer->SetTexture(name);
 }
 
 void InstanceRenderer::SetBuffer(Ptr<class StructureBuffer> buffer)

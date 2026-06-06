@@ -10,7 +10,7 @@ struct TileMetadata
     uint16 tileTypeCount = 0;
 };
 
-class SnowbrosTileParser
+class SnowbrosDataParser
 {
 public:
     static bool ParseStageData(const std::wstring& filename, byte* pData, size_t dataLength);
@@ -19,4 +19,5 @@ public:
       const std::wstring&                             textureFilename,
       const std::string&                              spriteSheetName,
       const std::wstring&                             spriteDataFilename);
+    static bool ReadPalettes(const std::wstring& filename);
 };

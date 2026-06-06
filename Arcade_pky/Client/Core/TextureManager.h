@@ -19,5 +19,5 @@ public:
     void Destroy() override;
 
     Ptr<class Texture> FindTexture(const std::string& name);
-    Ptr<class Texture> LoadTexture(const std::string& name, const std::wstring& fileName);
+    Ptr<class Texture> LoadTexture(const std::string& name, const std::wstring& fileName, uint32 flags = 0);
 };

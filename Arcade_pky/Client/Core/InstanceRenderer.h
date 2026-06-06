@@ -17,9 +17,6 @@ public:
     Ptr<class InstanceRendererComponent> GetRendererComponent() const;
     void SetRendererComponent(Ptr<class InstanceRendererComponent> renderer);
 
-    void SetTexture(Ptr<class Texture> texture);
-    void SetTexture(const std::string& name);
-
     void SetBuffer(Ptr<class StructureBuffer> buffer);
     void SetBuffer(const std::string& name);
 

@@ -20,7 +20,7 @@ int32 Animation2DClip::GetFrameCount() const
 void Animation2DClip::AddFrameData(Ptr<Animation2DSpriteSheet> sprite, int32 spriteIndex)
 {
     Animation2DSprite frameData;
-    frameData.spriteSheet      = sprite;
+    frameData.spriteSheet = sprite;
     frameData.spriteIndex = spriteIndex;
 
     _frames.push_back(frameData);

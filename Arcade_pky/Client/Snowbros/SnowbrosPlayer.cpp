@@ -3,6 +3,7 @@
 #include "SnowbrosPlayer.h"
 
 #include "Core/Collision/CollisionManager.h"
+#include "Core/ResourceManager.h"
 
 #include "PlayerStateGround.h"
 #include "PlayerStateMidair.h"
@@ -16,10 +17,12 @@
 #include "Core/Collision/AABBCollisionComponent.h"
 #include "Core/Collision/PointCollisionComponent.h"
 #include "Core/Input/InputComponent.h"
+#include "Core/Palette.h"
 #include "Platformer/PlatformerKinematicPlayerComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
 #include "Player/PlayerComponent.h"
 #include "Player/PlayerController.h"
+#include "Snowbros/IndexedSpriteInstanceComponent.h"
 #include "Tilemap/Tilemap.h"
 #include "Tilemap/TilemapLevel.h"
 
@@ -33,7 +36,9 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto rootComp = CreateSceneComponent<SpriteInstanceComponent>("Root");
+    auto rootComp = CreateSceneComponent<IndexedSpriteInstanceComponent>("Root");
+    auto palette  = FIND_PALETTE("player_1");
+    rootComp->SetPaletteNumber(palette->GetID());
     rootComp->SetRenderLayer("Player");
     // rootComp->SetShader("SpriteShader");
     SetRoot(rootComp);

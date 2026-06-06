@@ -29,6 +29,9 @@ bool ResourceManager::Init()
     if (!RegisterManager<SoundManager>(ResourceType::Sound))
         return false;
 
+    if (!RegisterManager<PaletteManager>(ResourceType::Palette))
+        return false;
+
     // if (!RegisterManager<FontManager>(ResourceType::Font))
     //     return false;
 

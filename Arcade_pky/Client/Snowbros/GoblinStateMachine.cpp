@@ -3,6 +3,7 @@
 #include "GoblinStateMachine.h"
 
 #include "Core/Collision/CollisionManager.h"
+#include "Core/ResourceManager.h"
 #include "Core/TimeManager.h"
 
 #include "GoblinBlackboard.h"
@@ -16,10 +17,11 @@
 #include "Common/Random.h"
 #include "Core/Actor.h"
 #include "Core/Animation/Animation2D.h"
-#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
+#include "Core/Palette.h"
 #include "Platformer/PlatformerKinematicComponent.h"
 #include "Player/Player.h"
+#include "Snowbros/IndexedSpriteInstanceComponent.h"
 #include "Tilemap/Tilemap.h"
 
 void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
@@ -34,12 +36,13 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     auto collider  = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
-    auto sprite    = pawn->FindSceneComponent<SpriteInstanceComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
     auto animation = sprite->CreateAnimation();
     animation->SetAnimationSequence("goblin");
     animation->ChangeAnimationClip("goblin_walk");
 
-    auto spriteSnowball    = pawn->FindSceneComponent<SpriteInstanceComponent>("SpriteSnowball");
+    auto spriteSnowball
+      = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("SpriteSnowball");
     auto animationSnowball = spriteSnowball->CreateAnimation();
     animationSnowball->SetAnimationSequence("snowball");
     animationSnowball->ChangeAnimationClip("snowball_none");
@@ -480,7 +483,11 @@ void GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           sprite->SetEnable(false);
           spriteSnowball->SetEnable(true);
           if (blackboard->isSnowballReinforced)
+          {
               spriteSnowball->ChangeAnimation("snowball_reinforced");
+              auto palette = FIND_PALETTE("player_1");
+              spriteSnowball->SetPaletteNumber(palette->GetID());
+          }
           else
               spriteSnowball->ChangeAnimation("snowball_rolling");
       });
