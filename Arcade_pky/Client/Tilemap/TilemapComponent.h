@@ -5,17 +5,16 @@
 class TilemapComponent : public SceneComponent
 {
 public:
-    TilemapComponent();
-    ~TilemapComponent() override;
+    TilemapComponent()           = default;
+    ~TilemapComponent() override = default;
 
 protected:
     std::vector<Ptr<class Tile>> _tiles;
     std::vector<SpriteData>      _tileSprites;
 
-    Ptr<class Mesh>                _tileMesh;
-    Ptr<class Texture>             _tileTexture;
-    Ptr<class TileStructureBuffer> _tileStructureBuffer;
-    Ptr<class Shader>              _tileInstanceShader;
+    Ptr<class Mesh>            _tileMesh;
+    Ptr<class StructureBuffer> _tileStructureBuffer;
+    Ptr<class Shader>          _tileInstanceShader;
 
     Ptr<class Mesh>                       _tileOutlineMesh;
     Ptr<class ColorConstantBuffer>        _tileOutlineConstantBuffer;
@@ -41,6 +40,8 @@ public:
     void Collision(float deltaTime) override;
     void Render(float deltaTime) override;
 
+    virtual Ptr<class Tile> CreateTile();
+
 public:
     int32 GetTileFrameCount() const { return static_cast<int32>(_tileSprites.size()); }
 
@@ -65,17 +66,63 @@ public:
 
     void CreateTile(int32 countX, int32 countY, Vector2 tileSize, int32 textureFrameIndex);
 
-    void SetTexture(Ptr<class Texture> texture);
-    void SetTexture(const std::string& name);
-    void SetTexture(const std::string& name, const std::wstring& fileName);
-
     void AddTileSprite(Vector2 start, Vector2 size);
     void AddTileSprite(float startX, float startY, float sizeX, float sizeY);
 
     void RefreshTileInstance(bool refresh) { _shouldRefreshTileInstance = refresh; }
     void RefreshTileOutlineInstance(bool refresh) { _shouldRefreshTileOutlineInstance = refresh; }
 
-private:
-    void RenderTile();
-    void RenderOutline();
+protected:
+    virtual void AddBufferData(int32 tileIndex) = 0;
+
+    virtual void RenderTile();
+    virtual void RenderOutline();
+};
+
+class TextureTilemapComponent : public TilemapComponent
+{
+public:
+    TextureTilemapComponent();
+    ~TextureTilemapComponent() override;
+
+protected:
+    Ptr<class Texture> _tileTexture;
+
+public:
+    bool Init(int32 componentID, const std::string& name, Ptr<class Actor> owner) override;
+
+    void SetTexture(Ptr<class Texture> texture);
+    void SetTexture(const std::string& name);
+    void SetTexture(const std::string& name, const std::wstring& fileName);
+
+protected:
+    void AddBufferData(int32 tileIndex) override;
+    void RenderTile() override;
+};
+
+class IndexedTextureTilemapComponent : public TilemapComponent
+{
+public:
+    IndexedTextureTilemapComponent();
+    ~IndexedTextureTilemapComponent() override;
+
+protected:
+    Ptr<class StructureBuffer> _paletteBuffer = nullptr;
+    Ptr<class IndexedTexture>  _tileTexture   = nullptr;
+
+    int32 _paletteSetNumber = 0;
+
+public:
+    bool Init(int32 componentID, const std::string& name, Ptr<class Actor> owner) override;
+
+    Ptr<class Tile> CreateTile() override;
+
+    void SetTexture(Ptr<class IndexedTexture> texture);
+    void SetTexture(const std::string& name);
+
+    void SetPaletteSet(int32 number);
+
+protected:
+    void AddBufferData(int32 tileIndex) override;
+    void RenderTile() override;
 };

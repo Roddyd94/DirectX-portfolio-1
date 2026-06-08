@@ -37,7 +37,7 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
     auto rootComp = CreateSceneComponent<IndexedSpriteInstanceComponent>("Root");
-    auto palette  = FIND_PALETTE("player_1");
+    auto palette  = FIND_PALETTE("player_2");
     rootComp->SetPaletteNumber(palette->GetID());
     rootComp->SetRenderLayer("Player");
     // rootComp->SetShader("SpriteShader");

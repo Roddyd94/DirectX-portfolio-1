@@ -18,6 +18,7 @@ namespace TileType
 class Tile : public Object
 {
     friend class TilemapComponent;
+    friend class IndexedTextureTilemapComponent;
 
 public:
     Tile()           = default;
@@ -59,4 +60,15 @@ public:
 
     void SetTileType(TileType::Type type);
     void SetSprite(uint32 index);
+};
+
+class IndexedTile : public Tile
+{
+protected:
+    int32 _paletteNumber;
+
+public:
+    int32 GetPaletteNumber() const;
+
+    void SetPalette(int32 paletteNumber);
 };

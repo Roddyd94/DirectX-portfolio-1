@@ -12,6 +12,8 @@
 #include "TransformConstantBuffer.h"
 
 #ifdef _HAS_TILEMAP_MODULE
+#include "Tilemap/IndexedTileInstanceShader.h"
+#include "Tilemap/IndexedTileStructureBuffer.h"
 #include "Tilemap/TileInstanceShader.h"
 #include "Tilemap/TileOutlineInstanceShader.h"
 #include "Tilemap/TileOutlineStructureBuffer.h"
@@ -38,6 +40,9 @@ bool ShaderManager::Init()
 
 #ifdef _HAS_TILEMAP_MODULE
     if (!CreateShader<TileInstanceShader>("TileInstanceShader"))
+        return false;
+
+    if (!CreateShader<IndexedTileInstanceShader>("IndexedTileInstanceShader"))
         return false;
 
     if (!CreateShader<TileOutlineInstanceShader>("TileOutlineInstanceShader"))
@@ -82,6 +87,9 @@ bool ShaderManager::Init()
 #ifdef _HAS_TILEMAP_MODULE
     if (!CreateStructureBuffer<TileStructureBuffer>(
           "Tile", sizeof(TileInstanceData), 128, 1, ShaderType::Vertex))
+        return false;
+    if (!CreateStructureBuffer<IndexedTileStructureBuffer>(
+          "IndexedTile", sizeof(IndexedTileInstanceData), 128, 1, ShaderType::Vertex))
         return false;
 
     if (!CreateStructureBuffer<TileOutlineStructureBuffer>(

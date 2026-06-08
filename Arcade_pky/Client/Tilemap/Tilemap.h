@@ -7,7 +7,7 @@ public:
     Tilemap()           = default;
     ~Tilemap() override = default;
 
-private:
+protected:
     Ptr<class TilemapComponent> _tileComponent;
 
 public:
@@ -19,17 +19,13 @@ public:
 
     void CreateTile(int32 countX, int32 countY, Vector2 tileSize, int32 textureFrameIndex);
 
-    void SetTexture(Ptr<class Texture> texture);
-    void SetTexture(const std::string& name);
-    void SetTexture(const std::string& name, const std::wstring& fileName);
-
     void AddTileSprite(Vector2 start, Vector2 size);
     void AddTileSprite(float startX, float startY, float sizeX, float sizeY);
 
     Ptr<class Tile> GetTile(int32 index);
     Ptr<class Tile> GetTile(Vector2 worldPosition);
     Ptr<class Tile> GetTileLocal(Vector2 localPosition);
-    
+
     int32 GetTileIndexX(float worldPositionX) const;
     int32 GetTileIndexY(float worldPositionY) const;
     int32 GetTileIndex(Vector2 worldPosition) const;

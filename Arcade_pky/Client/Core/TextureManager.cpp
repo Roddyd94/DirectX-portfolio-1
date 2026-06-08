@@ -36,6 +36,20 @@ Ptr<Texture> TextureManager::FindTexture(const std::string& name)
     return itTexture->second;
 }
 
+Ptr<class IndexedTexture> TextureManager::FindIndexedTexture(const std::string& name)
+{
+    auto itFinder = _textureFinder.find(name);
+    if (_textureFinder.end() == itFinder)
+        return nullptr;
+
+    int32 id        = itFinder->second;
+    auto  itTexture = _indexedTextures.find(id);
+    if (_indexedTextures.end() == itTexture)
+        return nullptr;
+
+    return itTexture->second;
+}
+
 Ptr<Texture> TextureManager::LoadTexture(
   const std::string& name, const std::wstring& fileName, uint32 flags)
 {
@@ -54,6 +68,23 @@ Ptr<Texture> TextureManager::LoadTexture(
     texture->SetID(_idCounter);
     _textures[_idCounter] = texture;
     _textureFinder[name]  = _idCounter;
+    _idCounter++;
+
+    return texture;
+}
+
+Ptr<IndexedTexture> TextureManager::AddIndexedTexture(
+  const std::string& name, Ptr<IndexedTexture> texture)
+{
+    Ptr<IndexedTexture> foundTexture = FindIndexedTexture(name);
+    if (foundTexture)
+        return foundTexture;
+
+    if (texture->GetName().empty())
+        texture->SetName(name);
+    texture->SetID(_idCounter);
+    _indexedTextures[_idCounter] = texture;
+    _textureFinder[name]         = _idCounter;
     _idCounter++;
 
     return texture;

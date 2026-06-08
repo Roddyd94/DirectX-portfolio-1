@@ -571,6 +571,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Snowbros\ShootComponent.h" />
     <ClInclude Include="Snowbros\SnowballMorphableEnemyBlackboard.h" />
     <ClInclude Include="Snowbros\SnowballMorphableEnemyStateMachine.h" />
+    <ClInclude Include="Snowbros\SnowbrosCheat.h" />
     <ClInclude Include="Snowbros\SnowbrosDataParser.h" />
     <ClInclude Include="Snowbros\SnowbrosEnemy.h" />
     <ClInclude Include="Snowbros\SnowbrosEnemyState.h" />
@@ -584,6 +585,10 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Snowbros\SpitterStateMachine.h" />
     <ClInclude Include="Snowbros\Types.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Tilemap\IndexedTileInstanceShader.h" />
+    <ClInclude Include="Tilemap\IndexedTilemap.h" />
+    <ClInclude Include="Tilemap\IndexedTileStructureBuffer.h" />
+    <ClInclude Include="Tilemap\TextureTilemap.h" />
     <ClInclude Include="Tilemap\Tile.h" />
     <ClInclude Include="Tilemap\TileInstanceShader.h" />
     <ClInclude Include="Tilemap\Tilemap.h" />
@@ -739,6 +744,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Snowbros\ShootComponent.cpp" />
     <ClCompile Include="Snowbros\SnowballMorphableEnemyBlackboard.cpp" />
     <ClCompile Include="Snowbros\SnowballMorphableEnemyStateMachine.cpp" />
+    <ClCompile Include="Snowbros\SnowbrosCheat.cpp" />
     <ClCompile Include="Snowbros\SnowbrosDataParser.cpp" />
     <ClCompile Include="Snowbros\SnowbrosEnemy.cpp" />
     <ClCompile Include="Snowbros\SnowbrosEnemyState.cpp" />
@@ -750,6 +756,10 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Snowbros\SnowProjectileComponent.cpp" />
     <ClCompile Include="Snowbros\SpitterBlackboard.cpp" />
     <ClCompile Include="Snowbros\SpitterStateMachine.cpp" />
+    <ClCompile Include="Tilemap\IndexedTileInstanceShader.cpp" />
+    <ClCompile Include="Tilemap\IndexedTilemap.cpp" />
+    <ClCompile Include="Tilemap\IndexedTileStructureBuffer.cpp" />
+    <ClCompile Include="Tilemap\TextureTilemap.cpp" />
     <ClCompile Include="Tilemap\Tile.cpp" />
     <ClCompile Include="Tilemap\TileInstanceShader.cpp" />
     <ClCompile Include="Tilemap\Tilemap.cpp" />
@@ -830,6 +840,38 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">Effect</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\IndexedTileInstance.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">IndexedTileInstanceVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">IndexedTileInstanceVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">IndexedTileInstanceVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">IndexedTileInstanceVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">IndexedTileInstanceVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">IndexedTileInstanceVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">IndexedTileInstanceVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_ObjectPool|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">IndexedTileInstanceVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">IndexedTileInstanceVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">IndexedTileInstanceVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_MemoryPool|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\HLSL\Sprite.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SpriteVS</EntryPointName>

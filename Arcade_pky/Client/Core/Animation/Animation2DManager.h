@@ -42,9 +42,11 @@ public:
     Ptr<class Animation2DSpriteSheet> CreateSpriteSheet(const std::string& spriteSheetName,
       const std::string&                                                   textureName,
       const std::wstring&                                                  fileName);
-    
+
     Ptr<class Animation2DSpriteSheet> CreateIndexedSpriteSheet(
       const std::string& name, Ptr<class IndexedTexture> texture);
+    Ptr<class Animation2DSpriteSheet> CreateIndexedSpriteSheet(
+      const std::string& spriteSheetName, const std::string& textureName);
 
     Ptr<class Animation2DClip>     CreateAnimationClip(const std::string& name);
     Ptr<class Animation2DSequence> CreateAnimationSequence(const std::string& name);

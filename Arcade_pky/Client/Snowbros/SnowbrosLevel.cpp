@@ -4,14 +4,15 @@
 
 #include "Core/ResourceManager.h"
 
+#include "SnowbrosCheat.h"
 #include "SnowbrosDataParser.h"
 #include "SnowbrosEnemy.h"
 #include "SnowbrosPlayer.h"
 #include "Core/Camera.h"
 #include "Core/Texture.h"
 #include "Snowbros/IndexedSpriteInstanceRenderer.h"
+#include "Tilemap/IndexedTilemap.h"
 #include "Tilemap/Tile.h"
-#include "Tilemap/Tilemap.h"
 
 bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
 {
@@ -21,12 +22,16 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
     Vector3 scale    = Vector3{1.f, 1.f, 1.f};
     Vector3 rotation = Vector3{0.f, 0.f, 0.f};
 
+    SpawnActor<SnowbrosCheat>(position, scale, rotation);
+
     position.x = -7.5f;
     position.y = -6.5f;
 
-    _tilemap = SpawnActor<Tilemap>(position, scale, rotation);
-    _tilemap->SetTexture("Tile", L"snowbros_tilemap.png");
-    _tilemap->CreateTile(16, 14, {1.f, 1.f}, 0);
+    auto tilemap = SpawnActor<IndexedTilemap>(position, scale, rotation);
+    SnowbrosDataParser::ParseIndexedTexture("Tile", L"snowbros_tilemap.bmp");
+    tilemap->SetTexture("Tile");
+    tilemap->CreateTile(16, 14, {1.f, 1.f}, 0);
+    _tilemap = tilemap;
 
     float tileSize = 16.f;
 
@@ -49,14 +54,17 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
 
     byte stageData[224] = {};
     SnowbrosDataParser::ParseStageData(L"snowbros_stage_1.bin", stageData, 224);
+
     for (size_t i = 0; i < 14; i++)
     {
         for (size_t j = 0; j < 16; j++)
         {
-            Ptr<Tile> tile = _tilemap->GetTile((13 - i) * 16 + j);
+            Ptr<IndexedTile> tile = Cast<Tile, IndexedTile>(tilemap->GetTile((13 - i) * 16 + j));
 
             int32 spriteIndex = stageData[i * 16 + j];
             tile->SetSprite(spriteIndex);
+
+            tile->SetPalette(tileMetadata.paletteNumbers[spriteIndex]);
 
             if (tileMetadata.tiles[TileType::Block].contains(spriteIndex))
                 tile->SetTileType(TileType::Block);

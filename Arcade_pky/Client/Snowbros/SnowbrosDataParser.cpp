@@ -41,8 +41,15 @@ bool SnowbrosDataParser::ParseTileMetadata(TileMetadata& data)
     DirectoryManager::Instance().GetFile(filePath, "snowbros_tilemap_metadata.bin", filePath);
 
     std::fstream fs{filePath.native(), fs.binary | fs.in};
-
     fs.read(reinterpret_cast<char*>(&data.tileSize), sizeof(data.tileSize));
+
+    int16 tileLength;
+    fs.read(reinterpret_cast<char*>(&tileLength), sizeof(tileLength));
+    data.paletteNumbers.resize(tileLength);
+
+    for (int i = 0; i < tileLength; ++i)
+        fs.read(reinterpret_cast<char*>(&data.paletteNumbers[i]), sizeof(byte));
+
     fs.read(reinterpret_cast<char*>(&data.tileTypeCount), sizeof(data.tileTypeCount));
 
     for (size_t i = 0; i < data.tileTypeCount; i++)
@@ -82,35 +89,28 @@ bool SnowbrosDataParser::ParseTileMetadata(TileMetadata& data)
     }
 }
 
-bool SnowbrosDataParser::ParseAnimationData(const std::string& textureName,
-  const std::wstring&                                          textureFilename,
-  const std::string&                                           spriteSheetName,
-  const std::wstring&                                          animationDataFilename)
+bool SnowbrosDataParser::ParseIndexedTexture(const std::string& name, const std::wstring& filename)
 {
-    auto dataPath    = DirectoryManager::Instance().GetCachePath("Resources/Stage");
     auto texturePath = DirectoryManager::Instance().GetCachePath("Resources/Texture");
-
-    if (dataPath == std::nullopt)
-        return false;
 
     if (texturePath == std::nullopt)
         return false;
 
     auto textureFilePath = texturePath.value();
-    DirectoryManager::Instance().GetFile(textureFilePath, textureFilename, textureFilePath);
+    DirectoryManager::Instance().GetFile(textureFilePath, filename, textureFilePath);
 
-    std::fstream tfs{textureFilePath.native(), tfs.binary | tfs.in};
+    std::fstream fs{textureFilePath.native(), fs.binary | fs.in};
 
     std::vector<char> buf;
     buf.resize(14);
-    tfs.read(buf.data(), 14);
+    fs.read(buf.data(), 14);
 
     uint32 headerSizeV5;
-    tfs.read(reinterpret_cast<char*>(&headerSizeV5), sizeof(uint32));
+    fs.read(reinterpret_cast<char*>(&headerSizeV5), sizeof(uint32));
 
     headerSizeV5 -= sizeof(uint32);
     buf.resize(headerSizeV5);
-    tfs.read(buf.data(), headerSizeV5);
+    fs.read(buf.data(), headerSizeV5);
 
     int32 textureWidth;
     int32 textureHeight;
@@ -127,18 +127,35 @@ bool SnowbrosDataParser::ParseAnimationData(const std::string& textureName,
         colorsInTable = 1 << bitsPerPixel;
 
     buf.resize(colorsInTable * sizeof(int32));
-    tfs.read(buf.data(), colorsInTable * sizeof(int32));
+    fs.read(buf.data(), colorsInTable * sizeof(int32));
 
     buf.resize(imageSize);
     int32 byteWidth = imageSize / textureHeight;
     for (int32 i = 0; i < textureHeight; ++i)
-        tfs.read(&buf[byteWidth * (textureHeight - 1 - i)], byteWidth);
+        fs.read(&buf[byteWidth * (textureHeight - 1 - i)], byteWidth);
 
     Ptr<IndexedTexture> texture = New<IndexedTexture>();
-    texture->SetName(textureName);
-    texture->LoadTexture(buf.data(), imageSize, 512, 512, 4);
+    texture->SetName(name);
+    texture->LoadTexture(buf.data(), imageSize, textureWidth, textureHeight, bitsPerPixel);
 
-    ANIMATION_MANAGER->CreateIndexedSpriteSheet(spriteSheetName, texture);
+    TEXTURE_MANAGER->AddIndexedTexture(name, texture);
+
+    return true;
+}
+
+bool SnowbrosDataParser::ParseAnimationData(const std::string& textureName,
+  const std::wstring&                                          textureFilename,
+  const std::string&                                           spriteSheetName,
+  const std::wstring&                                          animationDataFilename)
+{
+    auto dataPath = DirectoryManager::Instance().GetCachePath("Resources/Stage");
+
+    if (dataPath == std::nullopt)
+        return false;
+
+    ParseIndexedTexture(textureName, textureFilename);
+
+    ANIMATION_MANAGER->CreateIndexedSpriteSheet(spriteSheetName, textureName);
 
     auto filePath = dataPath.value();
     DirectoryManager::Instance().GetFile(filePath, animationDataFilename, filePath);

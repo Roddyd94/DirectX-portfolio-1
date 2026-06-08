@@ -130,3 +130,13 @@ void Tile::SetSprite(uint32 index)
 {
     _spriteIndex = index;
 }
+
+int32 IndexedTile::GetPaletteNumber() const
+{
+    return _paletteNumber;
+}
+
+void IndexedTile::SetPalette(int32 paletteNumber)
+{
+    _paletteNumber = paletteNumber;
+}

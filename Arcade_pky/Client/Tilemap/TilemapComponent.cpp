@@ -4,6 +4,8 @@
 
 #include "Core/ResourceManager.h"
 
+#include "IndexedTileInstanceShader.h"
+#include "IndexedTileStructureBuffer.h"
 #include "Tile.h"
 #include "TileInstanceShader.h"
 #include "TileOutlineInstanceShader.h"
@@ -13,23 +15,15 @@
 #include "Core/ColorConstantBuffer.h"
 #include "Core/Level.h"
 #include "Core/Mesh.h"
+#include "Core/PaletteStructureBuffer.h"
 #include "Core/Texture.h"
 #include "Core/TransformConstantBuffer.h"
-
-TilemapComponent::TilemapComponent()
-{
-    _shouldRender = true;
-}
-
-TilemapComponent::~TilemapComponent() {}
 
 bool TilemapComponent::Init(int32 componentID, const std::string& name, Ptr<class Actor> owner)
 {
     SceneComponent::Init(componentID, name, owner);
 
-    _tileMesh            = MESH_TEXTURE_RECT;
-    _tileStructureBuffer = FIND_STRUCTURE_BUFFER("Tile", TileStructureBuffer);
-    _tileInstanceShader  = FIND_SHADER("TileInstanceShader", TileInstanceShader);
+    _tileMesh = MESH_TEXTURE_RECT;
 
 #ifdef _DEBUG
     _shouldRenderOutline        = true;
@@ -71,6 +65,16 @@ void TilemapComponent::Render(float deltaTime)
 
     RenderTile();
     RenderOutline();
+}
+
+Ptr<class Tile> TilemapComponent::CreateTile()
+{
+    Ptr<Tile> tile = New<Tile>();
+
+    tile->_owner = This<TilemapComponent>();
+    tile->_type  = TileType::Background;
+
+    return tile;
 }
 
 int32 TilemapComponent::GetTileIndexX(float worldPositionX) const
@@ -193,10 +197,7 @@ void TilemapComponent::CreateTile(
     {
         for (int32 j = 0; j < _countX; ++j)
         {
-            Ptr<Tile> tile = New<Tile>();
-
-            tile->_owner = This<TilemapComponent>();
-            tile->_type  = TileType::Background;
+            Ptr<Tile> tile = CreateTile();
 
             tile->_position.x = j * _tileSize.x;
             tile->_position.y = i * _tileSize.y;
@@ -211,34 +212,6 @@ void TilemapComponent::CreateTile(
 
     RefreshTileInstance(true);
     RefreshTileOutlineInstance(true);
-}
-
-void TilemapComponent::SetTexture(Ptr<class Texture> texture)
-{
-    _tileTexture = texture;
-
-    _tileTextureSize.x = static_cast<float>(_tileTexture->GetWidth());
-    _tileTextureSize.y = static_cast<float>(_tileTexture->GetHeight());
-
-    RefreshTileInstance(true);
-    RefreshTileOutlineInstance(true);
-}
-
-void TilemapComponent::SetTexture(const std::string& name)
-{
-    Ptr<Texture> foundTexture = TEXTURE_MANAGER->FindTexture(name);
-    if (!foundTexture)
-        return;
-
-    SetTexture(foundTexture);
-}
-
-void TilemapComponent::SetTexture(const std::string& name, const std::wstring& fileName)
-{
-    if (!TEXTURE_MANAGER->LoadTexture(name, fileName))
-        return;
-
-    SetTexture(name);
 }
 
 void TilemapComponent::AddTileSprite(Vector2 start, Vector2 size)
@@ -266,9 +239,6 @@ void TilemapComponent::RenderTile()
     if (nullptr == level)
         return;
 
-    if (!_tileTexture)
-        return;
-
     if (_shouldRefreshTileInstance)
     {
         Ptr<Actor> owner = GetOwner();
@@ -283,22 +253,8 @@ void TilemapComponent::RenderTile()
         {
             for (int32 j = 0; j < _countX; ++j)
             {
-                int32     index = i * _countX + j;
-                Ptr<Tile> tile  = _tiles[index];
-
-                int32 spriteIndex = tile->GetSpriteIndex();
-                if (spriteIndex < 0 || spriteIndex >= _tileSprites.size())
-                    continue;
-
-                std::optional<Vector2> worldPos = GetTileWorldPos(index);
-
-                Vector2 uvLT, uvRB;
-                uvLT.x = _tileSprites[spriteIndex].start.x / _tileTextureSize.x;
-                uvLT.y = _tileSprites[spriteIndex].start.y / _tileTextureSize.y;
-                uvRB.x = uvLT.x + _tileSprites[spriteIndex].size.x / _tileTextureSize.x;
-                uvRB.y = uvLT.y + _tileSprites[spriteIndex].size.y / _tileTextureSize.y;
-
-                _tileStructureBuffer->AddData(worldPos.value(), uvLT, uvRB, _tileSize);
+                int32 index = i * _countX + j;
+                AddBufferData(index);
             }
         }
 
@@ -306,7 +262,6 @@ void TilemapComponent::RenderTile()
         RefreshTileInstance(false);
     }
 
-    _tileTexture->SetShaderResource(0, ShaderType::Pixel, 0);
     SHADER_MANAGER->SetSampler(SamplerType::Point);
 
     auto transformBuffer = Lock(_transformConstantBuffer);
@@ -381,4 +336,166 @@ void TilemapComponent::RenderOutline()
     _tileOutlineInstanceShader->SetShader();
 
     _tileOutlineMesh->RenderInstancing(_tileOutlineStructureBuffer->GetElementCount());
+}
+
+TextureTilemapComponent::TextureTilemapComponent()
+{
+    _shouldRender = true;
+}
+
+TextureTilemapComponent::~TextureTilemapComponent() {}
+
+bool TextureTilemapComponent::Init(
+  int32 componentID, const std::string& name, Ptr<class Actor> owner)
+{
+    TilemapComponent::Init(componentID, name, owner);
+
+    _tileStructureBuffer = FIND_STRUCTURE_BUFFER("Tile", TileStructureBuffer);
+    _tileInstanceShader  = FIND_SHADER("TileInstanceShader", TileInstanceShader);
+
+    return true;
+}
+
+void TextureTilemapComponent::SetTexture(Ptr<class Texture> texture)
+{
+    _tileTexture = texture;
+
+    _tileTextureSize.x = static_cast<float>(_tileTexture->GetWidth());
+    _tileTextureSize.y = static_cast<float>(_tileTexture->GetHeight());
+
+    RefreshTileInstance(true);
+    RefreshTileOutlineInstance(true);
+}
+
+void TextureTilemapComponent::SetTexture(const std::string& name)
+{
+    Ptr<Texture> foundTexture = FIND_TEXTURE(name);
+    if (!foundTexture)
+        return;
+
+    SetTexture(foundTexture);
+}
+
+void TextureTilemapComponent::SetTexture(const std::string& name, const std::wstring& fileName)
+{
+    if (!TEXTURE_MANAGER->LoadTexture(name, fileName))
+        return;
+
+    SetTexture(name);
+}
+
+void TextureTilemapComponent::AddBufferData(int32 tileIndex)
+{
+    Ptr<Tile> tile = _tiles[tileIndex];
+
+    int32 spriteIndex = tile->GetSpriteIndex();
+    if (spriteIndex < 0 || spriteIndex >= _tileSprites.size())
+        return;
+
+    std::optional<Vector2> worldPos = GetTileWorldPos(tileIndex);
+
+    Vector2 uvLT, uvRB;
+    uvLT.x = _tileSprites[spriteIndex].start.x / _tileTextureSize.x;
+    uvLT.y = _tileSprites[spriteIndex].start.y / _tileTextureSize.y;
+    uvRB.x = uvLT.x + _tileSprites[spriteIndex].size.x / _tileTextureSize.x;
+    uvRB.y = uvLT.y + _tileSprites[spriteIndex].size.y / _tileTextureSize.y;
+
+    auto structureBuffer = Cast<StructureBuffer, TileStructureBuffer>(_tileStructureBuffer);
+    structureBuffer->AddData(worldPos.value(), uvLT, uvRB, _tileSize);
+}
+
+void TextureTilemapComponent::RenderTile()
+{
+    if (!_tileTexture)
+        return;
+
+    _tileTexture->SetShaderResource(0, ShaderType::Pixel, 0);
+    TilemapComponent::RenderTile();
+}
+
+IndexedTextureTilemapComponent::IndexedTextureTilemapComponent()
+{
+    _shouldRender = true;
+}
+
+IndexedTextureTilemapComponent::~IndexedTextureTilemapComponent() {}
+
+bool IndexedTextureTilemapComponent::Init(
+  int32 componentID, const std::string& name, Ptr<class Actor> owner)
+{
+    TilemapComponent::Init(componentID, name, owner);
+
+    _tileStructureBuffer = FIND_STRUCTURE_BUFFER("IndexedTile", IndexedTileStructureBuffer);
+    _tileInstanceShader  = FIND_SHADER("IndexedTileInstanceShader", IndexedTileInstanceShader);
+    _paletteBuffer       = FIND_STRUCTURE_BUFFER("Palette", PaletteStructureBuffer);
+
+    return true;
+}
+
+Ptr<class Tile> IndexedTextureTilemapComponent::CreateTile()
+{
+    Ptr<Tile> tile = New<IndexedTile>();
+
+    tile->_owner = This<TilemapComponent>();
+    tile->_type  = TileType::Background;
+
+    return tile;
+}
+
+void IndexedTextureTilemapComponent::SetTexture(Ptr<class IndexedTexture> texture)
+{
+    _tileTexture = texture;
+
+    _tileTextureSize.x = static_cast<float>(_tileTexture->GetWidth());
+    _tileTextureSize.y = static_cast<float>(_tileTexture->GetHeight());
+
+    RefreshTileInstance(true);
+    RefreshTileOutlineInstance(true);
+}
+
+void IndexedTextureTilemapComponent::SetTexture(const std::string& name)
+{
+    Ptr<IndexedTexture> foundTexture = FIND_INDEXED_TEXTURE(name);
+    if (!foundTexture)
+        return;
+
+    SetTexture(foundTexture);
+}
+
+void IndexedTextureTilemapComponent::SetPaletteSet(int32 number)
+{
+    _paletteSetNumber = number;
+}
+
+void IndexedTextureTilemapComponent::AddBufferData(int32 tileIndex)
+{
+    Ptr<IndexedTile> tile = Cast<Tile, IndexedTile>(_tiles[tileIndex]);
+
+    int32 spriteIndex = tile->GetSpriteIndex();
+    if (spriteIndex < 0 || spriteIndex >= _tileSprites.size())
+        return;
+
+    std::optional<Vector2> worldPos = GetTileWorldPos(tileIndex);
+
+    Vector2 uvLT, uvRB;
+    uvLT.x = _tileSprites[spriteIndex].start.x / _tileTextureSize.x;
+    uvLT.y = _tileSprites[spriteIndex].start.y / _tileTextureSize.y;
+    uvRB.x = uvLT.x + _tileSprites[spriteIndex].size.x / _tileTextureSize.x;
+    uvRB.y = uvLT.y + _tileSprites[spriteIndex].size.y / _tileTextureSize.y;
+
+    auto structureBuffer = Cast<StructureBuffer, IndexedTileStructureBuffer>(_tileStructureBuffer);
+    structureBuffer->AddData(
+      worldPos.value(), uvLT, uvRB, _tileSize, _paletteSetNumber * 5 + tile->GetPaletteNumber());
+}
+
+void IndexedTextureTilemapComponent::RenderTile()
+{
+    if (!_tileTexture)
+        return;
+
+    _tileTexture->SetShaderResource();
+    _paletteBuffer->Update();
+    _paletteBuffer->Bind();
+
+    TilemapComponent::RenderTile();
 }

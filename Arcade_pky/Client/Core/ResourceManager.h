@@ -63,9 +63,10 @@ public:
 #define FIND_ANIMATION_CLIP(x)     ANIMATION_MANAGER->FindAnimationClip(x)
 #define FIND_ANIMATION_SEQUENCE(x) ANIMATION_MANAGER->FindAnimationSequence(x)
 
-#define FIND_TEXTURE(x) TEXTURE_MANAGER->FindTexture(x)
-#define FIND_SOUND(x)   SOUND_MANAGER->FindSound(x)
-#define FIND_PALETTE(x) PALETTE_MANAGER->FindPalette(x)
+#define FIND_TEXTURE(x)         TEXTURE_MANAGER->FindTexture(x)
+#define FIND_INDEXED_TEXTURE(x) TEXTURE_MANAGER->FindIndexedTexture(x)
+#define FIND_SOUND(x)           SOUND_MANAGER->FindSound(x)
+#define FIND_PALETTE(x)         PALETTE_MANAGER->FindPalette(x)
 
 #define MESH_LINE_RECT    MESH_MANAGER->FindMesh("FrameRect")
 #define MESH_LINE_SPHERE  MESH_MANAGER->FindMesh("FrameSphere")

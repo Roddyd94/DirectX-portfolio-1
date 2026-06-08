@@ -8,9 +8,6 @@ bool Tilemap::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
     Actor::Init(id, position, scale, rotation);
 
-    _tileComponent = CreateSceneComponent<TilemapComponent>("Tile");
-    SetRoot(_tileComponent);
-
     return true;
 }
 
@@ -32,21 +29,6 @@ void Tilemap::Collision(float deltaTime)
 void Tilemap::CreateTile(int32 countX, int32 countY, Vector2 tileSize, int32 textureFrameIndex)
 {
     _tileComponent->CreateTile(countX, countY, tileSize, textureFrameIndex);
-}
-
-void Tilemap::SetTexture(Ptr<Texture> texture)
-{
-    _tileComponent->SetTexture(texture);
-}
-
-void Tilemap::SetTexture(const std::string& name)
-{
-    _tileComponent->SetTexture(name);
-}
-
-void Tilemap::SetTexture(const std::string& name, const std::wstring& fileName)
-{
-    _tileComponent->SetTexture(name, fileName);
 }
 
 void Tilemap::AddTileSprite(Vector2 start, Vector2 size)

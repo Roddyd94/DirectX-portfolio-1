@@ -141,6 +141,13 @@ Ptr<class Animation2DSpriteSheet> Animation2DManager::CreateIndexedSpriteSheet(
     return sheet;
 }
 
+Ptr<class Animation2DSpriteSheet> Animation2DManager::CreateIndexedSpriteSheet(
+  const std::string& spriteSheetName, const std::string& textureName)
+{
+    Ptr<IndexedTexture> texture = FIND_INDEXED_TEXTURE(textureName);
+    return CreateIndexedSpriteSheet(spriteSheetName, texture);
+}
+
 Ptr<class Animation2DClip> Animation2DManager::CreateAnimationClip(const std::string& name)
 {
     Ptr<Animation2DClip> clip = FindAnimationClip(name);

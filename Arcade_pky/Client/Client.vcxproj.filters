@@ -505,7 +505,24 @@
     <ClInclude Include="Snowbros\IndexedSpriteInstanceRenderer.h">
       <Filter>Snowbros\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Snowbros\IndexedSpriteInstanceShader.h" />
+    <ClInclude Include="Tilemap\IndexedTileStructureBuffer.h">
+      <Filter>Tilemap\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\IndexedSpriteInstanceShader.h">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap\IndexedTileInstanceShader.h">
+      <Filter>Tilemap\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap\TextureTilemap.h">
+      <Filter>Tilemap\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap\IndexedTilemap.h">
+      <Filter>Tilemap\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosCheat.h">
+      <Filter>Snowbros\Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -972,7 +989,24 @@
     <ClCompile Include="Snowbros\IndexedSpriteInstanceRenderer.cpp">
       <Filter>Snowbros\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Snowbros\IndexedSpriteInstanceShader.cpp" />
+    <ClCompile Include="Tilemap\IndexedTileStructureBuffer.cpp">
+      <Filter>Tilemap\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\IndexedSpriteInstanceShader.cpp">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap\IndexedTileInstanceShader.cpp">
+      <Filter>Tilemap\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap\TextureTilemap.cpp">
+      <Filter>Tilemap\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap\IndexedTilemap.cpp">
+      <Filter>Tilemap\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosCheat.cpp">
+      <Filter>Snowbros\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -1266,6 +1300,9 @@
     </FxCompile>
     <FxCompile Include="..\HLSL\IndexedSpriteInstance.fx">
       <Filter>Snowbros\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\IndexedTileInstance.fx">
+      <Filter>Tilemap\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
