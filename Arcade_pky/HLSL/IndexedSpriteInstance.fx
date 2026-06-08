@@ -36,7 +36,8 @@ struct VS_Output
 
 float4 GetColorFromIndex(int paletteNumber, float2 uv)
 {
-    uint2 coords = uv * (textureSize - 1);
+    uint2 coords = uv * textureSize;
+
     int pixelCountsPerByte = 8 / textureStrideBitSize;
     int textureIndex = coords.y * (textureSize.x / pixelCountsPerByte) + coords.x / pixelCountsPerByte;
     int loadIndex = textureIndex - textureIndex % 4;

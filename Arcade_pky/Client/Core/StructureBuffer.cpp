@@ -53,7 +53,7 @@ void StructureBuffer::SetData(void* data, int32 elementCount)
     D3D11_MAPPED_SUBRESOURCE mapped = {};
 
     CONTEXT->Map(_buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
-    memcpy(mapped.pData, data, _size * _elementCount);
+    memcpy(mapped.pData, data, _size * elementCount);
     CONTEXT->Unmap(_buffer.Get(), 0);
 }
 
