@@ -205,6 +205,7 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
         }
 
         _nextTilemap = tilemap;
+        _player->EndStage();
 
         int32 timerID = TimeManager::Instance().SetTimer(0.f, true,
           [this]()

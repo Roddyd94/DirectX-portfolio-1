@@ -6,6 +6,7 @@
 #include "Core/ResourceManager.h"
 #include "Core/TimeManager.h"
 
+#include "PlayerStateClear.h"
 #include "PlayerStateGround.h"
 #include "PlayerStateMidair.h"
 #include "ShootComponent.h"
@@ -178,6 +179,7 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     auto shootComponent = CreateActorComponent<ShootComponent>("Shoot");
     shootComponent->SetExtentX(1.f);
 
+    InputSystem::Instance().FindOrAddInputContext("None");
     auto input = _playerController->GetInputComponent();
     input->BindAction(
       "Ground", "MoveLeft", 'A', Raw(_playerComponent), &PlayerComponent::HandleInput);
@@ -244,6 +246,9 @@ void SnowbrosPlayer::StartStage()
     effect->SetEnable(true);
     effect->ChangeAnimation("effect_eruption");
 
+    auto kinematic = FindActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
+    kinematic->SetVelocity(Vector2::zero);
+
     if (-1 != _timerID)
         TimeManager::Instance().RemoveTimer(_timerID);
 
@@ -258,6 +263,12 @@ void SnowbrosPlayer::StartStage()
           else
               sprite->SetEnable(true);
       });
+}
+
+void SnowbrosPlayer::EndStage()
+{
+    auto stateMachine = _playerComponent->GetStateMachine();
+    stateMachine->Transition(PlayerStateClear::instance);
 }
 
 void SnowbrosPlayer::OnShootButtonEvent(

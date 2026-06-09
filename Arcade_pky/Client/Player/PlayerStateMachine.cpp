@@ -23,6 +23,7 @@ void PlayerStateMachine::Tick(float deltaTime)
 void PlayerStateMachine::Transition(Ptr<class PlayerState> state)
 {
     Ptr<PlayerComponent> owner = GetOwner();
+
     if (_currentState)
         _currentState->Exit(owner);
     _currentState = state;

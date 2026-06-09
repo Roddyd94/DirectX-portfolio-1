@@ -565,6 +565,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Snowbros\IndexedSpriteInstanceShader.h" />
     <ClInclude Include="Snowbros\MonkeyBlackboard.h" />
     <ClInclude Include="Snowbros\MonkeyStateMachine.h" />
+    <ClInclude Include="Snowbros\PlayerStateClear.h" />
     <ClInclude Include="Snowbros\PlayerStateDead.h" />
     <ClInclude Include="Snowbros\PlayerStateGround.h" />
     <ClInclude Include="Snowbros\PlayerStateMidair.h" />
@@ -739,6 +740,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Snowbros\IndexedSpriteInstanceShader.cpp" />
     <ClCompile Include="Snowbros\MonkeyBlackboard.cpp" />
     <ClCompile Include="Snowbros\MonkeyStateMachine.cpp" />
+    <ClCompile Include="Snowbros\PlayerStateClear.cpp" />
     <ClCompile Include="Snowbros\PlayerStateDead.cpp" />
     <ClCompile Include="Snowbros\PlayerStateGround.cpp" />
     <ClCompile Include="Snowbros\PlayerStateMidair.cpp" />

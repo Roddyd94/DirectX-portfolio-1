@@ -526,6 +526,7 @@
     <ClInclude Include="Snowbros\EnemyProjectile.h">
       <Filter>Snowbros\Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Snowbros\PlayerStateClear.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1013,6 +1014,7 @@
     <ClCompile Include="Snowbros\EnemyProjectile.cpp">
       <Filter>Snowbros\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="Snowbros\PlayerStateClear.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

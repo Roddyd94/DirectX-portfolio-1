@@ -103,6 +103,11 @@ void PlatformerKinematicPlayerComponent::Tick(float deltaTime)
             worldPos = attachedTo->GetWorldPosition().ToVector2();
     }
     break;
+    default:
+    {
+        worldPos += delta;
+    }
+    break;
     }
 
     actor->SetWorldPosition(worldPos);

@@ -9,6 +9,7 @@ namespace SnowbrosPlayerStateType
         Midair,
         Snowball,
         Dead,
+        Clear,
         End
     };
 }

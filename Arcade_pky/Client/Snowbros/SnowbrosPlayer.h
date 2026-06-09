@@ -22,6 +22,7 @@ public:
     void SetDirection(float direction);
     void ResetState();
     void StartStage();
+    void EndStage();
 
 private:
     void OnShootButtonEvent(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
