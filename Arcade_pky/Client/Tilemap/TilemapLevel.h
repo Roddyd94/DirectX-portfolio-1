@@ -10,6 +10,7 @@ public:
 
 protected:
     Ptr<class Tilemap> _tilemap;
+    Ptr<class Tilemap> _nextTilemap = nullptr;
 
 public:
     Rect _boundary{-8.f, 6.f, 8.f, -7.f};

@@ -288,6 +288,8 @@ void TilemapComponent::RenderOutline()
 
     if (_shouldRefreshTileOutlineInstance)
     {
+        _tileOutlineStructureBuffer->Clear();
+
         for (int32 i = 0; i < _countY; ++i)
         {
             for (int32 j = 0; j < _countX; ++j)

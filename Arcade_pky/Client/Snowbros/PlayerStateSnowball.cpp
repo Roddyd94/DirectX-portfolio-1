@@ -67,7 +67,7 @@ void PlayerStateSnowball::Enter(Ptr<class PlayerComponent> playerComponent)
     auto controller = player->GetController();
     controller->SetActiveContext("Snowball");
 
-    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Root");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
     sprite->ChangeAnimation("player_shoved");
 }
 

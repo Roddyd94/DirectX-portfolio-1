@@ -30,7 +30,7 @@ void ShootComponent::HandleInput(Ptr<class InputAction> action, ButtonEventType:
     if (buttonEvent == ButtonEventType::Down)
     {
         Ptr<Actor> Actor  = GetOwner();
-        auto       sprite = Actor->FindSceneComponent<SpriteInstanceComponent>("Root");
+        auto       sprite = Actor->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
         if (action->GetName() == "ShootGround")
         {

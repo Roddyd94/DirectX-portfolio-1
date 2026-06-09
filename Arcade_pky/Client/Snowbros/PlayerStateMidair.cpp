@@ -31,7 +31,7 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
     Ptr<PlatformerMovementComponent> movement
       = player->FindActorComponent<PlatformerMovementComponent>("Movement");
 
-    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Root");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
     if (sprite->GetFlipX() != _initialFlipX)
         _flippedX = true;
@@ -109,7 +109,7 @@ void PlayerStateMidair::Enter(Ptr<class PlayerComponent> playerComponent)
     auto controller = player->GetController();
     controller->SetActiveContext("Midair");
 
-    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Root");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
     if (_jumped)
         sprite->ChangeAnimation("player_jump");

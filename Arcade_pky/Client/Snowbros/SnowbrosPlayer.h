@@ -15,9 +15,15 @@ private:
     Ptr<class PointCollisionComponent> _handColliderRight;
     Ptr<class PointCollisionComponent> _footCollider;
 
+    int32 _timerID;
+
 public:
     bool Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation) override;
+    void SetDirection(float direction);
+    void ResetState();
+    void StartStage();
 
 private:
     void OnShootButtonEvent(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
+    void RemoveTimer();
 };

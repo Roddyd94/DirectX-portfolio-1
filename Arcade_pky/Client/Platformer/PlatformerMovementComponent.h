@@ -21,6 +21,7 @@ public:
 
     float GetDirection() const;
 
+    void SetDirection(float direction);
     void SetKinematic(Ptr<class PlatformerKinematicComponent> kinematic);
     void SetJumpForce(float force);
 

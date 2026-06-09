@@ -11,9 +11,10 @@ public:
 
 private:
     std::vector<StageData> _stageData;
-    Ptr<class Player>      _player;
+    Ptr<class SnowbrosPlayer>      _player;
     TileMetadata           _tileMetadata;
     int32                  _stageNumber = 0;
+    bool                   _startingNextStage = false;
 
 public:
     bool Init(Ptr<class World> world, const std::string& path) override;

@@ -55,9 +55,11 @@ Vector2 PlatformerKinematicComponent::GetVelocity() const
     return _velocity;
 }
 
-void PlatformerKinematicComponent::SetTilemap(Ptr<class Tilemap> tilemap)
+Ptr<class Tilemap> PlatformerKinematicComponent::GetTilemap() const
 {
-    _tilemap = tilemap;
+    auto level = Cast<Level, TilemapLevel>(GetLevel());
+
+    return level->GetTilemap();
 }
 
 void PlatformerKinematicComponent::SetCollider(Ptr<class AABBCollisionComponent> collider)
@@ -118,12 +120,14 @@ bool PlatformerKinematicComponent::IsColliderOnFloor(Vector2 delta)
     Rect colliderBox = collider->GetBox();
     colliderBox.Move(delta);
 
-    auto      tilemap          = Lock(_tilemap);
+    auto tilemap = GetTilemap();
+
     Ptr<Tile> tileCenterBottom = tilemap->GetTile({colliderBox.GetCenterX(), colliderBox.bottom});
     Ptr<Tile> tileLeftBottom   = tilemap->GetTile({colliderBox.left, colliderBox.bottom});
     Ptr<Tile> tileRightBottom  = tilemap->GetTile({colliderBox.right, colliderBox.bottom});
 
-    if (tileCenterBottom && tileCenterBottom->IsTopBlock() || (tileLeftBottom && tileLeftBottom->IsTopBlock())
+    if (tileCenterBottom && tileCenterBottom->IsTopBlock()
+        || (tileLeftBottom && tileLeftBottom->IsTopBlock())
         || (tileRightBottom && tileRightBottom->IsTopBlock()))
     {
         Rect tileRect = tileCenterBottom->GetRect();
@@ -136,7 +140,7 @@ bool PlatformerKinematicComponent::IsColliderOnFloor(Vector2 delta)
 bool PlatformerKinematicComponent::IsColliderOnFirstFloor()
 {
     auto collider = Lock(_collider);
-    auto tilemap  = Lock(_tilemap);
+    auto tilemap  = GetTilemap();
 
     int32 tileIndexY = tilemap->GetTileIndexY(collider->GetWorldPosition().y);
 
@@ -146,7 +150,7 @@ bool PlatformerKinematicComponent::IsColliderOnFirstFloor()
 bool PlatformerKinematicComponent::IsColliderBottomOnBlock(Vector2 delta)
 {
     auto collider = Lock(_collider);
-    auto tilemap  = Lock(_tilemap);
+    auto tilemap  = GetTilemap();
 
     Rect colliderBox = collider->GetBox();
     colliderBox.Move(delta);
@@ -159,7 +163,7 @@ bool PlatformerKinematicComponent::IsColliderBottomOnBlock(Vector2 delta)
 bool PlatformerKinematicComponent::IsColliderTouchedBlock(Vector2 delta)
 {
     auto collider = Lock(_collider);
-    auto tilemap  = Lock(_tilemap);
+    auto tilemap  = GetTilemap();
 
     Rect colliderBox = collider->GetBox();
     colliderBox.Move(delta);
@@ -180,7 +184,7 @@ bool PlatformerKinematicComponent::IsColliderTouchedBlock(Vector2 delta)
 bool PlatformerKinematicComponent::IsColliderTouchedBoundary(Vector2 delta)
 {
     auto collider = Lock(_collider);
-    auto tilemap  = Lock(_tilemap);
+    auto tilemap  = GetTilemap();
 
     Rect colliderBox = collider->GetBox();
     colliderBox.Move(delta);
@@ -195,7 +199,7 @@ bool PlatformerKinematicComponent::IsColliderTouchedBoundary(Vector2 delta)
 bool PlatformerKinematicComponent::IsColliderTouchedBoundaryX(Vector2 delta)
 {
     auto collider = Lock(_collider);
-    auto tilemap  = Lock(_tilemap);
+    auto tilemap  = GetTilemap();
 
     Rect colliderBox = collider->GetBox();
     colliderBox.Move(delta);
@@ -209,7 +213,7 @@ bool PlatformerKinematicComponent::IsColliderTouchedBoundaryX(Vector2 delta)
 bool PlatformerKinematicComponent::IsColliderTouchedBoundaryY(Vector2 delta)
 {
     auto collider = Lock(_collider);
-    auto tilemap  = Lock(_tilemap);
+    auto tilemap  = GetTilemap();
 
     Rect colliderBox = collider->GetBox();
     colliderBox.Move(delta);
@@ -223,7 +227,7 @@ bool PlatformerKinematicComponent::IsColliderTouchedBoundaryY(Vector2 delta)
 bool PlatformerKinematicComponent::IsColliderMovingAgainstFloor(Vector2 delta)
 {
     auto collider = Lock(_collider);
-    auto tilemap  = Lock(_tilemap);
+    auto tilemap  = GetTilemap();
 
     Rect colliderBox = collider->GetBox();
     colliderBox.Move({delta.x, 0.f});
@@ -290,7 +294,7 @@ bool PlatformerKinematicComponent::IsPositionOutOfBoundary(Vector2 position)
 bool PlatformerKinematicComponent::IsTileOnColliderBoundaryBlocked(Direction::Type direction)
 {
     auto collider = Lock(_collider);
-    auto tilemap  = Lock(_tilemap);
+    auto tilemap  = GetTilemap();
 
     Ptr<Tile> tile             = nullptr;
     Rect      colliderBox      = collider->GetBox();
@@ -335,7 +339,7 @@ void PlatformerKinematicComponent::AdjustPositionToFloor(Vector2 delta)
     Ptr<Actor> actor = GetOwner();
 
     auto collider = Lock(_collider);
-    auto tilemap  = Lock(_tilemap);
+    auto tilemap  = GetTilemap();
 
     Rect colliderBox = collider->GetBox();
     colliderBox.Move(delta);

@@ -41,6 +41,19 @@ void Tilemap::AddTileSprite(float startX, float startY, float sizeX, float sizeY
     _tileComponent->AddTileSprite(startX, startY, sizeX, sizeY);
 }
 
+void Tilemap::AddTileSprites(Vector2 tileSize)
+{
+    for (size_t i = 0; i < 12; i++)
+    {
+        for (size_t j = 0; j < 13; j++)
+        {
+            float startX = tileSize.x * j;
+            float startY = tileSize.y * i;
+            _tileComponent->AddTileSprite(startX, startY, tileSize.x, tileSize.y);
+        }
+    }
+}
+
 Ptr<class Tile> Tilemap::GetTile(int32 index)
 {
     return _tileComponent->GetTile(index);
@@ -69,4 +82,10 @@ int32 Tilemap::GetTileIndexY(float worldPositionY) const
 int32 Tilemap::GetTileIndex(Vector2 worldPosition) const
 {
     return _tileComponent->GetTileIndex(worldPosition);
+}
+
+void Tilemap::Refresh()
+{
+    _tileComponent->RefreshTileInstance(true);
+    _tileComponent->RefreshTileOutlineInstance(true);
 }

@@ -22,6 +22,8 @@ public:
     void AddTileSprite(Vector2 start, Vector2 size);
     void AddTileSprite(float startX, float startY, float sizeX, float sizeY);
 
+    void AddTileSprites(Vector2 tileSize);
+
     Ptr<class Tile> GetTile(int32 index);
     Ptr<class Tile> GetTile(Vector2 worldPosition);
     Ptr<class Tile> GetTileLocal(Vector2 localPosition);
@@ -30,6 +32,7 @@ public:
     int32 GetTileIndexY(float worldPositionY) const;
     int32 GetTileIndex(Vector2 worldPosition) const;
 
+    void Refresh();
     // void ChangeTileTexture(Vector2 pos);
     // void ChangeTileType(Vector2 pos);
 };

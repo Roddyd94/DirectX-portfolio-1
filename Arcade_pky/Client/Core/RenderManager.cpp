@@ -20,7 +20,8 @@ bool RenderManager::Init()
     CreateRenderLayer("EnemyLaunched", 4'500);
     CreateRenderLayer("EnemyProjectile", 5'000);
     CreateRenderLayer("PlayerProjectile", 6'000);
-    CreateRenderLayer("Player", 6'000);
+    CreateRenderLayer("Player", 6'500);
+    CreateRenderLayer("PlayerEffect", 7'000);
 
 #ifdef _DEBUG
     CreateRenderLayer("Collider", INT_MAX);

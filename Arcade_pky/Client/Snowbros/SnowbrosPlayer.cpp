@@ -4,6 +4,7 @@
 
 #include "Core/Collision/CollisionManager.h"
 #include "Core/ResourceManager.h"
+#include "Core/TimeManager.h"
 
 #include "PlayerStateGround.h"
 #include "PlayerStateMidair.h"
@@ -29,6 +30,7 @@
 bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
     Player::Init(id, position, scale, rotation);
+    SetName("Player");
 
     auto blackboard = New<SnowbrosPlayerBlackboard>();
     _playerComponent->SetBlackboard(blackboard);
@@ -36,14 +38,16 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto rootComp = CreateSceneComponent<IndexedSpriteInstanceComponent>("Root");
-    auto palette  = FIND_PALETTE("player_2");
-    rootComp->SetPaletteNumber(palette->GetID());
-    rootComp->SetRenderLayer("Player");
+    auto sprite  = CreateSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto palette = FIND_PALETTE("player_1");
+    sprite->SetPaletteNumber(palette->GetID());
+    sprite->SetRenderLayer("Player");
     // rootComp->SetShader("SpriteShader");
-    SetRoot(rootComp);
+    sprite->AttachToComponent(_root);
+    sprite->SetWorldScale({2.f, 2.f});
+    sprite->SetWorldRotation(Vector3::zero);
 
-    Ptr<Animation2D> animation = rootComp->CreateAnimation();
+    Ptr<Animation2D> animation = sprite->CreateAnimation();
     animation->SetAnimationSequence("player");
     animation->ChangeAnimationClip("player_stand");
     animation->AddNotify("player_jump", animation->GetClipFrameCount("player_jump"),
@@ -85,29 +89,74 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
       {
           Lock(animation)->ChangeAnimationClip("player_midair");
       });
+    animation->AddNotify("player_melt", animation->GetClipFrameCount("player_melt"),
+      [this]()
+      {
+          SetActive(false);
+      });
+    animation->AddNotify("player_dead", animation->GetClipFrameCount("player_dead"),
+      [this]()
+      {
+          SetActive(false);
+      });
+
+    auto effect = CreateSceneComponent<IndexedSpriteInstanceComponent>("Effect");
+    palette     = FIND_PALETTE("snowball");
+    effect->SetPaletteNumber(palette->GetID());
+    effect->SetRenderLayer("PlayerEffect");
+    effect->AttachToComponent(_root);
+    effect->SetWorldScale({3.f, 2.f});
+    effect->SetWorldRotation(Vector3::zero);
+
+    animation = effect->CreateAnimation();
+    animation->SetAnimationSequence("effect");
+    animation->ChangeAnimationClip("effect_eruption");
+
+    animation->AddNotify("effect_eruption", animation->GetClipFrameCount("effect_eruption"),
+      [this, weakEffect = Weak(effect)]()
+      {
+          auto effect = Lock(weakEffect);
+          effect->SetWorldScale({2.f, 2.f});
+          effect->ChangeAnimation("effect_dust");
+
+          this->GetRoot()->SetEnable(true);
+      });
+    animation->AddNotify("effect_dust", animation->GetClipFrameCount("effect_dust"),
+      [this, weakSprite = Weak(sprite), weakEffect = Weak(effect)]()
+      {
+          auto effect = Lock(weakEffect);
+          auto sprite = Lock(weakSprite);
+
+          RemoveTimer();
+          effect->SetEnable(false);
+          sprite->SetEnable(true);
+
+          auto input = _playerController->GetInputComponent();
+          input->SetEnable(true);
+      });
 
     _headCollider = CreateSceneComponent<PointCollisionComponent>("HeadCollider");
-    _headCollider->AttachToComponent(rootComp);
+    _headCollider->AttachToComponent(_root);
     _headCollider->SetCollisionProfile("PlayerHead");
     _headCollider->SetRelativePosition({0.f, 0.25f});
 
     _handColliderLeft = CreateSceneComponent<PointCollisionComponent>("HandColliderLeft");
-    _handColliderLeft->AttachToComponent(rootComp);
+    _handColliderLeft->AttachToComponent(_root);
     _handColliderLeft->SetCollisionProfile("PlayerHandLeft");
     _handColliderLeft->SetRelativePosition({-0.26f, -0.1875f});
 
     _handColliderRight = CreateSceneComponent<PointCollisionComponent>("HandColliderRight");
-    _handColliderRight->AttachToComponent(rootComp);
+    _handColliderRight->AttachToComponent(_root);
     _handColliderRight->SetCollisionProfile("PlayerHandRight");
     _handColliderRight->SetRelativePosition({0.26f, -0.1875f});
 
     _footCollider = CreateSceneComponent<PointCollisionComponent>("FootCollider");
-    _footCollider->AttachToComponent(rootComp);
+    _footCollider->AttachToComponent(_root);
     _footCollider->SetCollisionProfile("PlayerFoot");
     _footCollider->SetRelativePosition({0.f, -0.26f});
 
     _collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
-    _collider->AttachToComponent(rootComp);
+    _collider->AttachToComponent(_root);
     _collider->SetBoxSize({0.9f, 1.2f});
     _collider->SetCollisionProfile("Player");
     _collider->RegisterCollisionCallBack(CollisionState::Enter,
@@ -146,7 +195,6 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
 
     auto kinematic = CreateActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
     kinematic->SetCollider(_collider);
-    kinematic->SetTilemap(tilemap);
     kinematic->RegisterOnStateChangedCallback(PlatformerKinematicState::OnGround,
       [playerComponent = Weak(_playerComponent)]()
       {
@@ -171,6 +219,47 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     return true;
 }
 
+void SnowbrosPlayer::SetDirection(float direction)
+{
+    auto movement = FindActorComponent<PlatformerMovementComponent>("Movement");
+    movement->SetDirection(direction);
+
+    auto sprite = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    sprite->SetFlipX(direction > 0 ? true : false);
+}
+
+void SnowbrosPlayer::ResetState()
+{
+    auto stateMachine = _playerComponent->GetStateMachine();
+    stateMachine->Transition(PlayerStateGround::instance);
+}
+
+void SnowbrosPlayer::StartStage()
+{
+    auto sprite = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto effect = FindSceneComponent<IndexedSpriteInstanceComponent>("Effect");
+    auto input  = _playerController->GetInputComponent();
+    input->SetEnable(false);
+
+    effect->SetEnable(true);
+    effect->ChangeAnimation("effect_eruption");
+
+    if (-1 != _timerID)
+        TimeManager::Instance().RemoveTimer(_timerID);
+
+    _timerID = TimeManager::Instance().SetTimer(0.f, true,
+      [weakSprite = Weak(sprite), weakEffect = Weak(effect)]()
+      {
+          auto sprite = Lock(weakSprite);
+          auto effect = Lock(weakEffect);
+
+          if (effect->GetFrameIndex() % 2 == 1)
+              sprite->SetEnable(false);
+          else
+              sprite->SetEnable(true);
+      });
+}
+
 void SnowbrosPlayer::OnShootButtonEvent(
   Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)
 {
@@ -180,7 +269,7 @@ void SnowbrosPlayer::OnShootButtonEvent(
     auto movement  = FindActorComponent<PlatformerMovementComponent>("Movement");
     auto kinematic = FindActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
 
-    auto sprite    = Cast<SceneComponent, SpriteInstanceComponent>(_root);
+    auto sprite    = FindSceneComponent<SpriteInstanceComponent>("Sprite");
     auto animation = sprite->GetAnimation();
 
     std::vector<Weak<AABBCollisionComponent>> snowballs;
@@ -238,4 +327,10 @@ void SnowbrosPlayer::OnShootButtonEvent(
 
     auto shootComponent = FindActorComponent<ShootComponent>("Shoot");
     shootComponent->HandleInput(action, buttonEvent);
+}
+
+void SnowbrosPlayer::RemoveTimer()
+{
+    TimeManager::Instance().RemoveTimer(_timerID);
+    _timerID = -1;
 }

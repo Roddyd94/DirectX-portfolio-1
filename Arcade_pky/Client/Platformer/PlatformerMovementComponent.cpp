@@ -27,6 +27,11 @@ float PlatformerMovementComponent::GetDirection() const
     return _direction;
 }
 
+void PlatformerMovementComponent::SetDirection(float direction)
+{
+    _direction = direction;
+}
+
 void PlatformerMovementComponent::SetKinematic(Ptr<class PlatformerKinematicComponent> kinematic)
 {
     _kinematic = kinematic;

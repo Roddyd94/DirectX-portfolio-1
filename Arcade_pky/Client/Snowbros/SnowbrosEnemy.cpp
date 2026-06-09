@@ -23,6 +23,7 @@
 bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
     AI::Init(id, position, scale, rotation);
+    SetName("Enemy");
 
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
@@ -52,7 +53,6 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
 
     auto kinematic = CreateActorComponent<PlatformerKinematicComponent>("Kinematic");
     kinematic->SetCollider(collider);
-    kinematic->SetTilemap(tilemap);
 
     return true;
 }

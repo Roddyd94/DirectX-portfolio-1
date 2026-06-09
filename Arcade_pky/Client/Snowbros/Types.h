@@ -34,6 +34,8 @@ enum class SnowbrosEnemyType
     Spitter,
     Pumpkin,
     Ghost,
+    Spawn,
+    Boss,
     End,
 };
 
@@ -58,5 +60,7 @@ struct StageData
 {
     std::wstring           filename;
     std::vector<EnemyData> enemies;
-    int32                  number = -1;
+    Vector2                playerPosition;
+    float                  playerDirection = 0.f;
+    int32                  number          = -1;
 };

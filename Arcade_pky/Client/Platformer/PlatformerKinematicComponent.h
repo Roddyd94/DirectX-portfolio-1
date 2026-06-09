@@ -17,7 +17,6 @@ protected:
     std::function<void()> _onCollidedWithBoundaryY;
 
     Weak<class AABBCollisionComponent> _collider;
-    Weak<class Tilemap>                _tilemap;
     Weak<class Actor>                  _attachedTo;
 
     Vector2 _velocity;
@@ -37,8 +36,8 @@ public:
     virtual void AttachTo(Ptr<class Actor> actor);
 
     Vector2 GetVelocity() const;
+    Ptr<class Tilemap> GetTilemap() const;
 
-    void SetTilemap(Ptr<class Tilemap> tilemap);
     void SetCollider(Ptr<class AABBCollisionComponent> collider);
     void SetVelocity(Vector2 velocity);
     void SetVelocityX(float velocityX);

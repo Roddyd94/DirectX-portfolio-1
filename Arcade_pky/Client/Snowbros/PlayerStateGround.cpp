@@ -36,7 +36,7 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
     auto blackboard = GetBlackboard(playerComponent);
     auto movement   = player->FindActorComponent<PlatformerMovementComponent>("Movement");
 
-    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Root");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
     if (action->GetName() == "MoveLeft")
     {
@@ -188,7 +188,7 @@ void PlayerStateGround::Enter(Ptr<class PlayerComponent> playerComponent)
       = player->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
     float deltaX = kinematic->GetVelocity().x;
 
-    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Root");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
     if (blackboard->speedUpgraded)
     {

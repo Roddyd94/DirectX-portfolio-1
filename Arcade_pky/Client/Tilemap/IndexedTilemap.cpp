@@ -9,7 +9,7 @@ bool IndexedTilemap::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Tilemap::Init(id, position, scale, rotation);
 
     _tileComponent = CreateSceneComponent<IndexedTextureTilemapComponent>("Tile");
-    SetRoot(_tileComponent);
+    _tileComponent->AttachToComponent(_root);
 
     return true;
 }

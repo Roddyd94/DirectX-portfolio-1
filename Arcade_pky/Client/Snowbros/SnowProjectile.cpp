@@ -43,7 +43,6 @@ bool SnowProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
 
     auto kinematic = CreateActorComponent<PlatformerKinematicComponent>("Kinematic");
     kinematic->SetCollider(collider);
-    kinematic->SetTilemap(tilemap);
 
     _projectileComponent = CreateActorComponent<SnowProjectileComponent>("Projectile");
     _projectileComponent->SetKinematic(kinematic);

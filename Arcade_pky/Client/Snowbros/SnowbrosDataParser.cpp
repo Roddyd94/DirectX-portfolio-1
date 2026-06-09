@@ -41,10 +41,14 @@ bool SnowbrosDataParser::ParseStageData(const std::wstring& filename, std::vecto
         fs.read(
           reinterpret_cast<char*>(data[i].filename.data()), stageFilenameLength * sizeof(wchar_t));
 
+        fs.read(reinterpret_cast<char*>(&data[i].playerPosition.x), sizeof(float));
+        fs.read(reinterpret_cast<char*>(&data[i].playerPosition.y), sizeof(float));
+        fs.read(reinterpret_cast<char*>(&data[i].playerDirection), sizeof(float));
+
         int16 enemiesCount;
         fs.read(reinterpret_cast<char*>(&enemiesCount), sizeof(int16));
-
         data[i].enemies.resize(enemiesCount);
+
         for (int j = 0; j < enemiesCount; ++j)
         {
             int16 enemyType;
@@ -54,6 +58,19 @@ bool SnowbrosDataParser::ParseStageData(const std::wstring& filename, std::vecto
             fs.read(reinterpret_cast<char*>(&data[i].enemies[j].position.x), sizeof(float));
             fs.read(reinterpret_cast<char*>(&data[i].enemies[j].position.y), sizeof(float));
             fs.read(reinterpret_cast<char*>(&data[i].enemies[j].direction), sizeof(float));
+
+            int16 patrolPositionCount;
+            fs.read(reinterpret_cast<char*>(&patrolPositionCount), sizeof(int16));
+
+            for (int k = 0; k < patrolPositionCount; ++k)
+            {
+                Vector2 patrolPosition;
+                fs.read(reinterpret_cast<char*>(&patrolPosition.x), sizeof(float));
+                fs.read(reinterpret_cast<char*>(&patrolPosition.y), sizeof(float));
+            }
+            
+            int16 loopPatrol;
+            fs.read(reinterpret_cast<char*>(&loopPatrol), sizeof(int16));
         }
     }
 
