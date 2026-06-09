@@ -21,7 +21,7 @@ Ptr<AIState> AIState::Tick(float deltaTime)
 {
     for (auto& transition : _transitions)
     {
-        if (transition->CheckCondition(deltaTime))
+        if (transition && transition->CheckCondition(deltaTime))
             return transition->GetJumpState();
     }
 
@@ -55,7 +55,10 @@ Ptr<AITransition> AIState::FindAITransition(const std::string& name) const
     if (index < 0 || index >= _transitions.size())
         return nullptr;
 
-    auto& transition = _transitions[index];
+    auto transition = _transitions[index];
+    if (nullptr == transition)
+        return nullptr;
+
     if (transition->GetName() == name)
         return transition;
 

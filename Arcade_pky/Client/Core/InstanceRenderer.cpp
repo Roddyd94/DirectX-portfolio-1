@@ -23,9 +23,14 @@ Ptr<class InstanceRendererComponent> InstanceRenderer::GetRendererComponent() co
     return _renderer;
 }
 
-void InstanceRenderer::SetRendererComponent(Ptr<class InstanceRendererComponent> renderer)
+void InstanceRenderer::SetMesh(Ptr<class Mesh> mesh)
 {
-    _renderer = renderer;
+    _renderer->SetMesh(mesh);
+}
+
+void InstanceRenderer::SetMesh(const std::string& name)
+{
+    _renderer->SetMesh(name);
 }
 
 void InstanceRenderer::SetBuffer(Ptr<class StructureBuffer> buffer)
@@ -50,5 +55,8 @@ void InstanceRenderer::SetShader(const std::string& name)
 
 void InstanceRenderer::SetRenderLayer(const std::string& name)
 {
+    if (nullptr == _renderer)
+        CreateRendererComponent<InstanceRendererComponent>();
+
     _renderer->SetRenderLayer(name);
 }

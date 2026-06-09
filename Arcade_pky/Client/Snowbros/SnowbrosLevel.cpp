@@ -9,6 +9,8 @@
 #include "SnowbrosEnemy.h"
 #include "SnowbrosPlayer.h"
 #include "Core/Camera.h"
+#include "Core/InstanceRendererComponent.h"
+#include "Core/Mesh.h"
 #include "Core/Texture.h"
 #include "Snowbros/IndexedSpriteInstanceRenderer.h"
 #include "Tilemap/IndexedTilemap.h"
@@ -49,27 +51,8 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
 
     int32 tileCount = 12 * 13;
 
-    TileMetadata tileMetadata;
-    SnowbrosDataParser::ParseTileMetadata(tileMetadata);
-
-    byte stageData[224] = {};
-    SnowbrosDataParser::ParseStageData(L"snowbros_stage_1.bin", stageData, 224);
-
-    for (size_t i = 0; i < 14; i++)
-    {
-        for (size_t j = 0; j < 16; j++)
-        {
-            Ptr<IndexedTile> tile = Cast<Tile, IndexedTile>(tilemap->GetTile((13 - i) * 16 + j));
-
-            int32 spriteIndex = stageData[i * 16 + j];
-            tile->SetSprite(spriteIndex);
-
-            tile->SetPalette(tileMetadata.paletteNumbers[spriteIndex]);
-
-            if (tileMetadata.tiles[TileType::Block].contains(spriteIndex))
-                tile->SetTileType(TileType::Block);
-        }
-    }
+    SnowbrosDataParser::ParseTileMetadata(_tileMetadata);
+    SnowbrosDataParser::ParseStageData(L"snowbros_stages.bin", _stageData);
 
     SnowbrosDataParser::ParseAnimationData("snowbros_player", L"snowbros_player.bmp",
       "snowbros_player", L"snowbros_player_animation.bin");
@@ -82,30 +65,46 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
     auto playerTexture = playerSpriteSheet->GetTexture();
     auto enemyTexture  = enemySpriteSheet->GetTexture();
 
-    auto renderer
+    auto colliderRenderer
+      = SpawnInstanceRenderer<InstanceRenderer>("SquareCollider", position, scale, rotation);
+    colliderRenderer->CreateRendererComponent<InstanceRendererComponent>();
+    colliderRenderer->SetMesh(MESH_LINE_RECT);
+    colliderRenderer->SetShader("TileOutlineInstanceShader");
+    colliderRenderer->SetBuffer("RectMesh");
+    colliderRenderer->SetRenderLayer("Collider");
+
+    colliderRenderer
+      = SpawnInstanceRenderer<InstanceRenderer>("SphereCollider", position, scale, rotation);
+    colliderRenderer->CreateRendererComponent<InstanceRendererComponent>();
+    colliderRenderer->SetMesh(MESH_LINE_SPHERE);
+    colliderRenderer->SetShader("TileOutlineInstanceShader");
+    colliderRenderer->SetBuffer("SphereMesh");
+    colliderRenderer->SetRenderLayer("Collider");
+
+    auto spriteInstanceRenderer
       = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>("Item", position, scale, rotation);
-    renderer->SetTexture(playerTexture);
-    renderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
+    spriteInstanceRenderer->SetTexture(playerTexture);
+    spriteInstanceRenderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
       "EnemyBehind", position, scale, rotation);
-    renderer->SetTexture(enemyTexture);
-    renderer
+    spriteInstanceRenderer->SetTexture(enemyTexture);
+    spriteInstanceRenderer
       = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>("Snowball", position, scale, rotation);
-    renderer->SetTexture(playerTexture);
-    renderer
+    spriteInstanceRenderer->SetTexture(playerTexture);
+    spriteInstanceRenderer
       = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>("Enemy", position, scale, rotation);
-    renderer->SetTexture(enemyTexture);
-    renderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
+    spriteInstanceRenderer->SetTexture(enemyTexture);
+    spriteInstanceRenderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
       "EnemyLaunched", position, scale, rotation);
-    renderer->SetTexture(enemyTexture);
-    renderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
+    spriteInstanceRenderer->SetTexture(enemyTexture);
+    spriteInstanceRenderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
       "EnemyProjectile", position, scale, rotation);
-    renderer->SetTexture(enemyTexture);
-    renderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
+    spriteInstanceRenderer->SetTexture(enemyTexture);
+    spriteInstanceRenderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
       "PlayerProjectile", position, scale, rotation);
-    renderer->SetTexture(playerTexture);
-    renderer
+    spriteInstanceRenderer->SetTexture(playerTexture);
+    spriteInstanceRenderer
       = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>("Player", position, scale, rotation);
-    renderer->SetTexture(playerTexture);
+    spriteInstanceRenderer->SetTexture(playerTexture);
 
     position.x = 0.f;
     position.y = 0.f;
@@ -114,38 +113,7 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
     _player = SpawnActor<SnowbrosPlayer>(position, scale, rotation);
     _player->SetName("Player");
 
-    position.x = 2.5f;
-    position.y = 3.5f;
-    {
-        Ptr<SnowbrosEnemy> enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
-        enemy->SetName("Enemy");
-        enemy->SetEnemyType(SnowbrosEnemyType::Goblin);
-        enemy->SetDirection(1.f);
-    }
-
-    position.x = -2.5f;
-    {
-        Ptr<SnowbrosEnemy> enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
-        enemy->SetName("Enemy");
-        enemy->SetEnemyType(SnowbrosEnemyType::Goblin);
-        enemy->SetDirection(-1.f);
-    }
-
-    position.x = -1.5f;
-    {
-        Ptr<SnowbrosEnemy> enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
-        enemy->SetName("Enemy");
-        enemy->SetEnemyType(SnowbrosEnemyType::Goblin);
-        enemy->SetDirection(-1.f);
-    }
-
-    position.x = 1.5f;
-    {
-        Ptr<SnowbrosEnemy> enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
-        enemy->SetName("Enemy");
-        enemy->SetEnemyType(SnowbrosEnemyType::Goblin);
-        enemy->SetDirection(1.f);
-    }
+    StartStage(0);
 
     return true;
 }
@@ -179,4 +147,45 @@ void SnowbrosLevel::Tick(float deltaTime)
 Ptr<class Player> SnowbrosLevel::GetPlayer() const
 {
     return _player;
+}
+
+void SnowbrosLevel::StartStage(int32 stageNumber)
+{
+    if (stageNumber < 0 || stageNumber >= _stageData.size())
+        return;
+
+    auto stageData = _stageData[stageNumber];
+
+    byte tileData[224] = {};
+    SnowbrosDataParser::ParseStageMapData(stageData.filename, tileData, 224);
+
+    for (size_t i = 0; i < 14; i++)
+    {
+        for (size_t j = 0; j < 16; j++)
+        {
+            Ptr<IndexedTile> tile = Cast<Tile, IndexedTile>(_tilemap->GetTile((13 - i) * 16 + j));
+
+            int32 spriteIndex = tileData[i * 16 + j];
+            tile->SetSprite(spriteIndex);
+
+            tile->SetPalette(_tileMetadata.paletteNumbers[spriteIndex]);
+
+            if (_tileMetadata.tiles[TileType::Block].contains(spriteIndex))
+                tile->SetTileType(TileType::Block);
+        }
+    }
+
+    Vector3 scale    = 2 * Vector3::one;
+    Vector3 rotation = Vector3::zero;
+    for (auto& enemyData : stageData.enemies)
+    {
+        Vector3 position = Vector3::one;
+
+        position.x = enemyData.position.x;
+        position.y = enemyData.position.y;
+
+        auto enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
+        enemy->SetEnemyType(enemyData.type);
+        enemy->SetDirection(enemyData.direction);
+    }
 }

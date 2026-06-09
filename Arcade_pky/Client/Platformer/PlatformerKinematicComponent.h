@@ -13,7 +13,8 @@ public:
 protected:
     std::function<void()> _onCollidedWithBlock;
     std::function<void()> _onCollidedWithFloor;
-    std::function<void()> _onCollidedWithBoundary;
+    std::function<void()> _onCollidedWithBoundaryX;
+    std::function<void()> _onCollidedWithBoundaryY;
 
     Weak<class AABBCollisionComponent> _collider;
     Weak<class Tilemap>                _tilemap;
@@ -52,6 +53,8 @@ public:
     bool IsColliderBottomOnBlock(Vector2 delta = Vector2::zero);
     bool IsColliderTouchedBlock(Vector2 delta = Vector2::zero);
     bool IsColliderTouchedBoundary(Vector2 delta = Vector2::zero);
+    bool IsColliderTouchedBoundaryX(Vector2 delta = Vector2::zero);
+    bool IsColliderTouchedBoundaryY(Vector2 delta = Vector2::zero);
 
     bool IsColliderMovingAgainstFloor(Vector2 delta);
     bool IsColliderMovingAgainstWallX(float deltaX);
@@ -90,14 +93,26 @@ public:
     }
 
     template <typename T>
-    void RegisterOnCollideWithBoundary(T* obj, void (T::*memFunc)())
+    void RegisterOnCollideWithBoundaryX(T* obj, void (T::*memFunc)())
     {
-        _onCollidedWithBoundary = std::bind(memFunc, obj);
+        _onCollidedWithBoundaryX = std::bind(memFunc, obj);
     }
 
     template <typename T>
-    void RegisterOnCollideWithBoundary(T&& func)
+    void RegisterOnCollideWithBoundaryX(T&& func)
     {
-        _onCollidedWithBoundary = std::forward<T>(func);
+        _onCollidedWithBoundaryX = std::forward<T>(func);
+    }
+
+    template <typename T>
+    void RegisterOnCollideWithBoundaryY(T* obj, void (T::*memFunc)())
+    {
+        _onCollidedWithBoundaryY = std::bind(memFunc, obj);
+    }
+
+    template <typename T>
+    void RegisterOnCollideWithBoundaryY(T&& func)
+    {
+        _onCollidedWithBoundaryY = std::forward<T>(func);
     }
 };

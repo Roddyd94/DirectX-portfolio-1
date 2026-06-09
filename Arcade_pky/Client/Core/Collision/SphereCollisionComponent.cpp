@@ -8,6 +8,12 @@
 #include "CollisionSystem.h"
 #include "OBBCollisionComponent.h"
 #include "PointCollisionComponent.h"
+#include "Core/Level.h"
+
+#ifdef _DEBUG
+#include "Core/InstanceRenderer.h"
+#include "Core/InstanceRendererComponent.h"
+#endif // _DEBUG
 
 SphereCollisionComponent::SphereCollisionComponent()
 {
@@ -21,8 +27,14 @@ bool SphereCollisionComponent::Init(
 {
     CollisionComponent::Init(componentID, name, owner);
 
-#ifdef _DEBUG
-    _mesh = MESH_LINE_SPHERE;
+    Ptr<Level> level = Lock<Level>(_level);
+    if (nullptr == level)
+        return false;
+
+#if _DEBUG
+    auto renderer = level->FindInstanceRenderer("SphereCollider");
+    if (renderer)
+        _renderer = renderer->GetRendererComponent();
 #endif // _DEBUG
 
     return true;

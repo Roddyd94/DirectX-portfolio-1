@@ -9,6 +9,12 @@
 #include "PointCollisionComponent.h"
 #include "SphereCollisionComponent.h"
 #include "Core/Actor.h"
+#include "Core/Level.h"
+
+#ifdef _DEBUG
+#include "Core/InstanceRenderer.h"
+#include "Core/InstanceRendererComponent.h"
+#endif // _DEBUG
 
 AABBCollisionComponent::AABBCollisionComponent()
 {
@@ -22,9 +28,15 @@ bool AABBCollisionComponent::Init(
 {
     CollisionComponent::Init(componentID, name, owner);
 
-#ifdef _DEBUG
-    _mesh = MESH_LINE_RECT;
-#endif //  _DEBUG
+    Ptr<Level> level = Lock<Level>(_level);
+    if (nullptr == level)
+        return false;
+
+#if _DEBUG
+    auto renderer = level->FindInstanceRenderer("SquareCollider");
+    if (renderer)
+        _renderer = renderer->GetRendererComponent();
+#endif // _DEBUG
 
     return true;
 }

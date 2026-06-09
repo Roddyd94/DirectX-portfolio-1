@@ -1,15 +1,6 @@
 #pragma once
+#include "Types.h"
 #include "AI/AI.h"
-
-enum class SnowbrosEnemyType
-{
-    Goblin,
-    Monkey,
-    Spitter,
-    Pumpkin,
-    Ghost,
-    End,
-};
 
 class SnowbrosEnemy : public AI
 {

@@ -1,21 +1,14 @@
 #pragma once
 
+#include "Types.h"
 #include "Tilemap/Tile.h"
-
-struct TileMetadata
-{
-    std::vector<byte> paletteNumbers;
-
-    std::map<TileType::Type, std::set<uint32>> tiles;
-
-    uint16 tileSize      = 1;
-    uint16 tileTypeCount = 0;
-};
 
 class SnowbrosDataParser
 {
 public:
-    static bool ParseStageData(const std::wstring& filename, byte* pData, size_t dataLength);
+    static bool ParseStageData(
+      const std::wstring& filename, std::vector<StageData>& data);
+    static bool ParseStageMapData(const std::wstring& filename, byte* pData, size_t dataLength);
     static bool ParseTileMetadata(TileMetadata& data);
     static bool ParseIndexedTexture(const std::string& name, const std::wstring& filename);
     static bool ParseAnimationData(const std::string& textureName,

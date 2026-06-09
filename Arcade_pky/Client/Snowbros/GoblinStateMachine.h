@@ -7,9 +7,11 @@ public:
     GoblinStateMachine()           = default;
     ~GoblinStateMachine() override = default;
 
-protected:
-    void Init(Ptr<class AIComponent> owner) override;
-
 public:
+    bool Init(Ptr<class AIComponent> owner) override;
     void Destroy() override;
+
+    void ChangeAnimationClip(SnowbrosEnemyAnimationType type, bool play = true) override;
+    void AddNotifyToAnimationClipEnd(
+      SnowbrosEnemyAnimationType type, std::function<void()>&& func) override;
 };

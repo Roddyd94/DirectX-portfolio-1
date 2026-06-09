@@ -15,6 +15,7 @@ protected:
     uint32 _size         = 0;
     uint32 _registerNum  = 0;
     uint8  _shaderType   = 0;
+    bool   _isByteBuffer = false;
 
 public:
     virtual void Update() = 0;
@@ -23,8 +24,7 @@ public:
     virtual int32 GetElementCount() const = 0;
     virtual void  Clear()                 = 0;
 
-    bool Create(
-      uint32 size, int32 elementCount, int32 registerNum, uint8 shaderType);
+    bool Create(uint32 size, int32 elementCount, int32 registerNum, uint8 shaderType);
     void Bind();
 
 protected:

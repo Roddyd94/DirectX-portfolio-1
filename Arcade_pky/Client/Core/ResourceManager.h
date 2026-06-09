@@ -68,6 +68,7 @@ public:
 #define FIND_SOUND(x)           SOUND_MANAGER->FindSound(x)
 #define FIND_PALETTE(x)         PALETTE_MANAGER->FindPalette(x)
 
+#define FIND_MESH(x)      MESH_MANAGER->FindMesh(x)
 #define MESH_LINE_RECT    MESH_MANAGER->FindMesh("FrameRect")
 #define MESH_LINE_SPHERE  MESH_MANAGER->FindMesh("FrameSphere")
 #define MESH_TEXTURE_RECT MESH_MANAGER->FindMesh("TextureRect")

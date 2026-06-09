@@ -6,6 +6,11 @@
 
 #include "IndexedTextureInfoConstantBuffer.h"
 
+IndexedTextureBuffer::IndexedTextureBuffer()
+{
+    _isByteBuffer = true;
+}
+
 void IndexedTextureBuffer::Update()
 {
     if (_dataArray.empty())

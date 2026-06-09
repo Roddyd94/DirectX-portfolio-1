@@ -15,7 +15,9 @@ public:
     void Destroy() override;
 
     Ptr<class InstanceRendererComponent> GetRendererComponent() const;
-    void SetRendererComponent(Ptr<class InstanceRendererComponent> renderer);
+
+    void SetMesh(Ptr<class Mesh> mesh);
+    void SetMesh(const std::string& name);
 
     void SetBuffer(Ptr<class StructureBuffer> buffer);
     void SetBuffer(const std::string& name);
@@ -24,4 +26,14 @@ public:
     void SetShader(const std::string& name);
 
     void SetRenderLayer(const std::string& name);
+
+public:
+    template <typename T>
+    Ptr<T> CreateRendererComponent()
+    {
+        _renderer = CreateSceneComponent<T>("Renderer");
+        SetRoot(_renderer);
+
+        return _renderer;
+    }
 };

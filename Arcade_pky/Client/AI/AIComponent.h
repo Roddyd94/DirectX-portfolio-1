@@ -32,18 +32,23 @@ public:
     }
 
     template <typename T>
-    Ptr<T> GetAIBlackboard() const
+    Ptr<T> GetBlackboard() const
     {
-        return _stateMachine->GetAIBlackboard<T>();
+        return _stateMachine->GetBlackboard<T>();
     }
 
     template <typename T>
-    void CreateAIStateMachine()
+    Ptr<T> CreateAIStateMachine()
     {
         if (_stateMachine)
-            return;
+            return Cast<AIStateMachine, T>(_stateMachine);
 
-        _stateMachine = New<T>();
-        _stateMachine->Init(This<AIComponent>());
+        auto stateMachine = New<T>();
+
+        Ptr<AIComponent> owner = This<AIComponent>();
+        stateMachine->Init(owner);
+        _stateMachine = stateMachine;
+
+        return stateMachine;
     }
 };

@@ -108,7 +108,7 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
 
     _collider = CreateSceneComponent<AABBCollisionComponent>("Collider");
     _collider->AttachToComponent(rootComp);
-    _collider->SetBoxSize({1.f, 0.9f});
+    _collider->SetBoxSize({0.9f, 1.2f});
     _collider->SetCollisionProfile("Player");
     _collider->RegisterCollisionCallBack(CollisionState::Enter,
       [playerComponent = Weak(_playerComponent)](Weak<CollisionComponent> collider)

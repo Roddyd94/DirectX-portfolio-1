@@ -41,10 +41,10 @@ public:
     void SetName(const std::string& name);
     void SetInterval(float interval);
     void SetCondition(const std::string& transitionName, Ptr<class AIConditionBase> condition);
-
+    
     Ptr<class AITransition> CreateAITransition(
       const std::string& name, Ptr<AIState> jumpState, Ptr<AIConditionBase> condition);
-
+    
 public:
     template <typename T>
     void RegisterCallback(AIEventState::Type stateType, T&& func)

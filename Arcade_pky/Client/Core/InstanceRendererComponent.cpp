@@ -8,6 +8,11 @@
 #include "Mesh.h"
 #include "TransformConstantBuffer.h"
 
+InstanceRendererComponent::InstanceRendererComponent()
+{
+    _shouldRender = true;
+}
+
 bool InstanceRendererComponent::Init(
   int32 componentID, const std::string& name, Ptr<class Actor> owner)
 {
@@ -57,6 +62,17 @@ void InstanceRendererComponent::Render(float deltaTime)
 
     _structureBuffer->Clear();
 }
+
+void InstanceRendererComponent::SetMesh(Ptr<class Mesh> mesh)
+{
+    _mesh = mesh;
+}
+
+void InstanceRendererComponent::SetMesh(const std::string& name)
+{
+    SetMesh(FIND_MESH(name));
+}
+
 void InstanceRendererComponent::SetBuffer(Ptr<class StructureBuffer> buffer)
 {
     buffer->Clear();

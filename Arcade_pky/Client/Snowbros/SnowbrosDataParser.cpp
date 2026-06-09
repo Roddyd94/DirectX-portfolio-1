@@ -14,7 +14,53 @@
 
 #include <fstream>
 
-bool SnowbrosDataParser::ParseStageData(
+bool SnowbrosDataParser::ParseStageData(const std::wstring& filename, std::vector<StageData>& data)
+{
+    auto path = DirectoryManager::Instance().GetCachePath("Resources/Stage");
+
+    if (path == std::nullopt)
+        return false;
+
+    auto filePath = path.value();
+    DirectoryManager::Instance().GetFile(filePath, filename, filePath);
+
+    std::fstream fs{filePath.native(), fs.binary | fs.in};
+
+    int16 stageCount;
+
+    fs.read(reinterpret_cast<char*>(&stageCount), sizeof(int16));
+    data.resize(stageCount);
+
+    for (int i = 0; i < stageCount; ++i)
+    {
+        data[i].number = i;
+        int16 stageFilenameLength;
+        fs.read(reinterpret_cast<char*>(&stageFilenameLength), sizeof(int16));
+
+        data[i].filename.resize(stageFilenameLength);
+        fs.read(
+          reinterpret_cast<char*>(data[i].filename.data()), stageFilenameLength * sizeof(wchar_t));
+
+        int16 enemiesCount;
+        fs.read(reinterpret_cast<char*>(&enemiesCount), sizeof(int16));
+
+        data[i].enemies.resize(enemiesCount);
+        for (int j = 0; j < enemiesCount; ++j)
+        {
+            int16 enemyType;
+            fs.read(reinterpret_cast<char*>(&enemyType), sizeof(int16));
+            data[i].enemies[j].type = static_cast<SnowbrosEnemyType>(enemyType);
+
+            fs.read(reinterpret_cast<char*>(&data[i].enemies[j].position.x), sizeof(float));
+            fs.read(reinterpret_cast<char*>(&data[i].enemies[j].position.y), sizeof(float));
+            fs.read(reinterpret_cast<char*>(&data[i].enemies[j].direction), sizeof(float));
+        }
+    }
+
+    return true;
+}
+
+bool SnowbrosDataParser::ParseStageMapData(
   const std::wstring& filename, byte* pData, size_t dataLength)
 {
     auto path = DirectoryManager::Instance().GetCachePath("Resources/Stage");

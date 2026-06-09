@@ -21,7 +21,7 @@ bool SnowProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
     auto rootComp = CreateSceneComponent<IndexedSpriteInstanceComponent>("Root");
-    auto palette  = FIND_PALETTE("player_1");
+    auto palette  = FIND_PALETTE("snowball");
     rootComp->SetPaletteNumber(palette->GetID());
     rootComp->SetRenderLayer("PlayerProjectile");
     // rootComp->SetShader("SpriteShader");
@@ -53,7 +53,7 @@ bool SnowProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
       Raw(_projectileComponent), &SnowProjectileComponent::OnCollision);
     kinematic->RegisterOnCollideWithFloor(
       Raw(_projectileComponent), &SnowProjectileComponent::OnCollision);
-    kinematic->RegisterOnCollideWithBoundary(
+    kinematic->RegisterOnCollideWithBoundaryX(
       Raw(_projectileComponent), &SnowProjectileComponent::OnCollision);
 
     return true;

@@ -8,12 +8,9 @@
 #include "Core/Level.h"
 
 #ifdef _DEBUG
-#include "Core/ResourceManager.h"
-
-#include "Core/ColorConstantBuffer.h"
-#include "Core/Mesh.h"
-#include "Core/Shader.h"
-#include "Core/TransformConstantBuffer.h"
+#include "Core/InstanceRenderer.h"
+#include "Core/InstanceRendererComponent.h"
+#include "Tilemap/TileOutlineStructureBuffer.h"
 #endif // _DEBUG
 
 CollisionComponent::CollisionComponent()
@@ -37,12 +34,6 @@ bool CollisionComponent::Init(int32 componentID, const std::string& name, Ptr<Ac
         return false;
 
     level->AddCollision(This<CollisionComponent>());
-
-#if _DEBUG
-    _shader                  = FIND_SHADER("FrameMeshShader", Shader);
-    _transformConstantBuffer = CONSTANT_BUFFER_TRANSFORM;
-    _colorConstantBuffer     = CONSTANT_BUFFER_COLOR;
-#endif // _DEBUG
 
     return true;
 }
@@ -79,36 +70,53 @@ void CollisionComponent::Collision(float deltaTime)
     SceneComponent::Collision(deltaTime);
 }
 
-void CollisionComponent::Render(float deltaTime)
+void CollisionComponent::PreRender(float deltaTime)
 {
-    SceneComponent::Render(deltaTime);
+    SceneComponent::PreRender(deltaTime);
 
-#if _DEBUG
-    if (!_mesh || !_shader)
-        return;
-
-    _transformConstantBuffer->SetWorldMatrix(_matrix.world);
-
-    Ptr<Level> level = Lock<Level>(_level);
-    if (nullptr == level)
-        return;
-
-    _transformConstantBuffer->SetViewMatrix(level->GetViewMatrix());
-    _transformConstantBuffer->SetProjMatrix(level->GetProjMatrix());
-
-    _transformConstantBuffer->Update();
-
+    Vector4 color;
     if (_collisionStates.size() > 0)
-        _colorConstantBuffer->SetColor(1.f, 0.f, 0.f, 1.f);
+        color = {1.f, 0.f, 0.f, 1.f};
     else
-        _colorConstantBuffer->SetColor(0.f, 1.f, 0.f, 1.f);
+        color = {0.f, 1.f, 0.f, 1.f};
 
-    _colorConstantBuffer->Update();
+    Vector2 worldPos = GetWorldPosition().ToVector2();
+    Vector2 size     = GetWorldScale().ToVector2();
 
-    _shader->SetShader();
-    _mesh->Render();
-#endif // _DEBUG
+    auto renderer = Lock(_renderer);
+    renderer->AddData<TileOutlineStructureBuffer>(color, worldPos, size);
 }
+
+// void CollisionComponent::Render(float deltaTime)
+//{
+//     SceneComponent::Render(deltaTime);
+//
+// #if _DEBUG
+//     if (!_mesh || !_shader)
+//         return;
+//
+//     _transformConstantBuffer->SetWorldMatrix(_matrix.world);
+//
+//     Ptr<Level> level = Lock<Level>(_level);
+//     if (nullptr == level)
+//         return;
+//
+//     _transformConstantBuffer->SetViewMatrix(level->GetViewMatrix());
+//     _transformConstantBuffer->SetProjMatrix(level->GetProjMatrix());
+//
+//     _transformConstantBuffer->Update();
+//
+//     if (_collisionStates.size() > 0)
+//         _colorConstantBuffer->SetColor(1.f, 0.f, 0.f, 1.f);
+//     else
+//         _colorConstantBuffer->SetColor(0.f, 1.f, 0.f, 1.f);
+//
+//     _colorConstantBuffer->Update();
+//
+//     _shader->SetShader();
+//     _mesh->Render();
+// #endif // _DEBUG
+// }
 
 CollisionState::Type CollisionComponent::CheckCollisionState(
   Ptr<class CollisionComponent> otherCollider) const

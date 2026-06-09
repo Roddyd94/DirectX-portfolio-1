@@ -34,6 +34,7 @@ public:
         SnowballCrashing,
         Launched,
         Dead,
+        Fire,
         End
     };
 };

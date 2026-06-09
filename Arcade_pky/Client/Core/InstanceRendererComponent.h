@@ -7,7 +7,7 @@
 class InstanceRendererComponent : public SceneComponent
 {
 public:
-    InstanceRendererComponent()           = default;
+    InstanceRendererComponent();
     ~InstanceRendererComponent() override = default;
 
 protected:
@@ -22,6 +22,9 @@ public:
 
     void Collision(float deltaTime) override;
     void Render(float deltaTime) override;
+
+    void SetMesh(Ptr<class Mesh> mesh);
+    void SetMesh(const std::string& name);
 
     void SetBuffer(Ptr<class StructureBuffer> buffer);
     void SetBuffer(const std::string& name);

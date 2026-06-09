@@ -1,4 +1,5 @@
 #pragma once
+#include "Tilemap/Tile.h"
 
 namespace SnowbrosPlayerStateType
 {
@@ -25,3 +26,37 @@ namespace SnowbrosColliderType
         End,
     };
 }
+
+enum class SnowbrosEnemyType
+{
+    Goblin,
+    Monkey,
+    Spitter,
+    Pumpkin,
+    Ghost,
+    End,
+};
+
+struct TileMetadata
+{
+    std::vector<byte> paletteNumbers;
+
+    std::map<TileType::Type, std::set<uint32>> tiles;
+
+    uint16 tileSize      = 1;
+    uint16 tileTypeCount = 0;
+};
+
+struct EnemyData
+{
+    SnowbrosEnemyType type;
+    Vector2           position;
+    float             direction = 0.f;
+};
+
+struct StageData
+{
+    std::wstring           filename;
+    std::vector<EnemyData> enemies;
+    int32                  number = -1;
+};

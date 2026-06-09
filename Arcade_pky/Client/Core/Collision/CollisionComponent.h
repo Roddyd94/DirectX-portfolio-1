@@ -22,10 +22,7 @@ protected:
     std::map<std::pair<ColliderType::Type, ComponentIDPair>, CollisionState::Type> _collisionStates;
 
 #if _DEBUG
-    Ptr<class Mesh>                    _mesh                    = nullptr;
-    Ptr<class Shader>                  _shader                  = nullptr;
-    Ptr<class TransformConstantBuffer> _transformConstantBuffer = nullptr;
-    Ptr<class ColorConstantBuffer>     _colorConstantBuffer     = nullptr;
+    Weak<class InstanceRendererComponent> _renderer;
 #endif // _DEBUG
 
 public:
@@ -34,7 +31,8 @@ public:
 
     void Tick(float deltaTime) override;
     void Collision(float deltaTime) override;
-    void Render(float deltaTime) override;
+
+    void PreRender(float deltaTime);
 
     CollisionShape::Type GetShape() const { return _shape; }
     CollisionState::Type CheckCollisionState(Ptr<class CollisionComponent> otherCollider) const;

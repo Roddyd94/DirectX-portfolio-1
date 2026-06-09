@@ -15,6 +15,7 @@ bool SpriteInstanceRenderer::Init(int32 id, Vector3 position, Vector3 scale, Vec
 
     _renderer->SetBuffer("Animation2DInstance");
     _renderer->SetShader("SpriteInstanceShader");
+    SetRoot(_renderer);
 
     return true;
 }

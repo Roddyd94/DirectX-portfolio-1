@@ -23,7 +23,7 @@ protected:
     float _accTime = 0.f;
 
 protected:
-    virtual void Init(Ptr<class AIComponent> owner);
+    virtual bool Init(Ptr<class AIComponent> owner);
 
 public:
     void Destroy() override;
@@ -43,7 +43,7 @@ public:
 
 public:
     template <typename T>
-    Ptr<T> GetAIBlackboard() const
+    Ptr<T> GetBlackboard() const
     {
         return Cast<AIBlackboard, T>(_blackboard);
     }

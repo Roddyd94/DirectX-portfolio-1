@@ -4,7 +4,7 @@
 class IndexedTextureBuffer : public StructureBuffer
 {
 public:
-    IndexedTextureBuffer()           = default;
+    IndexedTextureBuffer();
     ~IndexedTextureBuffer() override = default;
 
 private:

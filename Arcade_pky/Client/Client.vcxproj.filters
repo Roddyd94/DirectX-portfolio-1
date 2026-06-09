@@ -523,6 +523,9 @@
     <ClInclude Include="Snowbros\SnowbrosCheat.h">
       <Filter>Snowbros\Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Snowbros\EnemyProjectile.h">
+      <Filter>Snowbros\Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1005,6 +1008,9 @@
       <Filter>Tilemap\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Snowbros\SnowbrosCheat.cpp">
+      <Filter>Snowbros\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\EnemyProjectile.cpp">
       <Filter>Snowbros\Actor</Filter>
     </ClCompile>
   </ItemGroup>

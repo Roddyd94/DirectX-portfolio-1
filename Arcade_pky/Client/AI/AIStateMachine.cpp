@@ -2,9 +2,11 @@
 
 #include "AIStateMachine.h"
 
-void AIStateMachine::Init(Ptr<class AIComponent> owner)
+bool AIStateMachine::Init(Ptr<class AIComponent> owner)
 {
     _owner = owner;
+
+    return true;
 }
 
 void AIStateMachine::Destroy()
