@@ -130,6 +130,8 @@ void SnowbrosLevel::Tick(float deltaTime)
         player->SetDirection(stageData.playerDirection);
 
         _player = player;
+        _player->ResetState();
+        _player->StartStage();
     }
 
     std::vector<Ptr<Actor>> enemies;
@@ -151,6 +153,11 @@ void SnowbrosLevel::Tick(float deltaTime)
 Ptr<class Player> SnowbrosLevel::GetPlayer() const
 {
     return _player;
+}
+
+void SnowbrosLevel::SetPlayer(Ptr<class SnowbrosPlayer> player)
+{
+    _player = player;
 }
 
 void SnowbrosLevel::StartStage(int32 stageNumber)

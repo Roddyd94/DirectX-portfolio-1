@@ -11,6 +11,7 @@
 #include "PlayerStateMidair.h"
 #include "ShootComponent.h"
 #include "SnowballMorphableEnemyStateMachine.h"
+#include "SnowbrosLevel.h"
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
 #include "AI/AIComponent.h"
@@ -94,11 +95,15 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
       [this]()
       {
           SetActive(false);
+          auto level = Cast<Level, SnowbrosLevel>(GetLevel());
+          level->SetPlayer(nullptr);
       });
     animation->AddNotify("player_dead", animation->GetClipFrameCount("player_dead"),
       [this]()
       {
           SetActive(false);
+          auto level = Cast<Level, SnowbrosLevel>(GetLevel());
+          level->SetPlayer(nullptr);
       });
 
     auto effect = CreateSceneComponent<IndexedSpriteInstanceComponent>("Effect");
@@ -257,6 +262,9 @@ void SnowbrosPlayer::StartStage()
       {
           auto sprite = Lock(weakSprite);
           auto effect = Lock(weakEffect);
+
+          if (nullptr == sprite || nullptr == effect)
+              return;
 
           if (effect->GetFrameIndex() % 2 == 1)
               sprite->SetEnable(false);

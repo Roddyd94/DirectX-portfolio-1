@@ -891,9 +891,12 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           auto level = Lock(weakLevel);
           auto pawn  = Lock(weakPawn);
 
-          Ptr<Player> player          = level->GetPlayer();
-          float       playerPositionY = player->GetWorldPosition().y;
-          float       thisPositionY   = pawn->GetWorldPosition().y;
+          Ptr<Player> player = level->GetPlayer();
+          if (nullptr == player)
+              return false;
+
+          float playerPositionY = player->GetWorldPosition().y;
+          float thisPositionY   = pawn->GetWorldPosition().y;
 
           return playerPositionY > thisPositionY && playerPositionY - thisPositionY > 0.9f;
       });

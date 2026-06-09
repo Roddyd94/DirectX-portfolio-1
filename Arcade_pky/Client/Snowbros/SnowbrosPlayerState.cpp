@@ -6,6 +6,7 @@
 #include "Core/TimeManager.h"
 
 #include "Item.h"
+#include "PlayerStateDead.h"
 #include "PlayerStateSnowball.h"
 #include "ShootComponent.h"
 #include "SnowballMorphableEnemyStateMachine.h"
@@ -14,9 +15,9 @@
 #include "Types.h"
 #include "AI/AIComponent.h"
 #include "Core/Actor.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Core/Collision/AABBCollisionComponent.h"
 #include "Core/Collision/PointCollisionComponent.h"
-#include "Platformer/PlatformerKinematicComponent.h"
 #include "Platformer/PlatformerKinematicPlayerComponent.h"
 #include "Platformer/PlatformerMovementComponent.h"
 #include "Player/Player.h"
@@ -34,7 +35,7 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
     auto otherCollider     = Lock(collider);
     auto otherColliderType = otherCollider->GetColliderType();
 
-    auto kinematic = thisActor->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+    auto kinematic = thisActor->FindActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
 
     switch (otherColliderType)
     {
@@ -63,13 +64,26 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
         case SnowbrosEnemyState::Turn:
         case SnowbrosEnemyState::Jump:
         case SnowbrosEnemyState::Fall:
+        case SnowbrosEnemyState::Fire:
         case SnowbrosEnemyState::Crouch:
         case SnowbrosEnemyState::Dizzy:
             switch (collisionType)
             {
-            case CollisionState::Enter:
-                // todo: kill player
-                break;
+            case CollisionState::Stay:
+                if (this->GetType() != SnowbrosPlayerStateType::Ground
+                    && this->GetType() != SnowbrosPlayerStateType::Midair)
+                    break;
+
+                kinematic->SetVelocity(Vector2::zero);
+                kinematic->ChangeStateTo(PlatformerKinematicState::None);
+                playerComponent->Transition(New<PlayerStateDead>());
+                auto sprite = thisActor->FindSceneComponent<SpriteInstanceComponent>("Sprite");
+                TimeManager::Instance().SetTimer(1.0f, false,
+                  [weakSprite = Weak(sprite)]()
+                  {
+                      auto sprite = Lock(weakSprite);
+                      sprite->ChangeAnimation("player_dead");
+                  });
             }
             break;
         case SnowbrosEnemyState::SnowballRolling:
@@ -101,7 +115,23 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
     }
     break;
     case ColliderType::EnemyProjectile:
-        break;
+    {
+        if (this->GetType() != SnowbrosPlayerStateType::Ground
+            && this->GetType() != SnowbrosPlayerStateType::Midair)
+            break;
+
+        kinematic->SetVelocity(Vector2::zero);
+        kinematic->ChangeStateTo(PlatformerKinematicState::None);
+        playerComponent->Transition(New<PlayerStateDead>());
+        auto sprite = thisActor->FindSceneComponent<SpriteInstanceComponent>("Sprite");
+        TimeManager::Instance().SetTimer(1.0f, false,
+          [weakSprite = Weak(sprite)]()
+          {
+              auto sprite = Lock(weakSprite);
+              sprite->ChangeAnimation("player_melt");
+          });
+    }
+    break;
     case ColliderType::Item:
     {
         auto item = Cast<Actor, Item>(otherCollider->GetOwner());

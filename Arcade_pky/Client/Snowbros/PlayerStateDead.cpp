@@ -3,6 +3,7 @@
 #include "PlayerStateDead.h"
 
 #include "Types.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Player/Player.h"
 #include "Player/PlayerComponent.h"
 #include "Player/PlayerController.h"
@@ -24,7 +25,10 @@ void PlayerStateDead::Enter(Ptr<class PlayerComponent> playerComponent)
     Ptr<Player> player = playerComponent->GetPlayer();
 
     auto controller = player->GetController();
-    controller->SetActiveContext("Dead");
+    controller->SetActiveContext("None");
+
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
+    sprite->ChangeAnimation("player_damaged");
 }
 
 void PlayerStateDead::Exit(Ptr<class PlayerComponent> playerComponent) {}
