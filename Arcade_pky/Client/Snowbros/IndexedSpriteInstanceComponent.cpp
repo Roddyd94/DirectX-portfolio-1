@@ -50,7 +50,7 @@ void IndexedSpriteInstanceComponent::AddBufferData()
     instanceData.paletteNumber = _paletteNumber;
     instanceData.flipX         = _animation->GetFlipX();
 
-    AddData<IndexedAnimation2DStructureBuffer>(std::move(instanceData));
+    renderer->AddData<IndexedAnimation2DStructureBuffer>(std::move(instanceData));
 }
 
 void IndexedSpriteInstanceComponent::SetPaletteNumber(int32 number)

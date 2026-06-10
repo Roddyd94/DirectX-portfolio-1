@@ -7,7 +7,7 @@ struct Animation2DInstanceData
     Vector2 uvRB;
     Vector2 worldPos;
     Vector2 size;
-    int     flipX;
+    int32   flipX = 0;
 };
 
 class Animation2DStructureBuffer : public StructureBuffer
@@ -24,7 +24,6 @@ public:
 
     int32 GetElementCount() const override;
     void  Clear() override;
-    
-    void AddData(const Animation2DInstanceData& data);
+
     void AddData(Animation2DInstanceData&& data);
 };

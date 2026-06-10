@@ -86,7 +86,7 @@ void SpriteInstanceComponent::AddBufferData()
     instanceData.size     = size;
     instanceData.flipX    = _animation->GetFlipX();
 
-    AddData<Animation2DStructureBuffer>(std::move(instanceData));
+    renderer->AddData<Animation2DStructureBuffer>(std::move(instanceData));
 }
 
 int32 SpriteInstanceComponent::GetFrameCount() const

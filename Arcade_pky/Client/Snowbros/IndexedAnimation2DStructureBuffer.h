@@ -7,8 +7,8 @@ struct IndexedAnimation2DInstanceData
     Vector2 uvRB;
     Vector2 worldPos;
     Vector2 size;
-    int32   paletteNumber;
-    int32   flipX;
+    int32   paletteNumber = 0;
+    int32   flipX         = 0;
 };
 
 class IndexedAnimation2DStructureBuffer : public StructureBuffer

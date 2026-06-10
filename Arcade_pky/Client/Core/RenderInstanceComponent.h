@@ -24,15 +24,4 @@ public:
     void SetRenderLayer(const std::string& name);
 
     virtual void AddBufferData() = 0;
-
-protected:
-    template <typename T, typename... Args>
-    void AddData(Args&&... args)
-    {
-        Ptr<InstanceRendererComponent> renderer = GetRenderer();
-        if (nullptr == renderer)
-            return;
-
-        renderer->AddData<T>(std::forward<Args>(args)...);
-    }
 };

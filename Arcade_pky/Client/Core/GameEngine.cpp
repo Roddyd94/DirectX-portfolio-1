@@ -13,7 +13,6 @@
 #include "Input/InputSystem.h"
 
 #include "World.h"
-#include "Common/Random.h" // TODO Remove later
 
 #ifdef _USE_MEMORY_POOL
 #include "MemoryPool.h"
@@ -44,7 +43,7 @@ void GameEngine::Destroy()
 
     LogManager::Instance().Destroy();
     DirectoryManager::Instance().Destroy();
-    
+
 #ifdef _USE_MEMORY_POOL
     MemoryPool::Instance().Destroy();
 #elif _USE_OBJECT_POOL

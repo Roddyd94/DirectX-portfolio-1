@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Animation/Animation2D.h"
 #include "Core/RenderInstanceComponent.h"
 
 class SpriteInstanceComponent : public RenderInstanceComponent

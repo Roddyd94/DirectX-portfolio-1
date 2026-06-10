@@ -22,11 +22,6 @@ void Animation2DStructureBuffer::Clear()
     _dataArray.clear();
 }
 
-void Animation2DStructureBuffer::AddData(const Animation2DInstanceData& data)
-{
-    _dataArray.push_back(data);
-}
-
 void Animation2DStructureBuffer::AddData(Animation2DInstanceData&& data)
 {
     _dataArray.emplace_back(std::move(data));

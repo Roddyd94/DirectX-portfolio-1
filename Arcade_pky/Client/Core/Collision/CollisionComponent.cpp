@@ -74,6 +74,7 @@ void CollisionComponent::PreRender(float deltaTime)
 {
     SceneComponent::PreRender(deltaTime);
 
+#ifdef _DEBUG
     Vector4 color;
     if (_collisionStates.size() > 0)
         color = {1.f, 0.f, 0.f, 1.f};
@@ -85,6 +86,7 @@ void CollisionComponent::PreRender(float deltaTime)
 
     auto renderer = Lock(_renderer);
     renderer->AddData<TileOutlineStructureBuffer>(color, worldPos, size);
+#endif // _DEBUG
 }
 
 // void CollisionComponent::Render(float deltaTime)
