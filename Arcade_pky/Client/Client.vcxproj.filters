@@ -526,7 +526,12 @@
     <ClInclude Include="Snowbros\EnemyProjectile.h">
       <Filter>Snowbros\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Snowbros\PlayerStateClear.h" />
+    <ClInclude Include="Snowbros\PlayerStateClear.h">
+      <Filter>Snowbros\Player\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\PlayerStateSpawned.h">
+      <Filter>Snowbros\Player\PlayerState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1014,7 +1019,12 @@
     <ClCompile Include="Snowbros\EnemyProjectile.cpp">
       <Filter>Snowbros\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Snowbros\PlayerStateClear.cpp" />
+    <ClCompile Include="Snowbros\PlayerStateClear.cpp">
+      <Filter>Snowbros\Player\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\PlayerStateSpawned.cpp">
+      <Filter>Snowbros\Player\PlayerState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

@@ -4,6 +4,7 @@
 
 #include "Core/TimeManager.h"
 
+#include "IndexedSpriteInstanceComponent.h"
 #include "PlayerStateMidair.h"
 #include "SnowbrosEnemy.h"
 #include "SnowbrosPlayerBlackboard.h"
@@ -71,7 +72,23 @@ void PlayerStateSnowball::Enter(Ptr<class PlayerComponent> playerComponent)
     sprite->ChangeAnimation("player_shoved");
 }
 
-void PlayerStateSnowball::Exit(Ptr<class PlayerComponent> playerComponent) {}
+void PlayerStateSnowball::Exit(Ptr<class PlayerComponent> playerComponent)
+{
+    auto blackboard        = GetBlackboard(playerComponent);
+    blackboard->invincible = true;
+
+    TimeManager::Instance().SetTimer(blackboard->invincibleTime, false,
+      [weakPlayerComponent = Weak(playerComponent)]()
+      {
+          auto playerComponent = Lock(weakPlayerComponent);
+          auto blackboard      = GetBlackboard(playerComponent);
+          auto player          = playerComponent->GetPlayer();
+          auto sprite = player->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+
+          blackboard->invincible = false;
+          sprite->SetEnable(true);
+      });
+}
 
 void PlayerStateSnowball::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime)
 {

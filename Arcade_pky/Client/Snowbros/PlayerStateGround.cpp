@@ -206,6 +206,7 @@ void PlayerStateGround::Exit(Ptr<class PlayerComponent> playerComponent) {}
 
 void PlayerStateGround::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime)
 {
+    SnowbrosPlayerState::Tick(playerComponent, deltaTime);
     // auto blackboard =
     // playerComponent->GetStateMachine()->GetBlackboard<SnowbrosPlayerBlackboard>();
 }

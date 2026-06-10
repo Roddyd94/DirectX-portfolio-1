@@ -9,6 +9,7 @@
 #include "PlayerStateClear.h"
 #include "PlayerStateGround.h"
 #include "PlayerStateMidair.h"
+#include "PlayerStateSpawned.h"
 #include "ShootComponent.h"
 #include "SnowballMorphableEnemyStateMachine.h"
 #include "SnowbrosLevel.h"
@@ -132,13 +133,11 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
       {
           auto effect = Lock(weakEffect);
           auto sprite = Lock(weakSprite);
-
-          RemoveTimer();
+;
           effect->SetEnable(false);
           sprite->SetEnable(true);
 
-          auto input = _playerController->GetInputComponent();
-          input->SetEnable(true);
+          _playerComponent->Transition(PlayerStateGround::instance);
       });
 
     _headCollider = CreateSceneComponent<PointCollisionComponent>("HeadCollider");
@@ -243,40 +242,12 @@ void SnowbrosPlayer::ResetState()
 
 void SnowbrosPlayer::StartStage()
 {
-    auto sprite = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
-    auto effect = FindSceneComponent<IndexedSpriteInstanceComponent>("Effect");
-    auto input  = _playerController->GetInputComponent();
-    input->SetEnable(false);
-
-    effect->SetEnable(true);
-    effect->ChangeAnimation("effect_eruption");
-
-    auto kinematic = FindActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
-    kinematic->SetVelocity(Vector2::zero);
-
-    if (-1 != _timerID)
-        TimeManager::Instance().RemoveTimer(_timerID);
-
-    _timerID = TimeManager::Instance().SetTimer(0.f, true,
-      [weakSprite = Weak(sprite), weakEffect = Weak(effect)]()
-      {
-          auto sprite = Lock(weakSprite);
-          auto effect = Lock(weakEffect);
-
-          if (nullptr == sprite || nullptr == effect)
-              return;
-
-          if (effect->GetFrameIndex() % 2 == 1)
-              sprite->SetEnable(false);
-          else
-              sprite->SetEnable(true);
-      });
+    _playerComponent->Transition(New<PlayerStateSpawned>());
 }
 
 void SnowbrosPlayer::EndStage()
 {
-    auto stateMachine = _playerComponent->GetStateMachine();
-    stateMachine->Transition(PlayerStateClear::instance);
+    _playerComponent->Transition(PlayerStateClear::instance);
 }
 
 void SnowbrosPlayer::OnShootButtonEvent(
@@ -346,10 +317,4 @@ void SnowbrosPlayer::OnShootButtonEvent(
 
     auto shootComponent = FindActorComponent<ShootComponent>("Shoot");
     shootComponent->HandleInput(action, buttonEvent);
-}
-
-void SnowbrosPlayer::RemoveTimer()
-{
-    TimeManager::Instance().RemoveTimer(_timerID);
-    _timerID = -1;
 }

@@ -123,6 +123,8 @@ void PlayerStateMidair::Exit(Ptr<class PlayerComponent> playerComponent) {}
 
 void PlayerStateMidair::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime)
 {
+    SnowbrosPlayerState::Tick(playerComponent, deltaTime);
+
     Ptr<Actor>                       player = playerComponent->GetOwner();
     Ptr<PlatformerMovementComponent> movement
       = player->FindActorComponent<PlatformerMovementComponent>("Movement");

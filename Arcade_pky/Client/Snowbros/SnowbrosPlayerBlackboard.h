@@ -19,7 +19,9 @@ public:
     bool speedUpgraded = false;
     bool powerUpgraded = false;
     bool rangeUpgraded = false;
+    bool invincible    = false;
 
 public:
     inline static const float speedMultiplierSnowball = 0.5f;
+    inline static const float invincibleTime = 5.f;
 };

@@ -5,6 +5,7 @@
 #include "Core/Collision/CollisionManager.h"
 #include "Core/TimeManager.h"
 
+#include "IndexedSpriteInstanceComponent.h"
 #include "Item.h"
 #include "PlayerStateDead.h"
 #include "PlayerStateSnowball.h"
@@ -12,6 +13,7 @@
 #include "SnowballMorphableEnemyStateMachine.h"
 #include "SnowbrosEnemyState.h"
 #include "SnowbrosLevel.h"
+#include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
 #include "AI/AIComponent.h"
 #include "Core/Actor.h"
@@ -22,7 +24,24 @@
 #include "Platformer/PlatformerMovementComponent.h"
 #include "Player/Player.h"
 #include "Player/PlayerComponent.h"
-#include "Snowbros/SnowbrosPlayerBlackboard.h"
+
+void SnowbrosPlayerState::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime)
+{
+    auto player     = playerComponent->GetPlayer();
+    auto blackboard = GetBlackboard(playerComponent);
+
+    auto sprite = player->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+
+    if (blackboard->invincible)
+    {
+        int32 unitFrameCounts  = static_cast<int32>(TimeManager::targetFPS * 0.2f);
+        int32 frameNumber = TimeManager::Instance().GetFrameCount() % unitFrameCounts;
+        if (frameNumber > unitFrameCounts / 2)
+            sprite->SetEnable(false);
+        else
+            sprite->SetEnable(true);
+    }
+}
 
 void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent,
   CollisionState::Type                                           collisionType,

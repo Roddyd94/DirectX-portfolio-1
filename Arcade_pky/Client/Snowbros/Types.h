@@ -10,6 +10,7 @@ namespace SnowbrosPlayerStateType
         Snowball,
         Dead,
         Clear,
+        Spawned,
         End
     };
 }

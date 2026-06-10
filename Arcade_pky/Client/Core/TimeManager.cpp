@@ -26,13 +26,15 @@ float TimeManager::Tick()
     std::chrono::duration<float> frameTime = curTime - _prevTime;
 
     _deltaTime = frameTime.count();
+
 #ifdef _DEBUG
-    _deltaTime = std::min(_deltaTime, _targetDeltaTime);
-    Sleep((_targetDeltaTime - _deltaTime) * 1'000);
-    _deltaTime = _targetDeltaTime;
+    _deltaTime = std::min(_deltaTime, targetDeltaTime);
+    Sleep((targetDeltaTime - _deltaTime) * 1'000);
+    _deltaTime = targetDeltaTime;
 #endif // _DEBUG
 
     _prevTime = curTime;
+    ++_frameCounter;
 
     for (int32 id : _timersToRemove)
     {
@@ -60,6 +62,11 @@ float TimeManager::Tick()
     }
 
     return _deltaTime;
+}
+
+int32 TimeManager::GetFrameCount() const
+{
+    return _frameCounter;
 }
 
 float TimeManager::GetFPS()

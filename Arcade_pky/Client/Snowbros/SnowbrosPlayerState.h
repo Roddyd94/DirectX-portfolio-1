@@ -11,6 +11,8 @@ protected:
     inline static const float speedMultiplierSnowball = 0.5f;
 
 public:
+    void Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime) override;
+
     void CollideWith(Ptr<class PlayerComponent> playerComponent,
       CollisionState::Type                      collisionType,
       Weak<class CollisionComponent>            collider) override;
