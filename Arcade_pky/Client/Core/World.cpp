@@ -20,6 +20,8 @@ void World::Init(const std::string& name)
     _collisionProfileManager->CreateChannel(ColliderType::Enemy, CollisionResponse::Ignore);
     _collisionProfileManager->CreateChannel(
       ColliderType::PlayerProjectile, CollisionResponse::Ignore);
+    _collisionProfileManager->CreateChannel(
+      ColliderType::EnemyProjectile, CollisionResponse::Ignore);
     _collisionProfileManager->CreateChannel(ColliderType::Item, CollisionResponse::Ignore);
 
     _collisionProfileManager->CreateProfile("Player", ColliderType::Player);

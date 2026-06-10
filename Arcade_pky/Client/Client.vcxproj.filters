@@ -532,6 +532,7 @@
     <ClInclude Include="Snowbros\PlayerStateSpawned.h">
       <Filter>Snowbros\Player\PlayerState</Filter>
     </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosBoss.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1025,6 +1026,7 @@
     <ClCompile Include="Snowbros\PlayerStateSpawned.cpp">
       <Filter>Snowbros\Player\PlayerState</Filter>
     </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosBoss.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
