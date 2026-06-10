@@ -34,8 +34,8 @@ void SnowbrosPlayerState::Tick(Ptr<class PlayerComponent> playerComponent, float
 
     if (blackboard->invincible)
     {
-        int32 unitFrameCounts  = static_cast<int32>(TimeManager::targetFPS * 0.2f);
-        int32 frameNumber = TimeManager::Instance().GetFrameCount() % unitFrameCounts;
+        int32 unitFrameCounts = static_cast<int32>(TimeManager::targetFPS * 0.2f);
+        int32 frameNumber     = TimeManager::Instance().GetFrameCount() % unitFrameCounts;
         if (frameNumber > unitFrameCounts / 2)
             sprite->SetEnable(false);
         else
@@ -89,8 +89,11 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
             switch (collisionType)
             {
             case CollisionState::Stay:
-                if (this->GetType() != SnowbrosPlayerStateType::Ground
-                    && this->GetType() != SnowbrosPlayerStateType::Midair)
+                if (GetType() != SnowbrosPlayerStateType::Ground
+                    && GetType() != SnowbrosPlayerStateType::Midair)
+                    break;
+
+                if (blackboard->invincible)
                     break;
 
                 kinematic->SetVelocity(Vector2::zero);
@@ -137,6 +140,9 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
     {
         if (this->GetType() != SnowbrosPlayerStateType::Ground
             && this->GetType() != SnowbrosPlayerStateType::Midair)
+            break;
+
+        if (blackboard->invincible)
             break;
 
         kinematic->SetVelocity(Vector2::zero);
