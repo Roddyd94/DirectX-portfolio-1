@@ -16,6 +16,7 @@ private:
     float _accTime   = 0.f;
     bool  _powerUp   = false;
     bool  _rangeUp   = false;
+    bool  _setHit    = false;
     bool  _isHit     = false;
 
 private:

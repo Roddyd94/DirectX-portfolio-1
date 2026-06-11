@@ -22,6 +22,9 @@ void SnowProjectileComponent::Destroy()
 
 void SnowProjectileComponent::Tick(float deltaTime)
 {
+    if (_setHit)
+        _isHit = true;
+
     if (_isHit)
         return;
 
@@ -53,7 +56,7 @@ void SnowProjectileComponent::OnCollisionWith(Weak<class CollisionComponent> oth
 
 void SnowProjectileComponent::OnCollision()
 {
-    _isHit   = true;
+    _setHit  = true;
     _accTime = 0.f;
 
     _kinematic->SetVelocity(Vector2::zero);
