@@ -119,7 +119,10 @@ void PlayerStateMidair::Enter(Ptr<class PlayerComponent> playerComponent)
     _initialFlipX = sprite->GetFlipX();
 }
 
-void PlayerStateMidair::Exit(Ptr<class PlayerComponent> playerComponent) {}
+void PlayerStateMidair::Exit(Ptr<class PlayerComponent> playerComponent)
+{
+    SnowbrosPlayerState::Exit(playerComponent);
+}
 
 void PlayerStateMidair::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime)
 {

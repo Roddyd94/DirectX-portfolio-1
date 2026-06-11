@@ -43,6 +43,9 @@ void PlayerStateClear::Enter(Ptr<class PlayerComponent> playerComponent)
     sprite->ChangeAnimation("player_fly");
 }
 
-void PlayerStateClear::Exit(Ptr<class PlayerComponent> playerComponent) {}
+void PlayerStateClear::Exit(Ptr<class PlayerComponent> playerComponent)
+{
+    SnowbrosPlayerState::Exit(playerComponent);
+}
 
 void PlayerStateClear::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime) {}

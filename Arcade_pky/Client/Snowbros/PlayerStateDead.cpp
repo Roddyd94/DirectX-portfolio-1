@@ -31,6 +31,9 @@ void PlayerStateDead::Enter(Ptr<class PlayerComponent> playerComponent)
     sprite->ChangeAnimation("player_damaged");
 }
 
-void PlayerStateDead::Exit(Ptr<class PlayerComponent> playerComponent) {}
+void PlayerStateDead::Exit(Ptr<class PlayerComponent> playerComponent)
+{
+    SnowbrosPlayerState::Exit(playerComponent);
+}
 
 void PlayerStateDead::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime) {}

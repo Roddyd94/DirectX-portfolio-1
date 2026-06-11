@@ -74,6 +74,7 @@ void PlayerStateSnowball::Enter(Ptr<class PlayerComponent> playerComponent)
 
 void PlayerStateSnowball::Exit(Ptr<class PlayerComponent> playerComponent)
 {
+    SnowbrosPlayerState::Exit(playerComponent);
     auto blackboard        = GetBlackboard(playerComponent);
     blackboard->invincible = true;
 

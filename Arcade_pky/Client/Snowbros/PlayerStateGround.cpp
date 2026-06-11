@@ -202,7 +202,10 @@ void PlayerStateGround::Enter(Ptr<class PlayerComponent> playerComponent)
         sprite->ChangeAnimation("player_walk");
 }
 
-void PlayerStateGround::Exit(Ptr<class PlayerComponent> playerComponent) {}
+void PlayerStateGround::Exit(Ptr<class PlayerComponent> playerComponent)
+{
+    SnowbrosPlayerState::Exit(playerComponent);
+}
 
 void PlayerStateGround::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime)
 {

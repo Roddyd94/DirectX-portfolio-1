@@ -56,6 +56,7 @@ void PlayerStateSpawned::Enter(Ptr<class PlayerComponent> playerComponent)
 
 void PlayerStateSpawned::Exit(Ptr<class PlayerComponent> playerComponent)
 {
+    SnowbrosPlayerState::Exit(playerComponent);
     TimeManager::Instance().RemoveTimer(_timerID);
 
     auto blackboard        = GetBlackboard(playerComponent);

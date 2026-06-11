@@ -12,6 +12,7 @@ protected:
 
 public:
     void Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime) override;
+    void Exit(Ptr<class PlayerComponent> playerComponent) override;
 
     void CollideWith(Ptr<class PlayerComponent> playerComponent,
       CollisionState::Type                      collisionType,

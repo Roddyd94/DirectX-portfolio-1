@@ -43,6 +43,14 @@ void SnowbrosPlayerState::Tick(Ptr<class PlayerComponent> playerComponent, float
     }
 }
 
+void SnowbrosPlayerState::Exit(Ptr<class PlayerComponent> playerComponent)
+{
+    auto player = playerComponent->GetPlayer();
+
+    auto sprite = player->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    sprite->SetEnable(true);
+}
+
 void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent,
   CollisionState::Type                                           collisionType,
   Weak<class CollisionComponent>                                 collider)
