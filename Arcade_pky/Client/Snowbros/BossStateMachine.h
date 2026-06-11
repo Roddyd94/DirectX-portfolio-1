@@ -35,6 +35,6 @@ public:
     void ChangeLowerBody(SnowbrosBossLowerFrameType type);
     void Hit(int32 damage);
     void Jump();
-    void SpawnSpawn(float targetPositionX);
+    void SpawnSpawn(bool spawnOnLeft);
     void AdjustLowerBody();
 };

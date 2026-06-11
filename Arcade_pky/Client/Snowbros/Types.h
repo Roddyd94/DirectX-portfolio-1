@@ -65,4 +65,5 @@ struct StageData
     Vector2                playerPosition;
     float                  playerDirection = 0.f;
     int32                  number          = -1;
+    int32                  paletteNumber   = 0;
 };

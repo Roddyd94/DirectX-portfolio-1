@@ -35,6 +35,17 @@ bool SpawnStateMachine::Init(Ptr<class AIComponent> owner)
     auto enemyStateDead     = FindAIState<SnowbrosEnemyState>("Dead");
     auto enemyStateFly      = CreateAIState<SnowbrosEnemyState>("Fly", SnowbrosEnemyState::Fly);
 
+    enemyStateFly->RegisterCallback(AIEventState::Enter,
+      [this](float deltaTime)
+      {
+          auto pawn       = GetPawn<SnowbrosEnemy>();
+          auto blackboard = GetBlackboard<SpawnBlackboard>();
+          auto kinematic  = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+          auto sprite     = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+
+          sprite->ChangeAnimation("boss_spawn_midair");
+          kinematic->SetVelocity(blackboard->initialVelocity);
+      });
     enemyStateLaunched->RegisterCallback(AIEventState::Enter,
       [this](float deltaTime)
       {
@@ -49,6 +60,31 @@ bool SpawnStateMachine::Init(Ptr<class AIComponent> owner)
 
           auto item = level->SpawnItem(pawn->GetWorldPosition(), Item::Sushi);
           item->SetItemNumber(1);
+      });
+
+    enemyStateFly->RegisterCallback(AIEventState::Tick,
+      [this](float deltaTime)
+      {
+          auto pawn       = GetPawn<SnowbrosEnemy>();
+          auto blackboard = GetBlackboard<SpawnBlackboard>();
+          auto kinematic  = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+
+          Vector3 position = pawn->GetWorldPosition();
+          Vector2 velocity = kinematic->GetVelocity();
+
+          if (position.x < blackboard->landPositionX)
+          {
+              velocity.x += blackboard->dragX;
+              if (velocity.x > 0.f)
+              {
+                  velocity.x = 0.f;
+                  Transition("Fall");
+              }
+
+              kinematic->SetVelocity(velocity);
+          }
+
+          // todo  Drag & Gravity
       });
 
     auto conditionTurned               = CreateAICondition("Turned", ConditionOperator::And,
@@ -113,6 +149,8 @@ bool SpawnStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateWalk->CreateAITransition(
       "Walk_Turn", enemyStateTurn, conditionTouchedBlockNotOnFirstFloor);
     enemyStateFall->CreateAITransition("Fall_Dead", enemyStateDead, conditionOutOfLevel);
+
+    Transition("Fly");
 
     return true;
 }

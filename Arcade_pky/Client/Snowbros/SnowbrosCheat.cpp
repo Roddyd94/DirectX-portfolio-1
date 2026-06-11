@@ -60,7 +60,7 @@ void SnowbrosCheat::SpawnMonster(Ptr<class InputAction> action, ButtonEventType:
         enemy->SetEnemyType(SnowbrosEnemyType::Boss);
     }
 
-    enemy->SetDirection(-1);
+    enemy->SetDirection(-1.f);
 }
 
 void SnowbrosCheat::ChangePalette(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)

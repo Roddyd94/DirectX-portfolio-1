@@ -11,6 +11,7 @@
 #include "IndexedSpriteInstanceComponent.h"
 #include "SnowbrosEnemy.h"
 #include "SnowbrosLevel.h"
+#include "SpawnBlackboard.h"
 #include "AI/AIComponent.h"
 #include "AI/AIController.h"
 #include "Common/Random.h"
@@ -106,7 +107,7 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
           sprite->SetWorldScale({7.f, 3.f});
           sprite->SetRelativePosition({0.f, 2.f});
 
-          collider->SetBoxSize({7.f, 3.f});
+          collider->SetBoxSize({7.f, 2.5f});
           collider->SetRelativePosition({0.f, 2.f});
       });
 #pragma endregion AnimationNotifies
@@ -183,6 +184,22 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
                 Jump();
             });
       });
+    enemyStateJump->RegisterCallback(AIEventState::Enter,
+      [this](float deltaTime)
+      {
+          auto blackboard = GetBlackboard<BossBlackboard>();
+
+          blackboard->spawnedTop    = false;
+          blackboard->spawnedMiddle = false;
+          blackboard->spawnedBottom = false;
+
+          int32 randomValue = Utility::RandomInt(0, 10);
+
+          if (randomValue > 7)
+              blackboard->spawnPattern = 1;
+          else
+              blackboard->spawnPattern = 0;
+      });
     enemyStateFire->RegisterCallback(AIEventState::Enter,
       [this](float deltaTime)
       {
@@ -229,7 +246,7 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
           sprite->SetWorldScale({6.f, 5.f});
           sprite->SetRelativePosition({0.f, 3.f});
 
-          collider->SetBoxSize({6.f, 5.f});
+          collider->SetBoxSize({6.f, 4.5f});
           collider->SetRelativePosition({0.f, 3.f});
       });
 #pragma endregion RegisterStateCallbackEnter
@@ -238,7 +255,7 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateCrouch->RegisterCallback(AIEventState::Tick,
       [this](float deltaTime)
       {
-    LogManager::Instance().Debug("Crouch!", TimeManager::Instance().GetFrameCount());
+          LogManager::Instance().Debug("Crouch!", TimeManager::Instance().GetFrameCount());
           auto pawn       = GetPawn<SnowbrosEnemy>();
           auto blackboard = GetBlackboard<BossBlackboard>();
           auto kinematic  = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
@@ -246,10 +263,10 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
           kinematic->SetVelocity(Vector2::zero);
           kinematic->AdjustPositionToFloor();
 
-          int32 pattern = Utility::RandomInt(0, 5);
-          if (pattern > 3)
+          int32 pattern = Utility::RandomInt(0, 7);
+          if (pattern > 5)
               Transition("Stand");
-          else if (pattern > 1)
+          else if (pattern > 2)
               Transition("Fire");
           else
               Transition("Hop");
@@ -262,8 +279,47 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
           auto kinematic  = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
           kinematic->AddGravity(deltaTime);
-
           AdjustLowerBody();
+
+          if (0 == blackboard->targetFloor && kinematic->GetVelocity().y > 0.f)
+              return;
+
+          float posY = pawn->GetWorldPosition().y;
+          if (!blackboard->spawnedTop && std::abs(posY - blackboard->spawnPositionYTop) < 0.1f)
+          {
+              if (0 == blackboard->targetFloor && 0 == blackboard->spawnPattern)
+              {
+                  blackboard->spawnedTop = true;
+                  return;
+              }
+
+              if (0 == blackboard->targetFloor)
+                  SpawnSpawn(false);
+              else
+                  SpawnSpawn(true);
+
+              blackboard->spawnedTop = true;
+          }
+          else if (!blackboard->spawnedMiddle
+                   && std::abs(posY - blackboard->spawnPositionYMiddle) < 0.1f)
+          {
+              if (0 == blackboard->targetFloor)
+                  SpawnSpawn(false);
+              else
+                  SpawnSpawn(true);
+
+              blackboard->spawnedMiddle = true;
+          }
+          else if (!blackboard->spawnedBottom
+                   && std::abs(posY - blackboard->spawnPositionYBottom) < 0.1f)
+          {
+              if (0 == blackboard->targetFloor)
+                  SpawnSpawn(false);
+              else
+                  SpawnSpawn(true);
+
+              blackboard->spawnedBottom = true;
+          }
       });
     enemyStateFire->RegisterCallback(AIEventState::Tick,
       [this](float deltaTime)
@@ -480,7 +536,7 @@ void BossStateMachine::Jump()
     auto kinematic  = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
     float positionX       = pawn->GetWorldPosition().x;
-    float targetPositionX = Utility::RandomInt(5, 11) / 2.f;
+    float targetPositionX = Utility::RandomInt(6, 11) / 2.f;
 
     Vector2 jumpForce = blackboard->GetTargetJumpForceX(targetPositionX - positionX);
     kinematic->AddForce(jumpForce);
@@ -489,7 +545,46 @@ void BossStateMachine::Jump()
     Transition("Jump");
 }
 
-void BossStateMachine::SpawnSpawn(float targetPositionX) {}
+void BossStateMachine::SpawnSpawn(bool spawnOnLeft)
+{
+    auto blackboard = GetBlackboard<BossBlackboard>();
+
+    auto pawn  = GetPawn();
+    auto level = pawn->GetLevel();
+
+    float spawnPositionX = 0.f;
+    float positionError  = Utility::RandomInt(-10, 11) / 10.f;
+
+    Vector3 position = pawn->GetWorldPosition();
+    Vector3 scale    = Vector3::one * 2.f;
+    Vector3 rotation = Vector3::zero;
+
+    Vector3 spawnPosition = position;
+    spawnPosition.x += -1.f;
+    spawnPosition.y += 3.f;
+
+    auto spawn = level->SpawnActor<SnowbrosEnemy>(spawnPosition, scale, rotation);
+    spawn->SetEnemyType(SnowbrosEnemyType::Spawn);
+
+    auto spawnAI         = spawn->GetAIComponent();
+    auto spawnBlackboard = spawnAI->GetBlackboard<SpawnBlackboard>();
+
+    if (spawnOnLeft)
+    {
+        spawn->SetDirection(1.f);
+        spawnBlackboard->landPositionX = blackboard->spawnLandPositionXLeft + positionError;
+    }
+    else
+    {
+        spawn->SetDirection(-1.f);
+        if (1 == blackboard->spawnPattern
+            && std::abs(position.y - blackboard->spawnPositionYTop) < 0.1f)
+            spawnBlackboard->landPositionX
+              = blackboard->spawnLandPositionXRight + blackboard->spawnPattern1Bias + positionError;
+        else
+            spawnBlackboard->landPositionX = blackboard->spawnLandPositionXRight + positionError;
+    }
+}
 
 void BossStateMachine::AdjustLowerBody()
 {

@@ -184,6 +184,7 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
         auto tilemap = SpawnActor<IndexedTilemap>(position, scale, rotation);
         SnowbrosDataParser::ParseIndexedTexture("Tile", L"snowbros_tilemap.bmp");
 
+        tilemap->SetPaletteSet(stageData.paletteNumber);
         tilemap->SetTexture("Tile");
         tilemap->CreateTile(16, 14, {1.f, 1.f}, 0);
         tilemap->AddTileSprites({16.f, 16.f});
@@ -280,6 +281,8 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
 
     auto tilemap = SpawnActor<IndexedTilemap>(position, scale, rotation);
     SnowbrosDataParser::ParseIndexedTexture("Tile", L"snowbros_tilemap.bmp");
+
+    tilemap->SetPaletteSet(stageData.paletteNumber);
     tilemap->SetTexture("Tile");
     tilemap->CreateTile(16, 14, {1.f, 1.f}, 0);
     tilemap->AddTileSprites({16.f, 16.f});
