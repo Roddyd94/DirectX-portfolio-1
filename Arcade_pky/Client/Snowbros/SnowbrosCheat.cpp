@@ -85,6 +85,7 @@ void SnowbrosCheat::ChangeLevel(Ptr<class InputAction> action, ButtonEventType::
         return;
 
     auto level = Cast<Level, SnowbrosLevel>(GetLevel());
+    level->RemoveItems();
     level->RemoveEnemies();
 
     if (action->GetName() == "ChangeLevel_0")

@@ -39,25 +39,6 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
 
     blackboard->currentPaletteID = FIND_PALETTE("boss_normal")->GetID();
 
-    // blackboard->loopTimerID = TimeManager::Instance().SetTimer(5.0f, true,
-    //   [this]()
-    //   {
-    //       auto pawn       = GetPawn<SnowbrosEnemy>();
-    //       auto kinematic  = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
-    //       auto blackboard = GetBlackboard<BossBlackboard>();
-
-    //      ++blackboard->temp %= 2;
-    //      switch (blackboard->temp)
-    //      {
-    //      case 0:
-    //          kinematic->SetVelocity({0.f, -2.f});
-    //          break;
-    //      case 1:
-    //          kinematic->SetVelocity({0.f, 2.f});
-    //          break;
-    //      }
-    //  });
-
     auto spriteEffectCallback = [this](bool on)
     {
         auto pawn       = GetPawn<SnowbrosEnemy>();

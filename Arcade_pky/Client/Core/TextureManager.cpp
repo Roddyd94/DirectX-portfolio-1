@@ -8,8 +8,6 @@ bool TextureManager::Init()
 {
     // TODO: Read Metadata and Load Textures
 
-    // TODO: Remove this after implementing parser
-
     return true;
 }
 

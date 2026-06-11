@@ -32,7 +32,6 @@ bool Item::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
     auto sprite = CreateSceneComponent<IndexedSpriteInstanceComponent>("Root");
     sprite->SetRenderLayer("Item");
 
-    // sprite->SetShader("SpriteShader");
     SetRoot(sprite);
 
     auto animation = sprite->CreateAnimation();

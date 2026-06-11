@@ -73,7 +73,6 @@ void PlayerStateSpawned::Exit(Ptr<class PlayerComponent> playerComponent)
           blackboard->invincible = false;
           sprite->SetEnable(true);
       });
-    // invincible 부여
 }
 
 void PlayerStateSpawned::Tick(Ptr<class PlayerComponent> playerComponent, float deltaTime) {}

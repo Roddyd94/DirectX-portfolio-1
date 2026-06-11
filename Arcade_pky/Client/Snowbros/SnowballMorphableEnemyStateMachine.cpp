@@ -187,10 +187,9 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           blackboard->isJumping = true;
       });
     AddNotifyToAnimationClipEnd(SnowbrosEnemyAnimationType::Awake,
-      [weakAnimation = Weak(animation)]()
+      [this]()
       {
-          auto animation = Lock(weakAnimation);
-          animation->ChangeAnimationClip("goblin_dizzy");
+          ChangeAnimationClip(SnowbrosEnemyAnimationType::Dizzy);
       });
     AddNotifyToAnimationClipEnd(SnowbrosEnemyAnimationType::Dead,
       [weakLevel = Weak(level), weakBlackboard = Weak(blackboard), weakPawn = Weak(pawn)]()
@@ -501,7 +500,13 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
               case SnowbrosEnemyState::Struggle:
               case SnowbrosEnemyState::Snowball:
               {
-                  // todo melt snowball and destroy projectile
+                  auto otherPawn = otherCollider->GetOwner();
+                  auto otherKinematic = otherPawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+
+                  otherKinematic->SetVelocityX(0.f);
+
+                  Transition("Struggle");
+                  blackboard->accTime = 0.f;
               }
               break;
               }

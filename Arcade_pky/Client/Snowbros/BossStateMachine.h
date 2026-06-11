@@ -20,8 +20,6 @@ enum class SnowbrosBossLowerFrameType
     None
 };
 
-// BossAnimation struct
-
 class BossStateMachine : public AIStateMachine
 {
 public:

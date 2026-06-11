@@ -5,11 +5,15 @@
 #include "Core/ResourceManager.h"
 #include "Core/TimeManager.h"
 
+#include "IndexedSpriteInstanceComponent.h"
+#include "SnowbrosEnemy.h"
+#include "SnowbrosEnemyState.h"
+#include "AI/AIComponent.h"
+#include "AI/AIController.h"
 #include "Core/Animation/Animation2D.h"
 #include "Core/Collision/AABBCollisionComponent.h"
 #include "Core/Palette.h"
 #include "Platformer/PlatformerKinematicComponent.h"
-#include "Snowbros/IndexedSpriteInstanceComponent.h"
 #include "Tilemap/Tilemap.h"
 #include "Tilemap/TilemapLevel.h"
 

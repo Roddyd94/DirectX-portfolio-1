@@ -30,5 +30,6 @@ public:
     Ptr<class Item> SpawnItem(Vector3 position, Item::Type type);
 
     void StartStage(int32 stageNumber);
+    void RemoveItems();
     void RemoveEnemies();
 };

@@ -332,6 +332,15 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
     _startingNextStage = false;
 }
 
+void SnowbrosLevel::RemoveItems()
+{
+    std::vector<Ptr<Actor>> items;
+    FindActors("Item", items);
+
+    for (auto& item : items)
+        item->SetActive(false);
+}
+
 void SnowbrosLevel::RemoveEnemies()
 {
     std::vector<Ptr<Actor>> enemies;

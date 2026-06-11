@@ -43,19 +43,19 @@ void World::Init(const std::string& name)
       std::make_pair(ColliderType::Player, CollisionResponse::Block),
       std::make_pair(ColliderType::PlayerHead, CollisionResponse::Block),
       std::make_pair(ColliderType::Enemy, CollisionResponse::Block),
-      std::make_pair(ColliderType::PlayerProjectile, CollisionResponse::Block));
+      std::make_pair(ColliderType::PlayerProjectile, CollisionResponse::Block),
+      std::make_pair(ColliderType::EnemyProjectile, CollisionResponse::Block));
 
     _collisionProfileManager->SetProfileResponse(
       "PlayerProjectile", std::make_pair(ColliderType::Enemy, CollisionResponse::Block));
 
-    _collisionProfileManager->SetProfileResponse(
-      "EnemyProjectile", std::make_pair(ColliderType::Player, CollisionResponse::Block));
+    _collisionProfileManager->SetProfileResponse("EnemyProjectile",
+      std::make_pair(ColliderType::Player, CollisionResponse::Block),
+      std::make_pair(ColliderType::Enemy, CollisionResponse::Block));
 
     _collisionProfileManager->SetProfileResponse(
       "Item", std::make_pair(ColliderType::Player, CollisionResponse::Block));
 #endif // _HAS_COLLISION_MODULE
-
-    // TODO save & load
 
     _currentLevel = CreateLevel<SnowbrosLevel>(This<World>(), name);
 }
