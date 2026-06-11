@@ -16,6 +16,7 @@ enum class SnowbrosEnemyAnimationType
     Dead,
     Standing,
     Shoot,
+    Fly,
     None
 };
 
@@ -32,8 +33,6 @@ public:
     virtual void AddNotifyToAnimationClipEnd(
       SnowbrosEnemyAnimationType type, std::function<void()>&& func)
       = 0;
-
-    Ptr<class Pawn> GetPawn() const;
 
 public:
     static void FindSnowballs(Ptr<class CollisionManager> collisionManager,

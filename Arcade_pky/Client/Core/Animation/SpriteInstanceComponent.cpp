@@ -141,7 +141,7 @@ void SpriteInstanceComponent::Stop()
 
 void SpriteInstanceComponent::ChangeAnimation(const std::string& name, bool play)
 {
-    if (GetCurrentClipName() != name)
+    if (!_animation->GetCurrentClip() || GetCurrentClipName() != name)
         _animation->ChangeAnimationClip(name, play);
 }
 

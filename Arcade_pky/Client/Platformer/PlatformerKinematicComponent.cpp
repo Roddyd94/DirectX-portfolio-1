@@ -45,7 +45,8 @@ void PlatformerKinematicComponent::Tick(float deltaTime)
     if (this->IsColliderMovingAgainstFloor(delta) && _onCollidedWithFloor)
         _onCollidedWithFloor();
 
-    AdjustPositionX(worldPos);
+    if (!_canEscapeBoundaryX)
+        AdjustPositionX(worldPos);
 
     actor->SetWorldPosition(worldPos);
 }
@@ -93,6 +94,11 @@ void PlatformerKinematicComponent::SetVelocityY(float velocityY)
     _velocity.y = velocityY;
 }
 
+void PlatformerKinematicComponent::SetCanEscapeBoundaryX(bool canEscapeBoundaryX)
+{
+    _canEscapeBoundaryX = canEscapeBoundaryX;
+}
+
 void PlatformerKinematicComponent::MoveX(float deltaX)
 {
     Ptr<Actor> actor    = GetOwner();
@@ -130,7 +136,10 @@ bool PlatformerKinematicComponent::IsColliderOnFloor(Vector2 delta)
         || (tileLeftBottom && tileLeftBottom->IsTopBlock())
         || (tileRightBottom && tileRightBottom->IsTopBlock()))
     {
-        Rect tileRect = tileCenterBottom->GetRect();
+        Ptr<Tile> aTile = tileCenterBottom ? tileCenterBottom
+                                           : (tileLeftBottom ? tileLeftBottom : tileRightBottom);
+
+        Rect tileRect = aTile->GetRect();
         return std::abs(tileRect.top - colliderBox.bottom) < epsilonTile;
     }
 
@@ -346,6 +355,9 @@ void PlatformerKinematicComponent::AdjustPositionToFloor(Vector2 delta)
 
     Vector2   colliderCenterBottom = {colliderBox.GetCenterX(), colliderBox.bottom};
     Ptr<Tile> tile                 = tilemap->GetTile(colliderCenterBottom);
+
+    if (nullptr == tile)
+        return;
 
     float targetPositionY = tile->GetWorldPosition().y + tile->GetSize().y / 2.f
                           + collider->GetBoxSize().y / 2.f - correctionToTile / 2.f;

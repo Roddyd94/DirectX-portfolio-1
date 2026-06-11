@@ -27,7 +27,7 @@ public:
     ~AICondition() override = default;
 
 private:
-    std::vector<std::function<bool()>> _conditions;
+    std::vector<std::function<bool(float)>> _conditions;
 
 public:
     bool CheckCondition(float deltaTime) const override;
@@ -40,7 +40,7 @@ public:
     }
 
     template <typename T>
-    void AddCondition(T* obj, bool (T::*memFunc)())
+    void AddCondition(T* obj, bool (T::*memFunc)(float))
     {
         _conditions.push_back(std::bind(memFunc, obj));
     }
@@ -69,7 +69,7 @@ public:
     }
 
     template <typename T>
-    void AddCondition(T* obj, bool (T::*memFunc)())
+    void AddCondition(T* obj, bool (T::*memFunc)(float))
     {
         Ptr<AICondition> condition = New<AICondition>();
         condition->AddCondition(obj, memFunc);

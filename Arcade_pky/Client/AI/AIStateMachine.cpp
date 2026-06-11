@@ -2,6 +2,8 @@
 
 #include "AIStateMachine.h"
 
+#include "AIComponent.h"
+
 bool AIStateMachine::Init(Ptr<class AIComponent> owner)
 {
     _owner = owner;
@@ -58,9 +60,13 @@ void AIStateMachine::Transition(const std::string& stateName)
     _accTime = 0.f;
 }
 
-Ptr<class AIComponent> AIStateMachine::GetOwner() const
+Ptr<class Pawn> AIStateMachine::GetPawn() const
 {
-    return Lock(_owner);
+    auto owner = Lock(_owner);
+    if (nullptr == owner)
+        return nullptr;
+
+    return owner->GetPawn();
 }
 
 Ptr<class AIState> AIStateMachine::GetCurrentState() const

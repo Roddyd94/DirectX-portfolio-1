@@ -31,9 +31,9 @@ public:
     void Tick(float deltaTime);
     void Transition(const std::string& stateName);
 
-    Ptr<class AIComponent> GetOwner() const;
-    Ptr<class AIState>     GetCurrentState() const;
-    Ptr<class AIState>     FindAIState(const std::string& name) const;
+    Ptr<class Pawn>    GetPawn() const;
+    Ptr<class AIState> GetCurrentState() const;
+    Ptr<class AIState> FindAIState(const std::string& name) const;
 
     Ptr<class AIState>      CreateAIState(const std::string& name);
     Ptr<class AITransition> CreateAITransition(const std::string& stateName,
@@ -52,6 +52,12 @@ public:
     Ptr<T> GetCurrentState() const
     {
         return Cast<AIState, T>(_currentState);
+    }
+
+    template <typename T>
+    Ptr<T> GetPawn() const
+    {
+        return Cast<Pawn, T>(GetPawn());
     }
 
     template <typename T>

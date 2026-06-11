@@ -9,7 +9,7 @@ public:
     DELETE_SPECIAL_FUNC(TilemapLevel)
 
 protected:
-    Ptr<class Tilemap> _tilemap;
+    Ptr<class Tilemap> _tilemap     = nullptr;
     Ptr<class Tilemap> _nextTilemap = nullptr;
 
 public:

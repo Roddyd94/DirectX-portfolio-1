@@ -11,13 +11,13 @@ public:
 
 public:
     Vector2 previousPosition    = Vector2::zero;
-    Vector2 previousDelta       = Vector2::zero;
     Vector2 jumpTargetDirection = Vector2::zero;
 
     int32 hitCount = 0;
 
-    float direction = -1.f;
-    float accTime   = 0.f;
+    float walkSpeedX = 1.f;
+    float direction  = -1.f;
+    float accTime    = 0.f;
 
     bool turned               = false;
     bool hitByReinforced      = false;
@@ -30,7 +30,6 @@ public:
       = {0.f, 12.f, 18.5f, 23.f};
 
     inline static const float dizzyTime     = 1.f;
-    inline static const float walkSpeedX    = 1.f;
     inline static const float jumpTime      = 0.2f;
     inline static const float jumpForceFull = 6.625f;
     inline static const float jumpForceHalf = 6.625f;

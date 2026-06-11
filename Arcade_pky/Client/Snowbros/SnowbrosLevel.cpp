@@ -27,19 +27,7 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
 
     SpawnActor<SnowbrosCheat>(position, scale, rotation);
 
-    position.x = -7.5f;
-    position.y = -6.5f;
-
-    auto tilemap = SpawnActor<IndexedTilemap>(position, scale, rotation);
-    SnowbrosDataParser::ParseIndexedTexture("Tile", L"snowbros_tilemap.bmp");
-    tilemap->SetTexture("Tile");
-    tilemap->CreateTile(16, 14, {1.f, 1.f}, 0);
-    tilemap->AddTileSprites({16.f, 16.f});
-    _tilemap = tilemap;
-
     SnowbrosDataParser::ReadPalettes(L"snowbros_palettes.bin");
-
-    int32 tileCount = 12 * 13;
 
     SnowbrosDataParser::ParseTileMetadata(_tileMetadata);
     SnowbrosDataParser::ParseStageData(L"snowbros_stages.bin", _stageData);
@@ -160,6 +148,14 @@ void SnowbrosLevel::SetPlayer(Ptr<class SnowbrosPlayer> player)
     _player = player;
 }
 
+Ptr<class Item> SnowbrosLevel::SpawnItem(Vector3 position, Item::Type type)
+{
+    auto item = SpawnActor<Item>(position, Vector3::one, Vector3::zero);
+    item->SetItemType(type);
+
+    return item;
+}
+
 void SnowbrosLevel::StartStage(int32 stageNumber)
 {
     if (_startingNextStage)
@@ -176,14 +172,12 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
     byte tileData[224] = {};
     SnowbrosDataParser::ParseStageMapData(stageData.filename, tileData, 224);
 
-    if (0 != stageNumber)
+    Vector3 position = Vector3{0.f, 0.f, 1.f};
+    Vector3 scale    = Vector3{1.f, 1.f, 1.f};
+    Vector3 rotation = Vector3{0.f, 0.f, 0.f};
+
+    if (nullptr != _tilemap)
     {
-        // move player up
-
-        Vector3 position = Vector3{0.f, 0.f, 1.f};
-        Vector3 scale    = Vector3{1.f, 1.f, 1.f};
-        Vector3 rotation = Vector3{0.f, 0.f, 0.f};
-
         position.x = -7.5f;
         position.y = 7.5f;
 
@@ -281,16 +275,15 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
         return;
     }
 
-    Vector3 playerPosition = Vector3::one;
+    position.x = -7.5f;
+    position.y = -6.5f;
 
-    playerPosition.x = stageData.playerPosition.x;
-    playerPosition.y = stageData.playerPosition.y;
-
-    auto player = SpawnActor<SnowbrosPlayer>(playerPosition, 2 * Vector3::one, Vector3::zero);
-    player->SetDirection(stageData.playerDirection);
-
-    _player = player;
-    _player->StartStage();
+    auto tilemap = SpawnActor<IndexedTilemap>(position, scale, rotation);
+    SnowbrosDataParser::ParseIndexedTexture("Tile", L"snowbros_tilemap.bmp");
+    tilemap->SetTexture("Tile");
+    tilemap->CreateTile(16, 14, {1.f, 1.f}, 0);
+    tilemap->AddTileSprites({16.f, 16.f});
+    _tilemap = tilemap;
 
     for (size_t i = 0; i < 14; i++)
     {
@@ -308,8 +301,19 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
         }
     }
 
-    Vector3 scale    = 2 * Vector3::one;
-    Vector3 rotation = Vector3::zero;
+    Vector3 playerPosition = Vector3::one;
+
+    playerPosition.x = stageData.playerPosition.x;
+    playerPosition.y = stageData.playerPosition.y;
+
+    auto player = SpawnActor<SnowbrosPlayer>(playerPosition, 2 * Vector3::one, Vector3::zero);
+    player->SetDirection(stageData.playerDirection);
+
+    _player = player;
+    _player->StartStage();
+
+    scale    = 2 * Vector3::one;
+    rotation = Vector3::zero;
     for (auto& enemyData : stageData.enemies)
     {
         Vector3 position = Vector3::one;
@@ -323,4 +327,13 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
     }
 
     _startingNextStage = false;
+}
+
+void SnowbrosLevel::RemoveEnemies()
+{
+    std::vector<Ptr<Actor>> enemies;
+    FindActors("Enemy", enemies);
+
+    for (auto& enemy : enemies)
+        enemy->SetActive(false);
 }

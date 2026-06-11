@@ -23,7 +23,7 @@ bool AICondition::CheckCondition(float deltaTime) const
     {
         for (auto& condition : _conditions)
         {
-            if (!condition())
+            if (!condition(deltaTime))
                 return false;
         }
 
@@ -33,7 +33,7 @@ bool AICondition::CheckCondition(float deltaTime) const
     {
         for (auto& condition : _conditions)
         {
-            if (condition())
+            if (condition(deltaTime))
                 return true;
         }
 

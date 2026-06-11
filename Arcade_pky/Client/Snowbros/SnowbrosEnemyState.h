@@ -35,6 +35,8 @@ public:
         Launched,
         Dead,
         Fire,
+        Hop,
+        Fly,
         End
     };
 };

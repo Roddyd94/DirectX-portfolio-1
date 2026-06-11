@@ -15,6 +15,7 @@
 #include "SnowbrosEnemyState.h"
 #include "SnowbrosLevel.h"
 #include "AI/AIComponent.h"
+#include "AI/AIController.h"
 #include "Common/Random.h"
 #include "Core/Actor.h"
 #include "Core/Animation/Animation2D.h"
@@ -26,7 +27,7 @@
 
 bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
 {
-    auto pawn      = GetOwner()->GetPawn();
+    auto pawn      = GetPawn();
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
     if (kinematic->IsColliderMovingAgainstBoundaryX(deltaX))
@@ -110,7 +111,7 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
 
 void SnowballMorphableEnemyStateMachine::Throw(float direction)
 {
-    auto pawn      = GetOwner()->GetPawn();
+    auto pawn      = GetPawn();
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
     auto blackboard = Cast<AIBlackboard, SnowballMorphableEnemyBlackboard>(_blackboard);
@@ -198,20 +199,20 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           auto level      = Lock(weakLevel);
           auto blackboard = Lock(weakBlackboard);
 
-          auto item
-            = level->SpawnActor<Item>(pawn->GetWorldPosition(), Vector3::one, Vector3::zero);
+          Vector3 spawnPosition = pawn->GetWorldPosition();
+
           int32 randomValue = Utility::RandomInt(0, 100);
           if (blackboard->hitByReinforced)
           {
               if (randomValue >= 80)
-                  item->SetItemType(Item::Speed);
+                  level->SpawnItem(spawnPosition, Item::Speed);
               else if (randomValue >= 60)
-                  item->SetItemType(Item::Power);
+                  level->SpawnItem(spawnPosition, Item::Power);
               else if (randomValue >= 40)
-                  item->SetItemType(Item::Range);
+                  level->SpawnItem(spawnPosition, Item::Range);
               else
               {
-                  item->SetItemType(Item::Sushi);
+                  auto item = level->SpawnItem(spawnPosition, Item::Sushi);
 
                   int32 itemNumber = randomValue % 5;
                   item->SetItemNumber(itemNumber + 6);
@@ -220,14 +221,14 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           else
           {
               if (randomValue >= 80)
-                  item->SetItemType(Item::Speed);
+                  level->SpawnItem(spawnPosition, Item::Speed);
               else if (randomValue >= 60)
-                  item->SetItemType(Item::Power);
+                  level->SpawnItem(spawnPosition, Item::Power);
               else if (randomValue >= 40)
-                  item->SetItemType(Item::Range);
+                  level->SpawnItem(spawnPosition, Item::Range);
               else
               {
-                  item->SetItemType(Item::Sushi);
+                  auto item = level->SpawnItem(spawnPosition, Item::Sushi);
 
                   int32 itemNumber = randomValue % 5;
                   item->SetItemNumber(itemNumber + 1);
@@ -235,6 +236,17 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           }
 
           pawn->SetActive(false);
+      });
+
+    animationSnowball->AddNotify("snowball_crash",
+      animationSnowball->GetClipFrameCount("snowball_crash"),
+      [weakPawn = Weak(pawn), weakSpriteSnowball = Weak(spriteSnowball)]()
+      {
+          auto pawn           = Lock(weakPawn);
+          auto spriteSnowball = Lock(weakSpriteSnowball);
+
+          pawn->SetActive(false);
+          spriteSnowball->SetEnable(false);
       });
 #pragma endregion AnimationNotifies
 
@@ -328,123 +340,145 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
               auto thisPosition  = pawn->GetWorldPosition();
               auto otherPosition = otherCollider->GetWorldPosition();
 
-              auto otherPawn  = Cast<Actor, Pawn>(otherCollider->GetOwner());
-              auto otherActor = otherPawn->GetController();
+              auto otherPawn       = Cast<Actor, SnowbrosEnemy>(otherCollider->GetOwner());
+              auto otherController = otherPawn->GetController();
 
-              auto otherAI           = otherActor->FindActorComponent<AIComponent>("AI");
+              auto otherEnemyType = otherPawn->GetEnemyType();
+
+              auto otherAI           = otherController->FindActorComponent<AIComponent>("AI");
               auto otherStateMachine = otherAI->GetAIStateMachine();
-              auto otherState        = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
-              auto otherStateType    = otherState->GetStateType();
 
-              auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
-              auto thisStateType = thisState->GetStateType();
+              switch (otherEnemyType)
+              {
+              case SnowbrosEnemyType::Goblin:
+              case SnowbrosEnemyType::Monkey:
+              case SnowbrosEnemyType::Spitter:
+              case SnowbrosEnemyType::Spawn:
+              {
+                  auto otherState     = otherStateMachine->GetCurrentState<SnowbrosEnemyState>();
+                  auto otherStateType = otherState->GetStateType();
 
-              switch (thisStateType)
-              {
-              case SnowbrosEnemyState::Walk:
-              {
-                  switch (otherStateType)
+                  auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
+                  auto thisStateType = thisState->GetStateType();
+
+                  switch (thisStateType)
                   {
-                  case SnowbrosEnemyState::Stand:
-                  case SnowbrosEnemyState::Patrol:
                   case SnowbrosEnemyState::Walk:
-                  case SnowbrosEnemyState::Turn:
-                  case SnowbrosEnemyState::Crouch:
-                  case SnowbrosEnemyState::Struggle:
-                  case SnowbrosEnemyState::Dizzy:
-                  case SnowbrosEnemyState::Fire:
                   {
-                      if (thisPosition.x < otherPosition.x && blackboard->direction < 0)
-                          return;
+                      switch (otherStateType)
+                      {
+                      case SnowbrosEnemyState::Stand:
+                      case SnowbrosEnemyState::Patrol:
+                      case SnowbrosEnemyState::Walk:
+                      case SnowbrosEnemyState::Turn:
+                      case SnowbrosEnemyState::Crouch:
+                      case SnowbrosEnemyState::Struggle:
+                      case SnowbrosEnemyState::Dizzy:
+                      case SnowbrosEnemyState::Fire:
+                      {
+                          if (thisPosition.x < otherPosition.x && blackboard->direction < 0)
+                              return;
 
-                      if (thisPosition.x > otherPosition.x && blackboard->direction > 0)
-                          return;
+                          if (thisPosition.x > otherPosition.x && blackboard->direction > 0)
+                              return;
 
-                      Transition("Turn");
+                          Transition("Turn");
+                      }
+                      break;
+                      }
                   }
                   break;
-                  }
-              }
-              break;
-              case SnowbrosEnemyState::Snowball:
-              {
-                  switch (otherStateType)
-                  {
                   case SnowbrosEnemyState::Snowball:
                   {
-                      auto otherSnowballStateMachine
-                        = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(
-                          otherStateMachine);
-
-                      float distance = std::abs(thisPosition.x - otherPosition.x);
-                      if (distance > blackboard->snowballRepulsiveDistance)
-                          return;
-
-                      if (thisPosition.x < otherPosition.x)
+                      switch (otherStateType)
                       {
-                          otherSnowballStateMachine->TryMoveX(blackboard->snowballRepulsiveDeltaX);
-                          TryMoveX(-blackboard->snowballRepulsiveDeltaX);
+                      case SnowbrosEnemyState::Snowball:
+                      {
+                          auto otherSnowballStateMachine
+                            = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(
+                              otherStateMachine);
+
+                          float distance = std::abs(thisPosition.x - otherPosition.x);
+                          if (distance > blackboard->snowballRepulsiveDistance)
+                              return;
+
+                          if (thisPosition.x < otherPosition.x)
+                          {
+                              otherSnowballStateMachine->TryMoveX(
+                                blackboard->snowballRepulsiveDeltaX);
+                              TryMoveX(-blackboard->snowballRepulsiveDeltaX);
+                          }
+                          else
+                          {
+                              otherSnowballStateMachine->TryMoveX(
+                                -blackboard->snowballRepulsiveDeltaX);
+                              TryMoveX(blackboard->snowballRepulsiveDeltaX);
+                          }
                       }
-                      else
+                      break;
+                      case SnowbrosEnemyState::SnowballRolling:
                       {
-                          otherSnowballStateMachine->TryMoveX(-blackboard->snowballRepulsiveDeltaX);
-                          TryMoveX(blackboard->snowballRepulsiveDeltaX);
+                          auto thisPosition  = thisCollider->GetWorldPosition().ToVector2();
+                          auto otherPosition = otherCollider->GetWorldPosition().ToVector2();
+
+                          if (thisPosition.x < otherPosition.x)
+                              kinematic->SetVelocity({-blackboard->snowballRollingSpeedX, 0.f});
+                          else
+                              kinematic->SetVelocity({blackboard->snowballRollingSpeedX, 0.f});
+
+                          blackboard->isSnowballReinforced = true;
+                          Transition("SnowballRolling");
+
+                          {
+                              auto otherKinematic
+                                = otherPawn->FindActorComponent<PlatformerKinematicComponent>(
+                                  "Kinematic");
+
+                              Vector2 otherVelocity = otherKinematic->GetVelocity();
+                              otherKinematic->SetVelocityX(-otherVelocity.x);
+                          }
+                      }
+                      break;
                       }
                   }
                   break;
                   case SnowbrosEnemyState::SnowballRolling:
                   {
-                      auto thisPosition  = thisCollider->GetWorldPosition().ToVector2();
-                      auto otherPosition = otherCollider->GetWorldPosition().ToVector2();
-
-                      if (thisPosition.x < otherPosition.x)
-                          kinematic->SetVelocity({-blackboard->snowballRollingSpeedX, 0.f});
-                      else
-                          kinematic->SetVelocity({blackboard->snowballRollingSpeedX, 0.f});
-
-                      blackboard->isSnowballReinforced = true;
-                      Transition("SnowballRolling");
-
+                      switch (otherStateType)
                       {
-                          auto otherKinematic
-                            = otherPawn->FindActorComponent<PlatformerKinematicComponent>(
-                              "Kinematic");
+                      case SnowbrosEnemyState::Stand:
+                      case SnowbrosEnemyState::Patrol:
+                      case SnowbrosEnemyState::Walk:
+                      case SnowbrosEnemyState::Turn:
+                      case SnowbrosEnemyState::Jump:
+                      case SnowbrosEnemyState::Fall:
+                      case SnowbrosEnemyState::Fire:
+                      case SnowbrosEnemyState::Crouch:
+                      case SnowbrosEnemyState::Dizzy:
+                      case SnowbrosEnemyState::Struggle:
+                      {
+                          auto otherBlackboard
+                            = otherStateMachine->GetBlackboard<SnowballMorphableEnemyBlackboard>();
 
-                          Vector2 otherVelocity = otherKinematic->GetVelocity();
-                          otherKinematic->SetVelocityX(-otherVelocity.x);
+                          otherBlackboard->direction
+                            = thisPosition.x < otherPosition.x ? 1.f : -1.f;
+                          otherBlackboard->hitByReinforced = blackboard->isSnowballReinforced;
+
+                          otherStateMachine->Transition("Launched");
+                      }
+                      break;
                       }
                   }
                   break;
                   }
               }
               break;
-              case SnowbrosEnemyState::SnowballRolling:
-              {
-                  switch (otherStateType)
-                  {
-                  case SnowbrosEnemyState::Stand:
-                  case SnowbrosEnemyState::Patrol:
-                  case SnowbrosEnemyState::Walk:
-                  case SnowbrosEnemyState::Turn:
-                  case SnowbrosEnemyState::Jump:
-                  case SnowbrosEnemyState::Fall:
-                  case SnowbrosEnemyState::Fire:
-                  case SnowbrosEnemyState::Crouch:
-                  case SnowbrosEnemyState::Dizzy:
-                  case SnowbrosEnemyState::Struggle:
-                  {
-                      auto otherBlackboard
-                        = otherStateMachine->GetBlackboard<SnowballMorphableEnemyBlackboard>();
-
-                      otherBlackboard->direction = thisPosition.x < otherPosition.x ? 1.f : -1.f;
-                      otherBlackboard->hitByReinforced = blackboard->isSnowballReinforced;
-
-                      otherStateMachine->Transition("Launched");
-                  }
+              case SnowbrosEnemyType::Pumpkin:
                   break;
-                  }
-              }
-              break;
+              case SnowbrosEnemyType::Ghost:
+                  break;
+              case SnowbrosEnemyType::Boss:
+                  break;
               }
           }
           break;
@@ -469,17 +503,6 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           }
       });
 #pragma endregion ColliderCallbacks
-
-    animationSnowball->AddNotify("snowball_crash",
-      animationSnowball->GetClipFrameCount("snowball_crash"),
-      [weakPawn = Weak(pawn), weakSpriteSnowball = Weak(spriteSnowball)]()
-      {
-          auto pawn           = Lock(weakPawn);
-          auto spriteSnowball = Lock(weakSpriteSnowball);
-
-          pawn->SetActive(false);
-          spriteSnowball->SetEnable(false);
-      });
 
 #pragma region RegisterStateCallbackEnter
     enemyStateWalk->RegisterCallback(AIEventState::Enter,
@@ -631,7 +654,6 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           auto blackboard = Lock(weakBlackboard);
 
           kinematic->SetVelocity({blackboard->direction * blackboard->walkSpeedX, 0.f});
-          blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
       });
     enemyStateJump->RegisterCallback(AIEventState::Tick,
       [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime)
@@ -641,7 +663,6 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
 
           if (blackboard->isJumping)
               kinematic->AddGravity(deltaTime);
-          blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
       });
     enemyStateFall->RegisterCallback(AIEventState::Tick,
       [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime)
@@ -650,7 +671,6 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           auto blackboard = Lock(weakBlackboard);
 
           kinematic->AddGravity(deltaTime);
-          blackboard->previousDelta = kinematic->GetVelocity() * deltaTime;
       });
     enemyStateStruggle->RegisterCallback(AIEventState::Tick,
       [this, weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard),
@@ -849,144 +869,57 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
 #pragma endregion RegisterStateCallbackExit
 
 #pragma region AIConditions
-    auto conditionMoveAgainstBoundaryX
-      = CreateAICondition("MoveAgainstBoundaryX", ConditionOperator::And,
-        [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)]() -> bool
-        {
-            auto kinematic  = Lock(weakKinematic);
-            auto blackboard = Lock(weakBlackboard);
-
-            return kinematic->IsColliderMovingAgainstBoundaryX(blackboard->previousDelta.x);
-        });
-    auto conditionNotOnFloor       = CreateAICondition("NotOnFloor", ConditionOperator::And,
-            [weakKinematic = Weak(kinematic)]() -> bool
-            {
-          auto kinematic = Lock(weakKinematic);
-          return !kinematic->IsColliderOnFloor();
-      });
-    auto conditionMoveAgainstWall  = CreateAICondition("MoveAgainstWall", ConditionOperator::And,
-       [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)]() -> bool
-       {
-          auto kinematic  = Lock(weakKinematic);
-          auto blackboard = Lock(weakBlackboard);
-
-          return kinematic->IsColliderMovingAgainstWallX(blackboard->previousDelta.x);
-      });
-    auto conditionMoveAgainstFloor = CreateAICondition("MoveAgainstFloor", ConditionOperator::And,
-      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)]() -> bool
+    auto conditionMoveAgainstBoundaryX = CreateAICondition("MoveAgainstBoundaryX",
+      ConditionOperator::And,
+      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime) -> bool
       {
           auto kinematic  = Lock(weakKinematic);
           auto blackboard = Lock(weakBlackboard);
 
-          bool isFalling = kinematic->GetVelocity().y < 0.f;
-          bool wasColliderBottomOnBlock
-            = kinematic->IsColliderBottomOnBlock(-blackboard->previousDelta);
-          bool isColliderOnFloor = kinematic->IsColliderOnFloor();
+          float deltaX = kinematic->GetVelocity().x * deltaTime;
+
+          return kinematic->IsColliderMovingAgainstBoundaryX(deltaX);
+      });
+    auto conditionNotOnFloor           = CreateAICondition("NotOnFloor", ConditionOperator::And,
+                [weakKinematic = Weak(kinematic)](float deltaTime) -> bool
+                {
+          auto kinematic = Lock(weakKinematic);
+          return !kinematic->IsColliderOnFloor();
+      });
+    auto conditionMoveAgainstWall  = CreateAICondition("MoveAgainstWall", ConditionOperator::And,
+       [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime) -> bool
+       {
+          auto kinematic  = Lock(weakKinematic);
+          auto blackboard = Lock(weakBlackboard);
+
+          float deltaX = kinematic->GetVelocity().x * deltaTime;
+
+          return kinematic->IsColliderMovingAgainstWallX(deltaX);
+      });
+    auto conditionMoveAgainstFloor = CreateAICondition("MoveAgainstFloor", ConditionOperator::And,
+      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime) -> bool
+      {
+          auto kinematic  = Lock(weakKinematic);
+          auto blackboard = Lock(weakBlackboard);
+
+          Vector2 delta = kinematic->GetVelocity() * deltaTime;
+
+          bool isFalling                = delta.y < 0.f;
+          bool wasColliderBottomOnBlock = kinematic->IsColliderBottomOnBlock(-delta);
+          bool isColliderOnFloor        = kinematic->IsColliderOnFloor();
 
           return isFalling && !wasColliderBottomOnBlock && isColliderOnFloor;
       });
-    auto conditionIsPlayerAbove    = CreateAICondition("IsPlayerAbove", ConditionOperator::And,
-         [weakLevel = Weak(level), weakPawn = Weak(pawn)]() -> bool
-         {
-          auto level = Lock(weakLevel);
-          auto pawn  = Lock(weakPawn);
 
-          Ptr<Player> player = level->GetPlayer();
-          if (nullptr == player)
-              return false;
-
-          float playerPositionY = player->GetWorldPosition().y;
-          float thisPositionY   = pawn->GetWorldPosition().y;
-
-          return playerPositionY > thisPositionY && playerPositionY - thisPositionY > 0.9f;
-      });
-    auto conditionHasLandingTileForward
-      = CreateAICondition("HasLandingTileForward", ConditionOperator::And,
-        [weakTilemap = Weak(tilemap), weakBlackboard = Weak(blackboard),
-          weakPawn = Weak(pawn)]() -> bool
-        {
-            auto tilemap    = Lock(weakTilemap);
-            auto pawn       = Lock(weakPawn);
-            auto blackboard = Lock(weakBlackboard);
-
-            Ptr<Tile> tile           = tilemap->GetTile(pawn->GetWorldPosition().ToVector2());
-            Vector2   targetPosition = tile->GetPosition();
-
-            targetPosition.x += blackboard->direction * tile->GetSize().x;
-            targetPosition.y += tile->GetSize().y;
-            Ptr<Tile> targetTile = tilemap->GetTileLocal(targetPosition);
-
-            if (targetTile->IsTopBlock())
-            {
-                targetPosition.y += tile->GetSize().y;
-                blackboard->jumpTargetDirection = targetPosition - tile->GetPosition();
-                return true;
-            }
-
-            targetPosition.y -= tile->GetSize().y;
-            targetTile = tilemap->GetTileLocal(targetPosition);
-
-            if (targetTile->IsTopBlock())
-            {
-                targetPosition.y += tile->GetSize().y;
-                blackboard->jumpTargetDirection = targetPosition - tile->GetPosition();
-                return true;
-            }
-
-            return false;
-        });
-    auto conditionHasLandingTileAbove
-      = CreateAICondition("HasLandingTileAbove", ConditionOperator::And,
-        [weakTilemap = Weak(tilemap), weakBlackboard = Weak(blackboard),
-          weakPawn = Weak(pawn)]() -> bool
-        {
-            auto tilemap    = Lock(weakTilemap);
-            auto pawn       = Lock(weakPawn);
-            auto blackboard = Lock(weakBlackboard);
-
-            Ptr<Tile> tile           = tilemap->GetTile(pawn->GetWorldPosition().ToVector2());
-            Vector2   targetPosition = tile->GetPosition();
-
-            targetPosition.y += tile->GetSize().y;
-            Ptr<Tile> targetTile = tilemap->GetTileLocal(targetPosition);
-
-            if (targetTile->IsTopBlock())
-            {
-                targetPosition.y += tile->GetSize().y;
-                blackboard->jumpTargetDirection = targetPosition - tile->GetPosition();
-                return true;
-            }
-
-            return false;
-        });
-    auto conditionTouchedBlock   = CreateAICompositeCondition("TouchedBlock", ConditionOperator::Or,
-        conditionMoveAgainstBoundaryX, conditionMoveAgainstWall);
-    auto conditionShouldJumpNext = CreateAICompositeCondition("ShouldJumpNext",
-      ConditionOperator::And, conditionMoveAgainstWall, conditionHasLandingTileForward);
-    auto conditionCanJumpAbove   = CreateAICompositeCondition(
-      "CanJumpAbove", ConditionOperator::And, conditionIsPlayerAbove, conditionHasLandingTileAbove);
-    auto conditionShouldJump = CreateAICompositeCondition(
-      "ShouldJump", ConditionOperator::Or, conditionShouldJumpNext, conditionCanJumpAbove);
 #pragma endregion AIConditions
 
 #pragma region AITransitions
     enemyStateWalk->CreateAITransition("Walk_Fall", enemyStateFall, conditionNotOnFloor);
-    enemyStateWalk->CreateAITransition("Walk_Jump", enemyStateJump, conditionShouldJump);
-    enemyStateWalk->CreateAITransition("Walk_Turn", enemyStateTurn, conditionTouchedBlock);
     enemyStateJump->CreateAITransition("Jump_Crouch", enemyStateCrouch, conditionMoveAgainstFloor);
     enemyStateFall->CreateAITransition("Fall_Crouch", enemyStateCrouch, conditionMoveAgainstFloor);
 #pragma endregion AITransitions
 
     return true;
-}
-
-Ptr<class Pawn> SnowballMorphableEnemyStateMachine::GetPawn() const
-{
-    auto owner = GetOwner();
-    if (nullptr == owner)
-        return nullptr;
-
-    return owner->GetPawn();
 }
 
 void SnowballMorphableEnemyStateMachine::FindSnowballs(Ptr<class CollisionManager> collisionManager,

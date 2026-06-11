@@ -555,6 +555,8 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Player\PlayerState.h" />
     <ClInclude Include="Player\PlayerStateMachine.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Snowbros\BossBlackboard.h" />
+    <ClInclude Include="Snowbros\BossStateMachine.h" />
     <ClInclude Include="Snowbros\EnemyProjectile.h" />
     <ClInclude Include="Snowbros\GoblinBlackboard.h" />
     <ClInclude Include="Snowbros\GoblinStateMachine.h" />
@@ -574,7 +576,6 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Snowbros\ShootComponent.h" />
     <ClInclude Include="Snowbros\SnowballMorphableEnemyBlackboard.h" />
     <ClInclude Include="Snowbros\SnowballMorphableEnemyStateMachine.h" />
-    <ClInclude Include="Snowbros\SnowbrosBoss.h" />
     <ClInclude Include="Snowbros\SnowbrosCheat.h" />
     <ClInclude Include="Snowbros\SnowbrosDataParser.h" />
     <ClInclude Include="Snowbros\SnowbrosEnemy.h" />
@@ -585,6 +586,8 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Snowbros\SnowbrosPlayerState.h" />
     <ClInclude Include="Snowbros\SnowProjectile.h" />
     <ClInclude Include="Snowbros\SnowProjectileComponent.h" />
+    <ClInclude Include="Snowbros\SpawnBlackboard.h" />
+    <ClInclude Include="Snowbros\SpawnStateMachine.h" />
     <ClInclude Include="Snowbros\SpitterBlackboard.h" />
     <ClInclude Include="Snowbros\SpitterStateMachine.h" />
     <ClInclude Include="Snowbros\Types.h" />
@@ -732,6 +735,8 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Player\PlayerController.cpp" />
     <ClCompile Include="Player\PlayerState.cpp" />
     <ClCompile Include="Player\PlayerStateMachine.cpp" />
+    <ClCompile Include="Snowbros\BossBlackboard.cpp" />
+    <ClCompile Include="Snowbros\BossStateMachine.cpp" />
     <ClCompile Include="Snowbros\EnemyProjectile.cpp" />
     <ClCompile Include="Snowbros\GoblinBlackboard.cpp" />
     <ClCompile Include="Snowbros\GoblinStateMachine.cpp" />
@@ -751,7 +756,6 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Snowbros\ShootComponent.cpp" />
     <ClCompile Include="Snowbros\SnowballMorphableEnemyBlackboard.cpp" />
     <ClCompile Include="Snowbros\SnowballMorphableEnemyStateMachine.cpp" />
-    <ClCompile Include="Snowbros\SnowbrosBoss.cpp" />
     <ClCompile Include="Snowbros\SnowbrosCheat.cpp" />
     <ClCompile Include="Snowbros\SnowbrosDataParser.cpp" />
     <ClCompile Include="Snowbros\SnowbrosEnemy.cpp" />
@@ -762,6 +766,8 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Snowbros\SnowbrosPlayerState.cpp" />
     <ClCompile Include="Snowbros\SnowProjectile.cpp" />
     <ClCompile Include="Snowbros\SnowProjectileComponent.cpp" />
+    <ClCompile Include="Snowbros\SpawnBlackboard.cpp" />
+    <ClCompile Include="Snowbros\SpawnStateMachine.cpp" />
     <ClCompile Include="Snowbros\SpitterBlackboard.cpp" />
     <ClCompile Include="Snowbros\SpitterStateMachine.cpp" />
     <ClCompile Include="Tilemap\IndexedTileInstanceShader.cpp" />

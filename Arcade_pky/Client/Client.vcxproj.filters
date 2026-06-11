@@ -532,7 +532,16 @@
     <ClInclude Include="Snowbros\PlayerStateSpawned.h">
       <Filter>Snowbros\Player\PlayerState</Filter>
     </ClInclude>
-    <ClInclude Include="Snowbros\SnowbrosBoss.h" />
+    <ClInclude Include="Snowbros\BossStateMachine.h">
+      <Filter>Snowbros\Enemy\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\BossBlackboard.h">
+      <Filter>Snowbros\Enemy\Blackboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SpawnBlackboard.h">
+      <Filter>Snowbros\Enemy\Blackboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SpawnStateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1026,7 +1035,16 @@
     <ClCompile Include="Snowbros\PlayerStateSpawned.cpp">
       <Filter>Snowbros\Player\PlayerState</Filter>
     </ClCompile>
-    <ClCompile Include="Snowbros\SnowbrosBoss.cpp" />
+    <ClCompile Include="Snowbros\BossStateMachine.cpp">
+      <Filter>Snowbros\Enemy\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\BossBlackboard.cpp">
+      <Filter>Snowbros\Enemy\Blackboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SpawnBlackboard.cpp">
+      <Filter>Snowbros\Enemy\Blackboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SpawnStateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

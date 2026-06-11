@@ -20,6 +20,7 @@ protected:
     Weak<class Actor>                  _attachedTo;
 
     Vector2 _velocity;
+    bool    _canEscapeBoundaryX = false;
 
 public:
     inline static const float gravity           = -10.f;
@@ -42,6 +43,7 @@ public:
     void SetVelocity(Vector2 velocity);
     void SetVelocityX(float velocityX);
     void SetVelocityY(float velocityY);
+    void SetCanEscapeBoundaryX(bool canEscapeBoundaryX);
     void MoveX(float deltaX);
 
     void AddForce(Vector2 force);

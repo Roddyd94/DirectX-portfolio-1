@@ -1,4 +1,5 @@
 #pragma once
+#include "Item.h"
 #include "Types.h"
 #include "Tilemap/TilemapLevel.h"
 
@@ -26,5 +27,8 @@ public:
 
     void SetPlayer(Ptr<class SnowbrosPlayer> player);
 
+    Ptr<class Item> SpawnItem(Vector3 position, Item::Type type);
+
     void StartStage(int32 stageNumber);
+    void RemoveEnemies();
 };
