@@ -556,6 +556,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Player\PlayerStateMachine.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Snowbros\BossBlackboard.h" />
+    <ClInclude Include="Snowbros\BossState.h" />
     <ClInclude Include="Snowbros\BossStateMachine.h" />
     <ClInclude Include="Snowbros\EnemyProjectile.h" />
     <ClInclude Include="Snowbros\GoblinBlackboard.h" />
@@ -736,6 +737,7 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Player\PlayerState.cpp" />
     <ClCompile Include="Player\PlayerStateMachine.cpp" />
     <ClCompile Include="Snowbros\BossBlackboard.cpp" />
+    <ClCompile Include="Snowbros\BossState.cpp" />
     <ClCompile Include="Snowbros\BossStateMachine.cpp" />
     <ClCompile Include="Snowbros\EnemyProjectile.cpp" />
     <ClCompile Include="Snowbros\GoblinBlackboard.cpp" />

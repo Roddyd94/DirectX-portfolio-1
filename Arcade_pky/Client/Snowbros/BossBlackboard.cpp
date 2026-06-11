@@ -4,13 +4,10 @@
 
 #include "Platformer/PlatformerKinematicComponent.h"
 
-Vector2 BossBlackboard::GetTargetJumpForce() const
+Vector2 BossBlackboard::GetTargetJumpForceX(float deltaX) const
 {
-    float a = -PlatformerKinematicComponent::gravity;
-    float y = jumpTargetDirection.y + jumpEpsilon;
-
-    float c = std::sqrt(std::abs(2 * a * y));
-    float t = c / a;
-
-    return {jumpTargetDirection.x * 0.75f / t, c};
+    if (targetFloor == 1)
+        return {deltaX / jumpTimeFloor1, jumpForceFloor1};
+    else
+        return {deltaX / jumpTimeFloor0, jumpForceFloor0};
 }

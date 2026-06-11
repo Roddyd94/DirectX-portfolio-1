@@ -266,11 +266,9 @@ bool PlatformerKinematicComponent::IsColliderMovingAgainstWallX(float deltaX)
         return false;
 
     if (deltaX > 0)
-        return IsTileOnColliderBoundaryBlocked(Direction::RightTop)
-            || IsTileOnColliderBoundaryBlocked(Direction::RightBottom);
+        return IsTileOnColliderBoundaryBlocked(Direction::Right);
     else
-        return IsTileOnColliderBoundaryBlocked(Direction::LeftTop)
-            || IsTileOnColliderBoundaryBlocked(Direction::LeftBottom);
+        return IsTileOnColliderBoundaryBlocked(Direction::Left);
 }
 
 bool PlatformerKinematicComponent::IsColliderMovingAgainstBoundaryX(float deltaX)
@@ -362,7 +360,10 @@ void PlatformerKinematicComponent::AdjustPositionToFloor(Vector2 delta)
     float targetPositionY = tile->GetWorldPosition().y + tile->GetSize().y / 2.f
                           + collider->GetBoxSize().y / 2.f - correctionToTile / 2.f;
 
-    actor->SetWorldPosition({colliderCenterBottom.x, targetPositionY});
+    Vector2 colliderRelativePosition = collider->GetRelativePosition().ToVector2();
+
+    actor->SetWorldPosition({colliderCenterBottom.x - colliderRelativePosition.x,
+      targetPositionY - colliderRelativePosition.y});
 }
 
 void PlatformerKinematicComponent::AdjustPositionX(Vector2& position)

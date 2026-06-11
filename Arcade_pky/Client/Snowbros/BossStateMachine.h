@@ -33,4 +33,8 @@ public:
     void Destroy() override;
 
     void ChangeLowerBody(SnowbrosBossLowerFrameType type);
+    void Hit(int32 damage);
+    void Jump();
+    void SpawnSpawn(float targetPositionX);
+    void AdjustLowerBody();
 };

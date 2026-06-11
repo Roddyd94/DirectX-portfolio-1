@@ -131,13 +131,17 @@ void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
         auto stateMachine = aiComponent->CreateAIStateMachine<BossStateMachine>();
         stateMachine->ChangeLowerBody(SnowbrosBossLowerFrameType::Low);
 
-        auto dotCollider = CreateSceneComponent<PointCollisionComponent>("ColliderLegLow");
+        auto dotCollider = CreateSceneComponent<PointCollisionComponent>("ColliderLegHigh");
         dotCollider->AttachToComponent(_root);
-        dotCollider->SetRelativePosition({0.5f, -0.75f});
+        dotCollider->SetRelativePosition({0.5f, 0.f});
 
-        dotCollider = CreateSceneComponent<PointCollisionComponent>("ColliderLegLower");
+        dotCollider = CreateSceneComponent<PointCollisionComponent>("ColliderLegMid");
         dotCollider->AttachToComponent(_root);
-        dotCollider->SetRelativePosition({0.5f, -1.75f});
+        dotCollider->SetRelativePosition({0.5f, -1.f});
+
+        dotCollider = CreateSceneComponent<PointCollisionComponent>("ColliderLegLow");
+        dotCollider->AttachToComponent(_root);
+        dotCollider->SetRelativePosition({0.5f, -2.f});
     }
     break;
     case SnowbrosEnemyType::Pumpkin:

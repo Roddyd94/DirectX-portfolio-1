@@ -141,8 +141,8 @@ bool GoblinStateMachine::Init(Ptr<class AIComponent> owner)
     auto conditionTouchedBlock = CreateAICompositeCondition("TouchedBlock", ConditionOperator::Or,
       conditionMoveAgainstBoundaryX, conditionMoveAgainstWall);
 
-    enemyStateWalk->CreateAITransition("Walk_Turn", enemyStateTurn, conditionTouchedBlock);
     enemyStateWalk->CreateAITransition("Walk_Jump", enemyStateJump, conditionShouldJump);
+    enemyStateWalk->CreateAITransition("Walk_Turn", enemyStateTurn, conditionTouchedBlock);
     enemyStateTurn->CreateAITransition("Turn_Walk", enemyStateWalk, conditionTurned);
 
     return true;

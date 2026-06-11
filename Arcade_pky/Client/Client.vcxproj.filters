@@ -542,6 +542,7 @@
       <Filter>Snowbros\Enemy\Blackboard</Filter>
     </ClInclude>
     <ClInclude Include="Snowbros\SpawnStateMachine.h" />
+    <ClInclude Include="Snowbros\BossState.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1045,6 +1046,7 @@
       <Filter>Snowbros\Enemy\Blackboard</Filter>
     </ClCompile>
     <ClCompile Include="Snowbros\SpawnStateMachine.cpp" />
+    <ClCompile Include="Snowbros\BossState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

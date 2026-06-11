@@ -478,7 +478,14 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
               case SnowbrosEnemyType::Ghost:
                   break;
               case SnowbrosEnemyType::Boss:
-                  break;
+              {
+                  auto thisState     = Cast<AIState, SnowbrosEnemyState>(_currentState);
+                  auto thisStateType = thisState->GetStateType();
+
+                  if (SnowbrosEnemyState::SnowballRolling == thisStateType)
+                      Transition("SnowballCrashing");
+              }
+              break;
               }
           }
           break;
@@ -609,9 +616,12 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           ChangeAnimationClip(SnowbrosEnemyAnimationType::Awake);
       });
     enemyStateCrashing->RegisterCallback(AIEventState::Enter,
-      [weakAnimationSnowball = Weak(animationSnowball)](float deltaTime)
+      [weakAnimationSnowball = Weak(animationSnowball), weakKinematic = Weak(kinematic)](
+        float deltaTime)
       {
+          auto kinematic = Lock(weakKinematic);
           // todo particle,
+          kinematic->SetVelocity(Vector2::zero);
 
           auto animationSnowball = Lock(weakAnimationSnowball);
           animationSnowball->ChangeAnimationClip("snowball_crash");
