@@ -36,12 +36,12 @@ public:
     void AddInputContext(const std::string& name);
     void RemoveInputContext(const std::string& name);
     void RefreshInputMapping(const std::string& contextName, const struct InputMapping& mapping);
+    void ChangeInputActionKey(
+      const std::string& contextName, const std::string& actionName, uint8 key);
 
     template <typename T>
-    void BindAction(const std::string& contextName,
-      const std::string&               actionName,
-      uint8                            key,
-      T&&                              func)
+    void BindAction(
+      const std::string& contextName, const std::string& actionName, uint8 key, T&& func)
     {
         Ptr<InputContext> context = InputSystem::Instance().FindOrAddInputContext(contextName);
         Ptr<InputAction>  action  = InputSystem::Instance().FindOrAddInputAction(actionName);
@@ -76,6 +76,40 @@ public:
             return;
 
         _bindingsByContext[contextName][actionName].callback
+          = std::bind(memFunc, obj, std::placeholders::_1, std::placeholders::_2);
+    }
+
+    template <typename T>
+    void BindAction(const std::string& contextName, const std::string& actionName, T&& func)
+    {
+        auto itContext = _bindingsByContext.find(contextName);
+        if (_bindingsByContext.end() == itContext)
+            return;
+
+        auto& context  = itContext->second;
+        auto  itAction = context.find(actionName);
+        if (context.end() == itAction)
+            return;
+
+        itAction->second.callback = std::forward<T>(func);
+    }
+
+    template <typename T>
+    void BindAction(const std::string& contextName,
+      const std::string&               actionName,
+      T*                               obj,
+      void (T::*memFunc)(Ptr<class InputAction>, ButtonEventType::Type))
+    {
+        auto itContext = _bindingsByContext.find(contextName);
+        if (_bindingsByContext.end() == itContext)
+            return;
+
+        auto& context  = itContext->second;
+        auto  itAction = context.find(actionName);
+        if (context.end() == itAction)
+            return;
+
+        itAction->second.callback
           = std::bind(memFunc, obj, std::placeholders::_1, std::placeholders::_2);
     }
 };

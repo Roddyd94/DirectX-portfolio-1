@@ -119,3 +119,10 @@ void InputComponent::RefreshInputMapping(
         _bindingsByContext[contextName][bind.name] = bind;
     }
 }
+
+void InputComponent::ChangeInputActionKey(
+  const std::string& contextName, const std::string& actionName, uint8 key)
+{
+    Ptr<InputContext> context = InputSystem::Instance().FindOrAddInputContext(contextName);
+    context->ChangeInputActionKey(actionName, key);
+}

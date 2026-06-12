@@ -11,6 +11,8 @@
 #include "SnowbrosPlayer.h"
 #include "SnowbrosUI.h"
 #include "Core/Camera.h"
+#include "Core/Input/InputContext.h"
+#include "Core/Input/InputSystem.h"
 #include "Core/InstanceRendererComponent.h"
 #include "Core/Mesh.h"
 #include "Core/Texture.h"
@@ -21,6 +23,43 @@
 bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
 {
     TilemapLevel::Init(world, path);
+
+    InputSystem::Instance().FindOrAddInputContext("None");
+
+    auto contextGround1   = InputSystem::Instance().FindOrAddInputContext("Ground1");
+    auto contextMidair1   = InputSystem::Instance().FindOrAddInputContext("Midair1");
+    auto contextSnowball1 = InputSystem::Instance().FindOrAddInputContext("Snowball1");
+    auto contextGround2   = InputSystem::Instance().FindOrAddInputContext("Ground2");
+    auto contextMidair2   = InputSystem::Instance().FindOrAddInputContext("Midair2");
+    auto contextSnowball2 = InputSystem::Instance().FindOrAddInputContext("Snowball2");
+
+    auto actionMoveLeft    = InputSystem::Instance().FindOrAddInputAction("MoveLeft");
+    auto actionMoveRight   = InputSystem::Instance().FindOrAddInputAction("MoveRight");
+    auto actionJump        = InputSystem::Instance().FindOrAddInputAction("Jump");
+    auto actionShootGround = InputSystem::Instance().FindOrAddInputAction("ShootGround");
+    auto actionShootMidair = InputSystem::Instance().FindOrAddInputAction("ShootMidair");
+
+    contextGround1->BindInputAction(actionMoveLeft, 'A');
+    contextGround1->BindInputAction(actionMoveRight, 'D');
+    contextGround1->BindInputAction(actionJump, 'T');
+    contextGround1->BindInputAction(actionShootGround, 'R');
+
+    contextMidair1->BindInputAction(actionMoveLeft, 'A');
+    contextMidair1->BindInputAction(actionMoveRight, 'D');
+    contextMidair1->BindInputAction(actionShootMidair, 'R');
+
+    contextSnowball1->BindInputAction(actionJump, 'T');
+
+    contextGround2->BindInputAction(actionMoveLeft, 'H');
+    contextGround2->BindInputAction(actionMoveRight, 'K');
+    contextGround2->BindInputAction(actionJump, 'P');
+    contextGround2->BindInputAction(actionShootGround, 'O');
+
+    contextMidair2->BindInputAction(actionMoveLeft, 'H');
+    contextMidair2->BindInputAction(actionMoveRight, 'K');
+    contextMidair2->BindInputAction(actionShootMidair, 'O');
+
+    contextSnowball2->BindInputAction(actionJump, 'P');
 
     Vector3 position = Vector3{0.f, 0.f, 1.f};
     Vector3 scale    = Vector3{1.f, 1.f, 1.f};
@@ -111,21 +150,9 @@ void SnowbrosLevel::Tick(float deltaTime)
     TilemapLevel::Tick(deltaTime);
 
     if (nullptr == _player[0])
-    {
-        auto& stageData = _stageData[_stageNumber];
-
-        Vector3 playerPosition = Vector3::one;
-
-        playerPosition.x = stageData.playerPosition.x;
-        playerPosition.y = stageData.playerPosition.y;
-
-        auto player = SpawnActor<SnowbrosPlayer>(playerPosition, 2 * Vector3::one, Vector3::zero);
-        player->SetDirection(stageData.playerDirection);
-
-        _player[0] = player;
-        _player[0]->ResetState();
-        _player[0]->StartStage();
-    }
+        SpawnPlayer(0);
+    if (_enablePlayer2 && nullptr == _player[1])
+        SpawnPlayer(1);
 
     std::vector<Ptr<Actor>> enemies;
     FindActors("Enemy", enemies);
@@ -147,7 +174,17 @@ void SnowbrosLevel::Tick(float deltaTime)
 
 Ptr<class Player> SnowbrosLevel::FindNearestPlayerFrom(Vector2 position) const
 {
-    return _player[0];
+    if (nullptr == _player[1])
+        return _player[0];
+    else if (nullptr == _player[0])
+        return _player[1];
+
+    Vector2 playerPosition1 = _player[0]->GetWorldPosition().ToVector2();
+    Vector2 playerPosition2 = _player[1]->GetWorldPosition().ToVector2();
+
+    return position.SquareDistance(playerPosition1) < position.SquareDistance(playerPosition2)
+           ? _player[0]
+           : _player[1];
 }
 
 Ptr<class Player> SnowbrosLevel::FindNearestPlayerFrom(Vector3 position) const
@@ -163,6 +200,29 @@ Ptr<class Player> SnowbrosLevel::GetPlayer(int32 number) const
 void SnowbrosLevel::SetPlayer(int32 number, Ptr<class SnowbrosPlayer> player)
 {
     _player[number] = player;
+}
+
+Ptr<class Player> SnowbrosLevel::SpawnPlayer(int32 number)
+{
+    auto& stageData = _stageData[_stageNumber];
+
+    Vector3 playerPosition = Vector3::one;
+
+    playerPosition.x = stageData.playerPosition[number].x;
+    playerPosition.y = stageData.playerPosition[number].y;
+
+    auto player = SpawnActor<SnowbrosPlayer>(playerPosition, 2 * Vector3::one, Vector3::zero);
+    player->SetPlayerNumber(number);
+    player->SetDirection(stageData.playerDirection[number]);
+
+    player->StartStage();
+    player->ResetState();
+    _player[number] = player;
+
+    _ui->SwitchUI("InsertCoin2P", false);
+    _ui->Refresh();
+
+    return player;
 }
 
 Ptr<class Item> SnowbrosLevel::SpawnItem(Vector3 position, Item::Type type)
@@ -288,15 +348,23 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
 
               Vector3 playerPosition = Vector3::one;
 
-              playerPosition.x = stageData.playerPosition.x;
-              playerPosition.y = stageData.playerPosition.y;
-
               if (_player[0])
               {
+                  playerPosition.x = stageData.playerPosition[0].x;
+                  playerPosition.y = stageData.playerPosition[0].y;
                   _player[0]->SetWorldPosition(playerPosition);
-                  _player[0]->SetDirection(stageData.playerDirection);
+                  _player[0]->SetDirection(stageData.playerDirection[0]);
                   _player[0]->ResetState();
                   _player[0]->StartStage();
+              }
+              if (_player[1])
+              {
+                  playerPosition.x = stageData.playerPosition[1].x;
+                  playerPosition.y = stageData.playerPosition[1].y;
+                  _player[1]->SetWorldPosition(playerPosition);
+                  _player[1]->SetDirection(stageData.playerDirection[1]);
+                  _player[1]->ResetState();
+                  _player[1]->StartStage();
               }
 
               Vector3 scale    = 2 * Vector3::one;
@@ -349,16 +417,9 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
         }
     }
 
-    Vector3 playerPosition = Vector3::one;
-
-    playerPosition.x = stageData.playerPosition.x;
-    playerPosition.y = stageData.playerPosition.y;
-
-    auto player = SpawnActor<SnowbrosPlayer>(playerPosition, 2 * Vector3::one, Vector3::zero);
-    player->SetDirection(stageData.playerDirection);
-
-    _player[0] = player;
-    _player[0]->StartStage();
+    SpawnPlayer(0);
+    if (_enablePlayer2)
+        SpawnPlayer(1);
 
     scale    = 2 * Vector3::one;
     rotation = Vector3::zero;

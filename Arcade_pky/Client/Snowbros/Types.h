@@ -69,8 +69,8 @@ struct StageData
 {
     std::wstring           filename;
     std::vector<EnemyData> enemies;
-    Vector2                playerPosition;
-    float                  playerDirection = 0.f;
-    int32                  number          = -1;
-    int32                  paletteNumber   = 0;
+    Vector2                playerPosition[2]  = {};
+    float                  playerDirection[2] = {};
+    int32                  number             = -1;
+    int32                  paletteNumber      = 0;
 };

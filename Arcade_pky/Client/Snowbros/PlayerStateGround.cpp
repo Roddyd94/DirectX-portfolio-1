@@ -8,6 +8,7 @@
 #include "PlayerStateMidair.h"
 #include "SnowballMorphableEnemyStateMachine.h"
 #include "SnowbrosLevel.h"
+#include "SnowbrosPlayer.h"
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
 #include "AI/AIComponent.h"
@@ -176,13 +177,16 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
 
 void PlayerStateGround::Enter(Ptr<class PlayerComponent> playerComponent)
 {
-    Ptr<Player> player = playerComponent->GetPlayer();
+    auto player = Cast<Player, SnowbrosPlayer>(playerComponent->GetPlayer());
 
     auto blackboard = GetBlackboard(playerComponent);
     auto controller = player->GetController();
 
     blackboard->jumpedFromSnowball = false;
-    controller->SetActiveContext("Ground");
+    if (0 == player->GetPlayerNumber())
+        controller->SetActiveContext("Ground1");
+    if (1 == player->GetPlayerNumber())
+        controller->SetActiveContext("Ground2");
 
     Ptr<PlatformerKinematicComponent> kinematic
       = player->FindActorComponent<PlatformerKinematicComponent>("Kinematic");

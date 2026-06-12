@@ -5,6 +5,7 @@
 #include "Core/TimeManager.h"
 
 #include "SnowballMorphableEnemyStateMachine.h"
+#include "SnowbrosPlayer.h"
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
 #include "Core/Animation/SpriteInstanceComponent.h"
@@ -104,10 +105,14 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
 
 void PlayerStateMidair::Enter(Ptr<class PlayerComponent> playerComponent)
 {
-    Ptr<Player> player = playerComponent->GetPlayer();
+    auto player = Cast<Player, SnowbrosPlayer>(playerComponent->GetPlayer());
 
     auto controller = player->GetController();
-    controller->SetActiveContext("Midair");
+
+    if (0 == player->GetPlayerNumber())
+        controller->SetActiveContext("Midair1");
+    if (1 == player->GetPlayerNumber())
+        controller->SetActiveContext("Midair2");
 
     auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 

@@ -155,7 +155,12 @@ void SnowbrosUIComponent::RefreshInstance(bool refresh)
 
 void SnowbrosUIComponent::SwitchUI(const std::string& name, bool shouldRender)
 {
-    _scoreUIs[name].render = shouldRender;
+    auto it = _scoreUIs.find(name);
+
+    if (_scoreUIs.end() == it)
+        return;
+
+    it->second.render = shouldRender;
 }
 
 void SnowbrosUIComponent::SetScore(ScoreType::Type player, int32 score)
@@ -187,7 +192,7 @@ void SnowbrosUIComponent::AddScoreDataToBuffer(const ScoreText& scoreText)
         if (!level->GetPlayer(1))
             return;
 
-        startPosition = 11.f;
+        startPosition = 13.f;
     }
     break;
     }

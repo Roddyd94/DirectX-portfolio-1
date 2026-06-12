@@ -42,9 +42,12 @@ bool SnowbrosDataParser::ParseStageData(const std::wstring& filename, std::vecto
           reinterpret_cast<char*>(data[i].filename.data()), stageFilenameLength * sizeof(wchar_t));
 
         fs.read(reinterpret_cast<char*>(&data[i].paletteNumber), sizeof(int16));
-        fs.read(reinterpret_cast<char*>(&data[i].playerPosition.x), sizeof(float));
-        fs.read(reinterpret_cast<char*>(&data[i].playerPosition.y), sizeof(float));
-        fs.read(reinterpret_cast<char*>(&data[i].playerDirection), sizeof(float));
+
+        for (int j = 0; j < 2; ++j)
+        {
+            fs.read(reinterpret_cast<char*>(&data[i].playerPosition[j]), sizeof(Vector2));
+            fs.read(reinterpret_cast<char*>(&data[i].playerDirection[j]), sizeof(float));
+        }
 
         int16 enemiesCount;
         fs.read(reinterpret_cast<char*>(&enemiesCount), sizeof(int16));

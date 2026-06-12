@@ -23,3 +23,13 @@ void SnowbrosUI::SetScore(ScoreType::Type player, int32 score)
 {
     _uiComponent->SetScore(player, score);
 }
+
+void SnowbrosUI::SwitchUI(const std::string& name, bool shouldRender)
+{
+    _uiComponent->SwitchUI(name, shouldRender);
+}
+
+void SnowbrosUI::Refresh()
+{
+    _uiComponent->RefreshInstance(true);
+}

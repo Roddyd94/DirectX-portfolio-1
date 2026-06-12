@@ -5,6 +5,8 @@
 
 class SnowbrosLevel : public TilemapLevel
 {
+    friend class SnowbrosCheat;
+
 public:
     SnowbrosLevel()           = default;
     ~SnowbrosLevel() override = default;
@@ -18,6 +20,7 @@ private:
     int32                     _score[2]          = {};
     int32                     _stageNumber       = 0;
     bool                      _startingNextStage = false;
+    bool                      _enablePlayer2     = false;
 
 public:
     bool Init(Ptr<class World> world, const std::string& path) override;
@@ -31,6 +34,7 @@ public:
 
     void SetPlayer(int32 number, Ptr<class SnowbrosPlayer> player);
 
+    Ptr<class Player> SpawnPlayer(int32 number);
     Ptr<class Item> SpawnItem(Vector3 position, Item::Type type);
 
     void AddScore(int32 playerNumber, int32 score);

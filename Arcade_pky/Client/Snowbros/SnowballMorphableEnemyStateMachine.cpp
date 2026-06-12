@@ -651,8 +651,10 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           if (blackboard->isSnowballReinforced)
           {
               spriteSnowball->ChangeAnimation("snowball_reinforced");
-              auto palette = FIND_PALETTE("player_1");
-              spriteSnowball->SetPaletteNumber(palette->GetID());
+              if (0 == blackboard->snowballKickedPlayer)
+                  spriteSnowball->SetPaletteNumber(FIND_PALETTE("player_1")->GetID());
+              else if (1 == blackboard->snowballKickedPlayer)
+                  spriteSnowball->SetPaletteNumber(FIND_PALETTE("player_2")->GetID());
           }
           else
               spriteSnowball->ChangeAnimation("snowball_rolling");

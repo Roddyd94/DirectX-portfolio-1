@@ -20,15 +20,16 @@ bool SnowbrosCheat::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     input->BindAction("Cheat", "ChangePalette_0", '1', this, &SnowbrosCheat::ChangePalette);
     input->BindAction("Cheat", "ChangePalette_1", '2', this, &SnowbrosCheat::ChangePalette);
     input->BindAction("Cheat", "ChangePalette_2", '3', this, &SnowbrosCheat::ChangePalette);
-    input->BindAction("Cheat", "ChangeLevel_0", 'I', this, &SnowbrosCheat::ChangeLevel);
-    input->BindAction("Cheat", "ChangeLevel_1", 'O', this, &SnowbrosCheat::ChangeLevel);
-    input->BindAction("Cheat", "ChangeLevel_2", 'P', this, &SnowbrosCheat::ChangeLevel);
+    input->BindAction("Cheat", "ChangeLevel_0", VK_NUMPAD1, this, &SnowbrosCheat::ChangeLevel);
+    input->BindAction("Cheat", "ChangeLevel_1", VK_NUMPAD2, this, &SnowbrosCheat::ChangeLevel);
+    input->BindAction("Cheat", "ChangeLevel_2", VK_NUMPAD3, this, &SnowbrosCheat::ChangeLevel);
     input->BindAction("Cheat", "ToggleCamera", VK_TAB, this, &SnowbrosCheat::ToggleCamera);
     input->BindAction("Cheat", "SpawnMonster_0", '4', this, &SnowbrosCheat::SpawnMonster);
     input->BindAction("Cheat", "SpawnMonster_1", '5', this, &SnowbrosCheat::SpawnMonster);
     input->BindAction("Cheat", "SpawnMonster_2", '6', this, &SnowbrosCheat::SpawnMonster);
     input->BindAction("Cheat", "SpawnMonster_3", '7', this, &SnowbrosCheat::SpawnMonster);
     input->BindAction("Cheat", "SpawnMonster_4", '8', this, &SnowbrosCheat::SpawnMonster);
+    input->BindAction("Cheat", "StartPlayer2", '9', this, &SnowbrosCheat::StartPlayer2);
 
     return true;
 }
@@ -113,4 +114,13 @@ void SnowbrosCheat::ToggleCamera(Ptr<class InputAction> action, ButtonEventType:
       (toggle + 1) * defaultViewVolume.width, (toggle + 1) * defaultViewVolume.height);
 
     camera->SetProjectionType(CameraType ::Orthographic);
+}
+
+void SnowbrosCheat::StartPlayer2(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)
+{
+    if (buttonEvent != ButtonEventType::Down)
+        return;
+
+    auto level            = Cast<Level, SnowbrosLevel>(GetLevel());
+    level->_enablePlayer2 = true;
 }

@@ -14,4 +14,5 @@ public:
     void ChangePalette(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
     void ChangeLevel(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
     void ToggleCamera(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
+    void StartPlayer2(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
 };

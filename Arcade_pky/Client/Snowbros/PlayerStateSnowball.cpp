@@ -7,6 +7,7 @@
 #include "IndexedSpriteInstanceComponent.h"
 #include "PlayerStateMidair.h"
 #include "SnowbrosEnemy.h"
+#include "SnowbrosPlayer.h"
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
 #include "AI/AIComponent.h"
@@ -59,14 +60,18 @@ Ptr<PlayerState> PlayerStateSnowball::HandleInput(Ptr<class PlayerComponent> pla
 
 void PlayerStateSnowball::Enter(Ptr<class PlayerComponent> playerComponent)
 {
-    Ptr<Player> player = playerComponent->GetPlayer();
+    auto player = Cast<Player, SnowbrosPlayer>(playerComponent->GetPlayer());
+
+    auto controller = player->GetController();
+
+    if (0 == player->GetPlayerNumber())
+        controller->SetActiveContext("Snowball1");
+    if (1 == player->GetPlayerNumber())
+        controller->SetActiveContext("Snowball2");
 
     Ptr<PlatformerKinematicComponent> kinematic
       = player->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
     kinematic->SetVelocity(Vector2::zero);
-
-    auto controller = player->GetController();
-    controller->SetActiveContext("Snowball");
 
     auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
     sprite->ChangeAnimation("player_shoved");

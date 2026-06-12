@@ -41,9 +41,7 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto sprite  = CreateSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
-    auto palette = FIND_PALETTE("player_1");
-    sprite->SetPaletteNumber(palette->GetID());
+    auto sprite = CreateSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
     sprite->SetRenderLayer("Player");
     // rootComp->SetShader("SpriteShader");
     sprite->AttachToComponent(_root);
@@ -107,8 +105,8 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
           level->SetPlayer(_playerNumber, nullptr);
       });
 
-    auto effect = CreateSceneComponent<IndexedSpriteInstanceComponent>("Effect");
-    palette     = FIND_PALETTE("snowball");
+    auto effect  = CreateSceneComponent<IndexedSpriteInstanceComponent>("Effect");
+    auto palette = FIND_PALETTE("snowball");
     effect->SetPaletteNumber(palette->GetID());
     effect->SetRenderLayer("PlayerEffect");
     effect->AttachToComponent(_root);
@@ -183,22 +181,6 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     auto shootComponent = CreateActorComponent<ShootComponent>("Shoot");
     shootComponent->SetExtentX(1.f);
 
-    InputSystem::Instance().FindOrAddInputContext("None");
-    auto input = _playerController->GetInputComponent();
-    input->BindAction(
-      "Ground", "MoveLeft", 'A', Raw(_playerComponent), &PlayerComponent::HandleInput);
-    input->BindAction(
-      "Ground", "MoveRight", 'D', Raw(_playerComponent), &PlayerComponent::HandleInput);
-    input->BindAction("Ground", "Jump", 'T', Raw(_playerComponent), &PlayerComponent::HandleInput);
-    input->BindAction("Ground", "ShootGround", 'R', this, &SnowbrosPlayer::OnShootButtonEvent);
-    input->BindAction(
-      "Midair", "MoveLeft", 'A', Raw(_playerComponent), &PlayerComponent::HandleInput);
-    input->BindAction(
-      "Midair", "MoveRight", 'D', Raw(_playerComponent), &PlayerComponent::HandleInput);
-    input->BindAction("Midair", "ShootMidair", 'R', this, &SnowbrosPlayer::OnShootButtonEvent);
-    input->BindAction(
-      "Snowball", "Jump", 'T', Raw(_playerComponent), &PlayerComponent::HandleInput);
-
     auto kinematic = CreateActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
     kinematic->SetCollider(_collider);
     kinematic->RegisterOnStateChangedCallback(PlatformerKinematicState::OnGround,
@@ -257,6 +239,62 @@ int32 SnowbrosPlayer::GetPlayerNumber() const
 
 void SnowbrosPlayer::SetPlayerNumber(int32 number)
 {
+    auto input  = _playerController->GetInputComponent();
+    auto sprite = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+
+    if (0 == number)
+    {
+        auto contextGround1   = InputSystem::Instance().FindOrAddInputContext("Ground1");
+        auto contextMidair1   = InputSystem::Instance().FindOrAddInputContext("Midair1");
+        auto contextSnowball1 = InputSystem::Instance().FindOrAddInputContext("Snowball1");
+        input->AddInputContext(contextGround1);
+        input->AddInputContext(contextMidair1);
+        input->AddInputContext(contextSnowball1);
+
+        input->BindAction(
+          "Ground1", "MoveLeft", Raw(_playerComponent), &PlayerComponent::HandleInput);
+        input->BindAction(
+          "Ground1", "MoveRight", Raw(_playerComponent), &PlayerComponent::HandleInput);
+        input->BindAction("Ground1", "Jump", Raw(_playerComponent), &PlayerComponent::HandleInput);
+        input->BindAction("Ground1", "ShootGround", this, &SnowbrosPlayer::OnShootButtonEvent);
+        input->BindAction(
+          "Midair1", "MoveLeft", Raw(_playerComponent), &PlayerComponent::HandleInput);
+        input->BindAction(
+          "Midair1", "MoveRight", Raw(_playerComponent), &PlayerComponent::HandleInput);
+        input->BindAction("Midair1", "ShootMidair", this, &SnowbrosPlayer::OnShootButtonEvent);
+        input->BindAction(
+          "Snowball1", "Jump", Raw(_playerComponent), &PlayerComponent::HandleInput);
+
+        auto palette = FIND_PALETTE("player_1");
+        sprite->SetPaletteNumber(palette->GetID());
+    }
+    else if (1 == number)
+    {
+        auto contextGround2   = InputSystem::Instance().FindOrAddInputContext("Ground2");
+        auto contextMidair2   = InputSystem::Instance().FindOrAddInputContext("Midair2");
+        auto contextSnowball2 = InputSystem::Instance().FindOrAddInputContext("Snowball2");
+        input->AddInputContext(contextGround2);
+        input->AddInputContext(contextMidair2);
+        input->AddInputContext(contextSnowball2);
+
+        input->BindAction(
+          "Ground2", "MoveLeft", Raw(_playerComponent), &PlayerComponent::HandleInput);
+        input->BindAction(
+          "Ground2", "MoveRight", Raw(_playerComponent), &PlayerComponent::HandleInput);
+        input->BindAction("Ground2", "Jump", Raw(_playerComponent), &PlayerComponent::HandleInput);
+        input->BindAction("Ground2", "ShootGround", this, &SnowbrosPlayer::OnShootButtonEvent);
+        input->BindAction(
+          "Midair2", "MoveLeft", Raw(_playerComponent), &PlayerComponent::HandleInput);
+        input->BindAction(
+          "Midair2", "MoveRight", Raw(_playerComponent), &PlayerComponent::HandleInput);
+        input->BindAction("Midair2", "ShootMidair", this, &SnowbrosPlayer::OnShootButtonEvent);
+        input->BindAction(
+          "Snowball2", "Jump", Raw(_playerComponent), &PlayerComponent::HandleInput);
+
+        auto palette = FIND_PALETTE("player_2");
+        sprite->SetPaletteNumber(palette->GetID());
+    }
+
     _playerNumber = number;
 }
 

@@ -16,4 +16,6 @@ public:
     void Destroy() override;
 
     void SetScore(ScoreType::Type player, int32 score);
+    void SwitchUI(const std::string& name, bool shouldRender);
+    void Refresh();
 };
