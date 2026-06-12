@@ -150,9 +150,8 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
     auto animationSnowball = spriteSnowball->GetAnimation();
 
 #pragma region AIStates
-    auto enemyStateStand  = CreateAIState<SnowbrosEnemyState>("Stand", SnowbrosEnemyState::Stand);
-    auto enemyStatePatrol = CreateAIState<SnowbrosEnemyState>("Patrol", SnowbrosEnemyState::Patrol);
-    auto enemyStateWalk   = CreateAIState<SnowbrosEnemyState>("Walk", SnowbrosEnemyState::Walk);
+    auto enemyStateStand = CreateAIState<SnowbrosEnemyState>("Stand", SnowbrosEnemyState::Stand);
+    auto enemyStateWalk  = CreateAIState<SnowbrosEnemyState>("Walk", SnowbrosEnemyState::Walk);
     enemyStateWalk->SetInterval(0.1f);
     auto enemyStateTurn   = CreateAIState<SnowbrosEnemyState>("Turn", SnowbrosEnemyState::Turn);
     auto enemyStateJump   = CreateAIState<SnowbrosEnemyState>("Jump", SnowbrosEnemyState::Jump);
@@ -383,7 +382,6 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                       switch (otherStateType)
                       {
                       case SnowbrosEnemyState::Stand:
-                      case SnowbrosEnemyState::Patrol:
                       case SnowbrosEnemyState::Walk:
                       case SnowbrosEnemyState::Turn:
                       case SnowbrosEnemyState::Crouch:
@@ -480,7 +478,6 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                       switch (otherStateType)
                       {
                       case SnowbrosEnemyState::Stand:
-                      case SnowbrosEnemyState::Patrol:
                       case SnowbrosEnemyState::Walk:
                       case SnowbrosEnemyState::Turn:
                       case SnowbrosEnemyState::Jump:
@@ -696,7 +693,7 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           kinematic->AddForce(repulsion); // todo
 
           ChangeAnimationClip(SnowbrosEnemyAnimationType::Launched);
-          TimeManager::Instance().SetTimer(0.3f, false,
+          blackboard->airborneTimerID = TimeManager::Instance().SetTimer(0.3f, false,
             [this]()
             {
                 ChangeAnimationClip(SnowbrosEnemyAnimationType::Airborne);
@@ -711,10 +708,17 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
 
 #pragma region RegisterStateCallbackTick
     enemyStateWalk->RegisterCallback(AIEventState::Tick,
-      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime)
+      [this, weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime)
       {
           auto kinematic  = Lock(weakKinematic);
           auto blackboard = Lock(weakBlackboard);
+
+          if (CheckPatrolPoint())
+          {
+              ++blackboard->currentPatrolIndex;
+              Transition("Turn");
+              return;
+          }
 
           kinematic->SetVelocity({blackboard->direction * blackboard->walkSpeedX, 0.f});
       });
@@ -983,6 +987,37 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
 #pragma endregion AITransitions
 
     return true;
+}
+
+void SnowballMorphableEnemyStateMachine::Destroy()
+{
+    auto blackboard = GetBlackboard<SnowballMorphableEnemyBlackboard>();
+    TimeManager::Instance().RemoveTimer(blackboard->airborneTimerID);
+
+    AIStateMachine::Destroy();
+}
+
+bool SnowballMorphableEnemyStateMachine::CheckPatrolPoint()
+{
+    auto pawn       = GetPawn();
+    auto blackboard = GetBlackboard<SnowballMorphableEnemyBlackboard>();
+
+    if (0 == blackboard->patrolLoopCount)
+        return false;
+
+    if (blackboard->currentPatrolIndex >= blackboard->patrolPoints.size())
+    {
+        blackboard->currentPatrolIndex = 0;
+        --blackboard->patrolLoopCount;
+    }
+
+    Vector2 pawnPosition   = pawn->GetWorldPosition().ToVector2();
+    Vector2 targetPosition = blackboard->patrolPoints[blackboard->currentPatrolIndex];
+
+    if (targetPosition.SquareDistance(pawnPosition) < 0.04f)
+        return true;
+
+    return false;
 }
 
 void SnowballMorphableEnemyStateMachine::FindSnowballs(Ptr<class CollisionManager> collisionManager,

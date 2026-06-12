@@ -28,10 +28,14 @@ public:
 
 public:
     bool Init(Ptr<class AIComponent> owner) override;
+    void Destroy() override;
 
     virtual void ChangeAnimationClip(SnowbrosEnemyAnimationType type, bool play = true) = 0;
     virtual void AddNotifyToAnimationClipEnd(
       SnowbrosEnemyAnimationType type, std::function<void()>&& func) = 0;
+
+protected:
+    bool CheckPatrolPoint();
 
 public:
     static void FindSnowballs(Ptr<class CollisionManager> collisionManager,

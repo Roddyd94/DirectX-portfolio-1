@@ -21,7 +21,6 @@ public:
     enum EnemyStateType
     {
         Stand,
-        Patrol,
         Walk,
         Turn,
         Jump,

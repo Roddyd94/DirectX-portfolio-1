@@ -54,24 +54,26 @@ bool SnowbrosDataParser::ParseStageData(const std::wstring& filename, std::vecto
         {
             int16 enemyType;
             fs.read(reinterpret_cast<char*>(&enemyType), sizeof(int16));
-            data[i].enemies[j].type = static_cast<SnowbrosEnemyType>(enemyType);
+            EnemyData& enemyData = data[i].enemies[j];
+            enemyData.type       = static_cast<SnowbrosEnemyType>(enemyType);
 
-            fs.read(reinterpret_cast<char*>(&data[i].enemies[j].position.x), sizeof(float));
-            fs.read(reinterpret_cast<char*>(&data[i].enemies[j].position.y), sizeof(float));
-            fs.read(reinterpret_cast<char*>(&data[i].enemies[j].direction), sizeof(float));
+            fs.read(reinterpret_cast<char*>(&enemyData.position.x), sizeof(float));
+            fs.read(reinterpret_cast<char*>(&enemyData.position.y), sizeof(float));
+            fs.read(reinterpret_cast<char*>(&enemyData.direction), sizeof(float));
 
             int16 patrolPositionCount;
             fs.read(reinterpret_cast<char*>(&patrolPositionCount), sizeof(int16));
+            EnemyPatrolData& patrolData = enemyData.patrolData;
+            patrolData.patrolPoints.resize(patrolPositionCount);
 
             for (int k = 0; k < patrolPositionCount; ++k)
             {
                 Vector2 patrolPosition;
-                fs.read(reinterpret_cast<char*>(&patrolPosition.x), sizeof(float));
-                fs.read(reinterpret_cast<char*>(&patrolPosition.y), sizeof(float));
+                fs.read(reinterpret_cast<char*>(&patrolData.patrolPoints[k]), sizeof(Vector2));
             }
 
             int16 loopPatrol;
-            fs.read(reinterpret_cast<char*>(&loopPatrol), sizeof(int16));
+            fs.read(reinterpret_cast<char*>(&patrolData.loopCount), sizeof(int16));
         }
     }
 

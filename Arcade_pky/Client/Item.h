@@ -13,6 +13,7 @@ public:
 protected:
     Type  _itemType   = End;
     int32 _itemNumber = -1;
+    int32 _itemTimer  = -1;
 
 public:
     bool Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation) override;

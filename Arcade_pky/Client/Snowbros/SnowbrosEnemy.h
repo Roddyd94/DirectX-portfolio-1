@@ -16,6 +16,7 @@ public:
 
     SnowbrosEnemyType GetEnemyType() const;
 
+    void SetPatrolInfo(const EnemyPatrolData& patrolInfo);
     void SetEnemyType(SnowbrosEnemyType enemyType);
     void SetDirection(float direction);
 

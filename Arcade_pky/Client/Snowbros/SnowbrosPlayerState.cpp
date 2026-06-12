@@ -88,7 +88,6 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
         switch (otherStateType)
         {
         case SnowbrosEnemyState::Stand:
-        case SnowbrosEnemyState::Patrol:
         case SnowbrosEnemyState::Walk:
         case SnowbrosEnemyState::Turn:
         case SnowbrosEnemyState::Jump:

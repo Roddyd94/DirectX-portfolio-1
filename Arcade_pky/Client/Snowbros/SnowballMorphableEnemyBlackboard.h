@@ -10,11 +10,16 @@ public:
     ~SnowballMorphableEnemyBlackboard() override = default;
 
 public:
+    std::vector<Vector2> patrolPoints;
+
     Vector2 previousPosition    = Vector2::zero;
     Vector2 jumpTargetDirection = Vector2::zero;
 
-    int32 hitCount = 0;
+    int32 patrolLoopCount      = 0;
+    int32 currentPatrolIndex   = 0;
+    int32 hitCount             = 0;
     int32 snowballKickedPlayer = 0;
+    int32 airborneTimerID      = -1;
 
     float walkSpeedX = 1.f;
     float direction  = -1.f;

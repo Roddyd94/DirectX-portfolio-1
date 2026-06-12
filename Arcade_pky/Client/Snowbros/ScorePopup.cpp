@@ -21,7 +21,7 @@ bool ScorePopup::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotatio
     Ptr<Animation2D> animation = _spriteInstance->CreateAnimation();
     animation->SetAnimationSequence("score");
 
-    TimeManager::Instance().SetTimer(2.f, false,
+    _timerID = TimeManager::Instance().SetTimer(2.f, false,
       [this]()
       {
           SetActive(false);

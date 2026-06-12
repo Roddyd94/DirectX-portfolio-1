@@ -52,6 +52,15 @@ SnowbrosEnemyType SnowbrosEnemy::GetEnemyType() const
     return _enemyType;
 }
 
+void SnowbrosEnemy::SetPatrolInfo(const EnemyPatrolData& patrolInfo)
+{
+    auto ai         = GetAIComponent();
+    auto blackboard = ai->GetBlackboard<SnowballMorphableEnemyBlackboard>();
+
+    blackboard->patrolPoints    = patrolInfo.patrolPoints;
+    blackboard->patrolLoopCount = patrolInfo.loopCount;
+}
+
 void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
 {
     auto aiComponent = GetAIComponent();

@@ -50,7 +50,7 @@ bool SpitterStateMachine::Init(Ptr<class AIComponent> owner)
           auto sprite = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
           sprite->ChangeAnimation("spitter_shoot");
 
-          TimeManager::Instance().SetTimer(1.f, false,
+          blackboard->transitionTimerID = TimeManager::Instance().SetTimer(1.f, false,
             [this]()
             {
                 if (GetCurrentState()->GetName() == "Shoot")
@@ -159,12 +159,37 @@ bool SpitterStateMachine::Init(Ptr<class AIComponent> owner)
 
             return false;
         });
-    auto conditionShouldJumpNext = CreateAICompositeCondition("ShouldJumpNext",
+    auto conditionNextPatrolPointAbove
+      = CreateAICondition("NextPatrolPointAbove", ConditionOperator::And,
+        [weakTilemap = Weak(tilemap), weakBlackboard = Weak(blackboard), weakPawn = Weak(pawn)](
+          float deltaTime) -> bool
+        {
+            auto tilemap    = Lock(weakTilemap);
+            auto pawn       = Lock(weakPawn);
+            auto blackboard = Lock(weakBlackboard);
+
+            if (blackboard->currentPatrolIndex >= blackboard->patrolPoints.size())
+            {
+                blackboard->currentPatrolIndex = 0;
+                --blackboard->patrolLoopCount;
+            }
+
+            Vector2 pawnPosition = pawn->GetWorldPosition().ToVector2();
+            Vector2 targetPoint  = blackboard->patrolPoints[blackboard->currentPatrolIndex];
+
+            if (targetPoint.y > pawnPosition.y + 0.6f)
+                return true;
+
+            return false;
+        });
+    auto conditionShouldJumpNext           = CreateAICompositeCondition("ShouldJumpNext",
       ConditionOperator::And, conditionMoveAgainstWall, conditionHasLandingTileForward);
-    auto conditionCanJumpAbove   = CreateAICompositeCondition(
-      "CanJumpAbove", ConditionOperator::And, conditionIsPlayerAbove, conditionHasLandingTileAbove);
-    auto conditionShouldJump = CreateAICompositeCondition(
-      "ShouldJump", ConditionOperator::Or, conditionShouldJumpNext, conditionCanJumpAbove);
+    auto conditionCanJumpAboveTowardPlayer = CreateAICompositeCondition(
+      "CanJumpAboveTowardPlayer", ConditionOperator::And, conditionIsPlayerAbove, conditionHasLandingTileAbove);
+    auto conditionCanJumpAboveTowardNextPatrolPoint = CreateAICompositeCondition(
+      "CanJumpAboveTowardNextPatrolPoint", ConditionOperator::And, conditionNextPatrolPointAbove, conditionHasLandingTileAbove);
+    auto conditionShouldJump   = CreateAICompositeCondition("ShouldJump", ConditionOperator::Or,
+      conditionCanJumpAboveTowardNextPatrolPoint, conditionShouldJumpNext, conditionCanJumpAboveTowardPlayer);
     auto conditionTouchedBlock = CreateAICompositeCondition("TouchedBlock", ConditionOperator::Or,
       conditionMoveAgainstBoundaryX, conditionMoveAgainstWall);
 
@@ -177,6 +202,9 @@ bool SpitterStateMachine::Init(Ptr<class AIComponent> owner)
 
 void SpitterStateMachine::Destroy()
 {
+    auto blackboard = CreateBlackboard<SpitterBlackboard>();
+    TimeManager::Instance().RemoveTimer(blackboard->transitionTimerID);
+
     AIStateMachine::Destroy();
 }
 

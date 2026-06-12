@@ -51,8 +51,15 @@ struct TileMetadata
     uint16 tileTypeCount = 0;
 };
 
+struct EnemyPatrolData
+{
+    std::vector<Vector2> patrolPoints;
+    int32                loopCount = 1;
+};
+
 struct EnemyData
 {
+    EnemyPatrolData   patrolData;
     SnowbrosEnemyType type;
     Vector2           position;
     float             direction = 0.f;

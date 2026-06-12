@@ -3,4 +3,6 @@
 
 class SpitterBlackboard : public SnowballMorphableEnemyBlackboard
 {
+public:
+    int32 transitionTimerID;
 };

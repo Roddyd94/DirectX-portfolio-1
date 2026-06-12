@@ -51,7 +51,7 @@ bool Item::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
               this->SetActive(false);
       });
 
-    TimeManager::Instance().SetTimer(7.f, false,
+    _itemTimer = TimeManager::Instance().SetTimer(7.f, false,
       [this]()
       {
           this->SetActive(false);
@@ -63,6 +63,8 @@ bool Item::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 void Item::Destroy()
 {
     Actor::Destroy();
+
+    TimeManager::Instance().RemoveTimer(_itemTimer);
 }
 
 void Item::Tick(float deltaTime)

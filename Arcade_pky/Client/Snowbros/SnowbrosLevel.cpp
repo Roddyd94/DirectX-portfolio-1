@@ -312,6 +312,7 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
                   auto enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
                   enemy->SetEnemyType(enemyData.type);
                   enemy->SetDirection(enemyData.direction);
+                  enemy->SetPatrolInfo(enemyData.patrolData);
               }
 
               _startingNextStage = false;
@@ -371,6 +372,7 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
         auto enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
         enemy->SetEnemyType(enemyData.type);
         enemy->SetDirection(enemyData.direction);
+        enemy->SetPatrolInfo(enemyData.patrolData);
     }
 
     _startingNextStage = false;
