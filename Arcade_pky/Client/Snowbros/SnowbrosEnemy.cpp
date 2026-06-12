@@ -54,9 +54,21 @@ SnowbrosEnemyType SnowbrosEnemy::GetEnemyType() const
 
 void SnowbrosEnemy::SetPatrolInfo(const EnemyPatrolData& patrolInfo)
 {
-    auto ai         = GetAIComponent();
-    auto blackboard = ai->GetBlackboard<SnowballMorphableEnemyBlackboard>();
+    auto ai = GetAIComponent();
 
+    switch (_enemyType)
+    {
+    case SnowbrosEnemyType::Pumpkin:
+    case SnowbrosEnemyType::Ghost:
+    case SnowbrosEnemyType::Spawn:
+    case SnowbrosEnemyType::Boss:
+        return;
+    }
+
+    if (0 == patrolInfo.patrolPoints.size())
+        return;
+
+    auto blackboard             = ai->GetBlackboard<SnowballMorphableEnemyBlackboard>();
     blackboard->patrolPoints    = patrolInfo.patrolPoints;
     blackboard->patrolLoopCount = patrolInfo.loopCount;
 }
