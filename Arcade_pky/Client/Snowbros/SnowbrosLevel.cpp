@@ -131,8 +131,10 @@ void SnowbrosLevel::Tick(float deltaTime)
     FindActors("Enemy", enemies);
     std::vector<Ptr<Actor>> items;
     FindActors("Item", items);
+    std::vector<Ptr<Actor>> scores;
+    FindActors("Score", scores);
 
-    if (!enemies.size() && !items.size())
+    if (!enemies.size() && !items.size() && !scores.size())
     {
         // auto enemy = SpawnActor<SnowbrosEnemy>(position, scale, rotation);
         // enemy->SetEnemyType(SnowbrosEnemyType::Spawn);
@@ -390,4 +392,13 @@ void SnowbrosLevel::RemoveEnemies()
 
     for (auto& enemy : enemies)
         enemy->SetActive(false);
+}
+
+void SnowbrosLevel::RemoveScorePopups()
+{
+    std::vector<Ptr<Actor>> scores;
+    FindActors("Score", scores);
+
+    for (auto& score : scores)
+        score->SetActive(false);
 }

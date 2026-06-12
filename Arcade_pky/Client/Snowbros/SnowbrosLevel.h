@@ -39,4 +39,5 @@ public:
     void StartStage(int32 stageNumber);
     void RemoveItems();
     void RemoveEnemies();
+    void RemoveScorePopups();
 };
