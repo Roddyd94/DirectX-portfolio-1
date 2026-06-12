@@ -262,7 +262,6 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
     enemyStateCrouch->RegisterCallback(AIEventState::Tick,
       [this](float deltaTime)
       {
-          LogManager::Instance().Debug("Crouch!", TimeManager::Instance().GetFrameCount());
           auto pawn       = GetPawn<SnowbrosEnemy>();
           auto blackboard = GetBlackboard<BossBlackboard>();
           auto kinematic  = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
@@ -548,7 +547,6 @@ void BossStateMachine::Jump()
     Vector2 jumpForce = blackboard->GetTargetJumpForceX(targetPositionX - positionX);
     kinematic->AddForce(jumpForce);
 
-    LogManager::Instance().Debug("Jumped!", TimeManager::Instance().GetFrameCount());
     Transition("Jump");
 }
 

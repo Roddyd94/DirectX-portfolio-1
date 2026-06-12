@@ -20,9 +20,9 @@ bool SnowbrosCheat::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     input->BindAction("Cheat", "ChangePalette_0", '1', this, &SnowbrosCheat::ChangePalette);
     input->BindAction("Cheat", "ChangePalette_1", '2', this, &SnowbrosCheat::ChangePalette);
     input->BindAction("Cheat", "ChangePalette_2", '3', this, &SnowbrosCheat::ChangePalette);
-    input->BindAction("Cheat", "ChangeLevel_0", VK_NUMPAD1, this, &SnowbrosCheat::ChangeLevel);
-    input->BindAction("Cheat", "ChangeLevel_1", VK_NUMPAD2, this, &SnowbrosCheat::ChangeLevel);
-    input->BindAction("Cheat", "ChangeLevel_2", VK_NUMPAD3, this, &SnowbrosCheat::ChangeLevel);
+    input->BindAction("Cheat", "ChangeLevel_0", VK_F1, this, &SnowbrosCheat::ChangeLevel);
+    input->BindAction("Cheat", "ChangeLevel_1", VK_F2, this, &SnowbrosCheat::ChangeLevel);
+    input->BindAction("Cheat", "ChangeLevel_2", VK_F3, this, &SnowbrosCheat::ChangeLevel);
     input->BindAction("Cheat", "ToggleCamera", VK_TAB, this, &SnowbrosCheat::ToggleCamera);
     input->BindAction("Cheat", "SpawnMonster_0", '4', this, &SnowbrosCheat::SpawnMonster);
     input->BindAction("Cheat", "SpawnMonster_1", '5', this, &SnowbrosCheat::SpawnMonster);
