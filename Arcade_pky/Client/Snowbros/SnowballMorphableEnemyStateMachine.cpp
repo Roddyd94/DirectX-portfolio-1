@@ -8,6 +8,7 @@
 
 #include "IndexedSpriteInstanceComponent.h"
 #include "Item.h"
+#include "ScorePopup.h"
 #include "SnowProjectile.h"
 #include "SnowProjectileComponent.h"
 #include "SnowballMorphableEnemyBlackboard.h"
@@ -120,6 +121,9 @@ void SnowballMorphableEnemyStateMachine::Throw(int32 playerNumber, float directi
     blackboard->snowballKickedPlayer = playerNumber;
 
     level->AddScore(playerNumber, 500);
+    auto popup
+      = level->SpawnActor<ScorePopup>(pawn->GetWorldPosition(), Vector3::one, Vector3::zero);
+    popup->SetInfo(ScorePopup::General, 0);
 
     kinematic->SetVelocityX(direction * blackboard->snowballRollingSpeedX);
     Transition("SnowballRolling");
@@ -219,7 +223,7 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                   auto item = level->SpawnItem(spawnPosition, Item::Sushi);
 
                   int32 itemNumber = randomValue % 5;
-                  item->SetItemNumber(itemNumber + 6);
+                  item->SetItemNumber(itemNumber + 1);
               }
           }
           else
@@ -235,7 +239,7 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                   auto item = level->SpawnItem(spawnPosition, Item::Sushi);
 
                   int32 itemNumber = randomValue % 5;
-                  item->SetItemNumber(itemNumber + 1);
+                  item->SetItemNumber(itemNumber + 6);
               }
           }
 
@@ -437,10 +441,18 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
 
                           blackboard->snowballKickedPlayer = otherBlackboard->snowballKickedPlayer;
 
+                          auto popup = level->SpawnActor<ScorePopup>(
+                            pawn->GetWorldPosition(), Vector3::one, Vector3::zero);
                           if (otherBlackboard->isSnowballReinforced)
+                          {
                               level->AddScore(otherBlackboard->snowballKickedPlayer, 8'000);
+                              popup->SetInfo(ScorePopup::General, 5);
+                          }
                           else
+                          {
                               level->AddScore(otherBlackboard->snowballKickedPlayer, 1'000);
+                              popup->SetInfo(ScorePopup::General, 1);
+                          }
 
                           if (thisPosition.x < otherPosition.x)
                               kinematic->SetVelocity({-blackboard->snowballRollingSpeedX, 0.f});
@@ -485,10 +497,18 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                             = thisPosition.x < otherPosition.x ? 1.f : -1.f;
                           otherBlackboard->hitByReinforced = blackboard->isSnowballReinforced;
 
+                          auto popup = level->SpawnActor<ScorePopup>(
+                            pawn->GetWorldPosition(), Vector3::one, Vector3::zero);
                           if (blackboard->isSnowballReinforced)
+                          {
                               level->AddScore(blackboard->snowballKickedPlayer, 8'000);
+                              popup->SetInfo(ScorePopup::General, 5);
+                          }
                           else
+                          {
                               level->AddScore(blackboard->snowballKickedPlayer, 1'000);
+                              popup->SetInfo(ScorePopup::General, 1);
+                          }
 
                           otherStateMachine->Transition("Launched");
                       }

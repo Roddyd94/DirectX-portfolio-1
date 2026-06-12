@@ -9,6 +9,7 @@
 #include "Item.h"
 #include "PlayerStateDead.h"
 #include "PlayerStateSnowball.h"
+#include "ScorePopup.h"
 #include "ShootComponent.h"
 #include "SnowballMorphableEnemyStateMachine.h"
 #include "SnowbrosEnemyState.h"
@@ -183,6 +184,9 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
             if (blackboard->speedUpgraded)
             {
                 level->AddScore(thisActor->GetPlayerNumber(), 1'000);
+                auto popup = level->SpawnActor<ScorePopup>(
+                  item->GetWorldPosition(), Vector3::one, Vector3::zero);
+                popup->SetInfo(ScorePopup::General, 1);
                 return;
             }
 
@@ -195,6 +199,9 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
             if (blackboard->powerUpgraded)
             {
                 level->AddScore(thisActor->GetPlayerNumber(), 1'000);
+                auto popup = level->SpawnActor<ScorePopup>(
+                  item->GetWorldPosition(), Vector3::one, Vector3::zero);
+                popup->SetInfo(ScorePopup::General, 1);
                 return;
             }
 
@@ -209,6 +216,9 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
             if (blackboard->rangeUpgraded)
             {
                 level->AddScore(thisActor->GetPlayerNumber(), 1'000);
+                auto popup = level->SpawnActor<ScorePopup>(
+                  item->GetWorldPosition(), Vector3::one, Vector3::zero);
+                popup->SetInfo(ScorePopup::General, 1);
                 return;
             }
 
@@ -221,9 +231,22 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
         case Item::Invincibility:
             break;
         case Item::Sushi:
-        case Item::Envelope:
+        {
             level->AddScore(thisActor->GetPlayerNumber(), item->GetItemValue());
-            break;
+
+            auto popup = level->SpawnActor<ScorePopup>(
+              item->GetWorldPosition(), Vector3::one, Vector3::zero);
+            popup->SetInfo(ScorePopup::Sushi, 10 - item->GetItemNumber());
+        }
+        break;
+        case Item::Envelope:
+        {
+            level->AddScore(thisActor->GetPlayerNumber(), item->GetItemValue());
+            auto popup = level->SpawnActor<ScorePopup>(
+              item->GetWorldPosition(), Vector3::one, Vector3::zero);
+            popup->SetInfo(ScorePopup::Envelope, 0);
+        }
+        break;
         case Item::Special:
             break;
         case Item::End:

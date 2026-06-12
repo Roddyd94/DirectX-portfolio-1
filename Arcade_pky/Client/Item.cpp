@@ -85,6 +85,11 @@ int32 Item::GetItemValue() const
     return itemValues[_itemNumber];
 }
 
+int32 Item::GetItemNumber() const
+{
+    return _itemNumber;
+}
+
 void Item::SetItemType(Type itemType)
 {
     _itemType = itemType;

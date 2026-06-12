@@ -9,6 +9,7 @@
 #include "BossBlackboard.h"
 #include "BossState.h"
 #include "IndexedSpriteInstanceComponent.h"
+#include "ScorePopup.h"
 #include "SnowProjectile.h"
 #include "SnowProjectileComponent.h"
 #include "SnowbrosEnemy.h"
@@ -140,10 +141,18 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
                   auto otherBlackboard
                     = otherStateMachine->GetBlackboard<SnowballMorphableEnemyBlackboard>();
 
+                  auto popup = level->SpawnActor<ScorePopup>(
+                    pawn->GetWorldPosition(), Vector3::one, Vector3::zero);
                   if (otherBlackboard->isSnowballReinforced)
+                  {
                       level->AddScore(otherBlackboard->snowballKickedPlayer, 8'000);
+                      popup->SetInfo(ScorePopup::General, 6);
+                  }
                   else
+                  {
                       level->AddScore(otherBlackboard->snowballKickedPlayer, 1'000);
+                      popup->SetInfo(ScorePopup::General, 1);
+                  }
 
                   Hit(500);
               }

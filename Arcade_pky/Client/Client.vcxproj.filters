@@ -553,6 +553,7 @@
     <ClInclude Include="Snowbros\SnowbrosUIComponent.h">
       <Filter>Snowbros\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Snowbros\ScorePopup.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1067,6 +1068,7 @@
     <ClCompile Include="Snowbros\SnowbrosUIComponent.cpp">
       <Filter>Snowbros\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Snowbros\ScorePopup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

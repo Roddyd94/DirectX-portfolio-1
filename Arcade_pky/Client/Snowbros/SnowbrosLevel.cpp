@@ -87,6 +87,9 @@ bool SnowbrosLevel::Init(Ptr<class World> world, const std::string& path)
     spriteInstanceRenderer = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>(
       "PlayerEffect", position, scale, rotation);
     spriteInstanceRenderer->SetTexture(playerTexture);
+    spriteInstanceRenderer
+      = SpawnInstanceRenderer<IndexedSpriteInstanceRenderer>("Score", position, scale, rotation);
+    spriteInstanceRenderer->SetTexture(playerTexture);
 
     position.x = -8.f;
     position.y = 7.f;

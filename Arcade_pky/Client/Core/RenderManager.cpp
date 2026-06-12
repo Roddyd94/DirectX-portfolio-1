@@ -13,6 +13,7 @@ bool RenderManager::Init()
 {
     CreateRenderLayer("Background", 1'000);
     CreateRenderLayer("Default", 5'000);
+    CreateRenderLayer("Score", 1'500);
     CreateRenderLayer("Item", 2'000);
     CreateRenderLayer("EnemyBehind", 3'000);
     CreateRenderLayer("Snowball", 3'500);

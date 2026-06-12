@@ -23,6 +23,7 @@ public:
 
     Type  GetItemType() const;
     int32 GetItemValue() const;
+    int32 GetItemNumber() const;
 
     void SetItemType(Type itemType);
     void SetItemNumber(int32 itemNumber);
