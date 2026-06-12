@@ -202,7 +202,7 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     auto movement = CreateActorComponent<PlatformerMovementComponent>("Movement");
     movement->SetKinematic(kinematic);
 
-    _playerComponent->Transition(PlayerStateGround::instance);
+    _playerComponent->Transition(New<PlayerStateSpawned>());
 
     return true;
 }
@@ -214,12 +214,6 @@ void SnowbrosPlayer::SetDirection(float direction)
 
     auto sprite = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
     sprite->SetFlipX(direction > 0 ? true : false);
-}
-
-void SnowbrosPlayer::ResetState()
-{
-    auto stateMachine = _playerComponent->GetStateMachine();
-    stateMachine->Transition(PlayerStateGround::instance);
 }
 
 void SnowbrosPlayer::StartStage()

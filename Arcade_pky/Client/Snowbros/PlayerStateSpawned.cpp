@@ -35,6 +35,9 @@ void PlayerStateSpawned::Enter(Ptr<class PlayerComponent> playerComponent)
     effect->SetEnable(true);
     effect->ChangeAnimation("effect_eruption");
 
+    auto controller = player->GetController();
+    controller->SetActiveContext("None");
+
     auto kinematic = player->FindActorComponent<PlatformerKinematicPlayerComponent>("Kinematic");
     kinematic->SetVelocity(Vector2::zero);
 

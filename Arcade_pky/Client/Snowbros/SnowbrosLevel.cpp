@@ -216,7 +216,6 @@ Ptr<class Player> SnowbrosLevel::SpawnPlayer(int32 number)
     player->SetDirection(stageData.playerDirection[number]);
 
     player->StartStage();
-    player->ResetState();
     _player[number] = player;
 
     _ui->SwitchUI("InsertCoin2P", false);
@@ -354,7 +353,6 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
                   playerPosition.y = stageData.playerPosition[0].y;
                   _player[0]->SetWorldPosition(playerPosition);
                   _player[0]->SetDirection(stageData.playerDirection[0]);
-                  _player[0]->ResetState();
                   _player[0]->StartStage();
               }
               if (_player[1])
@@ -363,7 +361,6 @@ void SnowbrosLevel::StartStage(int32 stageNumber)
                   playerPosition.y = stageData.playerPosition[1].y;
                   _player[1]->SetWorldPosition(playerPosition);
                   _player[1]->SetDirection(stageData.playerDirection[1]);
-                  _player[1]->ResetState();
                   _player[1]->StartStage();
               }
 
