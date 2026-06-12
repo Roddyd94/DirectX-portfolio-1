@@ -53,7 +53,8 @@ bool SpitterStateMachine::Init(Ptr<class AIComponent> owner)
           TimeManager::Instance().SetTimer(1.f, false,
             [this]()
             {
-                Transition("Walk");
+                if (GetCurrentState()->GetName() == "Shoot")
+                    Transition("Walk");
             });
       });
 
