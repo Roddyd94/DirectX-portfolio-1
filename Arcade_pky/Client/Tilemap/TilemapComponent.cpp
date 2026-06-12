@@ -262,8 +262,6 @@ void TilemapComponent::RenderTile()
         RefreshTileInstance(false);
     }
 
-    SHADER_MANAGER->SetSampler(SamplerType::Point);
-
     auto transformBuffer = Lock(_transformConstantBuffer);
 
     transformBuffer->SetWorldMatrix(Matrix());
@@ -412,6 +410,8 @@ void TextureTilemapComponent::RenderTile()
         return;
 
     _tileTexture->SetShaderResource(0, ShaderType::Pixel, 0);
+    SHADER_MANAGER->SetSampler(SamplerType::Point);
+
     TilemapComponent::RenderTile();
 }
 

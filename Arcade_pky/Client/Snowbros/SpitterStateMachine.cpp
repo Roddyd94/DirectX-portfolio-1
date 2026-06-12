@@ -58,8 +58,8 @@ bool SpitterStateMachine::Init(Ptr<class AIComponent> owner)
       });
 
     auto conditionTurned               = CreateAICondition("Turned", ConditionOperator::And,
-                    [weakBlackboard = Weak(blackboard)](float deltaTime) -> bool
-                    {
+      [weakBlackboard = Weak(blackboard)](float deltaTime) -> bool
+      {
           auto blackboard = Lock(weakBlackboard);
           return blackboard->turned;
       });
@@ -85,12 +85,12 @@ bool SpitterStateMachine::Init(Ptr<class AIComponent> owner)
           return kinematic->IsColliderMovingAgainstWallX(deltaX);
       });
     auto conditionIsPlayerAbove   = CreateAICondition("IsPlayerAbove", ConditionOperator::And,
-        [weakLevel = Weak(level), weakPawn = Weak(pawn)](float deltaTime) -> bool
-        {
+      [weakLevel = Weak(level), weakPawn = Weak(pawn)](float deltaTime) -> bool
+      {
           auto level = Lock(weakLevel);
           auto pawn  = Lock(weakPawn);
 
-          Ptr<Player> player = level->GetPlayer();
+          Ptr<Player> player = level->FindNearestPlayerFrom(pawn->GetWorldPosition());
           if (nullptr == player)
               return false;
 

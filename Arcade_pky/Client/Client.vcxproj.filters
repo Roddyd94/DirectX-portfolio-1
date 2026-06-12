@@ -547,6 +547,12 @@
     <ClInclude Include="Snowbros\BossState.h">
       <Filter>Snowbros\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosUI.h">
+      <Filter>Snowbros\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\SnowbrosUIComponent.h">
+      <Filter>Snowbros\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1055,6 +1061,12 @@
     <ClCompile Include="Snowbros\BossState.cpp">
       <Filter>Snowbros\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosUI.cpp">
+      <Filter>Snowbros\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\SnowbrosUIComponent.cpp">
+      <Filter>Snowbros\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -1317,6 +1329,9 @@
     </Filter>
     <Filter Include="Snowbros\Rendering">
       <UniqueIdentifier>{1f0c7481-8d86-47a4-bd1a-2f772ee22c77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Snowbros\UI">
+      <UniqueIdentifier>{0f924981-b46b-4078-964e-2fac1ed44964}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

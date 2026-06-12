@@ -14,10 +14,13 @@ private:
 
     float _direction = 1.f;
     float _accTime   = 0.f;
-    bool  _powerUp   = false;
-    bool  _rangeUp   = false;
-    bool  _setHit    = false;
-    bool  _isHit     = false;
+
+    int32 _playerNumber = 0;
+
+    bool _powerUp = false;
+    bool _rangeUp = false;
+    bool _setHit  = false;
+    bool _isHit   = false;
 
 private:
     inline static float phaseTime              = 0.15f;
@@ -41,6 +44,9 @@ public:
     bool IsHit() const;
     bool IsPoweredUp() const;
 
+    int32 GetPlayerNumber() const;
+
+    void SetPlayer(int32 number);
     void SetKinematic(Ptr<class PlatformerKinematicComponent> kinematic);
     void SetDirection(float direction);
 };

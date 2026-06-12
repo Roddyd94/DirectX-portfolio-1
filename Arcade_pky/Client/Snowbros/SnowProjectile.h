@@ -17,7 +17,8 @@ public:
     Ptr<class SnowProjectileComponent> GetProjectileComponent() const;
 
     bool IsPoweredUp() const;
-
+    
+    void SetPlayer(int32 number);
     void SetPowerUp(bool powerUp);
     void SetRangeUp(bool rangeUp);
     void SetDirection(float direction);

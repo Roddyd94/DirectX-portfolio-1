@@ -14,6 +14,7 @@ public:
     Vector2 jumpTargetDirection = Vector2::zero;
 
     int32 hitCount = 0;
+    int32 snowballKickedPlayer = 0;
 
     float walkSpeedX = 1.f;
     float direction  = -1.f;

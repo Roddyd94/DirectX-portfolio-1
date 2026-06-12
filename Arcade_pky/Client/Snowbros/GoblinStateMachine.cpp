@@ -64,7 +64,7 @@ bool GoblinStateMachine::Init(Ptr<class AIComponent> owner)
           auto level = Lock(weakLevel);
           auto pawn  = Lock(weakPawn);
 
-          Ptr<Player> player = level->GetPlayer();
+          Ptr<Player> player = level->FindNearestPlayerFrom(pawn->GetWorldPosition());
           if (nullptr == player)
               return false;
 

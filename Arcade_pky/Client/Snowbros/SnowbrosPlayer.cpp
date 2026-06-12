@@ -97,14 +97,14 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
       {
           SetActive(false);
           auto level = Cast<Level, SnowbrosLevel>(GetLevel());
-          level->SetPlayer(nullptr);
+          level->SetPlayer(_playerNumber, nullptr);
       });
     animation->AddNotify("player_dead", animation->GetClipFrameCount("player_dead"),
       [this]()
       {
           SetActive(false);
           auto level = Cast<Level, SnowbrosLevel>(GetLevel());
-          level->SetPlayer(nullptr);
+          level->SetPlayer(_playerNumber, nullptr);
       });
 
     auto effect = CreateSceneComponent<IndexedSpriteInstanceComponent>("Effect");
@@ -133,7 +133,7 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
       {
           auto effect = Lock(weakEffect);
           auto sprite = Lock(weakSprite);
-;
+          ;
           effect->SetEnable(false);
           sprite->SetEnable(true);
 
@@ -250,6 +250,16 @@ void SnowbrosPlayer::EndStage()
     _playerComponent->Transition(PlayerStateClear::instance);
 }
 
+int32 SnowbrosPlayer::GetPlayerNumber() const
+{
+    return _playerNumber;
+}
+
+void SnowbrosPlayer::SetPlayerNumber(int32 number)
+{
+    _playerNumber = number;
+}
+
 void SnowbrosPlayer::OnShootButtonEvent(
   Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)
 {
@@ -285,7 +295,7 @@ void SnowbrosPlayer::OnShootButtonEvent(
             else if (action->GetName() == "ShootMidair")
                 animation->ChangeAnimationClip("player_kick_midair");
 
-            snowballStateMachine->Throw(movement->GetDirection());
+            snowballStateMachine->Throw(_playerNumber, movement->GetDirection());
             return;
         }
 
@@ -310,7 +320,7 @@ void SnowbrosPlayer::OnShootButtonEvent(
             else if (action->GetName() == "ShootMidair")
                 animation->ChangeAnimationClip("player_kick_midair");
 
-            snowballStateMachine->Throw(direction > 0.f ? 1.f : -1.f);
+            snowballStateMachine->Throw(_playerNumber, direction > 0.f ? 1.f : -1.f);
             return;
         }
     }

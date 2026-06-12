@@ -3,6 +3,7 @@
 #include "ShootComponent.h"
 
 #include "SnowProjectile.h"
+#include "SnowbrosPlayer.h"
 #include "Core/Actor.h"
 #include "Core/Animation/SpriteInstanceComponent.h"
 #include "Core/Input/InputAction.h"
@@ -57,9 +58,12 @@ void ShootComponent::Shoot()
       = GetOwner()->FindActorComponent<PlatformerMovementComponent>("Movement");
     float direction = movement->GetDirection();
 
+    auto player = Cast<Actor, SnowbrosPlayer>(GetOwner());
+
     position.x += _extentX * direction;
     Ptr<SnowProjectile> projectile
       = level->SpawnActor<SnowProjectile>(position, Vector3::one, Vector3::zero);
+    projectile->SetPlayer(player->GetPlayerNumber());
     projectile->SetPowerUp(_powerUp);
     projectile->SetRangeUp(_rangeUp);
     projectile->SetDirection(direction);

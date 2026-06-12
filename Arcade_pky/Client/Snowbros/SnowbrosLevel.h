@@ -11,9 +11,11 @@ public:
     DELETE_SPECIAL_FUNC(SnowbrosLevel)
 
 private:
-    std::vector<StageData>    _stageData;
-    Ptr<class SnowbrosPlayer> _player;
     TileMetadata              _tileMetadata;
+    std::vector<StageData>    _stageData;
+    Ptr<class SnowbrosPlayer> _player[2]         = {};
+    Ptr<class SnowbrosUI>     _ui                = nullptr;
+    int32                     _score[2]          = {};
     int32                     _stageNumber       = 0;
     bool                      _startingNextStage = false;
 
@@ -23,11 +25,16 @@ public:
 
     void Tick(float deltaTime) override;
 
-    Ptr<class Player> GetPlayer() const;
+    Ptr<class Player> FindNearestPlayerFrom(Vector2 position) const;
+    Ptr<class Player> FindNearestPlayerFrom(Vector3 position) const;
+    Ptr<class Player> GetPlayer(int32 number) const;
 
-    void SetPlayer(Ptr<class SnowbrosPlayer> player);
+    void SetPlayer(int32 number, Ptr<class SnowbrosPlayer> player);
 
     Ptr<class Item> SpawnItem(Vector3 position, Item::Type type);
+
+    void AddScore(int32 playerNumber, int32 score);
+    void ResetScore(int32 playerNumber);
 
     void StartStage(int32 stageNumber);
     void RemoveItems();

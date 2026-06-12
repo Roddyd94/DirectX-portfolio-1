@@ -92,6 +92,10 @@ bool ShaderManager::Init()
           "RectMesh", sizeof(TileOutlineInstanceData), 128, 1, ShaderType::Vertex))
         return false;
 
+    if (!CreateStructureBuffer<IndexedTileStructureBuffer>(
+          "UI", sizeof(IndexedTileInstanceData), 128, 1, ShaderType::Vertex))
+        return false;
+
 #ifdef _HAS_TILEMAP_MODULE
     if (!CreateStructureBuffer<TileStructureBuffer>(
           "Tile", sizeof(TileInstanceData), 128, 1, ShaderType::Vertex))

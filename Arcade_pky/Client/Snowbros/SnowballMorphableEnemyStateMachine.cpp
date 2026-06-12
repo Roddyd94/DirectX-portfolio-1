@@ -41,8 +41,9 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
     Rect    thisRect     = thisCollider->GetBox();
     Vector2 thisPosition = thisCollider->GetWorldPosition().ToVector2();
 
-    auto level          = Cast<Level, SnowbrosLevel>(pawn->GetLevel());
-    auto player         = level->GetPlayer();
+    auto level  = Cast<Level, SnowbrosLevel>(pawn->GetLevel());
+    auto player = level->FindNearestPlayerFrom(pawn->GetWorldPosition());
+    ;
     auto playerCollider = player->FindSceneComponent<AABBCollisionComponent>("Collider");
     Rect playerRect     = playerCollider->GetBox();
 
@@ -109,12 +110,16 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
     return true;
 }
 
-void SnowballMorphableEnemyStateMachine::Throw(float direction)
+void SnowballMorphableEnemyStateMachine::Throw(int32 playerNumber, float direction)
 {
     auto pawn      = GetPawn();
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+    auto level     = Cast<Level, SnowbrosLevel>(pawn->GetLevel());
 
     auto blackboard = Cast<AIBlackboard, SnowballMorphableEnemyBlackboard>(_blackboard);
+    blackboard->snowballKickedPlayer = playerNumber;
+
+    level->AddScore(playerNumber, 500);
 
     kinematic->SetVelocityX(direction * blackboard->snowballRollingSpeedX);
     Transition("SnowballRolling");
@@ -251,12 +256,15 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
 
 #pragma region ColliderCallbacks
     collider->RegisterCollisionCallBack(CollisionState::Enter,
-      [this, weakCollider = Weak(collider), weakKinematic = Weak(kinematic),
-        weakBlackboard = Weak(blackboard)](Weak<CollisionComponent> collider)
+      [this](Weak<CollisionComponent> collider)
       {
-          auto thisCollider = Lock(weakCollider);
-          auto kinematic    = Lock(weakKinematic);
-          auto blackboard   = Lock(weakBlackboard);
+          auto pawn       = GetPawn<SnowbrosEnemy>();
+          auto blackboard = GetBlackboard<SnowballMorphableEnemyBlackboard>();
+
+          auto level = Cast<Level, SnowbrosLevel>(pawn->GetLevel());
+
+          auto thisCollider = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
+          auto kinematic    = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
           Ptr<CollisionComponent> otherCollider     = Lock(collider);
           ColliderType::Type      otherColliderType = otherCollider->GetColliderType();
@@ -302,6 +310,7 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
               {
               case SnowbrosEnemyState::Struggle:
                   blackboard->accTime += blackboard->snowballIncForming * formingMultiplier;
+                  level->AddScore(projectile->GetPlayerNumber(), 10);
                   break;
               case SnowbrosEnemyState::Snowball:
                   blackboard->accTime += blackboard->snowballIncFormed * formingMultiplier;
@@ -314,6 +323,7 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
               default:
                   Transition("Struggle");
                   blackboard->accTime = blackboard->snowballFormingInitialValue;
+                  level->AddScore(projectile->GetPlayerNumber(), 10);
                   break;
               }
           }
@@ -336,6 +346,8 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           {
           case ColliderType::Enemy:
           {
+              auto level = Cast<Level, SnowbrosLevel>(pawn->GetLevel());
+
               auto thisPosition  = pawn->GetWorldPosition();
               auto otherPosition = otherCollider->GetWorldPosition();
 
@@ -420,6 +432,16 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                           auto thisPosition  = thisCollider->GetWorldPosition().ToVector2();
                           auto otherPosition = otherCollider->GetWorldPosition().ToVector2();
 
+                          auto otherBlackboard
+                            = otherStateMachine->GetBlackboard<SnowballMorphableEnemyBlackboard>();
+
+                          blackboard->snowballKickedPlayer = otherBlackboard->snowballKickedPlayer;
+
+                          if (otherBlackboard->isSnowballReinforced)
+                              level->AddScore(otherBlackboard->snowballKickedPlayer, 8'000);
+                          else
+                              level->AddScore(otherBlackboard->snowballKickedPlayer, 1'000);
+
                           if (thisPosition.x < otherPosition.x)
                               kinematic->SetVelocity({-blackboard->snowballRollingSpeedX, 0.f});
                           else
@@ -463,6 +485,11 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                             = thisPosition.x < otherPosition.x ? 1.f : -1.f;
                           otherBlackboard->hitByReinforced = blackboard->isSnowballReinforced;
 
+                          if (blackboard->isSnowballReinforced)
+                              level->AddScore(blackboard->snowballKickedPlayer, 8'000);
+                          else
+                              level->AddScore(blackboard->snowballKickedPlayer, 1'000);
+
                           otherStateMachine->Transition("Launched");
                       }
                       break;
@@ -501,7 +528,8 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
               case SnowbrosEnemyState::Snowball:
               {
                   auto otherPawn = otherCollider->GetOwner();
-                  auto otherKinematic = otherPawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
+                  auto otherKinematic
+                    = otherPawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
                   otherKinematic->SetVelocityX(0.f);
 
@@ -896,14 +924,14 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           return kinematic->IsColliderMovingAgainstBoundaryX(deltaX);
       });
     auto conditionNotOnFloor           = CreateAICondition("NotOnFloor", ConditionOperator::And,
-                [weakKinematic = Weak(kinematic)](float deltaTime) -> bool
-                {
+      [weakKinematic = Weak(kinematic)](float deltaTime) -> bool
+      {
           auto kinematic = Lock(weakKinematic);
           return !kinematic->IsColliderOnFloor();
       });
     auto conditionMoveAgainstWall  = CreateAICondition("MoveAgainstWall", ConditionOperator::And,
-       [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime) -> bool
-       {
+      [weakKinematic = Weak(kinematic), weakBlackboard = Weak(blackboard)](float deltaTime) -> bool
+      {
           auto kinematic  = Lock(weakKinematic);
           auto blackboard = Lock(weakBlackboard);
 

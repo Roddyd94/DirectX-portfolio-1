@@ -27,11 +27,11 @@ float TimeManager::Tick()
 
     _deltaTime = frameTime.count();
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
     _deltaTime = std::min(_deltaTime, targetDeltaTime);
     Sleep((targetDeltaTime - _deltaTime) * 1'000);
     _deltaTime = targetDeltaTime;
-#endif // _DEBUG
+//#endif // _DEBUG
 
     _prevTime = curTime;
     ++_frameCounter;

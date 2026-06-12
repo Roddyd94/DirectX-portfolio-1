@@ -13,6 +13,7 @@
 #include "SnowballMorphableEnemyStateMachine.h"
 #include "SnowbrosEnemyState.h"
 #include "SnowbrosLevel.h"
+#include "SnowbrosPlayer.h"
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
 #include "AI/AIComponent.h"
@@ -57,7 +58,7 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
 {
     auto blackboard = GetBlackboard(playerComponent);
 
-    auto thisActor         = playerComponent->GetOwner();
+    auto thisActor         = Cast<Actor, SnowbrosPlayer>(playerComponent->GetOwner());
     auto thisCollider      = thisActor->FindSceneComponent<CollisionComponent>("Collider");
     auto otherCollider     = Lock(collider);
     auto otherColliderType = otherCollider->GetColliderType();
@@ -171,6 +172,8 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
         if (nullptr == item)
             return;
 
+        auto level = Cast<Level, SnowbrosLevel>(item->GetLevel());
+
         Item::Type itemType = item->GetItemType();
 
         switch (itemType)
@@ -179,7 +182,7 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
         {
             if (blackboard->speedUpgraded)
             {
-                // TODO 1000 점
+                level->AddScore(thisActor->GetPlayerNumber(), 1'000);
                 return;
             }
 
@@ -191,7 +194,7 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
         {
             if (blackboard->powerUpgraded)
             {
-                // TODO 1000 점
+                level->AddScore(thisActor->GetPlayerNumber(), 1'000);
                 return;
             }
 
@@ -205,7 +208,7 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
         {
             if (blackboard->rangeUpgraded)
             {
-                // TODO 1000 점
+                level->AddScore(thisActor->GetPlayerNumber(), 1'000);
                 return;
             }
 
@@ -218,8 +221,8 @@ void SnowbrosPlayerState::CollideWith(Ptr<class PlayerComponent> playerComponent
         case Item::Invincibility:
             break;
         case Item::Sushi:
-            break;
         case Item::Envelope:
+            level->AddScore(thisActor->GetPlayerNumber(), item->GetItemValue());
             break;
         case Item::Special:
             break;

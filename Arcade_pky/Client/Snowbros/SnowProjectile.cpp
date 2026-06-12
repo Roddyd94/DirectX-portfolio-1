@@ -74,6 +74,11 @@ bool SnowProjectile::IsPoweredUp() const
     return _projectileComponent->_powerUp;
 }
 
+void SnowProjectile::SetPlayer(int32 number)
+{
+    _projectileComponent->SetPlayer(number);
+}
+
 void SnowProjectile::SetPowerUp(bool powerUp)
 {
     _projectileComponent->_powerUp = powerUp;

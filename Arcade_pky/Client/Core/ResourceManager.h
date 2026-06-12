@@ -59,7 +59,7 @@ public:
 #define FIND_CONSTANT_BUFFER(x, T)  SHADER_MANAGER->FindConstantBuffer<T>(x)
 #define FIND_STRUCTURE_BUFFER(x, T) SHADER_MANAGER->FindStructureBuffer<T>(x)
 
-#define FIND_SPRITESHEET(x)        ANIMATION_MANAGER->FindSpriteSheet(x)
+#define FIND_SPRITESHEET(x, T)     ANIMATION_MANAGER->FindSpriteSheet<T>(x)
 #define FIND_ANIMATION_CLIP(x)     ANIMATION_MANAGER->FindAnimationClip(x)
 #define FIND_ANIMATION_SEQUENCE(x) ANIMATION_MANAGER->FindAnimationSequence(x)
 

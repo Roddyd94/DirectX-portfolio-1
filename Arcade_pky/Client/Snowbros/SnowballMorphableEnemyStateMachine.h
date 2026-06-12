@@ -24,15 +24,14 @@ class SnowballMorphableEnemyStateMachine : public AIStateMachine
 {
 public:
     bool TryMoveX(float deltaX);
-    void Throw(float direction);
+    void Throw(int32 playerNumber, float direction);
 
 public:
     bool Init(Ptr<class AIComponent> owner) override;
 
     virtual void ChangeAnimationClip(SnowbrosEnemyAnimationType type, bool play = true) = 0;
     virtual void AddNotifyToAnimationClipEnd(
-      SnowbrosEnemyAnimationType type, std::function<void()>&& func)
-      = 0;
+      SnowbrosEnemyAnimationType type, std::function<void()>&& func) = 0;
 
 public:
     static void FindSnowballs(Ptr<class CollisionManager> collisionManager,

@@ -9,6 +9,8 @@
 #include "BossBlackboard.h"
 #include "BossState.h"
 #include "IndexedSpriteInstanceComponent.h"
+#include "SnowProjectile.h"
+#include "SnowProjectileComponent.h"
 #include "SnowbrosEnemy.h"
 #include "SnowbrosLevel.h"
 #include "SpawnBlackboard.h"
@@ -107,6 +109,9 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
           auto otherCollider     = Lock(collider);
           auto otherColliderType = otherCollider->GetColliderType();
 
+          auto pawn  = GetPawn();
+          auto level = Cast<Level, SnowbrosLevel>(pawn->GetLevel());
+
           switch (otherColliderType)
           {
           case ColliderType::Enemy:
@@ -132,6 +137,14 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
                   if (otherStateType != SnowbrosEnemyState::SnowballRolling)
                       break;
 
+                  auto otherBlackboard
+                    = otherStateMachine->GetBlackboard<SnowballMorphableEnemyBlackboard>();
+
+                  if (otherBlackboard->isSnowballReinforced)
+                      level->AddScore(otherBlackboard->snowballKickedPlayer, 8'000);
+                  else
+                      level->AddScore(otherBlackboard->snowballKickedPlayer, 1'000);
+
                   Hit(500);
               }
               break;
@@ -140,6 +153,10 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
           break;
           case ColliderType::PlayerProjectile:
           {
+              auto otherActor = otherCollider->GetOwner();
+              auto projectile
+                = otherActor->FindActorComponent<SnowProjectileComponent>("Projectile");
+              level->AddScore(projectile->GetPlayerNumber(), 10);
               Hit(2);
           }
           break;
@@ -402,8 +419,8 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
           return isFalling && !wasColliderBottomOnBlock && isColliderOnFloor;
       });
     auto conditionIsAtProperFloor  = CreateAICondition("IsAtProperFloor", ConditionOperator::And,
-       [this](float deltaTime) -> bool
-       {
+      [this](float deltaTime) -> bool
+      {
           auto    pawn       = GetPawn();
           auto    blackboard = GetBlackboard<BossBlackboard>();
           Vector2 position   = pawn->GetWorldPosition().ToVector2();

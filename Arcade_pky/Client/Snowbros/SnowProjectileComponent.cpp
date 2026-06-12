@@ -74,6 +74,16 @@ bool SnowProjectileComponent::IsPoweredUp() const
     return _powerUp;
 }
 
+int32 SnowProjectileComponent::GetPlayerNumber() const
+{
+    return _playerNumber;
+}
+
+void SnowProjectileComponent::SetPlayer(int32 number)
+{
+    _playerNumber = number;
+}
+
 void SnowProjectileComponent::SetKinematic(Ptr<class PlatformerKinematicComponent> kinematic)
 {
     _kinematic = kinematic;
