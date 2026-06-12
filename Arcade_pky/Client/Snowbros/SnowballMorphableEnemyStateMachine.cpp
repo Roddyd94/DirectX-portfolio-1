@@ -446,7 +446,7 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                           if (otherBlackboard->isSnowballReinforced)
                           {
                               level->AddScore(otherBlackboard->snowballKickedPlayer, 8'000);
-                              popup->SetInfo(ScorePopup::General, 5);
+                              popup->SetInfo(ScorePopup::General, 6);
                           }
                           else
                           {
@@ -502,7 +502,7 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                           if (blackboard->isSnowballReinforced)
                           {
                               level->AddScore(blackboard->snowballKickedPlayer, 8'000);
-                              popup->SetInfo(ScorePopup::General, 5);
+                              popup->SetInfo(ScorePopup::General, 6);
                           }
                           else
                           {
