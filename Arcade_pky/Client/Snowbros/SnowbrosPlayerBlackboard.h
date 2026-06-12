@@ -14,6 +14,8 @@ public:
     float speedX          = 2.f;
     float speedMultiplier = 1.f;
 
+    int32 invincibleTimer = -1;
+
     bool jumpedFromSnowball = false;
 
     bool speedUpgraded = false;
@@ -23,5 +25,8 @@ public:
 
 public:
     inline static const float speedMultiplierSnowball = 0.5f;
-    inline static const float invincibleTime = 5.f;
+    inline static const float invincibleTime          = 5.f;
+
+    public:
+    void Destroy() override;
 };
