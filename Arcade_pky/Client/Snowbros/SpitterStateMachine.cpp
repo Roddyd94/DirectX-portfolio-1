@@ -168,6 +168,9 @@ bool SpitterStateMachine::Init(Ptr<class AIComponent> owner)
             auto pawn       = Lock(weakPawn);
             auto blackboard = Lock(weakBlackboard);
 
+            if (blackboard->patrolPoints.empty())
+                return false;
+
             if (blackboard->currentPatrolIndex >= blackboard->patrolPoints.size())
             {
                 blackboard->currentPatrolIndex = 0;
@@ -184,12 +187,14 @@ bool SpitterStateMachine::Init(Ptr<class AIComponent> owner)
         });
     auto conditionShouldJumpNext           = CreateAICompositeCondition("ShouldJumpNext",
       ConditionOperator::And, conditionMoveAgainstWall, conditionHasLandingTileForward);
-    auto conditionCanJumpAboveTowardPlayer = CreateAICompositeCondition(
-      "CanJumpAboveTowardPlayer", ConditionOperator::And, conditionIsPlayerAbove, conditionHasLandingTileAbove);
-    auto conditionCanJumpAboveTowardNextPatrolPoint = CreateAICompositeCondition(
-      "CanJumpAboveTowardNextPatrolPoint", ConditionOperator::And, conditionNextPatrolPointAbove, conditionHasLandingTileAbove);
+    auto conditionCanJumpAboveTowardPlayer = CreateAICompositeCondition("CanJumpAboveTowardPlayer",
+      ConditionOperator::And, conditionIsPlayerAbove, conditionHasLandingTileAbove);
+    auto conditionCanJumpAboveTowardNextPatrolPoint
+      = CreateAICompositeCondition("CanJumpAboveTowardNextPatrolPoint", ConditionOperator::And,
+        conditionNextPatrolPointAbove, conditionHasLandingTileAbove);
     auto conditionShouldJump   = CreateAICompositeCondition("ShouldJump", ConditionOperator::Or,
-      conditionCanJumpAboveTowardNextPatrolPoint, conditionShouldJumpNext, conditionCanJumpAboveTowardPlayer);
+      conditionCanJumpAboveTowardNextPatrolPoint, conditionShouldJumpNext,
+      conditionCanJumpAboveTowardPlayer);
     auto conditionTouchedBlock = CreateAICompositeCondition("TouchedBlock", ConditionOperator::Or,
       conditionMoveAgainstBoundaryX, conditionMoveAgainstWall);
 
