@@ -31,7 +31,7 @@ void IndexedSpriteInstanceComponent::AddBufferData()
 
     SpriteData          data    = spriteSheet->GetSpriteData(sprite.spriteIndex);
     Ptr<IndexedTexture> texture = spriteSheet->GetTexture();
-    texture->SetShaderResource();
+    texture->SetShaderResource(0, ShaderType::Pixel, 0);
 
     Vector2 uvLT;
     Vector2 uvRB;

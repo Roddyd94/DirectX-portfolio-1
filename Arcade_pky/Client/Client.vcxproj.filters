@@ -1396,6 +1396,9 @@
     <FxCompile Include="..\HLSL\IndexedSprite.fx">
       <Filter>Snowbros\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="..\HLSL\IndexedTexture.fx">
+      <Filter>HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ThirdParty\fmod.dll">

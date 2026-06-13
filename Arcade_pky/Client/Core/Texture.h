@@ -35,7 +35,8 @@ public:
     ~IndexedTexture() override = default;
 
 protected:
-    std::vector<byte> _data;
+    ComPtr<ID3D11ShaderResourceView> _srv;
+    ComPtr<ID3D11Texture2D>          _texture;
 
     int32 _width        = 0;
     int32 _height       = 0;
@@ -49,5 +50,9 @@ public:
 
     bool LoadTexture(
       const char* data, size_t dataLength, int32 width, int32 height, int32 bitsPerPixel);
-    void SetShaderResource();
+    void SetShaderResource(int32 registerNum, uint32 shaderBufferType, uint32 textureIndex);
+    void ResetShaderResource(int32 registerNum, uint32 shaderBufferType);
+
+protected:
+    bool CreateShaderResourceView();
 };

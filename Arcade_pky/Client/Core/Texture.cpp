@@ -5,8 +5,9 @@
 #include "DeviceManager.h"
 #include "DirectoryManager.h"
 #include "ResourceManager.h"
+#include "Common/LogManager.h"
 
-#include "IndexedTextureBuffer.h"
+#include "IndexedTextureInfoConstantBuffer.h"
 #include "Rendering.h"
 #include "Shader.h"
 
@@ -90,26 +91,73 @@ void IndexedTexture::Destroy() {}
 bool IndexedTexture::LoadTexture(
   const char* data, size_t dataLength, int32 width, int32 height, int32 bitsPerPixel)
 {
-    _data.resize(dataLength);
-    memcpy_s(_data.data(), dataLength, data, dataLength);
+    D3D11_TEXTURE2D_DESC desc;
+    desc.Width     = width / (8 / bitsPerPixel);
+    desc.Height    = height;
+    desc.Format    = DXGI_FORMAT_R8_UINT;
+    desc.MipLevels = desc.ArraySize = 1;
+    desc.SampleDesc.Count           = 1;
+    desc.SampleDesc.Quality         = 0;
+    desc.Usage                      = D3D11_USAGE_DEFAULT;
+    desc.BindFlags                  = D3D11_BIND_SHADER_RESOURCE;
+    desc.CPUAccessFlags             = 0;
+    desc.MiscFlags                  = 0;
+
+    D3D11_SUBRESOURCE_DATA initData = {};
+    initData.pSysMem                = data;
+    initData.SysMemPitch            = desc.Width;
+
+    if (FAILED(DEVICE->CreateTexture2D(&desc, &initData, _texture.GetAddressOf())))
+        return false;
 
     _width  = width;
     _height = height;
 
     _bitsPerPixel = bitsPerPixel;
 
-    return true;
+    return CreateShaderResourceView();
 }
 
-void IndexedTexture::SetShaderResource()
+void IndexedTexture::SetShaderResource(
+  int32 registerNum, uint32 shaderBufferType, uint32 textureIndex)
 {
-    auto buffer = FIND_STRUCTURE_BUFFER("IndexedTexture", IndexedTextureBuffer);
+    if (shaderBufferType & ShaderType::Vertex)
+        DeviceManager::Instance().GetContext()->VSSetShaderResources(
+          registerNum, 1, _srv.GetAddressOf());
 
-    buffer->Clear();
-    buffer->AddData(reinterpret_cast<char*>(_data.data()), _data.size());
+    if (shaderBufferType & ShaderType::Pixel)
+        DeviceManager::Instance().GetContext()->PSSetShaderResources(
+          registerNum, 1, _srv.GetAddressOf());
+
+    auto buffer = FIND_CONSTANT_BUFFER("IndexedTextureInfo", IndexedTextureInfoConstantBuffer);
+
     buffer->SetSize(_width, _height);
     buffer->SetBitsPerPixel(_bitsPerPixel);
 
     buffer->Update();
-    buffer->Bind();
+}
+
+void IndexedTexture::ResetShaderResource(int32 registerNum, uint32 shaderBufferType)
+{
+    ID3D11ShaderResourceView* srv = nullptr;
+
+    if (shaderBufferType & ShaderType::Vertex)
+        DeviceManager::Instance().GetContext()->VSSetShaderResources(registerNum, 1, &srv);
+
+    if (shaderBufferType & ShaderType::Pixel)
+        DeviceManager::Instance().GetContext()->PSSetShaderResources(registerNum, 1, &srv);
+}
+
+bool IndexedTexture::CreateShaderResourceView()
+{
+    D3D11_SHADER_RESOURCE_VIEW_DESC desc = {};
+    desc.Format                          = DXGI_FORMAT_R8_UINT;
+    desc.ViewDimension                   = D3D11_SRV_DIMENSION_TEXTURE2D;
+    desc.Texture2D.MostDetailedMip       = 0;
+    desc.Texture2D.MipLevels             = 1;
+
+    if (FAILED(DEVICE->CreateShaderResourceView(_texture.Get(), &desc, _srv.GetAddressOf())))
+        return false;
+
+    return true;
 }

@@ -495,7 +495,7 @@ void IndexedTextureTilemapComponent::RenderTile()
     if (!_tileTexture)
         return;
 
-    _tileTexture->SetShaderResource();
+    _tileTexture->SetShaderResource(0, ShaderType::Pixel, 0);
     _paletteBuffer->Update();
     _paletteBuffer->Bind();
 
