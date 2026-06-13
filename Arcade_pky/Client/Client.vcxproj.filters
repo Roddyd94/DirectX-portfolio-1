@@ -553,7 +553,9 @@
     <ClInclude Include="Snowbros\SnowbrosUIComponent.h">
       <Filter>Snowbros\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Snowbros\ScorePopup.h" />
+    <ClInclude Include="Snowbros\ScorePopup.h">
+      <Filter>Snowbros\Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1068,7 +1070,9 @@
     <ClCompile Include="Snowbros\SnowbrosUIComponent.cpp">
       <Filter>Snowbros\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Snowbros\ScorePopup.cpp" />
+    <ClCompile Include="Snowbros\ScorePopup.cpp">
+      <Filter>Snowbros\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

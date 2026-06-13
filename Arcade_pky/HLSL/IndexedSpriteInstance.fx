@@ -1,6 +1,6 @@
 #include "Share.fx"
 
-ByteAddressBuffer textureIndexBytes : register(t0);
+ByteAddressBuffer pixelIndexBytes : register(t0);
 
 struct SpriteInstanceData
 {
@@ -17,8 +17,8 @@ StructuredBuffer<float4> paletteData : register(t1);
 cbuffer IndexedTextureInfo : register(b0)
 {
     uint2 textureSize;
-    uint textureStrideBitSize;
-    uint paletteLength; // 2 ^ textureStrideBitSize
+    uint bitsPerPixel;
+    uint paletteLength; // 2 ^ bitsPerPixel
 }
 
 struct VS_Input
@@ -34,34 +34,34 @@ struct VS_Output
     int paletteNumber : TEXCOORD1;
 };
 
-float4 GetColorFromIndex(int paletteNumber, float2 uv)
+float4 GetColorFromUV(int paletteNumber, float2 uv)
 {
     uint2 coords = uv * textureSize;
 
-    int pixelCountsPerByte = 8 / textureStrideBitSize;
-    int textureIndex = coords.y * (textureSize.x / pixelCountsPerByte) + coords.x / pixelCountsPerByte;
-    int loadIndex = textureIndex - textureIndex % 4;
-    uint pixelDataPerFourByte = textureIndexBytes.Load(loadIndex);
+    int pixelsPerByte = 8 / bitsPerPixel;
+    int pixelIndex = coords.y * (textureSize.x / pixelsPerByte) + coords.x / pixelsPerByte;
+    int loadIndex = pixelIndex - pixelIndex % 4;
+    uint loadData = pixelIndexBytes.Load(loadIndex);
 
-    uint dataPosition = textureIndex % 4;
-    uint paletteIndex = pixelDataPerFourByte >> (dataPosition) * 8;
+    uint dataPosition = pixelIndex % 4;
+    uint colorIndex = loadData >> (dataPosition) * 8;
     
-    if (textureStrideBitSize == 2)
+    if (bitsPerPixel == 2)
     {
-        paletteIndex >>= textureStrideBitSize * (pixelCountsPerByte - 1 - coords.x % pixelCountsPerByte);
-        paletteIndex &= 0x3;
+        colorIndex >>= bitsPerPixel * (pixelsPerByte - 1 - coords.x % pixelsPerByte);
+        colorIndex &= 0x3;
     }
-    else if (textureStrideBitSize == 4)
+    else if (bitsPerPixel == 4)
     {
-        paletteIndex >>= textureStrideBitSize * (pixelCountsPerByte - 1 - coords.x % pixelCountsPerByte);
-        paletteIndex &= 0xF;
+        colorIndex >>= bitsPerPixel * (pixelsPerByte - 1 - coords.x % pixelsPerByte);
+        colorIndex &= 0xF; // 스트라이드 크기가 4-bit인 경우
     }
-    else if (textureStrideBitSize == 8)
+    else if (bitsPerPixel == 8)
     {
-        paletteIndex &= 0xFF;
+        colorIndex &= 0xFF;
     }
     
-    return paletteData[paletteLength * paletteNumber + paletteIndex];
+    return paletteData[paletteLength * paletteNumber + colorIndex];
 }
 
 VS_Output IndexedSpriteInstanceVS(VS_Input input, uint instanceID : SV_InstanceID)
@@ -86,7 +86,7 @@ PS_Output_Single IndexedSpriteInstancePS(VS_Output input)
 {
     PS_Output_Single output = (PS_Output_Single) 0;
     
-    output.color = GetColorFromIndex(input.paletteNumber, input.uv);
+    output.color = GetColorFromUV(input.paletteNumber, input.uv);
     
     return output;
 }
