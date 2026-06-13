@@ -41,7 +41,7 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto sprite = CreateSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite = CreateSceneComponent<SpriteInstanceComponent>("Sprite");
     sprite->SetRenderLayer("Player");
     // rootComp->SetShader("SpriteShader");
     sprite->AttachToComponent(_root);
@@ -105,9 +105,9 @@ bool SnowbrosPlayer::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
           level->SetPlayer(_playerNumber, nullptr);
       });
 
-    auto effect  = CreateSceneComponent<IndexedSpriteInstanceComponent>("Effect");
+    auto effect  = CreateSceneComponent<SpriteInstanceComponent>("Effect");
     auto palette = FIND_PALETTE("snowball");
-    effect->SetPaletteNumber(palette->GetID());
+    //effect->SetPaletteNumber(palette->GetID());
     effect->SetRenderLayer("PlayerEffect");
     effect->AttachToComponent(_root);
     effect->SetWorldScale({3.f, 2.f});
@@ -212,7 +212,7 @@ void SnowbrosPlayer::SetDirection(float direction)
     auto movement = FindActorComponent<PlatformerMovementComponent>("Movement");
     movement->SetDirection(direction);
 
-    auto sprite = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite = FindSceneComponent<SpriteInstanceComponent>("Sprite");
     sprite->SetFlipX(direction > 0 ? true : false);
 }
 
@@ -234,7 +234,7 @@ int32 SnowbrosPlayer::GetPlayerNumber() const
 void SnowbrosPlayer::SetPlayerNumber(int32 number)
 {
     auto input  = _playerController->GetInputComponent();
-    auto sprite = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite = FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
     if (0 == number)
     {
@@ -260,7 +260,7 @@ void SnowbrosPlayer::SetPlayerNumber(int32 number)
           "Snowball1", "Jump", Raw(_playerComponent), &PlayerComponent::HandleInput);
 
         auto palette = FIND_PALETTE("player_1");
-        sprite->SetPaletteNumber(palette->GetID());
+        //sprite->SetPaletteNumber(palette->GetID());
     }
     else if (1 == number)
     {
@@ -286,7 +286,7 @@ void SnowbrosPlayer::SetPlayerNumber(int32 number)
           "Snowball2", "Jump", Raw(_playerComponent), &PlayerComponent::HandleInput);
 
         auto palette = FIND_PALETTE("player_2");
-        sprite->SetPaletteNumber(palette->GetID());
+        //sprite->SetPaletteNumber(palette->GetID());
     }
 
     _playerNumber = number;

@@ -14,7 +14,7 @@
 #include "Core/Level.h"
 #include "Platformer/PlatformerKinematicComponent.h"
 #include "Player/Player.h"
-#include "Snowbros/IndexedSpriteComponent.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Tilemap/Tilemap.h"
 
 bool SpitterStateMachine::Init(Ptr<class AIComponent> owner)
@@ -24,7 +24,7 @@ bool SpitterStateMachine::Init(Ptr<class AIComponent> owner)
 
     auto pawn      = owner->GetPawn<SnowbrosEnemy>();
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
-    auto sprite    = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<SpriteInstanceComponent>("Sprite");
     auto animation = sprite->GetAnimation();
     animation->ChangeAnimationClip("spitter_walk");
 
@@ -47,7 +47,7 @@ bool SpitterStateMachine::Init(Ptr<class AIComponent> owner)
             pawn->GetWorldPosition(), Vector3::one * 2.f, Vector3::zero);
           projectile->SetDirection(blackboard->direction);
 
-          auto sprite = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+          auto sprite = pawn->FindSceneComponent<SpriteInstanceComponent>("Sprite");
           sprite->ChangeAnimation("spitter_shoot");
 
           blackboard->transitionTimerID = TimeManager::Instance().SetTimer(1.f, false,
@@ -216,7 +216,7 @@ void SpitterStateMachine::Destroy()
 void SpitterStateMachine::ChangeAnimationClip(SnowbrosEnemyAnimationType type, bool play)
 {
     auto pawn   = GetPawn<SnowbrosEnemy>();
-    auto sprite = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+    auto sprite = pawn->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
     switch (type)
     {
@@ -271,7 +271,7 @@ void SpitterStateMachine::AddNotifyToAnimationClipEnd(
   SnowbrosEnemyAnimationType type, std::function<void()>&& func)
 {
     auto pawn      = GetPawn<SnowbrosEnemy>();
-    auto sprite    = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<SpriteInstanceComponent>("Sprite");
     auto animation = sprite->GetAnimation();
 
     switch (type)

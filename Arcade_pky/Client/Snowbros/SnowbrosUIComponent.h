@@ -45,7 +45,7 @@ protected:
     Ptr<class StructureBuffer> _uiStructureBuffer;
     Ptr<class Shader>          _uiInstanceShader;
     Ptr<class StructureBuffer> _paletteBuffer = nullptr;
-    Ptr<class IndexedTexture>  _texture       = nullptr;
+    Ptr<class Texture>  _texture       = nullptr;
 
     int32 _numberPaletteID         = 0;
     bool  _shouldRefreshUIInstance = false;

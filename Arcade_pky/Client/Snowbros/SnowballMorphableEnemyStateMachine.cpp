@@ -6,8 +6,7 @@
 #include "Core/ResourceManager.h"
 #include "Core/TimeManager.h"
 
-#include "IndexedSpriteComponent.h"
-#include "IndexedSpriteInstanceComponent.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 #include "Item.h"
 #include "ScorePopup.h"
 #include "SnowProjectile.h"
@@ -143,11 +142,11 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
     auto collider  = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
-    auto sprite    = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<SpriteInstanceComponent>("Sprite");
     auto animation = sprite->GetAnimation();
 
     auto spriteSnowball
-      = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("SpriteSnowball");
+      = pawn->FindSceneComponent<SpriteInstanceComponent>("SpriteSnowball");
     auto animationSnowball = spriteSnowball->GetAnimation();
 
 #pragma region AIStates
@@ -652,10 +651,10 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
           if (blackboard->isSnowballReinforced)
           {
               spriteSnowball->ChangeAnimation("snowball_reinforced");
-              if (0 == blackboard->snowballKickedPlayer)
-                  spriteSnowball->SetPaletteNumber(FIND_PALETTE("player_1")->GetID());
-              else if (1 == blackboard->snowballKickedPlayer)
-                  spriteSnowball->SetPaletteNumber(FIND_PALETTE("player_2")->GetID());
+              //if (0 == blackboard->snowballKickedPlayer)
+              //    spriteSnowball->SetPaletteNumber(FIND_PALETTE("player_1")->GetID());
+              //else if (1 == blackboard->snowballKickedPlayer)
+              //    spriteSnowball->SetPaletteNumber(FIND_PALETTE("player_2")->GetID());
           }
           else
               spriteSnowball->ChangeAnimation("snowball_rolling");

@@ -29,7 +29,7 @@ bool Item::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
     Actor::Init(id, position, scale, rotation);
     SetName("Item");
 
-    auto sprite = CreateSceneComponent<IndexedSpriteInstanceComponent>("Root");
+    auto sprite = CreateSceneComponent<SpriteInstanceComponent>("Root");
     sprite->SetRenderLayer("Item");
 
     SetRoot(sprite);
@@ -96,42 +96,42 @@ void Item::SetItemType(Type itemType)
 {
     _itemType = itemType;
 
-    auto sprite = FindSceneComponent<IndexedSpriteInstanceComponent>("Root");
+    auto sprite = FindSceneComponent<SpriteInstanceComponent>("Root");
     switch (_itemType)
     {
     case Item::Speed:
     {
         sprite->ChangeAnimation("item_speed");
         auto palette = FIND_PALETTE("item_upgrade");
-        sprite->SetPaletteNumber(palette->GetID());
+        //sprite->SetPaletteNumber(palette->GetID());
     }
     break;
     case Item::Power:
     {
         sprite->ChangeAnimation("item_power");
         auto palette = FIND_PALETTE("item_upgrade");
-        sprite->SetPaletteNumber(palette->GetID());
+        //sprite->SetPaletteNumber(palette->GetID());
     }
     break;
     case Item::Range:
     {
         sprite->ChangeAnimation("item_range");
         auto palette = FIND_PALETTE("item_upgrade");
-        sprite->SetPaletteNumber(palette->GetID());
+        //sprite->SetPaletteNumber(palette->GetID());
     }
     break;
     case Item::Invincibility:
     {
         sprite->ChangeAnimation("item_invincibility");
         auto palette = FIND_PALETTE("item_upgrade");
-        sprite->SetPaletteNumber(palette->GetID());
+        //sprite->SetPaletteNumber(palette->GetID());
     }
     break;
     case Item::Sushi:
     {
         sprite->ChangeAnimation("item_sushi");
         auto palette = FIND_PALETTE("item_sushi");
-        sprite->SetPaletteNumber(palette->GetID());
+        //sprite->SetPaletteNumber(palette->GetID());
         sprite->Pause();
     }
     break;
@@ -140,14 +140,14 @@ void Item::SetItemType(Type itemType)
         sprite->SetWorldScale(2 * Vector2::one);
         sprite->ChangeAnimation("item_envelope");
         auto palette = FIND_PALETTE("player_1");
-        sprite->SetPaletteNumber(palette->GetID());
+        //sprite->SetPaletteNumber(palette->GetID());
     }
     break;
     case Item::Special:
     {
         sprite->ChangeAnimation("item_upgrade");
         auto palette = FIND_PALETTE("player_1");
-        sprite->SetPaletteNumber(palette->GetID());
+        //sprite->SetPaletteNumber(palette->GetID());
     }
     break;
     }

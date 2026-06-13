@@ -32,7 +32,7 @@ void SnowbrosPlayerState::Tick(Ptr<class PlayerComponent> playerComponent, float
     auto player     = playerComponent->GetPlayer();
     auto blackboard = GetBlackboard(playerComponent);
 
-    auto sprite = player->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
     if (blackboard->invincible)
     {
@@ -49,7 +49,7 @@ void SnowbrosPlayerState::Exit(Ptr<class PlayerComponent> playerComponent)
 {
     auto player = playerComponent->GetPlayer();
 
-    auto sprite = player->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
     sprite->SetEnable(true);
 }
 

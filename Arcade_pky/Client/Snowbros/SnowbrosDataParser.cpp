@@ -222,9 +222,10 @@ bool SnowbrosDataParser::ParseAnimationData(const std::string& textureName,
     if (dataPath == std::nullopt)
         return false;
 
-    ParseIndexedTexture(textureName, textureFilename);
+    TEXTURE_MANAGER->LoadTexture(textureName, textureFilename);
+    //ParseIndexedTexture(textureName, textureFilename);
 
-    ANIMATION_MANAGER->CreateIndexedSpriteSheet(spriteSheetName, textureName);
+    ANIMATION_MANAGER->CreateSpriteSheet(spriteSheetName, textureName);
 
     auto filePath = dataPath.value();
     DirectoryManager::Instance().GetFile(filePath, animationDataFilename, filePath);

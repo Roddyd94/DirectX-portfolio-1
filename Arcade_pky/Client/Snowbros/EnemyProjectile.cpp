@@ -24,10 +24,10 @@ bool EnemyProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 ro
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto rootComp = CreateSceneComponent<IndexedSpriteInstanceComponent>("Root");
+    auto rootComp = CreateSceneComponent<SpriteInstanceComponent>("Root");
     // rootComp->
     auto palette = FIND_PALETTE("snowball");
-    rootComp->SetPaletteNumber(palette->GetID());
+    //rootComp->SetPaletteNumber(palette->GetID());
     rootComp->SetRenderLayer("EnemyProjectile");
     SetRoot(rootComp);
 
@@ -70,7 +70,7 @@ void EnemyProjectile::Tick(float deltaTime)
 
 void EnemyProjectile::SetDirection(float direction)
 {
-    auto sprite = FindSceneComponent<IndexedSpriteInstanceComponent>("Root");
+    auto sprite = FindSceneComponent<SpriteInstanceComponent>("Root");
     sprite->SetFlipX(direction > 0 ? true : false);
 
     auto kinematic = FindActorComponent<PlatformerKinematicComponent>("Kinematic");

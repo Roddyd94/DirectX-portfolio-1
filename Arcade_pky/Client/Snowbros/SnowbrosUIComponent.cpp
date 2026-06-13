@@ -12,8 +12,8 @@
 #include "Core/PaletteStructureBuffer.h"
 #include "Core/Texture.h"
 #include "Core/TransformConstantBuffer.h"
-#include "Tilemap/IndexedTileInstanceShader.h"
-#include "Tilemap/IndexedTileStructureBuffer.h"
+#include "Tilemap/TileInstanceShader.h"
+#include "Tilemap/TileStructureBuffer.h"
 
 SnowbrosUIComponent::SnowbrosUIComponent()
 {
@@ -23,14 +23,14 @@ SnowbrosUIComponent::SnowbrosUIComponent()
 bool SnowbrosUIComponent::Init(int32 componentID, const std::string& name, Ptr<class Actor> owner)
 {
     SceneComponent::Init(componentID, name, owner);
-    auto spriteSheet = FIND_SPRITESHEET("snowbros_player", IndexedTextureAnimation2DSpriteSheet);
+    auto spriteSheet = FIND_SPRITESHEET("snowbros_player", TextureAnimation2DSpriteSheet);
 
     _uiMesh            = MESH_TEXTURE_RECT;
-    _uiStructureBuffer = FIND_STRUCTURE_BUFFER("UI", IndexedTileStructureBuffer);
-    _uiInstanceShader  = FIND_SHADER("IndexedTileInstanceShader", IndexedTileInstanceShader);
+    _uiStructureBuffer = FIND_STRUCTURE_BUFFER("UI", TileStructureBuffer);
+    _uiInstanceShader  = FIND_SHADER("TileInstanceShader", TileInstanceShader);
 
     _paletteBuffer = FIND_STRUCTURE_BUFFER("Palette", PaletteStructureBuffer);
-    _texture       = FIND_INDEXED_TEXTURE("snowbros_player");
+    _texture       = FIND_TEXTURE("snowbros_player");
 
     _numberSpriteData.resize(10);
 
@@ -238,7 +238,7 @@ void SnowbrosUIComponent::AddScoreDataToBuffer(const ScoreText& scoreText)
 void SnowbrosUIComponent::AddBufferData(
   Vector2 position, Vector2 size, Animation2DSprite sprite, int32 paletteNumber)
 {
-    auto structureBuffer = Cast<StructureBuffer, IndexedTileStructureBuffer>(_uiStructureBuffer);
+    auto structureBuffer = Cast<StructureBuffer, TileStructureBuffer>(_uiStructureBuffer);
 
     SpriteData spriteData = sprite.spriteSheet->GetSpriteData(sprite.spriteIndex);
 
@@ -252,5 +252,5 @@ void SnowbrosUIComponent::AddBufferData(
     uvRB.x = uvLT.x + spriteData.size.x / textureSize.x;
     uvRB.y = uvLT.y + spriteData.size.y / textureSize.y;
 
-    structureBuffer->AddData(position, uvLT, uvRB, size, paletteNumber);
+    structureBuffer->AddData(position, uvLT, uvRB, size);
 }

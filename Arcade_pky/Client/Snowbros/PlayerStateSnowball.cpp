@@ -91,7 +91,7 @@ void PlayerStateSnowball::Exit(Ptr<class PlayerComponent> playerComponent)
             auto playerComponent = Lock(weakPlayerComponent);
             auto blackboard      = GetBlackboard(playerComponent);
             auto player          = playerComponent->GetPlayer();
-            auto sprite = player->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+            auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
             blackboard->invincible = false;
             sprite->SetEnable(true);

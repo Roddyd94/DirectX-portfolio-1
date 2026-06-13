@@ -9,7 +9,7 @@
 #include "AI/AIComponent.h"
 #include "Core/Animation/Animation2D.h"
 #include "Platformer/PlatformerKinematicComponent.h"
-#include "Snowbros/IndexedSpriteComponent.h"
+#include "Core/Animation/SpriteInstanceComponent.h"
 
 bool SpawnStateMachine::Init(Ptr<class AIComponent> owner)
 {
@@ -18,7 +18,7 @@ bool SpawnStateMachine::Init(Ptr<class AIComponent> owner)
 
     auto pawn      = owner->GetPawn<SnowbrosEnemy>();
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
-    auto sprite    = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<SpriteInstanceComponent>("Sprite");
     auto animation = sprite->GetAnimation();
     animation->ChangeAnimationClip("boss_spawn_fly");
 
@@ -41,7 +41,7 @@ bool SpawnStateMachine::Init(Ptr<class AIComponent> owner)
           auto pawn       = GetPawn<SnowbrosEnemy>();
           auto blackboard = GetBlackboard<SpawnBlackboard>();
           auto kinematic  = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
-          auto sprite     = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+          auto sprite     = pawn->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
           sprite->ChangeAnimation("boss_spawn_midair");
           kinematic->SetVelocity(blackboard->initialVelocity);
@@ -163,7 +163,7 @@ void SpawnStateMachine::Destroy()
 void SpawnStateMachine::ChangeAnimationClip(SnowbrosEnemyAnimationType type, bool play)
 {
     auto pawn   = GetPawn<SnowbrosEnemy>();
-    auto sprite = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+    auto sprite = pawn->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
     switch (type)
     {
@@ -192,7 +192,7 @@ void SpawnStateMachine::AddNotifyToAnimationClipEnd(
   SnowbrosEnemyAnimationType type, std::function<void()>&& func)
 {
     auto pawn      = GetPawn<SnowbrosEnemy>();
-    auto sprite    = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<SpriteInstanceComponent>("Sprite");
     auto animation = sprite->GetAnimation();
 
     switch (type)

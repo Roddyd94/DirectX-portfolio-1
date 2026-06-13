@@ -16,7 +16,7 @@ public:
     ~ScorePopup() override = default;
 
 protected:
-    Ptr<class IndexedSpriteInstanceComponent> _spriteInstance;
+    Ptr<class SpriteInstanceComponent> _spriteInstance;
 
     float _velocity = 1.f;
     int32 _timerID  = -1;

@@ -12,7 +12,7 @@ bool ScorePopup::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotatio
 {
     Actor::Init(id, position, scale, rotation);
     SetName("Score");
-    _spriteInstance = CreateSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    _spriteInstance = CreateSceneComponent<SpriteInstanceComponent>("Sprite");
 
     _spriteInstance->SetRenderLayer("Score");
     _spriteInstance->AttachToComponent(_root);
@@ -70,6 +70,6 @@ void ScorePopup::SetInfo(ScorePopup::Type scoreType, int32 index)
     }
 
     _spriteInstance->Pause();
-    _spriteInstance->SetPaletteNumber(paletteNumber);
+    //_spriteInstance->SetPaletteNumber(paletteNumber);
     _spriteInstance->SetFrameIndex(index);
 }

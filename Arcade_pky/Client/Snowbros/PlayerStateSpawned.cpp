@@ -30,10 +30,10 @@ Ptr<PlayerState> PlayerStateSpawned::HandleInput(Ptr<class PlayerComponent> play
 void PlayerStateSpawned::Enter(Ptr<class PlayerComponent> playerComponent)
 {
     auto player = playerComponent->GetPlayer();
-    auto sprite = player->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
     sprite->ChangeAnimation("player_stand");
 
-    auto effect = player->FindSceneComponent<IndexedSpriteInstanceComponent>("Effect");
+    auto effect = player->FindSceneComponent<SpriteInstanceComponent>("Effect");
     effect->SetEnable(true);
     effect->ChangeAnimation("effect_eruption");
 
@@ -75,7 +75,7 @@ void PlayerStateSpawned::Exit(Ptr<class PlayerComponent> playerComponent)
             auto playerComponent = Lock(weakPlayerComponent);
             auto blackboard      = GetBlackboard(playerComponent);
             auto player          = playerComponent->GetPlayer();
-            auto sprite = player->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+            auto sprite = player->FindSceneComponent<SpriteInstanceComponent>("Sprite");
 
             blackboard->invincible = false;
             sprite->SetEnable(true);

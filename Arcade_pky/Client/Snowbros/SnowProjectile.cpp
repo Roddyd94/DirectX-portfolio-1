@@ -20,9 +20,9 @@ bool SnowProjectile::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rot
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto rootComp = CreateSceneComponent<IndexedSpriteInstanceComponent>("Root");
+    auto rootComp = CreateSceneComponent<SpriteInstanceComponent>("Root");
     auto palette  = FIND_PALETTE("snowball");
-    rootComp->SetPaletteNumber(palette->GetID());
+    //rootComp->SetPaletteNumber(palette->GetID());
     rootComp->SetRenderLayer("PlayerProjectile");
     // rootComp->SetShader("SpriteShader");
     SetRoot(rootComp);
