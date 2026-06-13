@@ -7,6 +7,8 @@
 #include "BossStateMachine.h"
 #include "GoblinBlackboard.h"
 #include "GoblinStateMachine.h"
+#include "IndexedSpriteComponent.h"
+#include "IndexedSpriteInstanceComponent.h"
 #include "MonkeyBlackboard.h"
 #include "MonkeyStateMachine.h"
 #include "SnowballMorphableEnemyBlackboard.h"
@@ -19,7 +21,6 @@
 #include "Core/Collision/PointCollisionComponent.h"
 #include "Core/Palette.h"
 #include "Platformer/PlatformerKinematicComponent.h"
-#include "Snowbros/IndexedSpriteInstanceComponent.h"
 #include "Tilemap/Tilemap.h"
 #include "Tilemap/TilemapLevel.h"
 
@@ -31,7 +32,8 @@ bool SnowbrosEnemy::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     Ptr<TilemapLevel> level   = Cast<Level, TilemapLevel>(GetLevel());
     Ptr<Tilemap>      tilemap = level->GetTilemap();
 
-    auto sprite = CreateSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    // auto sprite = CreateSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite = CreateSceneComponent<IndexedSpriteComponent>("Sprite");
     sprite->SetRenderLayer("Enemy");
     sprite->AttachToComponent(_root);
     sprite->SetRelativeScale(Vector3::one);
@@ -76,6 +78,7 @@ void SnowbrosEnemy::SetPatrolInfo(const EnemyPatrolData& patrolInfo)
 void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
 {
     auto aiComponent = GetAIComponent();
+    auto sprite      = FindSceneComponent<IndexedSpriteComponent>("Sprite");
     _enemyType       = enemyType;
 
     switch (_enemyType)
@@ -83,7 +86,6 @@ void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
     case SnowbrosEnemyType::Goblin:
     {
         CreateSnowball();
-        auto sprite    = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
         auto animation = sprite->CreateAnimation();
         animation->SetAnimationSequence("goblin");
         auto palette = FIND_PALETTE("enemy_goblin");
@@ -95,7 +97,6 @@ void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
     case SnowbrosEnemyType::Monkey:
     {
         CreateSnowball();
-        auto sprite    = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
         auto animation = sprite->CreateAnimation();
         animation->SetAnimationSequence("monkey");
         auto palette = FIND_PALETTE("enemy_monkey");
@@ -107,7 +108,6 @@ void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
     case SnowbrosEnemyType::Spitter:
     {
         CreateSnowball();
-        auto sprite    = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
         auto animation = sprite->CreateAnimation();
         animation->SetAnimationSequence("spitter");
         auto palette = FIND_PALETTE("enemy_spitter");
@@ -119,7 +119,6 @@ void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
     case SnowbrosEnemyType::Spawn:
     {
         CreateSnowball();
-        auto sprite    = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
         auto animation = sprite->CreateAnimation();
         animation->SetAnimationSequence("boss_spawn");
         auto palette = FIND_PALETTE("boss_spawn");
@@ -132,7 +131,6 @@ void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
     {
         SetWorldScale(Vector2::one);
 
-        auto sprite = FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
         sprite->SetRelativePosition({0.f, 3.5f});
         sprite->SetRelativeScale({3.f, 3.f});
         auto palette = FIND_PALETTE("boss_normal");
@@ -141,7 +139,7 @@ void SnowbrosEnemy::SetEnemyType(SnowbrosEnemyType enemyType)
         animation->SetAnimationSequence("boss");
         animation->ChangeAnimationClip("boss_upper_shout");
 
-        auto spriteLower = CreateSceneComponent<IndexedSpriteInstanceComponent>("SpriteLower");
+        auto spriteLower = CreateSceneComponent<IndexedSpriteComponent>("SpriteLower");
         spriteLower->SetRenderLayer("Enemy");
         spriteLower->AttachToComponent(_root);
         spriteLower->SetPaletteNumber(palette->GetID());
@@ -177,7 +175,7 @@ void SnowbrosEnemy::SetDirection(float direction)
 {
     auto aiComponent = GetAIComponent();
 
-    auto sprite = FindComponent<SpriteInstanceComponent>("Sprite");
+    auto sprite = FindComponent<IndexedSpriteComponent>("Sprite");
     sprite->SetFlipX(direction > 0);
 
     auto stateMachine = aiComponent->GetAIStateMachine();

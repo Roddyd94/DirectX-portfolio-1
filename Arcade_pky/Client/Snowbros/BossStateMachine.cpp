@@ -8,7 +8,7 @@
 
 #include "BossBlackboard.h"
 #include "BossState.h"
-#include "IndexedSpriteInstanceComponent.h"
+#include "IndexedSpriteComponent.h"
 #include "ScorePopup.h"
 #include "SnowProjectile.h"
 #include "SnowProjectileComponent.h"
@@ -37,7 +37,7 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
     auto collider  = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
-    auto sprite    = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
     auto animation = sprite->GetAnimation();
 
     blackboard->currentPaletteID = FIND_PALETTE("boss_normal")->GetID();
@@ -47,8 +47,8 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
         auto pawn       = GetPawn<SnowbrosEnemy>();
         auto blackboard = GetBlackboard<BossBlackboard>();
 
-        auto sprite      = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
-        auto spriteLower = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("SpriteLower");
+        auto sprite        = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+        auto spriteLower   = pawn->FindSceneComponent<IndexedSpriteComponent>("SpriteLower");
         auto paletteNumber = FIND_PALETTE("boss_damaged")->GetID();
 
         if (on && blackboard->damaged)
@@ -85,7 +85,7 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
           auto pawn = GetPawn<SnowbrosEnemy>();
 
           auto collider = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
-          auto sprite   = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+          auto sprite   = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
 
           sprite->ChangeAnimation("boss_dead");
           sprite->SetWorldScale({7.f, 3.f});
@@ -212,7 +212,7 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
       {
           auto pawn       = GetPawn<SnowbrosEnemy>();
           auto blackboard = GetBlackboard<BossBlackboard>();
-          auto sprite     = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+          auto sprite     = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
 
           sprite->ChangeAnimation("boss_upper_shout");
           blackboard->actionLeft = 4;
@@ -228,7 +228,7 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
           auto pawn       = GetPawn<SnowbrosEnemy>();
           auto blackboard = GetBlackboard<BossBlackboard>();
           auto kinematic  = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
-          auto sprite     = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+          auto sprite     = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
 
           blackboard->actionLeft = 4;
 
@@ -240,10 +240,9 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
           auto pawn       = GetPawn<SnowbrosEnemy>();
           auto blackboard = GetBlackboard<BossBlackboard>();
 
-          auto collider = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
-          auto sprite   = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
-          auto spriteLower
-            = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("SpriteLower");
+          auto collider    = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
+          auto sprite      = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+          auto spriteLower = pawn->FindSceneComponent<IndexedSpriteComponent>("SpriteLower");
 
           blackboard->targetFloor = 1;
           TimeManager::Instance().RemoveTimer(blackboard->jumpTimerID);
@@ -404,7 +403,7 @@ bool BossStateMachine::Init(Ptr<class AIComponent> owner)
       {
           auto pawn       = GetPawn<SnowbrosEnemy>();
           auto blackboard = GetBlackboard<BossBlackboard>();
-          auto sprite     = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+          auto sprite     = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
 
           sprite->ChangeAnimation("boss_upper_shut");
       });
@@ -467,8 +466,8 @@ void BossStateMachine::ChangeLowerBody(SnowbrosBossLowerFrameType type)
     auto pawn     = GetPawn();
     auto collider = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
 
-    auto spriteUpper = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
-    auto spriteLower = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("SpriteLower");
+    auto spriteUpper = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
+    auto spriteLower = pawn->FindSceneComponent<IndexedSpriteComponent>("SpriteLower");
 
     switch (type)
     {
@@ -510,7 +509,7 @@ void BossStateMachine::Hit(int32 damage)
     auto pawn       = GetPawn<SnowbrosEnemy>();
     auto blackboard = GetBlackboard<BossBlackboard>();
 
-    auto sprite = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
 
     blackboard->hp -= damage;
     blackboard->damaged = true;

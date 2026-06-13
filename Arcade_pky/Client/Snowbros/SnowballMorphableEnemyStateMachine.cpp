@@ -6,6 +6,7 @@
 #include "Core/ResourceManager.h"
 #include "Core/TimeManager.h"
 
+#include "IndexedSpriteComponent.h"
 #include "IndexedSpriteInstanceComponent.h"
 #include "Item.h"
 #include "ScorePopup.h"
@@ -142,7 +143,7 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
     auto collider  = pawn->FindSceneComponent<AABBCollisionComponent>("Collider");
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
-    auto sprite    = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
     auto animation = sprite->GetAnimation();
 
     auto spriteSnowball

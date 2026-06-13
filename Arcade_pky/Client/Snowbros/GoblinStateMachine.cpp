@@ -10,7 +10,7 @@
 #include "Core/Animation/Animation2D.h"
 #include "Platformer/PlatformerKinematicComponent.h"
 #include "Player/Player.h"
-#include "Snowbros/IndexedSpriteInstanceComponent.h"
+#include "Snowbros/IndexedSpriteComponent.h"
 #include "Tilemap/Tilemap.h"
 
 bool GoblinStateMachine::Init(Ptr<class AIComponent> owner)
@@ -20,7 +20,7 @@ bool GoblinStateMachine::Init(Ptr<class AIComponent> owner)
 
     auto pawn      = owner->GetPawn<SnowbrosEnemy>();
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
-    auto sprite    = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
     auto animation = sprite->GetAnimation();
     animation->ChangeAnimationClip("goblin_walk");
 
@@ -156,7 +156,7 @@ void GoblinStateMachine::Destroy()
 void GoblinStateMachine::ChangeAnimationClip(SnowbrosEnemyAnimationType type, bool play)
 {
     auto pawn   = GetPawn<SnowbrosEnemy>();
-    auto sprite = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
 
     switch (type)
     {
@@ -208,7 +208,7 @@ void GoblinStateMachine::AddNotifyToAnimationClipEnd(
   SnowbrosEnemyAnimationType type, std::function<void()>&& func)
 {
     auto pawn      = GetPawn<SnowbrosEnemy>();
-    auto sprite    = pawn->FindSceneComponent<IndexedSpriteInstanceComponent>("Sprite");
+    auto sprite    = pawn->FindSceneComponent<IndexedSpriteComponent>("Sprite");
     auto animation = sprite->GetAnimation();
 
     switch (type)
