@@ -4,7 +4,13 @@
 
 void IndexedTextureInfoConstantBuffer::Update()
 {
-    SetData(&_data);
+    BindData(&_data);
+}
+
+void IndexedTextureInfoConstantBuffer::SetData(int32 width, int32 height, int32 bitsPerPixel)
+{
+    SetSize(width, height);
+    SetBitsPerPixel(bitsPerPixel);
 }
 
 void IndexedTextureInfoConstantBuffer::SetSize(int32 width, int32 height)
@@ -13,8 +19,8 @@ void IndexedTextureInfoConstantBuffer::SetSize(int32 width, int32 height)
     _data.textureHeight = height;
 }
 
-void IndexedTextureInfoConstantBuffer::SetStride(int32 strideBitSize)
+void IndexedTextureInfoConstantBuffer::SetBitsPerPixel(int32 bitsPerPixel)
 {
-    _data.textureStrideBitSize = strideBitSize;
-    _data.paletteLength        = 1 << strideBitSize;
+    _data.textureStrideBitSize = bitsPerPixel;
+    _data.paletteLength        = 1 << bitsPerPixel;
 }

@@ -9,7 +9,7 @@ void TileOutlineStructureBuffer::Update()
 
     int32 count = GetElementCount();
     Resize(count);
-    SetData(_dataArray.data(), count);
+    BindData(_dataArray.data(), count);
 }
 
 int32 TileOutlineStructureBuffer::GetElementCount() const

@@ -26,8 +26,10 @@
 #include "Animation/Animation2DStructureBuffer.h"
 #include "Animation/SpriteInstanceShader.h"
 #include "Animation/SpriteShader.h"
+#include "Snowbros/IndexedAnimation2DConstantBuffer.h"
 #include "Snowbros/IndexedAnimation2DStructureBuffer.h"
 #include "Snowbros/IndexedSpriteInstanceShader.h"
+#include "Snowbros/IndexedSpriteShader.h"
 
 bool ShaderManager::Init()
 {
@@ -52,6 +54,9 @@ bool ShaderManager::Init()
     if (!CreateShader<SpriteShader>("SpriteShader"))
         return false;
 
+    if (!CreateShader<IndexedSpriteShader>("IndexedSpriteShader"))
+        return false;
+
     if (!CreateShader<SpriteInstanceShader>("SpriteInstanceShader"))
         return false;
 
@@ -66,6 +71,10 @@ bool ShaderManager::Init()
 
     if (!CreateConstantBuffer<Animation2DConstantBuffer>(
           "Animation2D", sizeof(Animation2DConstantBufferData), 1, ShaderType::Vertex))
+        return false;
+
+    if (!CreateConstantBuffer<IndexedAnimation2DConstantBuffer>("IndexedAnimation2D",
+          sizeof(IndexedAnimation2DConstantBufferData), 1, ShaderType::Vertex))
         return false;
 #pragma endregion VERTEX_CONSTANT_BUFFERS
 

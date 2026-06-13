@@ -72,6 +72,19 @@ void SpriteComponent::Render(float deltaTime)
     _mesh->Render();
 }
 
+Ptr<class Animation2D> SpriteComponent::CreateAnimation()
+{
+    _animation = New<Animation2D>();
+
+    if (!_animation->Init())
+    {
+        DESTROY(_animation);
+        return nullptr;
+    }
+
+    return _animation;
+}
+
 int32 SpriteComponent::GetFrameCount() const
 {
     return _animation->GetFrameCount();
@@ -131,19 +144,6 @@ void SpriteComponent::ChangeAnimation(const std::string& name, bool play)
 {
     if (GetCurrentClipName() != name)
         _animation->ChangeAnimationClip(name, play);
-}
-
-Ptr<class Animation2D> SpriteComponent::CreateAnimation()
-{
-    _animation = New<Animation2D>();
-
-    if (!_animation->Init())
-    {
-        DESTROY(_animation);
-        return nullptr;
-    }
-
-    return _animation;
 }
 
 Ptr<class Animation2D> SpriteComponent::GetAnimation()

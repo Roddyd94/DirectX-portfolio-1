@@ -108,7 +108,7 @@ void IndexedTexture::SetShaderResource()
     buffer->Clear();
     buffer->AddData(reinterpret_cast<char*>(_data.data()), _data.size());
     buffer->SetSize(_width, _height);
-    buffer->SetStride(_bitsPerPixel);
+    buffer->SetBitsPerPixel(_bitsPerPixel);
 
     buffer->Update();
     buffer->Bind();

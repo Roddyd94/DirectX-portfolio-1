@@ -21,6 +21,8 @@ public:
     void Collision(float deltaTime) override;
     void Render(float deltaTime) override;
 
+    virtual Ptr<class Animation2D> CreateAnimation();
+
     int32 GetFrameCount() const;
     int32 GetFrameIndex() const;
     bool GetFlipX() const;
@@ -37,7 +39,6 @@ public:
 
     void ChangeAnimation(const std::string& name, bool play = true);
 
-    Ptr<class Animation2D> CreateAnimation();
     Ptr<class Animation2D> GetAnimation();
     const std::string&     GetCurrentClipName() const;
 

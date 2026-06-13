@@ -109,9 +109,9 @@ void CollisionComponent::PreRender(float deltaTime)
 //     _transformConstantBuffer->Update();
 //
 //     if (_collisionStates.size() > 0)
-//         _colorConstantBuffer->SetColor(1.f, 0.f, 0.f, 1.f);
+//         _colorConstantBuffer->SetData(1.f, 0.f, 0.f, 1.f);
 //     else
-//         _colorConstantBuffer->SetColor(0.f, 1.f, 0.f, 1.f);
+//         _colorConstantBuffer->SetData(0.f, 1.f, 0.f, 1.f);
 //
 //     _colorConstantBuffer->Update();
 //

@@ -23,7 +23,7 @@ void IndexedTextureBuffer::Update()
       = FIND_CONSTANT_BUFFER("IndexedTextureInfo", IndexedTextureInfoConstantBuffer);
     textureInfoBuffer->Update();
 
-    SetData(_dataArray.data(), count / 4);
+    BindData(_dataArray.data(), count / 4);
 }
 
 int32 IndexedTextureBuffer::GetElementCount() const
@@ -51,9 +51,9 @@ void IndexedTextureBuffer::SetSize(int32 width, int32 height)
     textureInfoBuffer->SetSize(width, height);
 }
 
-void IndexedTextureBuffer::SetStride(int32 strideBitSize)
+void IndexedTextureBuffer::SetBitsPerPixel(int32 bitsPerPixel)
 {
     auto textureInfoBuffer
       = FIND_CONSTANT_BUFFER("IndexedTextureInfo", IndexedTextureInfoConstantBuffer);
-    textureInfoBuffer->SetStride(strideBitSize);
+    textureInfoBuffer->SetBitsPerPixel(bitsPerPixel);
 }

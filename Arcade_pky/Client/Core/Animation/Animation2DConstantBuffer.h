@@ -21,6 +21,6 @@ private:
 public:
     void Update() override;
     void SetFlipX(bool flipX);
-    void SetUV(float ltx, float lty, float rbx, float rby);
     void SetUV(Vector2 uvLT, Vector2 uvRB);
+    void SetData(Vector2 uvLT, Vector2 uvRB, bool flipX);
 };

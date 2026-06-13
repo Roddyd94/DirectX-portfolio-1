@@ -21,5 +21,5 @@ public:
 
     // 패딩을 추가하여 width를 4의 배수로 맞출 것!
     void SetSize(int32 width, int32 height);
-    void SetStride(int32 strideBitSize);
+    void SetBitsPerPixel(int32 bitsPerPixel);
 };

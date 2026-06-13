@@ -4,7 +4,14 @@
 
 void MaterialConstantBuffer::Update()
 {
-    SetData(&_data);
+    BindData(&_data);
+}
+
+void MaterialConstantBuffer::SetData(Vector4 color, int32 width, int32 height)
+{
+    SetBaseColor(color);
+    SetTextureWidth(width);
+    SetTextureHeight(height);
 }
 
 void MaterialConstantBuffer::SetBaseColor(Vector4 v)

@@ -17,11 +17,12 @@ public:
     Animation2D()           = default;
     ~Animation2D() override = default;
 
-private:
+protected:
     std::map<std::pair<int32, int32>, Animation2DNotify> _notifies;
-    Weak<class Animation2DSequence>                      _animationSequence;
-    Weak<class Animation2DClip>                          _currentAnimationClip;
-    Ptr<class Animation2DConstantBuffer>                 _buffer;
+
+    Weak<class Animation2DSequence> _animationSequence;
+    Weak<class Animation2DClip>     _currentAnimationClip;
+    Ptr<class ConstantBuffer>       _constantBuffer;
 
     int32 _frameIndex = 0;
     float _accTime    = 0.f;
@@ -31,9 +32,12 @@ private:
     bool  _flipX      = false;
 
 public:
-    bool Init();
-    void Destroy() override;
+    virtual bool Init();
+    void         Destroy() override;
+
     void Tick(float deltaTime);
+
+    virtual void BindConstantBuffer(Animation2DSprite& sprite);
 
     bool IsPlaying() const { return _isPlaying; }
 
@@ -65,6 +69,16 @@ private:
     void InvokeNotify();
 
 public:
+    template <typename T, typename... Args>
+    void SetConstantBuffer(Args... args)
+    {
+        Ptr<T> buffer = Cast<ConstantBuffer, T>(_constantBuffer);
+        if (nullptr == buffer)
+            return;
+
+        buffer->SetData(std::forward<Args>(args)...);
+    }
+
     template <typename T>
     void AddNotify(const std::string& clipName, int32 frameIndex, T* obj, void (T::*memFunc)())
     {

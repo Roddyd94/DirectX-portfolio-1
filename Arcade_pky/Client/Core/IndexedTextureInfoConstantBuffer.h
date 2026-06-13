@@ -21,6 +21,7 @@ private:
 public:
     void Update() override;
 
+    void SetData(int32 width, int32 height, int32 bitsPerPixel);
     void SetSize(int32 width, int32 height);
-    void SetStride(int32 strideBitSize);
+    void SetBitsPerPixel(int32 bitsPerPixel);
 };

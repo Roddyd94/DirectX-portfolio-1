@@ -556,6 +556,16 @@
     <ClInclude Include="Snowbros\ScorePopup.h">
       <Filter>Snowbros\Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Snowbros\IndexedAnimation2D.h">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\IndexedAnimation2DConstantBuffer.h">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\IndexedSpriteComponent.h">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Snowbros\IndexedSpriteShader.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1073,6 +1083,16 @@
     <ClCompile Include="Snowbros\ScorePopup.cpp">
       <Filter>Snowbros\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="Snowbros\IndexedAnimation2D.cpp">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\IndexedAnimation2DConstantBuffer.cpp">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\IndexedSpriteComponent.cpp">
+      <Filter>Snowbros\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Snowbros\IndexedSpriteShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -1372,6 +1392,9 @@
     </FxCompile>
     <FxCompile Include="..\HLSL\IndexedTileInstance.fx">
       <Filter>Tilemap\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\IndexedSprite.fx">
+      <Filter>Snowbros\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

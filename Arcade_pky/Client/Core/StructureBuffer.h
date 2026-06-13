@@ -28,6 +28,6 @@ public:
     void Bind();
 
 protected:
-    void SetData(void* data, int32 elementCount);
+    void BindData(void* data, int32 elementCount);
     void Resize(int32 elementCount);
 };

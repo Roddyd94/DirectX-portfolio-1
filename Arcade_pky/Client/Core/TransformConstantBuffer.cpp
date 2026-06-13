@@ -13,5 +13,5 @@ void TransformConstantBuffer::Update()
     _data.wv.Transpose();
     _data.wvp.Transpose();
 
-    SetData(&_data);
+    BindData(&_data);
 }

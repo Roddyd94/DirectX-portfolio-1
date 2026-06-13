@@ -10,7 +10,7 @@
 
 bool Animation2D::Init()
 {
-    _buffer = FIND_CONSTANT_BUFFER("Animation2D", Animation2DConstantBuffer);
+    _constantBuffer = FIND_CONSTANT_BUFFER("Animation2D", Animation2DConstantBuffer);
 
     return true;
 }
@@ -52,6 +52,28 @@ void Animation2D::Tick(float deltaTime)
 
     if (_isPlaying)
         InvokeNotify();
+}
+
+void Animation2D::BindConstantBuffer(Animation2DSprite& sprite)
+{
+    Ptr<TextureAnimation2DSpriteSheet> spriteSheet
+      = Cast<Animation2DSpriteSheet, TextureAnimation2DSpriteSheet>(sprite.spriteSheet);
+
+    SpriteData   data    = spriteSheet->GetSpriteData(sprite.spriteIndex);
+    Ptr<Texture> texture = spriteSheet->GetTexture();
+    texture->SetShaderResource(0, ShaderType::Pixel, 0);
+
+    Vector2 uvLT;
+    Vector2 uvRB;
+
+    uvLT.x = data.start.x / texture->GetWidth();
+    uvLT.y = data.start.y / texture->GetHeight();
+
+    uvRB.x = uvLT.x + data.size.x / texture->GetWidth();
+    uvRB.y = uvLT.y + data.size.y / texture->GetHeight();
+
+    SetConstantBuffer<Animation2DConstantBuffer>(uvLT, uvRB, _flipX);
+    _constantBuffer->Update();
 }
 
 Ptr<class Animation2DSequence> Animation2D::GetSequence() const
@@ -140,26 +162,9 @@ void Animation2D::SetShader()
 
     int32 frameIndex = _isReversed ? clip->GetFrameCount() - 1 - _frameIndex : _frameIndex;
     frameIndex       = std::clamp(frameIndex, 0, clip->GetFrameCount() - 1);
-    Animation2DSprite                  sprite = clip->GetFrame(frameIndex);
-    Ptr<TextureAnimation2DSpriteSheet> spriteSheet
-      = Cast<Animation2DSpriteSheet, TextureAnimation2DSpriteSheet>(sprite.spriteSheet);
 
-    SpriteData   data    = spriteSheet->GetSpriteData(sprite.spriteIndex);
-    Ptr<Texture> texture = spriteSheet->GetTexture();
-    texture->SetShaderResource(0, ShaderType::Pixel, 0);
-
-    Vector2 uvLT;
-    Vector2 uvRB;
-
-    uvLT.x = data.start.x / texture->GetWidth();
-    uvLT.y = data.start.y / texture->GetHeight();
-
-    uvRB.x = uvLT.x + data.size.x / texture->GetWidth();
-    uvRB.y = uvLT.y + data.size.y / texture->GetHeight();
-
-    _buffer->SetUV(uvLT, uvRB);
-    _buffer->SetFlipX(_flipX);
-    _buffer->Update();
+    Animation2DSprite sprite = clip->GetFrame(frameIndex);
+    BindConstantBuffer(sprite);
 }
 
 void Animation2D::Reset()

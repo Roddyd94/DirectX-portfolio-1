@@ -71,7 +71,7 @@ void StructureBuffer::Bind()
         CONTEXT->PSSetShaderResources(_registerNum, 1, _srv.GetAddressOf());
 }
 
-void StructureBuffer::SetData(void* data, int32 elementCount)
+void StructureBuffer::BindData(void* data, int32 elementCount)
 {
     D3D11_MAPPED_SUBRESOURCE mapped = {};
 

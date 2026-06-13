@@ -29,7 +29,7 @@ bool ConstantBuffer::Create(uint32 size, int32 registerNum, uint8 shaderType)
     return true;
 }
 
-void ConstantBuffer::SetData(void* data)
+void ConstantBuffer::BindData(void* data)
 {
     D3D11_MAPPED_SUBRESOURCE map = {};
 

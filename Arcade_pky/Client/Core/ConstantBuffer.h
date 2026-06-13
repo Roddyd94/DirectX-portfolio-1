@@ -18,5 +18,5 @@ public:
     void         Destroy() override;
 
     bool Create(uint32 size, int32 registerNum, uint8 shaderType);
-    void SetData(void* data);
+    void BindData(void* data);
 };

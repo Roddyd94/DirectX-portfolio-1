@@ -4,5 +4,5 @@
 
 void ColorConstantBuffer::Update()
 {
-    SetData(&_data);
+    BindData(&_data);
 }

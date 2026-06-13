@@ -18,7 +18,7 @@ private:
 public:
     void Update() override;
 
-    void SetColor(float r, float g, float b, float a)
+    void SetData(float r, float g, float b, float a)
     {
         _data.color.r = r;
         _data.color.g = g;

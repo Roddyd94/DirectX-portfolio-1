@@ -9,7 +9,7 @@ void Animation2DStructureBuffer::Update()
 
     int32 count = GetElementCount();
     Resize(count);
-    SetData(_dataArray.data(), count);
+    BindData(_dataArray.data(), count);
 }
 
 int32 Animation2DStructureBuffer::GetElementCount() const
