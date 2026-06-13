@@ -29,7 +29,7 @@ void IndexedSpriteInstanceRendererComponent::Render(float deltaTime)
 
     _paletteBuffer->Update();
     _paletteBuffer->Bind();
-    _texture->SetShaderResource();
+    _texture->SetShaderResource(0, ShaderType::Pixel, 0);
 
     InstanceRendererComponent::Render(deltaTime);
 }

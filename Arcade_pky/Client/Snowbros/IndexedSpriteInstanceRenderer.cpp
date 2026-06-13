@@ -14,6 +14,7 @@ bool IndexedSpriteInstanceRenderer::Init(
 
     _renderer->SetBuffer("IndexedAnimation2DInstance");
     _renderer->SetShader("IndexedSpriteInstanceShader");
+
     SetRoot(_renderer);
 
     return true;

@@ -141,7 +141,7 @@ void SnowbrosUIComponent::Render(float deltaTime)
     _uiStructureBuffer->Bind();
     _uiInstanceShader->SetShader();
 
-    _texture->SetShaderResource();
+    _texture->SetShaderResource(0, ShaderType::Pixel, 0);
     _paletteBuffer->Update();
     _paletteBuffer->Bind();
 
