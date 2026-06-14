@@ -88,8 +88,7 @@ bool Texture::CreateShaderResourceView()
 
 void IndexedTexture::Destroy() {}
 
-bool IndexedTexture::LoadTexture(
-  const char* data, size_t dataLength, int32 width, int32 height, int32 bitsPerPixel)
+bool IndexedTexture::LoadTexture(const char* data, int32 width, int32 height, int32 bitsPerPixel)
 {
     D3D11_TEXTURE2D_DESC desc;
     desc.Width     = width / (8 / bitsPerPixel);
@@ -122,12 +121,10 @@ void IndexedTexture::SetShaderResource(
   int32 registerNum, uint32 shaderBufferType, uint32 textureIndex)
 {
     if (shaderBufferType & ShaderType::Vertex)
-        DeviceManager::Instance().GetContext()->VSSetShaderResources(
-          registerNum, 1, _srv.GetAddressOf());
+        CONTEXT->VSSetShaderResources(registerNum, 1, _srv.GetAddressOf());
 
     if (shaderBufferType & ShaderType::Pixel)
-        DeviceManager::Instance().GetContext()->PSSetShaderResources(
-          registerNum, 1, _srv.GetAddressOf());
+        CONTEXT->PSSetShaderResources(registerNum, 1, _srv.GetAddressOf());
 
     auto buffer = FIND_CONSTANT_BUFFER("IndexedTextureInfo", IndexedTextureInfoConstantBuffer);
 

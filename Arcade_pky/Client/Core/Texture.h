@@ -48,8 +48,7 @@ public:
     uint32 GetWidth() const { return _width; }
     uint32 GetHeight() const { return _height; }
 
-    bool LoadTexture(
-      const char* data, size_t dataLength, int32 width, int32 height, int32 bitsPerPixel);
+    bool LoadTexture(const char* data, int32 width, int32 height, int32 bitsPerPixel);
     void SetShaderResource(int32 registerNum, uint32 shaderBufferType, uint32 textureIndex);
     void ResetShaderResource(int32 registerNum, uint32 shaderBufferType);
 

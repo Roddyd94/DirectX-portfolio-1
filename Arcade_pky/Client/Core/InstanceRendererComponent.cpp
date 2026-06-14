@@ -45,8 +45,6 @@ void InstanceRendererComponent::Render(float deltaTime)
     if (0 == _structureBuffer->GetElementCount())
         return;
 
-    _structureBuffer->Update();
-
     auto level           = GetLevel();
     auto transformBuffer = Lock(_transformConstantBuffer);
 
@@ -55,8 +53,10 @@ void InstanceRendererComponent::Render(float deltaTime)
     transformBuffer->SetProjMatrix(level->GetProjMatrix());
     transformBuffer->Update();
 
-    _structureBuffer->Bind();
     _shader->SetShader();
+
+    _structureBuffer->Update();
+    _structureBuffer->Bind();
 
     _mesh->RenderInstancing(_structureBuffer->GetElementCount());
 
