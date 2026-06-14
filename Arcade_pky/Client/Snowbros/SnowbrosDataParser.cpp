@@ -205,7 +205,7 @@ bool SnowbrosDataParser::ParseIndexedTexture(const std::string& name, const std:
 
     Ptr<IndexedTexture> texture = New<IndexedTexture>();
     texture->SetName(name);
-    texture->LoadTexture(buf.data(), imageSize, textureWidth, textureHeight, bitsPerPixel);
+    texture->LoadTexture(buf.data(), textureWidth, textureHeight, bitsPerPixel);
 
     TEXTURE_MANAGER->AddIndexedTexture(name, texture);
 
