@@ -21,9 +21,10 @@ public:
     int32 snowballKickedPlayer = 0;
     int32 airborneTimerID      = -1;
 
-    float walkSpeedX = 1.f;
-    float direction  = -1.f;
-    float accTime    = 0.f;
+    float walkSpeedX           = 1.f;
+    float direction            = -1.f;
+    float accTime              = 0.f;
+    float snowballDecPerSecond = 5.f;
 
     bool turned               = false;
     bool hitByReinforced      = false;
@@ -44,7 +45,6 @@ public:
 
     inline static const float snowballDragFloor           = 0.9f;
     inline static const float snowballFrameDistance       = 0.125f;
-    inline static const float snowballDecPerSecond        = 5.f;
     inline static const float snowballIncForming          = 5.f;
     inline static const float snowballIncFormed           = 3.f;
     inline static const float snowballFormingInitialValue = 2.f;

@@ -2,6 +2,8 @@
 
 #include "SnowbrosCheat.h"
 
+#include "GoblinBlackboard.h"
+#include "GoblinStateMachine.h"
 #include "SnowbrosEnemy.h"
 #include "SnowbrosLevel.h"
 #include "Core/CameraComponent.h"
@@ -9,6 +11,8 @@
 #include "Core/Input/InputComponent.h"
 #include "Tilemap/IndexedTilemap.h"
 #include "Tilemap/TilemapLevel.h"
+
+#include <AI/AIComponent.h>
 
 bool SnowbrosCheat::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
@@ -30,6 +34,22 @@ bool SnowbrosCheat::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     input->BindAction("Cheat", "SpawnMonster_3", '7', this, &SnowbrosCheat::SpawnMonster);
     input->BindAction("Cheat", "SpawnMonster_4", '8', this, &SnowbrosCheat::SpawnMonster);
     input->BindAction("Cheat", "StartPlayer2", '9', this, &SnowbrosCheat::StartPlayer2);
+
+    input->BindAction(
+      "Cheat", "SpawnMonster_Stress_50", VK_F4, this, &SnowbrosCheat::SpawnMonsterStress);
+    input->BindAction(
+      "Cheat", "SpawnMonster_Stress_100", VK_F5, this, &SnowbrosCheat::SpawnMonsterStress);
+    input->BindAction(
+      "Cheat", "SpawnMonster_Stress_200", VK_F6, this, &SnowbrosCheat::SpawnMonsterStress);
+    input->BindAction("Cheat", "MakeSnowball", VK_F7, this, &SnowbrosCheat::MakeSnowball);
+
+    for (float x = -7.5f; x < 8.f; x++)
+    {
+        for (float y = -5.5f; y < 6.f; y++)
+        {
+            _stressTestPositions.push_back({x, y});
+        }
+    }
 
     return true;
 }
@@ -62,6 +82,56 @@ void SnowbrosCheat::SpawnMonster(Ptr<class InputAction> action, ButtonEventType:
     }
 
     enemy->SetDirection(-1.f);
+}
+
+void SnowbrosCheat::SpawnMonsterStress(
+  Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)
+{
+    int32 count = 0;
+
+    if (action->GetName() == "SpawnMonster_Stress_50")
+        count = 50;
+    else if (action->GetName() == "SpawnMonster_Stress_100")
+        count = 100;
+    else if (action->GetName() == "SpawnMonster_Stress_200")
+        count = 200;
+
+    if (buttonEvent != ButtonEventType::Down)
+        return;
+
+    auto level = Cast<Level, SnowbrosLevel>(GetLevel());
+    if (nullptr == level)
+        return;
+
+    Reset();
+    level->RemoveEnemies();
+
+    for (size_t i = 0; i < count; i++)
+    {
+        auto spawnPosition = _stressTestPositions[_stressTestPositionIndex];
+        auto enemy         = level->SpawnActor<SnowbrosEnemy>(
+          {spawnPosition.first, spawnPosition.second, 1.f}, Vector3::one * 2, Vector3::zero);
+
+        enemy->SetEnemyType(SnowbrosEnemyType::Goblin);
+        Ptr<AIComponent>      aiComponent = enemy->GetAIComponent();
+        Ptr<GoblinBlackboard> blackboard;
+        if (nullptr == aiComponent)
+            goto end;
+
+        blackboard = aiComponent->GetBlackboard<GoblinBlackboard>();
+        if (nullptr == blackboard)
+            goto end;
+
+        blackboard->walkSpeedX           = 0.f;
+        blackboard->snowballDecPerSecond = 0.f;
+
+        _stressTestPositionIndex = ++_stressTestPositionIndex % _stressTestPositions.size();
+
+        _stressTestEntries.push_back(enemy);
+
+    end:
+        enemy->SetDirection(-1.f);
+    }
 }
 
 void SnowbrosCheat::ChangePalette(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)
@@ -123,4 +193,42 @@ void SnowbrosCheat::StartPlayer2(Ptr<class InputAction> action, ButtonEventType:
 
     auto level            = Cast<Level, SnowbrosLevel>(GetLevel());
     level->_enablePlayer2 = true;
+}
+
+void SnowbrosCheat::MakeSnowball(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)
+{
+    if (buttonEvent != ButtonEventType::Down)
+        return;
+
+    if (_stressTestEntries.empty())
+        return;
+
+    Ptr<SnowbrosEnemy> enemy = Lock(_stressTestEntries[_stressTestEntryIndex]);
+    if (nullptr == enemy)
+        return;
+
+    Ptr<AIComponent> aiComponent = enemy->GetAIComponent();
+    if (nullptr == aiComponent)
+        return;
+
+    Ptr<GoblinStateMachine> stateMachine
+      = Cast<AIStateMachine, GoblinStateMachine>(aiComponent->GetAIStateMachine());
+    if (nullptr == stateMachine)
+        return;
+
+    Ptr<GoblinBlackboard> blackboard = stateMachine->GetBlackboard<GoblinBlackboard>();
+    if (nullptr == blackboard)
+        return;
+
+    blackboard->accTime = 9000.f;
+    stateMachine->Transition("Snowball");
+
+    _stressTestEntryIndex = ++_stressTestEntryIndex % _stressTestEntries.size();
+}
+
+void SnowbrosCheat::Reset()
+{
+    _stressTestEntries.clear();
+    _stressTestEntryIndex    = 0;
+    _stressTestPositionIndex = 0;
 }
