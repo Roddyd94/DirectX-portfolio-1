@@ -23,8 +23,23 @@ enum class SnowbrosEnemyAnimationType
 class SnowballMorphableEnemyStateMachine : public AIStateMachine
 {
 public:
-    bool TryMoveX(float deltaX);
+    struct MoveProfile
+    {
+        int32 tryMoveCallCount   = 0;
+        int32 findSnowballsCount = 0;
+        int32 snowballStayCount  = 0;
+        int32 maxDepth           = 0;
+    };
+
+private:
+    inline static MoveProfile _moveProfile;
+
+public:
+    bool TryMoveX(float deltaX, int32 depth = 0);
     void Throw(int32 playerNumber, float direction);
+
+    static void        ResetMoveProfile();
+    static MoveProfile GetMoveProfile();
 
 public:
     bool Init(Ptr<class AIComponent> owner) override;

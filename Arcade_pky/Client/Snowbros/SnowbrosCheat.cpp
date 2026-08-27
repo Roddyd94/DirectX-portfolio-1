@@ -13,6 +13,7 @@
 #include "Tilemap/TilemapLevel.h"
 
 #include <AI/AIComponent.h>
+#include <Platformer/PlatformerKinematicComponent.h>
 
 bool SnowbrosCheat::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
@@ -41,15 +42,12 @@ bool SnowbrosCheat::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
       "Cheat", "SpawnMonster_Stress_100", VK_F5, this, &SnowbrosCheat::SpawnMonsterStress);
     input->BindAction(
       "Cheat", "SpawnMonster_Stress_200", VK_F6, this, &SnowbrosCheat::SpawnMonsterStress);
+
     input->BindAction("Cheat", "MakeSnowball", VK_F7, this, &SnowbrosCheat::MakeSnowball);
 
     for (float x = -7.5f; x < 8.f; x++)
-    {
         for (float y = -5.5f; y < 6.f; y++)
-        {
             _stressTestPositions.push_back({x, y});
-        }
-    }
 
     return true;
 }
@@ -124,6 +122,7 @@ void SnowbrosCheat::SpawnMonsterStress(
 
         blackboard->walkSpeedX           = 0.f;
         blackboard->snowballDecPerSecond = 0.f;
+        // blackboard->disableSnowballRepulsion = true;
 
         _stressTestPositionIndex = ++_stressTestPositionIndex % _stressTestPositions.size();
 
@@ -222,8 +221,11 @@ void SnowbrosCheat::MakeSnowball(Ptr<class InputAction> action, ButtonEventType:
 
     blackboard->accTime = 9000.f;
     stateMachine->Transition("Snowball");
-
     _stressTestEntryIndex = ++_stressTestEntryIndex % _stressTestEntries.size();
+
+    auto kinematic = enemy->FindComponent<PlatformerKinematicComponent>("Kinematic");
+    if (nullptr == kinematic)
+        return;
 }
 
 void SnowbrosCheat::Reset()

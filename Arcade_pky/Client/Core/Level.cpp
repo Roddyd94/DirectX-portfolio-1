@@ -4,15 +4,22 @@
 
 #include "CameraManager.h"
 #include "TagManager.h"
+#include "Common/LogManager.h"
 
 #include "Actor.h"
 #include "Camera.h"
 #include "InstanceRenderer.h"
 #include "World.h"
+#include "Common/Profiler.h"
 
 #ifdef _HAS_COLLISION_MODULE
 #include "Core/Collision/CollisionManager.h"
 #endif // _HAS_COLLISION_MODULE
+#include <AI/AIComponent.h>
+#include <Snowbros/GoblinStateMachine.h>
+#include <Snowbros/SnowballMorphableEnemyStateMachine.h>
+#include <Snowbros/SnowbrosEnemy.h>
+#include <Snowbros/SnowbrosEnemyState.h>
 
 bool Level::Init(Ptr<World> world, const std::string& path)
 {
@@ -74,6 +81,9 @@ void Level::Tick(float deltaTime)
 
     _actorsToRemove.clear();
 
+    int32 goblinCount         = 0;
+    int32 goblinSnowballCount = 0;
+
     for (auto& [actorID, actor] : _actors)
     {
         if (!actor->IsActive())
@@ -86,15 +96,60 @@ void Level::Tick(float deltaTime)
             continue;
 
         actor->Tick(deltaTime);
+
+        auto enemy = Cast<Actor, SnowbrosEnemy>(actor);
+        if (nullptr == enemy)
+            continue;
+
+        auto ai = enemy->GetAIComponent();
+        if (nullptr == ai)
+            continue;
+
+        auto stateMachine = Cast<AIStateMachine, GoblinStateMachine>(ai->GetAIStateMachine());
+        if (nullptr == stateMachine)
+            continue;
+
+        ++goblinCount;
+
+        auto currentState = stateMachine->GetCurrentState<SnowbrosEnemyState>();
+        if (nullptr == currentState)
+            continue;
+
+        if (SnowbrosEnemyState::Snowball == currentState->GetStateType())
+            ++goblinSnowballCount;
     }
 
+    LogManager::Instance().Debug("Counts : ", goblinCount, goblinSnowballCount);
     // TODO UI _uiManager->Tick(deltaTime);
 }
 
 void Level::Collision(float deltaTime)
 {
 #ifdef _HAS_COLLISION_MODULE
+#ifdef _DEBUG
+    static Profiler<float> profiler(1);
+
+    SnowballMorphableEnemyStateMachine::ResetMoveProfile();
+
+    auto collisionStartTime = std::chrono::high_resolution_clock::now();
     _collisionManager->Collision(deltaTime);
+    auto collisionEndTime = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<float> collisionTime = collisionEndTime - collisionStartTime;
+
+    profiler.Add(collisionTime.count());
+
+    float       avgCollisionTime = profiler.GetAverage();
+    auto        moveProfile      = SnowballMorphableEnemyStateMachine::GetMoveProfile();
+    const auto& collisionCounts = _collisionManager->GetLastCollisionCounts();
+
+    LogManager::Instance().Debug("CollisionProfile : ", avgCollisionTime,
+      collisionCounts[0], collisionCounts[1], collisionCounts[2], collisionCounts[3],
+      moveProfile.snowballStayCount, moveProfile.tryMoveCallCount,
+      moveProfile.findSnowballsCount, moveProfile.maxDepth);
+#else  // _DEBUG
+    _collisionManager->Collision(deltaTime);
+#endif // _DEBUG
 #endif // _HAS_COLLISION_MODULE
 
     // TODO UI _uiManager->MouseEvent();

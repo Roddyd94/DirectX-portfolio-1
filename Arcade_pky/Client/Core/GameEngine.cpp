@@ -13,6 +13,7 @@
 #include "Input/InputSystem.h"
 
 #include "World.h"
+#include "Common/Profiler.h"
 
 #ifdef _USE_MEMORY_POOL
 #include "MemoryPool.h"
@@ -55,8 +56,15 @@ void GameEngine::Logic()
 {
     float deltaTime = TimeManager::Instance().Tick();
 #ifdef _DEBUG
+    static Profiler<float> profiler(1);
+
     float fps = TimeManager::Instance().GetFPS();
-    LogManager::Instance().Debug(fps);
+
+    profiler.Add(deltaTime);
+
+    float avgDeltaTime = profiler.GetAverage();
+
+    LogManager::Instance().Debug("FPS : ", 1 / avgDeltaTime);
 #endif // _DEBUG
 
     Tick(deltaTime);

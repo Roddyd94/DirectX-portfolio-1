@@ -2,6 +2,7 @@
 
 #include "PlayerStateMidair.h"
 
+#include "Common/LogManager.h"
 #include "Core/TimeManager.h"
 
 #include "SnowballMorphableEnemyStateMachine.h"
@@ -49,7 +50,8 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
             auto snowball = FindSnowballToPush(playerComponent, deltaX);
             if (nullptr != snowball)
             {
-                if (snowball->TryMoveX(deltaX))
+                int depth = 0;
+                if (snowball->TryMoveX(deltaX, depth))
                     movement->MoveLeft(
                       speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else
@@ -80,7 +82,8 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
             auto snowball = FindSnowballToPush(playerComponent, deltaX);
             if (nullptr != snowball)
             {
-                if (snowball->TryMoveX(deltaX))
+                int depth = 0;
+                if (snowball->TryMoveX(deltaX, depth))
                     movement->MoveRight(
                       speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else

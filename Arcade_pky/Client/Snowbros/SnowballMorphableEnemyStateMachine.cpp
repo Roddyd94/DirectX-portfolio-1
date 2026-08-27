@@ -26,8 +26,11 @@
 #include "Player/Player.h"
 #include "Tilemap/Tilemap.h"
 
-bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
+bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX, int32 depth)
 {
+    ++_moveProfile.tryMoveCallCount;
+    _moveProfile.maxDepth = std::max(_moveProfile.maxDepth, depth);
+
     auto pawn      = GetPawn();
     auto kinematic = pawn->FindActorComponent<PlatformerKinematicComponent>("Kinematic");
 
@@ -58,6 +61,7 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
 
     auto                                      collisionManager = level->GetCollisionManager();
     std::vector<Weak<AABBCollisionComponent>> snowballs;
+    ++_moveProfile.findSnowballsCount;
     SnowballMorphableEnemyStateMachine::FindSnowballs(collisionManager, snowballs);
 
     for (auto& snowball : snowballs)
@@ -98,7 +102,7 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
         if (nullptr == otherStateMachine)
             continue;
 
-        if (otherStateMachine->TryMoveX(deltaX))
+        if (otherStateMachine->TryMoveX(deltaX, depth + 1))
         {
             kinematic->MoveX(deltaX);
             return true;
@@ -109,6 +113,17 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX)
 
     kinematic->MoveX(deltaX);
     return true;
+}
+
+void SnowballMorphableEnemyStateMachine::ResetMoveProfile()
+{
+    _moveProfile = {};
+}
+
+SnowballMorphableEnemyStateMachine::MoveProfile
+SnowballMorphableEnemyStateMachine::GetMoveProfile()
+{
+    return _moveProfile;
 }
 
 void SnowballMorphableEnemyStateMachine::Throw(int32 playerNumber, float direction)
@@ -407,6 +422,10 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                       {
                       case SnowbrosEnemyState::Snowball:
                       {
+#ifdef _DEBUG
+                          if (blackboard->disableSnowballRepulsion)
+                              break;
+#endif // _DEBUG
                           auto otherSnowballStateMachine
                             = Cast<AIStateMachine, SnowballMorphableEnemyStateMachine>(
                               otherStateMachine);
@@ -415,6 +434,7 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                           if (distance > blackboard->snowballRepulsiveDistance)
                               return;
 
+                          ++_moveProfile.snowballStayCount;
                           if (thisPosition.x < otherPosition.x)
                           {
                               otherSnowballStateMachine->TryMoveX(

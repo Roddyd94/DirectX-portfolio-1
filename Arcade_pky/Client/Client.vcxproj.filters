@@ -566,6 +566,7 @@
       <Filter>Snowbros\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Snowbros\IndexedSpriteShader.h" />
+    <ClInclude Include="Common\Profiler.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1093,6 +1094,7 @@
       <Filter>Snowbros\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Snowbros\IndexedSpriteShader.cpp" />
+    <ClCompile Include="Common\Profiler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

@@ -2,6 +2,7 @@
 
 #include "PlayerStateGround.h"
 
+#include "Common/LogManager.h"
 #include "Core/Collision/CollisionManager.h"
 #include "Core/TimeManager.h"
 
@@ -52,7 +53,8 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
             auto snowball = FindSnowballToPush(playerComponent, -speedSnowballX * deltaTime);
             if (nullptr != snowball)
             {
-                if (snowball->TryMoveX(-speedSnowballX * deltaTime))
+                int depth = 0;
+                if (snowball->TryMoveX(-speedSnowballX * deltaTime, depth))
                     movement->MoveLeft(
                       speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else
@@ -110,7 +112,8 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
             auto snowball = FindSnowballToPush(playerComponent, speedSnowballX * deltaTime);
             if (nullptr != snowball)
             {
-                if (snowball->TryMoveX(speedSnowballX * deltaTime))
+                int depth = 0;
+                if (snowball->TryMoveX(speedSnowballX * deltaTime, depth))
                     movement->MoveRight(
                       speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else
