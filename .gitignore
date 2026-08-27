@@ -477,3 +477,6 @@ FodyWeavers.xsd
 imgui.ini
 
 test.test
+
+!Arcade_pky/ThirdParty/*.lib
+!Arcade_pky/ThirdParty/*.dll
