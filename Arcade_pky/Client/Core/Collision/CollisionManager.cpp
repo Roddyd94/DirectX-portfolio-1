@@ -61,8 +61,6 @@ void CollisionManager::Collision(float deltaTime)
                     if (!destCollider->GetProfile())
                         continue;
 
-                    // collision occurred
-                    ++_collidedCount;
                     if (srcCollider->Collision(destCollider))
                     {
                         switch (srcCollider->CheckCollisionState(destCollider))
@@ -71,16 +69,12 @@ void CollisionManager::Collision(float deltaTime)
                         case CollisionState::Stay:
                         {
                             srcCollider->Invoke(CollisionState::Stay, destCollider);
-                            // collision Stay occurred
-                            ++_stayCount;
                         }
                         break;
                         case CollisionState::Exit:
                         case CollisionState::None:
                         {
                             srcCollider->Invoke(CollisionState::Enter, destCollider);
-                            // collision Enter occurred
-                            ++_enterCount;
                         }
                         break;
                         }
@@ -93,8 +87,6 @@ void CollisionManager::Collision(float deltaTime)
                         case CollisionState::Stay:
                         {
                             srcCollider->Invoke(CollisionState::Exit, destCollider);
-                            // collision Exit occurred
-                            ++_exitCount;
                         }
                         break;
                         }
@@ -104,16 +96,6 @@ void CollisionManager::Collision(float deltaTime)
         }
     }
 
-    _lastCollisionCounts = {_collidedCount, _enterCount, _stayCount, _exitCount};
-    _collidedCount = 0;
-    _enterCount    = 0;
-    _stayCount     = 0;
-    _exitCount     = 0;
-}
-
-const std::array<int32, 4>& CollisionManager::GetLastCollisionCounts() const
-{
-    return _lastCollisionCounts;
 }
 
 Ptr<class CollisionComponent> CollisionManager::FindCollider(

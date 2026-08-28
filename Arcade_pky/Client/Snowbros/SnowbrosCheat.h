@@ -22,6 +22,7 @@ public:
     void ChangeLevel(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
     void ToggleCamera(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
     void StartPlayer2(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
+    void SetItem(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
     void MakeSnowball(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent);
     void Reset();
 };

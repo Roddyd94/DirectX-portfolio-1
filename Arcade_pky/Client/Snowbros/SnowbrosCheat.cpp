@@ -4,8 +4,11 @@
 
 #include "GoblinBlackboard.h"
 #include "GoblinStateMachine.h"
+#include "ShootComponent.h"
 #include "SnowbrosEnemy.h"
 #include "SnowbrosLevel.h"
+#include "SnowbrosPlayer.h"
+#include "SnowbrosPlayerBlackboard.h"
 #include "Core/CameraComponent.h"
 #include "Core/Input/InputAction.h"
 #include "Core/Input/InputComponent.h"
@@ -13,7 +16,8 @@
 #include "Tilemap/TilemapLevel.h"
 
 #include <AI/AIComponent.h>
-#include <Platformer/PlatformerKinematicComponent.h>
+#include <Player/PlayerComponent.h>
+#include <Player/PlayerStateMachine.h>
 
 bool SnowbrosCheat::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rotation)
 {
@@ -36,18 +40,25 @@ bool SnowbrosCheat::Init(int32 id, Vector3 position, Vector3 scale, Vector3 rota
     input->BindAction("Cheat", "SpawnMonster_4", '8', this, &SnowbrosCheat::SpawnMonster);
     input->BindAction("Cheat", "StartPlayer2", '9', this, &SnowbrosCheat::StartPlayer2);
 
-    input->BindAction(
-      "Cheat", "SpawnMonster_Stress_50", VK_F4, this, &SnowbrosCheat::SpawnMonsterStress);
-    input->BindAction(
-      "Cheat", "SpawnMonster_Stress_100", VK_F5, this, &SnowbrosCheat::SpawnMonsterStress);
-    input->BindAction(
-      "Cheat", "SpawnMonster_Stress_200", VK_F6, this, &SnowbrosCheat::SpawnMonsterStress);
+    input->BindAction("Cheat", "SetItem_Power", VK_F4, this, &SnowbrosCheat::SetItem);
+    input->BindAction("Cheat", "SetItem_Speed", VK_F5, this, &SnowbrosCheat::SetItem);
+    input->BindAction("Cheat", "SetItem_Range", VK_F6, this, &SnowbrosCheat::SetItem);
 
-    input->BindAction("Cheat", "MakeSnowball", VK_F7, this, &SnowbrosCheat::MakeSnowball);
+    input->BindAction(
+      "Cheat", "SpawnMonster_Stress_50", VK_F7, this, &SnowbrosCheat::SpawnMonsterStress);
+    input->BindAction(
+      "Cheat", "SpawnMonster_Stress_100", VK_F8, this, &SnowbrosCheat::SpawnMonsterStress);
+    input->BindAction(
+      "Cheat", "SpawnMonster_Stress_200", VK_F9, this, &SnowbrosCheat::SpawnMonsterStress);
+    input->BindAction("Cheat", "MakeSnowball", VK_F10, this, &SnowbrosCheat::MakeSnowball);
 
     for (float x = -7.5f; x < 8.f; x++)
+    {
         for (float y = -5.5f; y < 6.f; y++)
+        {
             _stressTestPositions.push_back({x, y});
+        }
+    }
 
     return true;
 }
@@ -122,7 +133,6 @@ void SnowbrosCheat::SpawnMonsterStress(
 
         blackboard->walkSpeedX           = 0.f;
         blackboard->snowballDecPerSecond = 0.f;
-        // blackboard->disableSnowballRepulsion = true;
 
         _stressTestPositionIndex = ++_stressTestPositionIndex % _stressTestPositions.size();
 
@@ -194,6 +204,54 @@ void SnowbrosCheat::StartPlayer2(Ptr<class InputAction> action, ButtonEventType:
     level->_enablePlayer2 = true;
 }
 
+void SnowbrosCheat::SetItem(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)
+{
+    if (buttonEvent != ButtonEventType::Down)
+        return;
+
+    auto level = Cast<Level, SnowbrosLevel>(GetLevel());
+    if (nullptr == level)
+        return;
+
+    auto player = Cast<Player, SnowbrosPlayer>(level->GetPlayer(0));
+    if (nullptr == player)
+        return;
+
+    auto playerComponent = player->FindActorComponent<PlayerComponent>("Player");
+    if (nullptr == playerComponent)
+        return;
+
+    auto stateMachine = playerComponent->GetStateMachine();
+    if (nullptr == stateMachine)
+        return;
+
+    auto blackboard = stateMachine->GetBlackboard<SnowbrosPlayerBlackboard>();
+    if (nullptr == blackboard)
+        return;
+
+    if (action->GetName() == "SetItem_Speed")
+    {
+        blackboard->speedMultiplier = 2.f;
+        blackboard->speedUpgraded   = true;
+        return;
+    }
+
+    auto shoot = player->FindActorComponent<ShootComponent>("Shoot");
+    if (nullptr == shoot)
+        return;
+
+    if (action->GetName() == "SetItem_Power" && !blackboard->powerUpgraded)
+    {
+        shoot->PowerUp();
+        blackboard->powerUpgraded = true;
+    }
+    else if (action->GetName() == "SetItem_Range" && !blackboard->rangeUpgraded)
+    {
+        shoot->RangeUp();
+        blackboard->rangeUpgraded = true;
+    }
+}
+
 void SnowbrosCheat::MakeSnowball(Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)
 {
     if (buttonEvent != ButtonEventType::Down)
@@ -221,11 +279,8 @@ void SnowbrosCheat::MakeSnowball(Ptr<class InputAction> action, ButtonEventType:
 
     blackboard->accTime = 9000.f;
     stateMachine->Transition("Snowball");
-    _stressTestEntryIndex = ++_stressTestEntryIndex % _stressTestEntries.size();
 
-    auto kinematic = enemy->FindComponent<PlatformerKinematicComponent>("Kinematic");
-    if (nullptr == kinematic)
-        return;
+    _stressTestEntryIndex = ++_stressTestEntryIndex % _stressTestEntries.size();
 }
 
 void SnowbrosCheat::Reset()

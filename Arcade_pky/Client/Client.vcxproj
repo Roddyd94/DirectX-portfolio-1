@@ -435,7 +435,6 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClInclude Include="Client.h" />
     <ClInclude Include="Common\Logger.h" />
     <ClInclude Include="Common\LogManager.h" />
-    <ClInclude Include="Common\Profiler.h" />
     <ClInclude Include="Common\Random.h" />
     <ClInclude Include="Core\Actor.h" />
     <ClInclude Include="Core\ActorComponent.h" />
@@ -626,7 +625,6 @@ xcopy /y /d "$(solutionDir)ThirdParty\fmodL.dll" "$(OutDir)" </Command>
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Common\Logger.cpp" />
     <ClCompile Include="Common\LogManager.cpp" />
-    <ClCompile Include="Common\Profiler.cpp" />
     <ClCompile Include="Core\Actor.cpp" />
     <ClCompile Include="Core\ActorComponent.cpp" />
     <ClCompile Include="Core\Animation\Animation2D.cpp" />

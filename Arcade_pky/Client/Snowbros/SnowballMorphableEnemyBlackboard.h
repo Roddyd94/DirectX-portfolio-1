@@ -26,12 +26,11 @@ public:
     float accTime              = 0.f;
     float snowballDecPerSecond = 5.f;
 
-    bool turned                   : 1 = false;
-    bool hitByReinforced          : 1 = false;
-    bool isJumping                : 1 = false;
-    bool isSnowballReinforced     : 1 = false;
-    bool isSnowballFalling        : 1 = false;
-    bool disableSnowballRepulsion : 1 = false;
+    bool turned               = false;
+    bool hitByReinforced      = false;
+    bool isJumping            = false;
+    bool isSnowballReinforced = false;
+    bool isSnowballFalling    = false;
 
 public:
     inline static const float phaseThreshold[snowballStateFormingPhaseCount]
