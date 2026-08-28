@@ -14,6 +14,8 @@
 
 #ifdef _HAS_COLLISION_MODULE
 #include "Core/Collision/CollisionManager.h"
+
+#include "Core/Collision/AABBCollisionComponent.h"
 #endif // _HAS_COLLISION_MODULE
 #include <AI/AIComponent.h>
 #include <Snowbros/GoblinStateMachine.h>
@@ -84,6 +86,8 @@ void Level::Tick(float deltaTime)
     int32 goblinCount         = 0;
     int32 goblinSnowballCount = 0;
 
+    SnowballMorphableEnemyStateMachine::ResetMoveProfile();
+
     for (auto& [actorID, actor] : _actors)
     {
         if (!actor->IsActive())
@@ -112,12 +116,14 @@ void Level::Tick(float deltaTime)
         ++goblinCount;
 
         auto currentState = stateMachine->GetCurrentState<SnowbrosEnemyState>();
-        if (nullptr == currentState)
-            continue;
-
-        if (SnowbrosEnemyState::Snowball == currentState->GetStateType())
+        if (nullptr != currentState && SnowbrosEnemyState::Snowball == currentState->GetStateType())
             ++goblinSnowballCount;
     }
+
+    _snowballsInCurrentFrame.clear();
+#ifdef _HAS_COLLISION_MODULE
+    SnowballMorphableEnemyStateMachine::FindSnowballs(_collisionManager, _snowballsInCurrentFrame);
+#endif // _HAS_COLLISION_MODULE
 
     LogManager::Instance().Debug("Counts : ", goblinCount, goblinSnowballCount);
     // TODO UI _uiManager->Tick(deltaTime);
@@ -129,8 +135,6 @@ void Level::Collision(float deltaTime)
 #ifdef _DEBUG
     static Profiler<float> profiler(1);
 
-    SnowballMorphableEnemyStateMachine::ResetMoveProfile();
-
     auto collisionStartTime = std::chrono::high_resolution_clock::now();
     _collisionManager->Collision(deltaTime);
     auto collisionEndTime = std::chrono::high_resolution_clock::now();
@@ -141,12 +145,11 @@ void Level::Collision(float deltaTime)
 
     float       avgCollisionTime = profiler.GetAverage();
     auto        moveProfile      = SnowballMorphableEnemyStateMachine::GetMoveProfile();
-    const auto& collisionCounts = _collisionManager->GetLastCollisionCounts();
+    const auto& collisionCounts  = _collisionManager->GetLastCollisionCounts();
 
-    LogManager::Instance().Debug("CollisionProfile : ", avgCollisionTime,
-      collisionCounts[0], collisionCounts[1], collisionCounts[2], collisionCounts[3],
-      moveProfile.snowballStayCount, moveProfile.tryMoveCallCount,
-      moveProfile.findSnowballsCount, moveProfile.maxDepth);
+    LogManager::Instance().Debug("CollisionProfile : ", avgCollisionTime, collisionCounts[0],
+      collisionCounts[1], collisionCounts[2], collisionCounts[3], moveProfile.snowballStayCount,
+      moveProfile.tryMoveCallCount, moveProfile.findSnowballsCount, moveProfile.maxDepth);
 #else  // _DEBUG
     _collisionManager->Collision(deltaTime);
 #endif // _DEBUG
@@ -238,6 +241,11 @@ Ptr<CameraComponent> Level::GetMainCamera() const
 Vector3 Level::GetCameraWorldPosition() const
 {
     return _cameraManager->GetCameraWorldPosition();
+}
+
+const std::vector<Weak<class AABBCollisionComponent>>& Level::GetSnowballs() const
+{
+    return _snowballsInCurrentFrame;
 }
 
 void Level::AddTag(const std::string& tag, int32 actorID)

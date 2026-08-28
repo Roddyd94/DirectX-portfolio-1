@@ -13,10 +13,11 @@ public:
 private:
     std::unordered_map<std::string, Ptr<class InstanceRenderer>> _instanceRenderers;
 
-    std::map<int32, Ptr<class Actor>> _actors;
-    std::vector<int32>                _actorsToRemove;
-    Weak<class World>                 _world;
-    Ptr<class CameraManager>          _cameraManager;
+    std::map<int32, Ptr<class Actor>>        _actors;
+    std::vector<int32>                       _actorsToRemove;
+    std::vector<Weak<class AABBCollisionComponent>> _snowballsInCurrentFrame;
+    Weak<class World>                        _world;
+    Ptr<class CameraManager>                 _cameraManager;
 #ifdef _HAS_COLLISION_MODULE
     Ptr<class CollisionManager> _collisionManager;
 #endif // _HAS_COLLISION_MODULE
@@ -38,9 +39,10 @@ public:
     const Matrix& GetViewMatrix() const;
     const Matrix& GetProjMatrix() const;
 
-    Ptr<class World>           GetWorld() const;
-    Ptr<class CameraComponent> GetMainCamera() const;
-    Vector3                    GetCameraWorldPosition() const;
+    Ptr<class World>                          GetWorld() const;
+    Ptr<class CameraComponent>                GetMainCamera() const;
+    Vector3                                   GetCameraWorldPosition() const;
+    const std::vector<Weak<class AABBCollisionComponent>>& GetSnowballs() const;
 #ifdef _HAS_COLLISION_MODULE
     Ptr<class CollisionManager>        GetCollisionManager() const;
     Ptr<class CollisionProfileManager> GetCollisionProfileManager() const;

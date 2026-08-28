@@ -32,6 +32,12 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
   ButtonEventType::Type                                                    buttonEvent)
 {
     Ptr<Actor> player = playerComponent->GetOwner();
+    if (nullptr == player)
+        return nullptr;
+
+    Ptr<SnowbrosLevel> level = Cast<Level, SnowbrosLevel>(player->GetLevel());
+    if (nullptr == level)
+        return nullptr;
 
     float deltaTime = TimeManager::Instance().GetDeltaTime();
 
@@ -54,7 +60,7 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
             if (nullptr != snowball)
             {
                 int depth = 0;
-                if (snowball->TryMoveX(-speedSnowballX * deltaTime, depth))
+                if (snowball->TryMoveX(level->GetSnowballs(), -speedSnowballX * deltaTime, depth))
                     movement->MoveLeft(
                       speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else
@@ -113,7 +119,7 @@ Ptr<PlayerState> PlayerStateGround::HandleInput(Ptr<class PlayerComponent> playe
             if (nullptr != snowball)
             {
                 int depth = 0;
-                if (snowball->TryMoveX(speedSnowballX * deltaTime, depth))
+                if (snowball->TryMoveX(level->GetSnowballs(), speedSnowballX * deltaTime, depth))
                     movement->MoveRight(
                       speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else

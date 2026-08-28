@@ -295,7 +295,7 @@ void SnowbrosPlayer::SetPlayerNumber(int32 number)
 void SnowbrosPlayer::OnShootButtonEvent(
   Ptr<class InputAction> action, ButtonEventType::Type buttonEvent)
 {
-    auto level            = GetLevel();
+    auto level            = Cast<Level, SnowbrosLevel>(GetLevel());
     auto collisionManager = level->GetCollisionManager();
 
     auto movement  = FindActorComponent<PlatformerMovementComponent>("Movement");

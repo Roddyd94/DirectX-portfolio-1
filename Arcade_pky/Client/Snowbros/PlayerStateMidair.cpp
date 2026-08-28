@@ -6,6 +6,7 @@
 #include "Core/TimeManager.h"
 
 #include "SnowballMorphableEnemyStateMachine.h"
+#include "SnowbrosLevel.h"
 #include "SnowbrosPlayer.h"
 #include "SnowbrosPlayerBlackboard.h"
 #include "Types.h"
@@ -25,6 +26,12 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
   ButtonEventType::Type                                                    buttonEvent)
 {
     Ptr<Actor> player = playerComponent->GetOwner();
+    if (nullptr == player)
+        return nullptr;
+
+    Ptr<SnowbrosLevel> level = Cast<Level, SnowbrosLevel>(player->GetLevel());
+    if (nullptr == level)
+        return nullptr;
 
     float deltaTime = TimeManager::Instance().GetDeltaTime();
 
@@ -51,7 +58,7 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
             if (nullptr != snowball)
             {
                 int depth = 0;
-                if (snowball->TryMoveX(deltaX, depth))
+                if (snowball->TryMoveX(level->GetSnowballs(), deltaX, depth))
                     movement->MoveLeft(
                       speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else
@@ -83,7 +90,7 @@ Ptr<PlayerState> PlayerStateMidair::HandleInput(Ptr<class PlayerComponent> playe
             if (nullptr != snowball)
             {
                 int depth = 0;
-                if (snowball->TryMoveX(deltaX, depth))
+                if (snowball->TryMoveX(level->GetSnowballs(), deltaX, depth))
                     movement->MoveRight(
                       speedX * blackboard->speedMultiplier * blackboard->speedMultiplierSnowball);
                 else

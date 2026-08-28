@@ -26,7 +26,8 @@
 #include "Player/Player.h"
 #include "Tilemap/Tilemap.h"
 
-bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX, int32 depth)
+bool SnowballMorphableEnemyStateMachine::TryMoveX(
+  const std::vector<Weak<class AABBCollisionComponent>>& snowballs, float deltaX, int32 depth)
 {
     ++_moveProfile.tryMoveCallCount;
     _moveProfile.maxDepth = std::max(_moveProfile.maxDepth, depth);
@@ -47,7 +48,6 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX, int32 depth)
 
     auto level  = Cast<Level, SnowbrosLevel>(pawn->GetLevel());
     auto player = level->FindNearestPlayerFrom(pawn->GetWorldPosition());
-    ;
     auto playerCollider = player->FindSceneComponent<AABBCollisionComponent>("Collider");
     Rect playerRect     = playerCollider->GetBox();
 
@@ -58,11 +58,6 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX, int32 depth)
     if (deltaX < 0.f && thisRect.left < playerRect.right && thisRect.left > playerRect.left
         && thisPosition.y < playerRect.top && thisPosition.y > playerRect.bottom)
         return false;
-
-    auto                                      collisionManager = level->GetCollisionManager();
-    std::vector<Weak<AABBCollisionComponent>> snowballs;
-    ++_moveProfile.findSnowballsCount;
-    SnowballMorphableEnemyStateMachine::FindSnowballs(collisionManager, snowballs);
 
     for (auto& snowball : snowballs)
     {
@@ -102,7 +97,7 @@ bool SnowballMorphableEnemyStateMachine::TryMoveX(float deltaX, int32 depth)
         if (nullptr == otherStateMachine)
             continue;
 
-        if (otherStateMachine->TryMoveX(deltaX, depth + 1))
+        if (otherStateMachine->TryMoveX(snowballs, deltaX, depth + 1))
         {
             kinematic->MoveX(deltaX);
             return true;
@@ -120,8 +115,7 @@ void SnowballMorphableEnemyStateMachine::ResetMoveProfile()
     _moveProfile = {};
 }
 
-SnowballMorphableEnemyStateMachine::MoveProfile
-SnowballMorphableEnemyStateMachine::GetMoveProfile()
+SnowballMorphableEnemyStateMachine::MoveProfile SnowballMorphableEnemyStateMachine::GetMoveProfile()
 {
     return _moveProfile;
 }
@@ -438,14 +432,14 @@ bool SnowballMorphableEnemyStateMachine::Init(Ptr<class AIComponent> owner)
                           if (thisPosition.x < otherPosition.x)
                           {
                               otherSnowballStateMachine->TryMoveX(
-                                blackboard->snowballRepulsiveDeltaX);
-                              TryMoveX(-blackboard->snowballRepulsiveDeltaX);
+                                level->GetSnowballs(), blackboard->snowballRepulsiveDeltaX);
+                              TryMoveX(level->GetSnowballs(), -blackboard->snowballRepulsiveDeltaX);
                           }
                           else
                           {
                               otherSnowballStateMachine->TryMoveX(
-                                -blackboard->snowballRepulsiveDeltaX);
-                              TryMoveX(blackboard->snowballRepulsiveDeltaX);
+                                level->GetSnowballs(), -blackboard->snowballRepulsiveDeltaX);
+                              TryMoveX(level->GetSnowballs(), blackboard->snowballRepulsiveDeltaX);
                           }
                       }
                       break;
@@ -1045,6 +1039,8 @@ bool SnowballMorphableEnemyStateMachine::CheckPatrolPoint()
 void SnowballMorphableEnemyStateMachine::FindSnowballs(Ptr<class CollisionManager> collisionManager,
   std::vector<Weak<class AABBCollisionComponent>>&                                 snowballs)
 {
+    ++_moveProfile.findSnowballsCount;
+
     std::vector<Weak<CollisionComponent>> enemyColliders;
     collisionManager->FindColliders(ColliderType::Enemy, enemyColliders);
 

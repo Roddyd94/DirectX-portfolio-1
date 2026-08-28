@@ -35,7 +35,9 @@ private:
     inline static MoveProfile _moveProfile;
 
 public:
-    bool TryMoveX(float deltaX, int32 depth = 0);
+    bool TryMoveX(const std::vector<Weak<class AABBCollisionComponent>>& snowballs,
+      float                                                              deltaX,
+      int32                                                              depth = 0);
     void Throw(int32 playerNumber, float direction);
 
     static void        ResetMoveProfile();
