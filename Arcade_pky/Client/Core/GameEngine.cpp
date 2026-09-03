@@ -36,10 +36,15 @@ int GameEngine::Init()
 void GameEngine::Destroy()
 {
     DESTROY(_world)
-    ResourceManager::Instance().Destroy();
+    RenderManager::Instance().Destroy();
 
-    DESTROY(_input)
     InputSystem::Instance().Destroy();
+    DESTROY(_input)
+
+    ResourceManager::Instance().Destroy();
+    DeviceManager::Instance().Destroy();
+
+    TimeManager::Instance().Destroy();
 
     LogManager::Instance().Destroy();
     DirectoryManager::Instance().Destroy();
@@ -59,9 +64,28 @@ void GameEngine::Logic()
     LogManager::Instance().Debug(fps);
 #endif // _DEBUG
 
+    auto                         prevTime = std::chrono::high_resolution_clock::now();
+    auto                         curTime  = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> frameTime;
+
     Tick(deltaTime);
+    curTime   = std::chrono::high_resolution_clock::now();
+    frameTime = curTime - prevTime;
+    prevTime  = curTime;
+    LogManager::Instance().Debug("Tick : ", frameTime.count());
+
     Collision(deltaTime);
+    curTime   = std::chrono::high_resolution_clock::now();
+    frameTime = curTime - prevTime;
+    prevTime  = curTime;
+    LogManager::Instance().Debug("Collision : ", frameTime.count());
+
     Render(deltaTime);
+
+    curTime   = std::chrono::high_resolution_clock::now();
+    frameTime = curTime - prevTime;
+    prevTime  = curTime;
+    LogManager::Instance().Debug("Render : ", frameTime.count());
 }
 
 Ptr<class World> GameEngine::GetWorld() const
